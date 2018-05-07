@@ -1,0 +1,257 @@
+\chapter{Production on a single line}
+\label{chap:lot-size on single line}
+
+
+\begin{itemize}
+  \item bibliographie
+  \item Flexibilité
+  \item Production on a single line
+  \item campagne de production ou batch de production
+\end{itemize}
+
+
+
+\section{Deterministic setting}
+
+\subsection{Motivation}
+
+Ce que veut Argon
+
+\subsection{Bibliography}
+
+\textbf{literature review}
+
+\begin{itemize}
+   \item \cite{Gayon2016} Continuous-review inventory models for single item
+\end{itemize} 
+
+\medskip
+
+\textbf{Ordering}
+
+\begin{itemize}
+  \item \cite{Harris1913} Economic Order Quantity (in French: ``Formule de Wilson'' because it was extensively used by R. H. Wilson from 1934)
+  \begin{itemize}
+    \item single item
+    \item cost structure: proportional holding cost, variable and fixed order cost
+    \item stationary demand $\demand$
+    \item average cost over infinite horizon
+  \end{itemize}
+  \item Time varying demand $\demand(t)$
+  \begin{itemize}
+    \item \cite{Resh1976,Donaldson1977} $\demand(t)=\alpha t+\gamma$ polynomial
+    \item \cite{Barbosa1978} $\demand(t)=\alpha t^{\beta}$
+    \item difficult in general
+  \end{itemize}
+\end{itemize}
+
+Classical policy: Zero Inventory Ordering policy $(r,q)$ (Order quantity $q$ when current inventory is $r$)
+
+\medskip
+
+\textbf{Production}
+
+\begin{itemize}
+  \item Economic Production Quantity (extension of EOQ with limited production capacity) \cite{Taft1918}
+  \begin{itemize}
+    \item Limited production capacity
+  \end{itemize}
+\end{itemize}
+
+
+\medskip
+
+\esgil{complete bibliography}
+
+\medskip
+
+
+\subsection{Problem}
+
+\esgil{vérifier dans la litérature set up, setup, launch, }\label{sec:prob-cont-rev}
+
+The exact problem in which Argon Consulting was interested in is the following.
+
+We are given a set $\REF$ of products, which have to be produced over an infinite horizon. For each product $r\in\REF$, the demand rate $\demand_r$ is a fixed value known in advance and there is also a unitary holding cost $\holding_r$: given an inventory profile $\inventory_r\colon[0,\horizon]\rightarrow\RR_+$ (with all suitable assumptions) for product $r$, the dynamic of the inventory is $\frac{\diff}{\diff t}\inventory_r(t)=\demand_r$ (almost everywhere) and the total holding cost of product $r$ over the horizon is $\holding_r\int_0^{\horizon}\inventory_r(t)\diff t$.
+
+Production of a product $r$ can be set up at any time, and we assume that the production is instantaneous. However, the interval between two successive production setups of a given product has to be the same over the whole horizon (this interval is the {\em cover} of product $r$). (It imposes that the solution is periodic for each product.) Production of several products can be set up simultaneously (like in blablabla in a slightly different setting), but the total number of times a production is set up per time unit (over all products) is upper bounded by a given quantity denoted by $N$. The goal is to satisfy the demand, \ie, $\inventory_r(t)\geq 0$ almost everywhere for every product $r$, while minimizing the average cost.
+
+We will consider two versions of this problem.
+\begin{itemize}
+  \item The covers can be any nonnegative real numbers.
+  \item The covers have to be inverses of integers.
+\end{itemize}
+In other words, since a cover is a time period, the production frequencies are unconstrained in the first version, while there are constrained to be integers in the second one. We qualify the first version of being {\em unconstrained} and the second of being {\em integer}.
+
+
+% Our problem deals with a single production line which can produce a set $\REF$ of products. This ability, called \emph{flexibility}, enables to make several setups as shown in figure~\ref{fig:1}. The graphic shows the evolution of the inventory of three products depending on time. During some period, the line is used to produce one product but cannot be used during the same period for the others.
+
+% \medskip
+
+% \esgil{FIG 1: Graph with several products and several decreasing of demand and internal production time}
+
+% \medskip
+
+
+% The industrial goal is to find simple rules which enables to minimize the holding cost. Since randomness happens during the scheduling and cannot be seen at tactical level, the goal is not to find the optimal scheduling but to size the operations which will be scheduled. Thus, we are interested in sizing the \emph{cover} of products which is the time for which inventory of the product is positive and we neglect the production time. Figure~\ref{fig:1} can now be simplify in figure~\ref{fig:2}.
+
+% \medskip
+
+
+% \esgil{fig:1 without internal production time}
+
+% \medskip
+
+
+
+
+% In practice, comparing holding cost and setup cost is hard. As explain in Harris' model, they are different type of cost. However, in some industries like cosmetic where a clean up is needed to change the lotion or in pneumatic industry where new settings are needed to change the size of produced pneumatics, operational people can easily give the number of setups in a period. Our optimization problem can be rewrite in the minimization of the holding cost subject to limited number of setups.
+
+
+% Like Harris, we formulate several hypothesis.
+% \begin{itemize}
+%   \item The demand $\demand_r$ of each product $r$ per time unit is constant over the whole period $\horizon$.
+%   \item The cost of the inventory is proportional to his size and the company has no limit on the holding capacity.
+%   \item The company has always enough raw material to ensure his production.
+% \end{itemize}
+
+
+% We use the following notations. $\REF$ is the set of products and $\nbsetups$ the number of possible setups during the whole horizon. For each product $r\in\REF$, let $\demand_r$ be the demand per time unit and $\holding_r$ be the unit holding cost. Since the demand is constant over time, we can use three set of variables: cover size $\cover_r$ of the product $r$, production frequency $\freq_r=\frac{1}{\cover_r}$ which is the number of time product $r$ is produced during the horizon or lot size $\lot_r = \demand_r\cover_r$ which is the quantity produced each time product $r$ is produced.
+
+
+
+%\subsection{Deterministic model}
+
+\subsection{Unconstrained frequencies}
+
+
+%Using the average value of the inventory of each product over time, the optimization problem can be written as follow:
+
+We claim that the following optimization problem is a correct model of the problem described in Section~\ref{sec:prob-cont-rev} in its unconstrained version:
+\begin{equation}\label{eq:cont-rev-det}
+  \begin{array}{lll}
+  \min & \ds\sum_{r\in\REF} \frac{1}{2}\holding_r\demand_r\cover_r \\
+  \st  & \ds\sum_{r\in\REF} \frac{1}{\cover_r} \le \nbsetups \\
+       & \cover_r > 0 & \forall r\in\REF.
+  \end{array}
+\end{equation}
+The correctness is however not necessarily immediate: note that blablabla. We state thus this fact, with a complete proof.
+
+\begin{prop}
+Problem~\eqref{eq:cont-rev-det} has a unique optimal solution $(\cover_r^*)_{r\in\REF}$, which provides the optimal cover values for the unconstrained version of the problem described in Section~\ref{sec:prob-cont-rev}.
+\end{prop}
+
+\begin{proof}
+\tbc
+\end{proof}
+
+Solving Problem~\eqref{eq:cont-rev-det} is straightforward using the Karush-Kuhn-Tucker condition since it is a convex problem:
+$$\cover_r^*= \frac{\sum_{s\in\REF}\sqrt{\holding_s\demand_s}}{\nbsetups\sqrt{\holding_r\demand_r}}\qquad\forall r\in\REF.$$
+
+% Using the production frequencies $\freq_r=\frac{1}{\cover_r}$ of product $r$, we get the optimal frequencies:
+% \begin{equation}
+%   \freq_r^* = \frac{1}{\cover_r^*}
+%             = \frac{\nbsetups\sqrt{\holding_r\demand_r}}{\sum_{s\in\REF}\sqrt{\holding_s\demand_s}}
+%             \quad \forall r\in\REF,
+% \end{equation}
+% and the associated holding cost is $\frac{1}{2\nbsetups}\bracket{\sum_{r\in\REF}\sqrt{\holding_r\demand_r}}^2$.
+
+
+% \esgil{Write the proof}
+
+
+\subsection{Integer frequencies}
+
+
+In some cases, it is easier for industrial to use integer frequencies. When dealing with internal production time, it is sufficient to multiply the holding costs by a correcting factor to get the same optimization than without internal production time. Thus, we only write the case without internal production time.
+\begin{equation}
+  \begin{array}{lll}
+  \min & \ds\sum_{r\in\REF} \frac{1}{2}\holding_r\demand_r\frac{1}{\freq_r} \\
+  \st  & \ds\sum_{r\in\REF} \freq_r \le \nbsetups \\
+       & \freq_r \in \ZZ_+^* & \forall r\in\REF
+  \end{array}
+\end{equation}
+
+This formulation is a special case of the integer simple resource allocation problem:
+\begin{equation}
+  \max\crbracket{\sum_{r\in\REF} f_r\bracket{\freq_r} \Big| \sum_{r\in\REF}\freq_r=\nbsetups,\quad\freq\in \ZZ_+^*}
+\end{equation}
+where the $f_r$ are concave.
+\esgil{Check the definition of the problem}
+
+The fastest algorithm known has a $O\bracket{\card{\REF}\log{\frac{\nbsetups}{\card{\REF}}}}$ running time and was proposed by \cite{Frederickson1982} and then simplified by \cite{Hochbaum1994}. Implementation of these algorithms is not easy that is why dynamic programming might be used even if its complexity is only $O\bracket{\card{\REF}\nbsetups^2}$ which is pseudo-polynomial.
+
+
+
+\section{Stochastic model}
+
+
+\subsection{Model}
+
+Source of randomness:
+\begin{itemize}
+  \item customer demand
+  \item manufacturing time (internal production time)
+  \item delivery lead time
+\end{itemize}
+
+Randomness was handled by probability (most cases) but also with fuzzy set theory (\eg \cite{Park1987,Lee1999,Wang2007} for extensions of the EOQ and \cite{Ziukov2015} for a complete review of the extensions of EOP, EPQ, Joint Economic Lot Sizing models). In what follows, we focus on randomness represented by probability.
+
+Literature often include backorder costs!
+
+\medskip
+
+\textbf{Ordering}
+
+One period:
+\begin{itemize}
+  \item News-vendor problem \cite{Edgeworth88,Arrow1951}
+\end{itemize}
+
+Continuous-review:
+\begin{itemize}
+  \item adaptation of (r,q) policies with EOQ taking into account random demand during lead-time \cite{Gallego1998}
+\end{itemize}
+
+\medskip
+
+\textbf{Production}
+
+
+
+
+\esgil{Complete bibliography}
+
+There are many sources of randomness. Raw materials can be out of stock when production is supposed to begin, level of demand is uncertain, there can be variability on the internal production time, etc. We only consider variability of demand. We do an optimization without recourse and the objective is to minimize the expectation of the holding costs which is:
+\begin{equation}
+  \espe\sqbracket{\sum_{r\in\REF} \frac{1}{2}\holding_r\va\demand_r\bracket{1-\internal_r\va\demand_r}\cover_r}
+  = 
+  \sum_{r\in\REF} \frac{1}{2}\holding_r\bracket{\espe\sqbracket{\va\demand_r}\bracket{1-\internal_r\espe\sqbracket{\va\demand_r}}-\internal_r\vari\sqbracket{\va\demand_r}}\cover_r
+\end{equation}
+
+We can use the results of deterministic case setting replacing $\holding_r\demand_r$ by $\holding_r\bracket{\espe\sqbracket{\va\demand_r}\bracket{1-\internal_r\espe\sqbracket{\va\demand_r}}-\internal_r\vari\sqbracket{\va\demand_r}}$.
+
+
+When the only randomness come from the demand, we show that the optimal solution is completely determine by the expectation and the variance of each of the demand $\demand_r$.
+
+
+\section{Numerical experiments}
+
+\begin{itemize}
+  \item Numerical experiments
+  \item Lien avec la formule de Wilson
+\end{itemize}
+
+
+\subsection{Concluding remarks}
+
+
+
+A natural extension takes into account the internal production time $\internal_r$ which is the time needed to produce one unit of product $r$. In this case, the production is not instantaneous and during the production phase of $r$, the increase of the inventory is $\frac{1}{\internal_r}-\demand_r$ per time unit. Thus, the average value of the inventory of product $r$ is equal to $\frac{1}{2}\holding_r\demand_r\bracket{1-\internal_r\demand_r}$. Setting $\holding_r'=\holding_r\bracket{1-\internal_r\demand_r}$, we get the optimal frequencies:
+\begin{equation}
+  \freq_r^* = \frac{1}{\cover_r^*}
+            = \frac{\nbsetups\sqrt{\holding_r\demand_r\bracket{1-\internal_r\demand_r}}}{\sum_{s\in\REF}\sqrt{\holding_s\demand_s\bracket{1-\internal_s\demand_s}}}
+            \quad \forall r\in\REF,
+\end{equation}
+and the associated holding cost is $\frac{1}{2\nbsetups}\bracket{\sum_{r\in\REF}\sqrt{\holding_r\demand_r\bracket{1-\internal_r\demand_r}}}^2$.
+

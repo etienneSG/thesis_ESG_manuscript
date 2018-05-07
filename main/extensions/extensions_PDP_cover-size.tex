@@ -1,0 +1,61 @@
+\chapter{Production planning using cover-size}
+
+
+\esgil{Choose if we use backorder in deterministic version. If we use it, proofs must be verify!}
+
+\medskip
+
+When defining cover in chapter~\ref{chap:lot-size on single line} and using it for numerical experiment in chapter \ref{chap:PDP - Numerical experiments}, we compute it using an heuristic which smooths the demand over periods. However, the goal of cover is to take into account variability of the demand. Thus it is unfortunate to compute it without it. The goal of this part is to compute optimal cover-sizes keeping both constraints of production planning and constraints linked to cover-size definition.
+
+\medskip
+
+As in part~\ref{part:production planning}, we consider an assembly line producing a set $\REF$ over products over $\horizon$ weeks. The number of distinct products produced over a week cannot exceed $\nbsetups$. Note that in general, there is an upper bound $\capacity$ for the total week production, internal production times $\internal^r$ and initial inventory $\inventory_0^r$ but as explain in chapter~\ref{chap:PDP - deterministic}, we can assume without loss of generality than $\capacity=1$ and $\internal^r=1$ and $\inventory_0^r=0$ for all product $r$.
+
+The production must satisfy a demand $\demand_t^r$ for each product $r$ at each period $t$.
+When production of a product $r$ is not used to served demand, it can be stored be incurs a unit holding cost $\holding^r>0$ per period.
+%When demand is not satisfied by the production of the current week or by the inventory, it can be satisfied later but incurs a unit backorder cost $\delay^r$ per delayed period.
+Since we use covers, we also impose that for a product $r$ the time interval between two periods of production of $r$ was identical over the horizon of planning and belong to a set $\coverset_r\subseteq\range{\horizon}$ of possible covers.
+
+The objective remains the minimization of the sum of the holding and backorder costs over the horizon.
+
+\medskip
+
+The production planning using cover-size can be modeled as follow:
+\begin{subequations}\label{eq:cover-MIP}
+  \begin{align}
+    \min\quad & \rlap{$\ds \sum_{t=1}^{\horizon} \sum_{r\in\REF} \holding^r \inventory_t^r$}
+    \label{eq:cover-MIP - objective}
+    \\
+    \st\quad & \ds \inventory_t^r = \inventory_{t-1}^r + \quantity_t^r - \demand_t^r && \forall r\in\REF,\ \forall t\in\range{\horizon},
+    \label{eq:cover-MIP - stock dynamics}
+    \\
+    & \ds \sum_{r\in\REF} \quantity_t^r \le 1 && \forall t\in\range{\horizon},
+    \label{eq:cover-MIP - total capacity}
+    \\
+    & \ds \sum_{\cover_r\in\coverset_r} \sum_{t=1}^{\cover_r} \setup_{t,\cover_r}^r = 1 && \forall r\in\REF,
+    \label{eq:cover-MIP - one cover}
+    \\
+    & \ds \setup_{t+\cover_r,\cover_r}^r = \setup_{t,\cover_r}^r && \forall r\in\REF,\ \forall \cover_r\in\coverset_r,\ \forall t\in\range{\horizon-\cover_r},
+    \label{eq:cover-MIP - periodic cover}
+    \\
+    & \ds \quantity_t^r = \sum_{\cover_r\in\coverset_r} \bracket{\sum_{t'=t}^{t+\cover_r-1}\demand_{t'}^r} \setup_{t,\cover_r}^r  && \forall r\in\REF,\ \forall t\in\range{\horizon},
+    \label{eq:cover-MIP - quantity}
+    \\
+    & \ds \sum_{r\in\REF} \sum_{\cover_r\in\coverset_r} \setup_{t,\cover_r}^r \le \nbsetups && \forall t\in\range{\horizon},
+    \label{eq:cover-MIP - setups per period}
+    \\
+    & \ds \setup_{t,\cover_r}^r \in \crbracket{0,1} && \forall r\in\REF,\ \forall \cover_r\in\coverset_r,\ \forall t\in\range{\horizon},
+    \label{eq:cover-MIP - boolean constraint}
+    \\
+    & \ds \quantity_t^r,\ \inventory_t^r \ge 0 && \forall r\in\REF,\ \forall t\in\range{\horizon},
+    \label{eq:cover-MIP - positive}
+  \end{align}
+\end{subequations}
+where the variable $\inventory_t^r$ models the inventory of reference $r$ at the end of week $t$, the variable $\quantity_t^r$ models the quantity of reference $r$ produced over week $t$, and the variable $\setup_{t,\cover_r}^r$ takes the value $1$ if the reference $r$ is produced over week $t$ and its cover-size is $\cover_r$ and $0$ otherwise.
+
+There are three additional constraints.
+Constraints~\eqref{eq:cover-MIP - one cover} enable to choose exactly one cover-size for each reference.
+Constraints~\eqref{eq:cover-MIP - periodic cover} ensure the periodicity of the cover.
+Constraints~\eqref{eq:cover-MIP - quantity} define the quantity that must be produced according to the chosen cover-size and first period of production.
+
+

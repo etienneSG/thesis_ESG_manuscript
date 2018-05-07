@@ -1,0 +1,346 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%		Thesis Settings
+%		Custom settings
+%
+%		2011
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage{empheq} 
+\usepackage{supertabular} 
+%\usepackage[numbers,sort&compress]{natbib}
+\usepackage{bibentry}
+
+% Three next lines enable to use footnotes in tabular
+\usepackage{footnote}
+\makesavenoteenv{tabular}
+\makesavenoteenv{table}
+
+\usepackage{enumitem}
+\setlist[enumerate]{topsep=0pt,itemsep=-1ex,partopsep=1ex,parsep=1ex}
+\setlist[itemize]{topsep=0pt,itemsep=-1ex,partopsep=1ex,parsep=1ex}
+
+\usepackage{siunitx}
+%\usepackage{algorithm}
+%\usepackage{algorithmic}
+
+\newenvironment{changemargin}[2]{\begin{list}{}{%
+\setlength{\topsep}{0pt}%
+\setlength{\leftmargin}{0pt}%
+\setlength{\rightmargin}{0pt}%
+\setlength{\listparindent}{\parindent}%
+\setlength{\itemindent}{\parindent}%
+\setlength{\parsep}{0pt plus 1pt}%
+\addtolength{\leftmargin}{#1}%
+\addtolength{\rightmargin}{#2}%
+}\item }{\end{list}}
+
+%%-------------------------------
+% Center in title line
+%%-------------------------------
+\newcommand*{\thead}[1]{\multicolumn{1}{c}{#1}}
+
+
+%%-------------------------------
+% Enable to specify that a \part is finished
+%%-------------------------------
+\usepackage{bookmark}
+% To specify the end of a part, add the following commands
+% \bookmarksetup{startatroot}% this is it
+% \addtocontents{toc}{\bigskip}% perhaps as well
+
+%%-------------------------------
+% Colors
+%%-------------------------------
+\usepackage{xcolor}
+\definecolor{bottle green}{RGB}{9, 106, 9}
+\definecolor{kaki}{rgb}{.5,.5,0}
+
+\definecolor{argon orange}{RGB}{237, 128, 0}  % Argon orange
+\definecolor{argon gray}{RGB}{83, 86, 90}     % Argon gray
+
+\definecolor{PartChapter}{RGB}{237, 128, 0}
+\definecolor{EmphCite}{RGB}{83, 86, 90}
+%\definecolor{darkgrey}{HTML}{2E2E2E}
+%\definecolor{darkgrey2}{HTML}{585858}
+%\definecolor{lightgrey2}{HTML}{A4A4A4}
+%\definecolor{lightgrey}{HTML}{D8D8D8}
+
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\maincolor}[1]{\textcolor{argon orange}{#1}}
+\newcommand{\secondcolor}[1]{\textcolor{argon gray}{#1}}
+%\newcommand{\blue}[1]{\begin{color}{bleuEmphCite}\textit{#1}\end{color}}
+
+
+
+% Put emphasized text in color
+%\let\oldemph\emph
+%\renewcommand\emph[1]{{\color{bleuEmphCite}\oldemph{#1}}}
+
+%%-------------------------------
+% Image on part pages
+%%-------------------------------
+\newcommand{\partimage}[2][]{\gdef\@partimage{\includegraphics[#1]{#2}}}
+
+%%-------------------------------
+% Index
+%%-------------------------------
+% \usepackage{makeidx}
+% \makeindex
+
+\usepackage{imakeidx}
+\indexsetup{othercode=\small}
+\makeindex[program=makeindex,columns=2,options={-s head/index_style.ist}]
+% \makeindex[options= -s head/index_style.ist]
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% for interactions
+\usepackage{todonotes}
+\newcommand{\vl}[1]{\todo[color=blue!50]{#1}}
+\newcommand{\esg}[1]{\todo[color=green!50]{#1}}
+\newcommand{\fm}[1]{\todo[color=red!50]{#1}}
+\newcommand{\vlil}[1]{\todo[inline,color=blue!20]{VL: #1}}
+\newcommand{\esgil}[1]{\todo[inline,color=green!20]{ESG: #1}}
+\newcommand{\fmil}[1]{\todo[inline,color=red!20]{FM: #1}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%		Thesis Commands
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% To include images
+\usepackage{graphicx}
+
+% More maths and chemistry
+\usepackage{amsmath,amssymb,amsfonts,amsthm,dsfont,stmaryrd}
+\usepackage[overload]{empheq}
+\usepackage[version=3]{mhchem} % chemistry
+%\usepackage{physics}  % Physics
+\usepackage{siunitx}  % International System of Units (SI).
+\usepackage{eurosym}  % Euro symbol
+
+% Environnement outdent (centre)
+\newenvironment{outdent}
+{\begin{list}{}{\leftmargin-2cm\rightmargin\leftmargin}\centering\item\relax}
+{\end{list}\ignorespacesafterend}
+
+% Environnement PROBLEME
+\newenvironment{probleme}[1]{\vskip 0.12 cm\noindent{\bf {\sc
+#1}}}{\vspace*{0.12 cm}}
+\newcommand{\inputProblem}{\newline\noindent{\bf Input.~}}
+\newcommand{\outputProblem}{\newline\noindent{\bf Output.~}}
+
+\newcommand{\inputProblemfr}{\newline\noindent{\bf Entrée.~}}
+\newcommand{\outputProblemfr}{\newline\noindent{\bf Sortie.~}}
+
+%------------------------ Theorems
+%\usepackage{amsmath,amssymb,amsthm}
+\usepackage{cleveref}
+\usepackage{thmtools}
+\usepackage{thm-restate}
+\usepackage{multirow}
+\usepackage{pict2e}
+
+
+\theoremstyle{plain}
+\newtheorem{thm}{Theorem}
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{claim}[thm]{Claim}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{cor}[thm]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{defn}{Definition}
+\newtheorem{conj}{Conjecture}
+\newtheorem{example}{Example}
+\newtheorem{question}{Question}
+
+\theoremstyle{remark}
+\newtheorem{rmq}{Remark}
+
+% fixes space after and before \left and \right
+\let\originalleft\left
+\let\originalright\right
+\def\left#1{\mathopen{}\originalleft#1}
+\def\right#1{\originalright#1\mathclose{}}
+
+% Algorithms
+\usepackage[english]{algorithm2e}
+\SetKw{And}{and}
+\SetKw{From}{from}
+\SetKw{To}{to}
+\setlength{\algomargin}{0em}
+
+% Array environment
+\usepackage{array} % Center tabular
+\usepackage{multirow} % multirow and multicolumn
+\usepackage{arydshln} % dashed line
+%\usepackage[hang, small,labelfont=bf,up,textfont=it,up]{caption} % custom table names
+\usepackage{booktabs} % Tables with lines
+
+% Tikzpicture
+\usepackage{tikz}
+\usetikzlibrary{calc,arrows,automata,matrix,positioning,fit}
+\usetikzlibrary{decorations,decorations.pathreplacing}
+\usetikzlibrary{patterns}
+\usepackage{tikzscale}
+\usepackage{pgfplots}
+
+% allows line breaks in \cite
+\usepackage{cite}
+
+% Useful shortcut
+\newcommand{\tbc}{\red{\texttt{To be completed}}}
+%\newcommand{\todo}[1]{\red{(TO DO: #1)}}
+\def\ds{\displaystyle}
+\newcommand{\ie}{\emph{i.e.}~}
+\newcommand{\eg}{\emph{e.g.}~}
+\newcommand{\NP}{NP}
+\newcommand{\st}{\text{s.c.}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%                   Mathematic commands                    %%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\cA}{\mathcal{A}}
+\newcommand{\cB}{\mathcal{B}}
+\newcommand{\cC}{\mathcal{C}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\cE}{\mathcal{E}}
+\newcommand{\cF}{\mathcal{F}}
+\newcommand{\cG}{\mathcal{G}}
+\newcommand{\cH}{\mathcal{H}}
+\newcommand{\cI}{\mathcal{I}}
+\newcommand{\cJ}{\mathcal{J}}
+\newcommand{\cK}{\mathcal{K}}
+\newcommand{\cL}{\mathcal{L}}
+\newcommand{\cM}{\mathcal{M}}
+\newcommand{\cN}{\mathcal{N}}
+\newcommand{\cO}{\mathcal{O}}
+\newcommand{\cP}{\mathcal{P}}
+\newcommand{\cQ}{\mathcal{Q}}
+\newcommand{\cR}{\mathcal{R}}
+\newcommand{\cS}{\mathcal{S}}
+\newcommand{\cT}{\mathcal{T}}
+\newcommand{\cU}{\mathcal{U}}
+\newcommand{\cV}{\mathcal{V}}
+\newcommand{\cW}{\mathcal{W}}
+\newcommand{\cX}{\mathcal{X}}
+\newcommand{\cY}{\mathcal{Y}}
+\newcommand{\cZ}{\mathcal{Z}}
+
+\newcommand{\BB}{\mathbb{B}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\DD}{\mathbb{D}}
+\newcommand{\EE}{\mathbb{E}}
+\newcommand{\FF}{\mathbb{F}}
+\newcommand{\GG}{\mathbb{G}}
+\newcommand{\HH}{\mathbb{H}}
+\newcommand{\II}{\mathbb{I}}
+\newcommand{\JJ}{\mathbb{J}}
+\newcommand{\KK}{\mathbb{K}}
+\newcommand{\LL}{\mathbb{L}}
+\newcommand{\MM}{\mathbb{M}}
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\OO}{\mathbb{O}}
+\newcommand{\PP}{\mathbb{P}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\TT}{\mathbb{T}}
+\newcommand{\UU}{\mathbb{U}}
+\newcommand{\VV}{\mathbb{V}}
+\newcommand{\WW}{\mathbb{W}}
+\newcommand{\XX}{\mathbb{X}}
+\newcommand{\YY}{\mathbb{Y}}
+\newcommand{\ZZ}{\mathbb{Z}}
+
+
+%%%%% Bracket, square bracket and curly bracket with adaptation to the size of content
+\newcommand{\bracket}[1]{\left(#1\right)}
+\newcommand{\sqbracket}[1]{\left[#1\right]}
+\newcommand{\crbracket}[1]{\left\{#1\right\}}
+
+%%%%% Integer interval
+% If the lower bound is not specified, it assumes 1.
+\makeatletter
+\def\range{\@ifnextchar[{\@with}{\@without}}
+\def\@with[#1]#2{\left\{#1,\ldots,#2\right\}}
+\def\@without#1{\sqbracket{#1}}
+\makeatother
+
+%%%%% Cardinal of a set
+\newcommand{\card}[1]{\left\vert{#1}\right\vert}
+
+%%%%% Probability
+\newcommand{\espe}{\mathbb{E}}                  % Mean
+\newcommand{\vari}{\mathrm{Var}}                % Variance
+\newcommand{\VaR}{\mathrm{V@R}}                 % Value-at-risk
+\newcommand{\AVaR}{\mathrm{A\VaR}}              % Average value-at-risk
+\newcommand{\Sfield}[1]{\sigma\left(#1\right)}  % sigma-field generated by the random variable #1
+
+%%%%% Differential
+\newcommand{\diff}{\mathrm{d}}  % Differential
+
+%%%%% Random variable
+\makeatletter
+\def\va@a{\boldsymbol{\va@arg^{\textstyle\text{\unboldmath$\scriptstyle\va@expo$}}_{\textstyle\text{\unboldmath$\scriptstyle\va@index$}}}}
+\def\va#1{\def\va@expo{}\def\va@index{}\def\va@arg{#1}%
+  \@ifnextchar^{\va@h}{\@ifnextchar_\va@u\va@a}}
+\def\va@h^#1{\def\va@expo{#1}\@ifnextchar_\va@hu\va@a}
+\def\va@u_#1{\def\va@index{#1}\@ifnextchar^\va@uh\va@a}
+\def\va@hu_#1{\def\va@index{#1}\va@a}
+\def\va@uh^#1{\def\va@expo{#1}\va@a}
+\makeatother
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%                                                          %%%%%
+%%%%% Variables                                                %%%%%
+%%%%%                                                          %%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Common
+\newcommand\REF{\cR}  % Set of product
+
+
+% PP modeling
+\newcommand\horizon{T}              % Number of periods
+\newcommand\cover{\tau}             % Cover for a product
+\newcommand\coverset{\cT}           % Set of possible cover for a product
+\newcommand\lot{\ell}               % lot of the product 
+\newcommand\freq{n}                 % frequency of production
+\newcommand\demand{d}               % Demand
+\newcommand\cumdemand{D}            % Cumulative demand
+\newcommand\holding{h}              % holding cost of product
+\newcommand\backorder{\gamma}       % Backorder cost
+\newcommand\capacity{C}             % Capacity of the assembly line
+\newcommand\rate{v}                 % Capacity needed for assembly line to produce one unit of product
+\newcommand\internal{v}             % Internal production time (time needed to produce one unit)
+\newcommand\nbsetups{N}             % Total number of setups of the line
+\newcommand\scenarios{\Omega}       % Set of scenarios
+
+\newcommand\setup{x}                % 1 if product is produced at period and 0 otherwise
+\newcommand\quantity{q}             % Quantity of product produced at period
+\newcommand\inventory{s}            % Inventory of product at the end of period (may be negative)
+\newcommand\backlog{b}              % Backlog quantity of product at end of period
+\newcommand\excess{\tilde{s}}       % Excess of inventory of product at the end of period
+\newcommand\safety{s_{\min}}        % Safety stock of the product
+\newcommand\lag{\tau}               % Number of periods for which decisions are fixed
+
+
+% Strategic modeling
+\newcommand\plants{\cP}       % Set of factories
+\newcommand\capital{K}        % Available capital to invest in flexible production capacities
+\newcommand\affect{c}         % Cost for assigning the capactity of production to a factory
+\newcommand\produce{p}        % Cost for producing one unit of a product
+\newcommand\assign{y}         % 1 if factory can produce product and 0 otherwise
+\newcommand\open{z}           % 1 if factory got the ability to produce during previous period and 0 otherwise
+\newcommand\servicelvl{\beta} % Service shortage (1 - service level)
