@@ -114,6 +114,9 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Correct mathcal letters
+\DeclareSymbolFont{calletters}{OMS}{cmsy}{m}{n}
+\DeclareSymbolFontAlphabet{\mathcal}{calletters}
 
 % To include images
 \usepackage{graphicx}
@@ -203,7 +206,7 @@
 \newcommand{\ie}{\emph{i.e.}~}
 \newcommand{\eg}{\emph{e.g.}~}
 \newcommand{\NP}{NP}
-\newcommand{\st}{\text{s.c.}}
+\newcommand{\st}{\text{s.t.}}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -281,6 +284,7 @@
 
 %%%%% Probability
 \newcommand{\espe}{\mathbb{E}}                  % Mean
+\newcommand{\prob}{\mathbb{P}}                  % Probability
 \newcommand{\vari}{\mathrm{Var}}                % Variance
 \newcommand{\VaR}{\mathrm{V@R}}                 % Value-at-risk
 \newcommand{\AVaR}{\mathrm{A\VaR}}              % Average value-at-risk
@@ -308,7 +312,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Common
-\newcommand\REF{\cR}  % Set of product
+\newcommand\REF{\cI}  % Set of product
 
 
 % PP modeling

@@ -25,6 +25,16 @@ Ce que veut Argon
    \item \cite{Gayon2016} Continuous-review inventory models for single item
 \end{itemize} 
 
+Multi-item
+
+\begin{itemize}
+  \item \cite{Hadley1963} first to note that perhaps the most important real world constraints are budget restrictions on the amount that can be invested in inventory.
+  \item \cite{Schrady1971} Minimization of total time-weighted shortage subject to inventory investment (holding cost) and to reorder workload. They use our formula to find a solution but does not prove it optimality.
+  \item \cite{Daeschner1975} Model with limited number of reorder transactions to be considered in the present allocation.
+  \item \cite{Ohno2001} Minimization of the holding cost, backorder cost and ordering cost subject to capacity constraints on the inventory.
+\end{itemize}
+
+
 \medskip
 
 \textbf{Ordering}
@@ -68,13 +78,15 @@ Classical policy: Zero Inventory Ordering policy $(r,q)$ (Order quantity $q$ whe
 
 \subsection{Problem}
 
-\esgil{vérifier dans la litérature set up, setup, launch, }\label{sec:prob-cont-rev}
+\esgil{vérifier dans la literature set up, setup, launch, }\label{sec:prob-cont-rev}
 
 The exact problem in which Argon Consulting was interested in is the following.
 
-We are given a set $\REF$ of products, which have to be produced over an infinite horizon. For each product $r\in\REF$, the demand rate $\demand_r$ is a fixed value known in advance and there is also a unitary holding cost $\holding_r$: given an inventory profile $\inventory_r\colon[0,\horizon]\rightarrow\RR_+$ (with all suitable assumptions) for product $r$, the dynamic of the inventory is $\frac{\diff}{\diff t}\inventory_r(t)=\demand_r$ (almost everywhere) and the total holding cost of product $r$ over the horizon is $\holding_r\int_0^{\horizon}\inventory_r(t)\diff t$.
+We are given a set $\REF$ of products, which have to be produced over an infinite horizon. For each product $r\in\REF$, the demand rate $\demand_r$ is a fixed value known in advance and there is also a unitary holding cost $\holding_r$: given an inventory profile $\inventory_r\colon[0,\horizon]\rightarrow\RR_+$ (with all suitable assumptions) for product $r$, when there is no production, the dynamic of the inventory is $\frac{\diff}{\diff t}\inventory_r(t)=\demand_r$ and the total holding cost of product $r$ over the horizon is $\holding_r\int_0^{\horizon}\inventory_r(t)\diff t$.
 
-Production of a product $r$ can be set up at any time, and we assume that the production is instantaneous. However, the interval between two successive production setups of a given product has to be the same over the whole horizon (this interval is the {\em cover} of product $r$). (It imposes that the solution is periodic for each product.) Production of several products can be set up simultaneously (like in blablabla in a slightly different setting), but the total number of times a production is set up per time unit (over all products) is upper bounded by a given quantity denoted by $N$. The goal is to satisfy the demand, \ie, $\inventory_r(t)\geq 0$ almost everywhere for every product $r$, while minimizing the average cost.
+Order of production of $r$ can be placed at any time, and we assume that the production is instantaneous. However, the interval between two successive orders of a given product has to be the same over the whole horizon (this interval is the {\em cover} of product $r$). (It imposes that the solution is periodic for each product.) Order of production of several products can be placed simultaneously (like in~\cite{Ohno2001} where authors assume the immediate replenishment of the order with lead time), but the total number of times an order is placed per time unit (over all products) is upper bounded by a given quantity denoted by $\nbsetups$. The goal is to satisfy the demand, \ie, $\inventory_r(t)\geq 0$ almost everywhere for every product $r$, while minimizing the average cost.
+
+\esgil{Ordre de production périodique et doivent couvrir exactement la demande de la période.}
 
 We will consider two versions of this problem.
 \begin{itemize}
@@ -135,7 +147,9 @@ We claim that the following optimization problem is a correct model of the probl
        & \cover_r > 0 & \forall r\in\REF.
   \end{array}
 \end{equation}
-The correctness is however not necessarily immediate: note that blablabla. We state thus this fact, with a complete proof.
+The correctness is however not necessarily immediate: note that \tbc. We state thus this fact, with a complete proof.
+
+\esgil{On ne peut pas parler d'horizon glissant. (Exemple: si $N$ est plus petit que 1 produit par unité de temps). Que veut-on réellement ?}
 
 \begin{prop}
 Problem~\eqref{eq:cont-rev-det} has a unique optimal solution $(\cover_r^*)_{r\in\REF}$, which provides the optimal cover values for the unconstrained version of the problem described in Section~\ref{sec:prob-cont-rev}.
