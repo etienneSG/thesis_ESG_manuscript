@@ -5,7 +5,7 @@
 \section{Motivations}
 \label{sec:PDP:Motivations}
 
-Fixing the production level for the forthcoming period is a basic decision to be taken when managing a assembly line. Usually, a demand has to be satisfied at due dates but the limited capacity of the line prevents last minute production. On the other hand, too early productions may lead to unnecessary high inventory costs. The challenge of this kind of problems, known as {\em lot-sizing problems} in the operational research community, consists in finding a trade-off between demand satisfaction and holding costs.
+Fixing the production level for the forthcoming period is a basic decision to be taken when managing an assembly line. Usually, a demand has to be satisfied at due dates but the limited capacity of the line prevents last minute production. On the other hand, too early productions may lead to unnecessary high inventory costs. The challenge of this kind of problems, known as {\em lot-sizing problems} in the operational research community, consists in finding a trade-off between demand satisfaction and holding costs.
 When several items can be produced on a same line -- the so-called {\em multi-item} lot-sizing problem --, the capacity of the assembly line is often all the more reduced as the number of distinct items produced over the current period is high. Indeed, changing an item in production stops the line for a moment. This additional capacity reduction is usually modeled by setup costs contributing to the total cost.
 
 
@@ -13,6 +13,19 @@ Within the partnership with Argon Consulting, a non-standard feature of the prob
 
 
 To the best of our knowledge, the problem addressed in this chapter is original and such a bound on the number of distinct items produced over a period has not been considered by academics yet, with the notable exception of \cite{Rubaszewski2011} but, contrary to our problem, their bound is an overall bound for the whole horizon and they still consider setup costs.
+
+
+\medskip
+
+The problem considers an assembly line producing a set $\REF$ of items over $\horizon$ periods. The number of distinct items produced over a period $t$ cannot exceed $\nbsetups_t$. There is also an upper bound $\capacity_t$ on the total period production (summed over all items) and an upper bound $\capacity_t^i$ on the production of item $i$ at period $t$. The capacity needed (in time units) to produce one unit of $i$ in period $t$ is $\rate_t^i$.
+
+The production of item $i$ must satisfy a demand $\demand_t^i$ at the end of period $t$. When production of a item $i$ is not used to satisfy the demand, it can be stored but incurs a unit holding cost $\holding^i>0$ per period. Note that there is no setup cost, as discussed in section~\ref{sec:PDP:Motivations}. For each item $i$, there is an initial inventory $s_0^i\in\mathbb{R}_+$.
+
+The goal is to satisfy the whole demand at minimum cost.
+
+Since this problem is a variation of the \emph{Capacitated Lot-Sizing Problem (CLSP)} with a new flexibility constraint expressed as an upper bound on the number of setups, we call our formulation the \emph{Capacitated Lot-Sizing Problem with Bounded number of Setups (CLSP-BS)}.
+
+In many of our applications, the capacity $\rate_t^i$ does not depend on the period and the upper bounds $\capacity_t^i$ and $\capacity_t$ and the maximal number $\nbsetups_t$ of setups does not depend on the item nor the period. Then, we get a simplest version called the \emph{Uniform Capacitated Lot-Sizing Problem with Bounded number of Setups (Uniform CLSP-BS)}. This formulation captures the essential part and the difficulty of the problem namely the limited flexibility of the assembly line. Most results are true for the CLPS-BS, but we will give counterexample when results only stand for the Normalized CLSP-BS.
 
 
 \section{Bibliography}
@@ -29,15 +42,9 @@ Lot-sizing problems are a well-studied topic, with many variations (deterministi
 \section{Model formulation}
 
 
-\subsection{Most general formulation}
+In order to solve the CLSP-BS, we introduce the following decision variables. The quantity of item $i$ produced at period $t$ is denoted by $\quantity_t^i$ and the inventory at the end of the period is denoted by $\inventory_t^i$. We also introduce a binary variable $\setup_t^i$ which takes the value 1 if the item $i$ is produced during period $t$.
 
-The assembly line produces a set $\REF$ of items over $\horizon$ periods. The number of distinct items produced over a period $t$ cannot exceed $\nbsetups_t$. There is also an upper bound $\capacity_t$ on the total period production (summed over all items) and an upper bound $\capacity_t^i$ on the production of item $i$ at period $t$. The capacity needed (in time units) to produce one unit of $i$ in period $t$ is $\rate_t^i$.
-
-The production of item $i$ must satisfy a demand $\demand_t^i$ at the end of period $t$. When production of a item $i$ is not used to satisfy the demand, it can be stored but incurs a unit holding cost $\holding^i>0$ per period. Note that there is no setup cost, as discussed in section~\ref{sec:PDP:Motivations}. For each item $i$, there is an initial inventory $s_0^i\in\mathbb{R}_+$.
-
-The quantity of item $i$ produced at period $t$ is denoted by $\quantity$ and the inventory level at the end of the period is denoted by $\inventory_t^i$. We also introduce a binary variable $\setup_t^i$ which takes the value 1 if the item $i$ is produced during period $t$.
-
-The lot-sizing problem whose objective is to minimize the holding costs over the whole horizon can be written as:
+The lot-sizing problem can be written as:
 \begin{subequations}\label{eq:CLSP-BS}
   \begin{align}
     \min\quad & \rlap{$\ds \sum_{t=1}^{\horizon} \sum_{i\in\REF} \holding^i \inventory_t^i$}
@@ -69,39 +76,35 @@ Constraint~\eqref{eq:CLSP-BS:big-M} is both a ``big-M'' constraint and a capacit
 Constraint~\eqref{eq:CLSP-BS:setups} limits the number of setups at each period.
 Note that without loss of generality, we can suppose that $\capacity_t^i \le \capacity_t$ for each period $t$ and each item $i$.
 
-Since this problem directly inherit the Capacity Lot-Sizing Problem (CLSP), we call this formulation \emph{Capacitated Lot-Sizing Problem with Bounded number of Setups (CLSP-BS)}. 
-
 
 \medskip
 
-In many of our applications, the capacity $\rate_t^i$ does not depend on the period and the upper bounds $\capacity_t^i$ and $\capacity_t$ and the maximal number $\nbsetups_t$ of setups does not depend on the item nor the period. Then, we normalize all quantities and replace accordingly the holding cost so that the optimization problem can be written as:
+In the uniform case, we normalize all quantities and replace accordingly the holding cost so that the optimization problem can be written as:
 
-\begin{subequations}\label{eq:Normalized-CLSP-BS}
+\begin{subequations}\label{eq:Uniform-CLSP-BS}
   \begin{align}
     \min\quad & \rlap{$\ds \sum_{t=1}^{\horizon} \sum_{i\in\REF} \holding^i \inventory_t^i$}
-    \label{eq:Normalized-CLSP-BS:objective}
+    \label{eq:Uniform-CLSP-BS:objective}
     \\
     \st\quad & \ds \inventory_t^i = \inventory_{t-1}^i + \quantity_t^i - \demand_t^i && \forall t\in\range{\horizon},\ \forall i\in\REF,
-    \label{eq:Normalized-CLSP-BS:stock-dynamics}
+    \label{eq:Uniform-CLSP-BS:stock-dynamics}
     \\
     & \ds \sum_{i\in\REF} \quantity_t^i \le 1 && \forall t\in\range{\horizon},
-    \label{eq:Normalized-CLSP-BS:capacity}
+    \label{eq:Uniform-CLSP-BS:capacity}
     \\
     & \ds \quantity_t^i \le \setup_t^i && \forall t\in\range{\horizon},\ \forall i\in\REF,
-    \label{eq:Normalized-CLSP-BS:item-capacity}
+    \label{eq:Uniform-CLSP-BS:item-capacity}
     \\
     & \ds \sum_{i\in\REF} \setup_t^i \le \nbsetups && \forall t\in\range{\horizon},
-    \label{eq:Normalized-CLSP-BS:setups}
+    \label{eq:Uniform-CLSP-BS:setups}
     \\
     & \ds \setup_t^i \in \crbracket{0,1} && \forall t\in\range{\horizon},\ \forall i\in\REF,
-    \label{eq:Normalized-CLSP-BS:boolean}
+    \label{eq:Uniform-CLSP-BS:boolean}
     \\
     & \ds \quantity_t^i,\ \inventory_t^i \ge 0 && \forall t\in\range{\horizon},\ \forall i\in\REF,
-    \label{eq:Normalized-CLSP-BS:positivity}
+    \label{eq:Uniform-CLSP-BS:positivity}
   \end{align}
 \end{subequations}
-
-This version is called the \emph{Normalized Capacitated Lot-Sizing Problem with Bounded number of Setups (Normalized CLSP-BS)}. This formulation capture the essential part and the difficulty of the problem which is the limited flexibility of the assembly line. Most results are true for the CLPS-BS, but we will give counterexample when result only stand for the Normalized CLSP-BS.
 
 
 \section{Theoretical results}

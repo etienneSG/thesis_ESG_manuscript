@@ -19,7 +19,7 @@ Many technical constraints limits our decisions such as inventory dynamic over p
 
 We present the deterministic version of the multi-sourcing problem and use the following notations. Let $\REF$ be the set of the products, $\plants$ be the set of plants and $\horizon$ be the number of periods of production. For each plant $p\in\plants$, let $\capacity_p$ be the capacity of the plant and for each product $r\in\REF$ let $\capacity_p^r$ be the maximal capacity of the plant $p$ dedicated to the product $r$. For each product $r\in\REF$ and each period $t\in\range{\horizon}$, let $\demand_t^r$ be the demand in product $r$ and $\backorder^r$ be the unitary cost for undelivered amount of product $r$. Finally, let $\affect_p^r$ be the affectation cost for the ability to produce the product $r\in\REF$ in plant $p\in\plants$ and $\capital$ the available capital to pay for this affectations.
 
-For each product $r\in\REF$, let $\inventory_t^r$ be the relative value of the inventory of product $r$ at period $t$ (\ie it may be negative if there are undelivered units), let $\excess_t^r$ be the real value of the inventory of product $r$ (\ie the positive part of $\inventory_t^r$) and let $\backlog_t^r$ be the undelivered amount of product $r$ (\ie the negative part of $\inventory_t^r$). For a plant $p\in\plants$ and a product $r\in\REF$, let $\assign_p^r$ be the binary variable equal to one if we give to the plant $p$ the ability to produce the product $r$ and zero otherwise and let $\quantity_{pt}^r$ be the quantity of product $r$ produced in plant $p$ at period $t$.
+For each product $r\in\REF$, let $\level_t^r$ be the relative value of the inventory of product $r$ at period $t$ (\ie it may be negative if there are undelivered units), let $\inventory_t^r$ be the real value of the inventory of product $r$ (\ie the positive part of $\level_t^r$) and let $\backlog_t^r$ be the undelivered amount of product $r$ (\ie the negative part of $\level_t^r$). For a plant $p\in\plants$ and a product $r\in\REF$, let $\assign_p^r$ be the binary variable equal to one if we give to the plant $p$ the ability to produce the product $r$ and zero otherwise and let $\quantity_{pt}^r$ be the quantity of product $r$ produced in plant $p$ at period $t$.
 
 The deterministic version of the multi-sourcing problem subject to limited capital can be written as follow:
 \begin{subequations}\label{eq:multi-sourcing - limited capital}
@@ -27,10 +27,10 @@ The deterministic version of the multi-sourcing problem subject to limited capit
     \min\quad & \rlap{$\ds \sum_{t=1}^{\horizon} \sum_{r\in\REF} \backorder^r \backlog_t^r$}
     \label{eq:multi-sourcing - limited capital - objective}
     \\
-    \st\quad & \ds \inventory_t^r = \excess_t^r - \backlog_t^r && \forall t\in\range{\horizon},\ \forall r\in\REF,
+    \st\quad & \ds \level_t^r = \inventory_t^r - \backlog_t^r && \forall t\in\range{\horizon},\ \forall r\in\REF,
     \label{eq:multi-sourcing - limited capital - inventory}
     \\
-    & \ds \inventory_t^r = \inventory_{t-1}^r + \sum_{p\in\plants}\quantity_{pt}^r - \demand_t^r && \forall t\in\range{\horizon},\ \forall r\in\REF,
+    & \ds \level_t^r = \level_{t-1}^r + \sum_{p\in\plants}\quantity_{pt}^r - \demand_t^r && \forall t\in\range{\horizon},\ \forall r\in\REF,
     \label{eq:multi-sourcing - limited capital - dynamic}
     \\
     & \ds \quantity_{pt}^r \le \capacity_p^r \assign_p^r && \forall t\in\range{\horizon},\ \forall p\in\plants,\ \forall r\in\REF
@@ -42,7 +42,7 @@ The deterministic version of the multi-sourcing problem subject to limited capit
     & \ds \sum_{r\in\REF} \sum_{p\in\plants}\affect_{pt}^r\assign_p^r \le \capital && \forall t\in\range{\horizon},
     \label{eq:multi-sourcing - limited capital - capital}
     \\
-    & \ds \excess_t^r,\ \backlog_t^r,\ \quantity_{pt}^r \ge 0 && \forall t\in\range{\horizon},\ \forall p\in\plants,\ \forall r\in\REF,
+    & \ds \inventory_t^r,\ \backlog_t^r,\ \quantity_{pt}^r \ge 0 && \forall t\in\range{\horizon},\ \forall p\in\plants,\ \forall r\in\REF,
     \label{eq:multi-sourcing - limited capital - nonnegativity}
     \\
     & \ds \assign_p^r \in \crbracket{0,1} && \forall p\in\plants,\ \forall r\in\REF,
@@ -107,10 +107,10 @@ Like in previous parts, we choose to only consider randomness on demand although
     \min\quad & \rlap{$\ds \rho\bracket{\sum_{t=1}^{\horizon} \sum_{r\in\REF} \backorder^r \va\backlog_t^r}$}
     \label{eq:stochastic multi-sourcing - limited capital - objective}
     \\
-    \st\quad & \ds \va\inventory_t^r = \va\excess_t^r - \va\backlog_t^r && \forall t\in\range{\horizon},\ \forall r\in\REF,
+    \st\quad & \ds \va\level_t^r = \va\inventory_t^r - \va\backlog_t^r && \forall t\in\range{\horizon},\ \forall r\in\REF,
     \label{eq:stochastic multi-sourcing - limited capital - inventory}
     \\
-    & \ds \va\inventory_t^r = \va\inventory_{t-1}^r + \sum_{p\in\plants}\va\quantity_{pt}^r - \va\demand_t^r && \forall t\in\range{\horizon},\ \forall r\in\REF,
+    & \ds \va\level_t^r = \va\inventory_{t-1}^r + \sum_{p\in\plants}\va\quantity_{pt}^r - \va\demand_t^r && \forall t\in\range{\horizon},\ \forall r\in\REF,
     \label{eq:stochastic multi-sourcing - limited capital - dynamic}
     \\
     & \ds \va\quantity_{pt}^r \le \capacity_p^r \assign_p^r && \forall t\in\range{\horizon},\ \forall p\in\plants,\ \forall r\in\REF
@@ -122,13 +122,13 @@ Like in previous parts, we choose to only consider randomness on demand although
     & \ds \sum_{r\in\REF} \sum_{p\in\plants}\affect_{pt}^r\assign_p^r \le \capital && \forall t\in\range{\horizon},
     \label{eq:stochastic multi-sourcing - limited capital - capital}
     \\
-    & \ds \va\excess_t^r,\ \va\backlog_t^r,\ \va\quantity_{pt}^r \ge 0 && \forall t\in\range{\horizon},\ \forall p\in\plants,\ \forall r\in\REF,
+    & \ds \va\inventory_t^r,\ \va\backlog_t^r,\ \va\quantity_{pt}^r \ge 0 && \forall t\in\range{\horizon},\ \forall p\in\plants,\ \forall r\in\REF,
     \label{eq:stochastic multi-sourcing - limited capital - nonnegativity}
     \\
     & \ds \assign_p^r \in \crbracket{0,1} && \forall p\in\plants,\ \forall r\in\REF,
     \label{eq:stochastic multi-sourcing - limited capital - binary}
     \\
-    & \ds \va\excess_t^r,\ \va\backlog_t^r,\ \va\quantity_{pt}^r,\ \va\inventory_t^r \preceq \Sfield{\bracket{\va\demand^r}_{r\in\REF}} && \forall t\in\range{\horizon},\ \forall p\in\plants,\ \forall r\in\REF,
+    & \ds \va\level_t^r,\ \va\backlog_t^r,\ \va\quantity_{pt}^r,\ \va\inventory_t^r \preceq \Sfield{\bracket{\va\demand^r}_{r\in\REF}} && \forall t\in\range{\horizon},\ \forall p\in\plants,\ \forall r\in\REF,
     \label{eq:stochastic multi-sourcing - limited capital - non-anticipation}
   \end{align}
 \end{subequations}

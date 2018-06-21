@@ -333,9 +333,10 @@
 
 \newcommand\setup{x}                % 1 if product is produced at period and 0 otherwise
 \newcommand\quantity{q}             % Quantity of product produced at period
-\newcommand\inventory{s}            % Inventory of product at the end of period (may be negative)
+\newcommand\inventory{s}            % Inventory of product at the end of period
 \newcommand\backlog{b}              % Backlog quantity of product at end of period
-\newcommand\excess{\tilde{s}}       % Excess of inventory of product at the end of period
+\newcommand\level{\tilde{s}}        % Relative inventory of product at the end of period (may be negative)
+\newcommand\supplied{\tilde{d}}     % Supplied demand
 \newcommand\safety{s_{\min}}        % Safety stock of the product
 \newcommand\lag{\tau}               % Number of periods for which decisions are fixed
 

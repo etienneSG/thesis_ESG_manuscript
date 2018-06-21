@@ -4,19 +4,23 @@
 \section{Motivations}
 
 
-\esgil{Describe the whole problem, except stochastic part, in chapter~\ref{chap:PDP - deterministic}}
+In Chapter~\ref{chap:PDP - deterministic}, data are deterministic. In practice, part of data is uncertain. Depending on the industry or on the planing horizon, uncertainty can be on demand forecast, production rate, capacities or any other part of the supply chain. When making a production plan, the main uncertainty in Argon's application cases is on demand forecast. Thus, in this whole chapter, we only consider this source of randomness in the model to get the stochastic counterpart of the Uniform CLSP-BS.
 
 
-In chapter~\ref{chap:PDP - deterministic}, data are deterministic. In practice, part of data is uncertain. Depending on the industry or on the planing horizon, uncertainty can be on forecast, production rate, capacities or any other part of the supply chain. When making a production plan, the main uncertainty in Argon's application cases is on forecast. Thus, in this whole chapter, we only consider this source of randomness in the model.
+As for the Uniform CLSP-BS in Chapter~\ref{chap:PDP - deterministic}, we consider an assembly line producing a set $\REF$ of items over $\horizon$ periods. The number of distinct items produced over a period cannot exceed $\nbsetups$. There is also an upper bound on the total period production (summed over all items) and we normalize all quantities so that this upper bound is equal to $1$.
+
+The production should satisfy a random demand. However, because of uncertainty, backorder (\ie late delivery) is allowed but must be controlled. Part of demand supplied on time must meet a fill rate service level $\servicelvl$ as defined in Chapter~\ref{chap:business-problem}. The demand of item $i$ over period $t$ is a random parameter $\va\demand_t^i$, whose realization is known at the end of period $t$. When production of a item $i$ is not used to satisfy the demand, it can be stored but incurs a unit holding cost $\holding^i>0$ per period. For each item $i$, there is an initial inventory $s_0^i\in\RR_+$.
+
+Regarding randomness, we assume that for any $i$ and $t$, realizations of $\bracket{\va\demand_t^i,\ldots,\va\demand_{\horizon}^i}$ have finite expectation and can be efficiently sampled, knowing a realization of $\bracket{\va\demand_1^j,\ldots,\va\demand_{t-1}^j}_{j\in\REF}$.
+
+Decisions can be made at the beginning of each period knowing past realizations of the demand. In particular, decision for current period are firm decisions, but decisions for the following period may change depending on the realization of the demand at the end of the period. This kind of formulation is called \emph{multi-stage}.
+
+Finally, feasibility of model must not be an issue. Indeed, in real applications, model must always return a production planning. That's why some constraints are ``soft constraints''. For example, in case of capacity issue, production must be planned in such a way as to best approach service level even if it cannot reach it.
 
 
-Dealing with uncertainty leads to make choices. First one is the time when randomness is revealed. We choose a pessimistic vision that is the demand of period $t$ is revealed at the end of the period after the production decisions were made. One may object about this somehow non-conventional assumption that the demand is revealed at the end of the period but there are industrial cases where this occurs, like in computer manufacturing. However, the methods developed in this thesis can be easily adapted to the case where the demand is revealed at the beginning of the period.
+\medskip
 
-
-Second one concerns the feasibility of the planing. In Argon's applications, cover every possible realizations of demand often leads to too expensive production planning or to infeasible planning. An other question is about the undelivered quantities since serving only 95\% of the demand is less critical than serving only 80\%. Thus, Argon aims to reach a \emph{service level} for delivered quantities. Fill rate service level which is the proportion of demand delivered on time is considered. As previously explained, the cycle service level which is the proportion of command entirely delivered could have been considered but in most of our application, it is less relevant.
-
-
-Finally, feasibility of model must not be an issue. Indeed, in real application, some constraints are ``soft constraints'' in case of infeasibility. In case of capacity issue, production must be planned in such a way as to best approach service level even if it cannot reach it.
+Adding uncertainty in the formulation makes the description of the problem incomplete. Then, it leads to make choices in modeling. They will be discussed in Section~\ref{sec:stoch-CLSP-BS-discussion}.
 
 
 \section{Bibliography}
@@ -27,123 +31,117 @@ Finally, feasibility of model must not be an issue. Indeed, in real application,
 \section{Model}
 
 
-We remind the notations used. The assembly line produces a set $\REF$ of items over $\horizon$ periods. The number of distinct items produced over a period cannot exceed $\nbsetups$. There is also an upper bound $\capacity$ on the total period production (summed over all items). We normalize all quantities so that this upper bound is equal to $1$.
-
-The production must satisfy a random demand. The demand of item $i$ over period $t$ is a random parameter $\va\demand_t^i$, whose realization is known at the end of period $t$. When production of a item $i$ is not used to satisfy the demand, it can be stored but incurs a unit holding cost $\holding^i>0$ per period. For each item $i$, there is an initial inventory $s_0^i\in\RR_+$.
-
-Regarding randomness, we assume that for any $i$ and $t$, realizations of $(\va\demand_t^i,\va\demand_{t+1}^i,\ldots,\va\demand_{\horizon}^i)$ have finite expectation and can be efficiently sampled, knowing a realization of $\va\demand_{t-1}^i$.
-
-The variable $\va\excess_t^i$ (resp. $\va\backlog_t^i$) models the real inventory (resp. the backorder) of item $i$ at the end of period $t$ and $\va\inventory_t^i$ models the sum of real inventory and backorder. The variable $\va\quantity_t^i$ models the quantity of item $i$ produced over period $t$, and the variable $\va\setup_t^i$ takes the value $1$ if the item $i$ is produced over period $t$ and $0$ otherwise. All these variables are random.
-
+In order to solve the stochastic counterpart of the Uniform CLSP-BS, we introduce the following decision variables. The quantity of item $i$ produced at period $t$ is denoted by $\va\quantity_t^i$ and the inventory at the end of the period is denoted by $\va\inventory_t^i$. We also introduce a binary variable $\va\setup_t^i$ which takes the value 1 if the item $i$ is produced during period $t$. All these variables are random and may depend on the past realizations of the random demand $\bracket{\va\demand_1^j,\ldots,\va\demand_{t-1}^j}_{j\in\REF}$.
 
 
 \subsection{Model with service level constraint}
 
-
-The first approach consists in writing the service level constraint. Thus, there is no backorder costs for undelivered quantities. For each period $t$ and each item $i$, the delivered quantity is the minimum between the realization of the demand $\demand_t^i$ and the sum of the inventory $\excess_{t-1}^i$ at the end of the previous period and the produced quantity $\quantity_t^i$ during current period. The constraint can be written as:
+We have to address the service level constraint. For each period $t$ and each item $i$, we introduce the decision variable $\supplied_t^i$ which the part of demand $\demand_t^i$ supplied at the end of period $t$. We decide to model the service level constraint for all item by:
 \begin{equation}
   \label{eq:service-level-constraint}
-  \espe\sqbracket{\frac{
-  \sum_{i\in\REF}\sum_{t=1}^{\horizon}\min\bracket{\va \demand_t^i,\va \quantity_t^i+\va\excess_{t-1}^i}}
-  {\sum_{i\in\REF}\va\demand^i}}
+  \espe\sqbracket{ \frac{\sum_{i\in\REF}\sum_{t=1}^{\horizon}\va\supplied_t^i}{\sum_{i\in\REF}\sum_{t=1}^{\horizon}\va\demand_t^i} }
   \geq \servicelvl ,
 \end{equation}
-where $\va\demand^i=\sum_{t=1}^{\horizon}\va\demand_t^i$. Then, we can write the mathematical program corresponding to our problem:
+
+Then, we can write the mathematical program corresponding to our problem at time $t$:
 
 
-\begin{subequations}\label{eq:PDP-stoch-service-level}
+\begin{subequations}\label{eq:Uniform-CLSP-BS:service-level}
   \begin{align}
-    \min\quad & \rlap{$\ds \espe\sqbracket{\sum_{t'=t}^{\horizon} \sum_{i\in\REF} \holding^i\va\excess_{t'}^i}$}
-    \label{eq:PDP-stoch-service-level:objective}
+    \min\quad & \rlap{$\ds \espe\sqbracket{\sum_{t'=t}^{\horizon} \sum_{i\in\REF} \holding^i\va\inventory_{t'}^i}$}
+    \label{eq:Uniform-CLSP-BS:service-level:objective}
     \\
-    \st\quad & \ds \va\excess_{t'}^i = \va\excess_{t'-1}^i + \va\quantity_{t'}^i - \va\demand_{t'}^i && \forall t'\in\range[t]{\horizon},\, \forall i\in\REF,
-    \label{eq:PDP-stoch-service-level:inventory-dynamic}
+    \st\quad & \ds \va\inventory_{t'}^i = \va\inventory_{t'-1}^i + \va\quantity_{t'}^i - \va\supplied_{t'}^i && \forall t'\in\range[t]{\horizon},\, \forall i\in\REF,
+    \label{eq:Uniform-CLSP-BS:service-level:inventory-dynamic}
     \\
     & \ds \sum_{i\in\REF} \va\quantity_{t'}^i \le 1 && \forall t'\in\range[t]{\horizon},
-    \label{eq:PDP-stoch-service-level:capacity}
+    \label{eq:Uniform-CLSP-BS:service-level:capacity}
     \\
     & \ds \va\quantity_{t'}^i \le \va\setup_{t'}^i && \forall t'\in\range[t]{\horizon},\, \forall i\in\REF,
-    \label{eq:PDP-stoch-service-level:big-M}
+    \label{eq:Uniform-CLSP-BS:service-level:big-M}
     \\
     & \ds \sum_{i\in\REF} \va\setup_{t'}^i \le \nbsetups && \forall t'\in\range[t]{\horizon},
-    \label{eq:PDP-stoch-service-level:setups}
+    \label{eq:Uniform-CLSP-BS:service-level:setups}
     \\
-    & \ds \espe\sqbracket{\frac{\sum_{i\in\REF}\sum_{t=1}^{\horizon} \min\bracket{\va\demand_t^i,\va\quantity_t^i+\va\excess_{t-1}^i}}{\sum_{i\in\REF}\va\demand^i}} \ge \servicelvl
-    \label{eq:PDP-stoch-service-level:service-level}
+    & \ds \espe\sqbracket{\frac{\sum_{i\in\REF}\sum_{t'=1}^{\horizon}\va\supplied_{t'}^i }{\sum_{i\in\REF}\sum_{t'=1}^{\horizon}\va\demand_{t'}^i}} \ge \servicelvl
+    \label{eq:Uniform-CLSP-BS:service-level:service-level}
+    \\
+    & \ds \va\supplied_{t'}^i \le \va\demand_{t'}^i && \forall t'\in\range[t]{\horizon},\, \forall i\in\REF,
+    \label{eq:Uniform-CLSP-BS:service-level:supplied-bound-demand}
+    \\
+    & \ds \va\supplied_{t'}^i \le \va\inventory_{t'-1}^i+\va\quantity_{t'}^i && \forall t'\in\range[t]{\horizon},\, \forall i\in\REF,
+    \label{eq:Uniform-CLSP-BS:service-level:supplied-bound-production}
     \\
     & \ds \va\setup_{t'}^i \in \crbracket{0,1} && \forall t'\in\range[t]{\horizon},\, \forall i\in\REF,
-    \label{eq:PDP-stoch-service-level:binary}
+    \label{eq:Uniform-CLSP-BS:service-level:binary}
     \\
-    & \ds \va\quantity_{t'}^i,\ \va\excess_{t'}^i \ge 0 && \forall t'\in\range[t]{\horizon},\, \forall i\in\REF,
-    \label{eq:PDP-stoch-service-level:positity}
+    & \ds \va\quantity_{t'}^i,\ \va\inventory_{t'}^i,\ \va\supplied_{t'}^i \ge 0 && \forall t'\in\range[t]{\horizon},\, \forall i\in\REF,
+    \label{eq:Uniform-CLSP-BS:service-level:positity}
     \\
     & \ds \va\quantity_{t'}^i \preceq \Sfield{\bracket{\va\demand_1^i,\ldots,\va\demand_{t-1}^i}_{i\in\REF}} && \forall t'\in\range[t]{\horizon},\ \forall i\in\REF.
-    \label{eq:PDP-stoch-service-level:measurability}
+    \label{eq:Uniform-CLSP-BS:service-level:measurability}
   \end{align}
 \end{subequations}
 
-Objective~\eqref{eq:PDP-stoch-service-level:objective} minimizes the real inventory at the end of each period.
-%Constraint~\eqref{eq:PDP-stoch-service-level:inventory-dynamic} is the inventory dynamic.
-%Constraint~\eqref{eq:PDP-stoch-service-level:capacity} prevents from exceeding the capacity of the assembly line.
-%Constraint~\eqref{eq:PDP-stoch-service-level:big-M} is both a ``big-M'' constraint and a capacity of the production of a single item.
-%Constraint~\eqref{eq:PDP-stoch-service-level:setups} limits the number of setups each period.
-Constraints~\eqref{eq:PDP-stoch-service-level:inventory-dynamic}, \eqref{eq:PDP-stoch-service-level:capacity}, \eqref{eq:PDP-stoch-service-level:big-M} and \eqref{eq:PDP-stoch-service-level:setups} have the same meaning than their deterministic counterparts.
-Constraint~\eqref{eq:PDP-stoch-service-level:service-level} ensures the service level. Note that this constraint does not make a difference between a one-period delay and a two-period delay. Second, this constraint is a global constraint to satisfy over the whole horizon: it does not depend on the current period. This is a matter of modeling point of view since we were not able to get a precise formulation from our partner and from its clients.
-Last constraint~\eqref{eq:PDP-stoch-service-level:measurability} of the program, written as a {\em measurability constraint}, means that the values of the variables $\va\quantity_{t'}^i$ can only depend on the values taken by the demand before time $t'$ (the planner does not know the future).
+Objective~\eqref{eq:Uniform-CLSP-BS:service-level:objective} minimizes the real inventory at the end of each period.
+Constraints~\eqref{eq:Uniform-CLSP-BS:service-level:inventory-dynamic}, \eqref{eq:Uniform-CLSP-BS:service-level:capacity}, \eqref{eq:Uniform-CLSP-BS:service-level:big-M} and \eqref{eq:Uniform-CLSP-BS:service-level:setups} have the same meaning than their deterministic counterparts.
+Constraint~\eqref{eq:Uniform-CLSP-BS:service-level:service-level} ensures the service level.
+Constraints~\eqref{eq:Uniform-CLSP-BS:service-level:supplied-bound-demand} and \eqref{eq:Uniform-CLSP-BS:service-level:supplied-bound-production} upper bound the supplied part of demand by the demand and the inventory plus the produced quantity.
+Last constraint~\eqref{eq:Uniform-CLSP-BS:service-level:measurability} of the program, written as a {\em measurability constraint}, means that the values of the variables $\va\quantity_{t'}^i$ can only depend on the values taken by the demand before time $t'$ (the planner does not know the future).
 
 
-The main advantage of this formulation is the perfect adequacy between the mathematical model and Argon objectives. Indeed, objective is simple (only holding costs) and do not weighs indicators hardly comparable. Moreover, every parameter easily given by operational people.
+The main advantage of this formulation is the adequacy between the mathematical model and Argon objectives described in problem formulation. Indeed, objective is simple (only holding costs) and do not weighs indicators hardly comparable. Moreover, every parameter is easily given by clients.
 
-The drawback of this formulation is the feasibility. Because of the service level constraint~\eqref{eq:PDP-stoch-service-level:service-level}, program~\eqref{eq:PDP-stoch-service-level} may be infeasible. In this cases, heuristics must be developed to create a production planning which break as little as possible the constraints.
+The drawback of this formulation is the feasibility. Because of the service level constraint~\eqref{eq:Uniform-CLSP-BS:service-level:service-level}, program~\eqref{eq:Uniform-CLSP-BS:service-level} may be infeasible. In this cases, heuristics must be developed to create a production planning which violates as little as possible the constraints.
 
 
 
 \subsection{Model with backorder costs}
 
 
-Service level constraint is a main issue since it may lead to infeasibility of the model. Thus, we remove this constraint and penalize backorder quantities. When a demand for item $i$ is not satisfied by the production of the current period or by inventory, it can be satisfied later but incurs a unit backorder cost $\backorder^i$ per period for some coefficient $\backorder^i>0$.
+Service level constraint is a main issue since it may lead to infeasibility of the model. Thus, we remove this constraint and penalize backorder quantities. We introduce new decisions variables. When a demand for item $i$ is not satisfied by the production of the current period or by inventory, it can be satisfied later but incurs a unit backorder cost $\backorder^i$ per period for some coefficient $\backorder^i>0$ and the backorder of item $i$ at the end of the period $t$ is denoted by $\va\backlog_t^i$. We also used the inventory level $\va\level_t^i$ which is the relative value of the inventory of item $i$ at the end of period $t$ (\ie the inventory minus the back order).
 
 Problem can be written as follow:
 
-\begin{subequations}\label{eq:PDP-stoch-backorder}
+\begin{subequations}\label{eq:Uniform-CLSP-BS:backorder}
   \begin{align}
-    \min\quad & \rlap{$\ds \espe\sqbracket{\sum_{t'=t}^{\horizon} \sum_{i\in\REF} \bracket{\holding^i\va\excess_{t'}^i + \backorder^i\va\backlog_{t'}^i}}$}
-    \label{eq:PDP-stoch-backorder:objective}
+    \min\quad & \rlap{$\ds \espe\sqbracket{\sum_{t'=t}^{\horizon} \sum_{i\in\REF} \bracket{\holding^i\va\inventory_{t'}^i + \backorder^i\va\backlog_{t'}^i}}$}
+    \label{eq:Uniform-CLSP-BS:backorder:objective}
     \\
-    \st\quad & \ds \va\inventory_{t'}^i = \va\inventory_{t'-1}^i + \va\quantity_{t'}^i - \va\demand_{t'}^i && \forall t'\in\range[t]{\horizon},\, \forall i\in\REF,
-    \label{eq:PDP-stoch-backorder:inventory-dynamic}
+    \st\quad & \ds \va\level_{t'}^i = \va\level_{t'-1}^i + \va\quantity_{t'}^i - \va\demand_{t'}^i && \forall t'\in\range[t]{\horizon},\, \forall i\in\REF,
+    \label{eq:Uniform-CLSP-BS:backorder:inventory-dynamic}
     \\
     & \ds \sum_{i\in\REF} \va\quantity_{t'}^i \le 1 && \forall t'\in\range[t]{\horizon},
-    \label{eq:PDP-stoch-backorder:capacity}
+    \label{eq:Uniform-CLSP-BS:backorder:capacity}
     \\
     & \ds \va\quantity_{t'}^i \le \va\setup_{t'}^i && \forall t'\in\range[t]{\horizon},\, \forall i\in\REF,
-    \label{eq:PDP-stoch-backorder:big-M}
+    \label{eq:Uniform-CLSP-BS:backorder:big-M}
     \\
     & \ds \sum_{i\in\REF} \va\setup_{t'}^i \le \nbsetups && \forall t'\in\range[t]{\horizon},
-    \label{eq:PDP-stoch-backorder:setups}
+    \label{eq:Uniform-CLSP-BS:backorder:setups}
     \\
-    & \ds \va\inventory_{t'}^i = \va\excess_{t'}^i - \va\backlog_{t'}^i && \forall t'\in\range[t]{\horizon},\, \forall i\in\REF,
-    \label{eq:PDP-stoch-backorder:inventory}
+    & \ds \va\level_{t'}^i = \va\inventory_{t'}^i - \va\backlog_{t'}^i && \forall t'\in\range[t]{\horizon},\, \forall i\in\REF,
+    \label{eq:Uniform-CLSP-BS:backorder:inventory}
     \\
     & \ds \va\setup_{t'}^i \in \crbracket{0,1} && \forall t'\in\range[t]{\horizon},\, \forall i\in\REF,
-    \label{eq:PDP-stoch-backorder:binary}
+    \label{eq:Uniform-CLSP-BS:backorder:binary}
     \\
-    & \ds \va\quantity_{t'}^i,\ \va\excess_{t'}^i,\ \va\backlog_{t'}^i \ge 0 && \forall t'\in\range[t]{\horizon},\, \forall i\in\REF,
-    \label{eq:PDP-stoch-backorder:positity}
+    & \ds \va\quantity_{t'}^i,\ \va\inventory_{t'}^i,\ \va\backlog_{t'}^i \ge 0 && \forall t'\in\range[t]{\horizon},\, \forall i\in\REF,
+    \label{eq:Uniform-CLSP-BS:backorder:positity}
     \\
     & \ds \va\quantity_{t'}^i \preceq \Sfield{\bracket{\va\demand_1^i,\ldots,\va\demand_{t-1}^i}_{i\in\REF}} && \forall t'\in\range[t]{\horizon},\ \forall i\in\REF.
-    \label{eq:PDP-stoch-backorder:measurability}
+    \label{eq:Uniform-CLSP-BS:backorder:measurability}
   \end{align}
 \end{subequations}
 
-In contrast to model~\eqref{eq:PDP-stoch-service-level}, objective~\eqref{eq:PDP-stoch-backorder:objective} minimizes the sum of real inventory and backorder at the end of each period and service level constraint~\eqref{eq:PDP-stoch-service-level:service-level} is replaced by constraint~\eqref{eq:PDP-stoch-backorder:inventory} which linked real inventory and backorder quantities.
+In contrast to model~\eqref{eq:Uniform-CLSP-BS:service-level}, objective~\eqref{eq:Uniform-CLSP-BS:backorder:objective} minimizes the sum of inventory and backorder at the end of each period and service level constraint~\eqref{eq:Uniform-CLSP-BS:service-level:service-level} is replaced by constraint~\eqref{eq:Uniform-CLSP-BS:backorder:inventory} which links real inventory and backorder quantities.
 
 
-This model is useful since there always exists a feasible solution. However, it cannot ensure the desired service level. Moreover, parameters of first model were easy to get whereas in practice, except when they are enshrined through contracts with the client, backorder costs can be hard to estimate.
+An interesting feature of this model is that there always exists a feasible solution which makes it more amenable to real-world applications. However, it cannot ensure the desired service level. Moreover, parameters of first model were easy to get whereas in practice, except when they are enshrined through contracts with the clients, backorder costs can be hard to estimate.
 
 \medskip
 
-When backorder costs are not given by the clients, we defining surrogate backorder coefficients $\backorder^i$ for each item $i$ before the first period, with the idea to heuristically entice it to choose solutions satisfying service level constraint~\eqref{eq:PDP-stoch-service-level:service-level}.
+When backorder costs are not given by the clients, we propose a way to ``price'' backorder coefficients $\backorder^i$ for each item $i$ before the first period, with the idea to heuristically entice it to choose solutions satisfying service level constraint~\eqref{eq:PDP-stoch-service-level:service-level}.
 
 \begin{equation}
 \backorder^i := \frac{\prob\sqbracket{\va\demand^i \le q^i(\servicelvl)}}{\prob\sqbracket{\va\demand^i>q^i(\servicelvl)}} \holding^i
@@ -162,7 +160,7 @@ where $\va\demand^i = \sum_{t=1}^{\horizon} \va \demand_t^i$ is the demand of it
 Computing an approximate value of $q^i(\servicelvl)$ at an arbitrary precision can easily be performed by binary search.
 
 
-To justify this choice, consider the second problem~\eqref{eq:PDP-stoch-backorder} with only one item and for a horizon of one period. Assuming no initial inventory, it takes then the form of the famous \emph{newsvendor problem} (see~\eg, \cite[Chapter 1]{Shapiro2009})
+To justify this choice, consider the second problem~\eqref{eq:Uniform-CLSP-BS:backorder} with only one item and for a horizon of one period. Assuming no initial inventory, it takes then the form of the famous \emph{newsvendor problem} (see~\eg, \cite[Chapter 1]{Shapiro2009})
 \begin{equation}
 \label{eq:newsvendor}
 \min_{q\ge 0} \quad \espe\sqbracket{h^i (q - \va d^i )^+ + \backorder^i ( \va d^i - q)^+},
@@ -205,3 +203,23 @@ Indeed, in this case, the optimal solution $q^{r*}$ of~\eqref{eq:newsvendor} sat
   \item approximation using scenarios
 \end{itemize}
 
+
+\section{Discussion about modeling}
+\label{sec:stoch-CLSP-BS-discussion}
+
+In the way we formulate the stochastic counterpart of Uniform CLSP-BS, we made some choices. First one is the time when randomness is revealed. There were two possibilities for each period: decision-hazard where decisions are made before the hazard is revealed and hazard-decision which is the opposite. Both make sense in industrial applications but we choose the pessimistic vision that is the demand of period $t$ is revealed at the end of the period after the production decisions were made. However, the methods developed in this thesis can be easily adapted to the case where the demand is revealed at the beginning of the period.
+
+
+Second one concerns the feasibility of the planing. In Argon's applications, cover every possible realizations of demand often leads to too expensive production planning or to infeasible planning. An other question is about the undelivered quantities since serving only 95\% of the demand is less critical than serving only 80\%. Thus, Argon aims at reaching a \emph{service level} for delivered quantities. Fill rate service level which is the proportion of demand delivered on time is considered. As previously explained in Chapter~\ref{chap:business-problem}, the cycle service level which is the proportion of command entirely delivered could have been considered but in most of our application, it is less relevant.
+
+\esgil{Modify this part}
+
+\begin{itemize}
+  \item Expectation because repeated optimization (not robust one)
+  \item Service level for all item vs. item by item
+  \begin{itemize}
+    \item pros: enables to not penalized a huge demand for satisfying a small demand
+    \item cons: some item with small demand may have a very bad service level
+  \end{itemize}
+  Note that this constraint does not make a difference between a one-period delay and a two-period delay. Second, this constraint is a global constraint to satisfy over the whole horizon: it does not depend on the current period. This is a matter of modeling point of view since we were not able to get a precise formulation from our partner and from its clients.
+\end{itemize}
