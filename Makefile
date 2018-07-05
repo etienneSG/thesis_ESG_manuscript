@@ -5,9 +5,12 @@ OUT_DIR=auxiliary_files
 
 all: pdf change_name
 
-pdf: $(TEX_NAME).tex
+update:	$(TEX_NAME).tex
 	@mkdir -p $(OUT_DIR)
 	pdflatex -output-directory=$(OUT_DIR) $(TEX_NAME).tex
+	make change_name
+
+pdf: update
 	bibtex $(OUT_DIR)/$(TEX_NAME).aux
 	pdflatex -output-directory=$(OUT_DIR) $(TEX_NAME).tex
 	pdflatex -output-directory=$(OUT_DIR) $(TEX_NAME).tex

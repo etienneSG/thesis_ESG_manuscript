@@ -15,12 +15,12 @@ Regarding randomness, we assume that for any $i$ and $t$, realizations of $\brac
 
 Decisions can be made at the beginning of each period knowing past realizations of the demand. In particular, decision for current period are firm decisions, but decisions for the following period may change depending on the realization of the demand at the end of the period. This kind of formulation is called \emph{multi-stage}.
 
-Finally, feasibility of model must not be an issue. Indeed, in real applications, model must always return a production planning. That's why some constraints are ``soft constraints''. For example, in case of capacity issue, production must be planned in such a way as to best approach service level even if it cannot reach it.
+Finally, model must always be feasible. Indeed, in real applications, model must always return a production planning. That's why some constraints are ``soft constraints''. For example, in case of capacity issue, production must be planned in such a way as to best approach service level even if it cannot reach it.
 
 
 \medskip
 
-Adding uncertainty in the formulation makes the description of the problem incomplete. Then, it leads to make choices in modeling. They will be discussed in Section~\ref{sec:stoch-CLSP-BS-discussion}.
+Adding uncertainty in the formulation makes the description of the problem incomplete. Then, it requires to make choices in modeling. They will be discussed in Section~\ref{sec:stoch-CLSP-BS-discussion}.
 
 
 \section{Bibliography}
@@ -88,7 +88,9 @@ Constraints~\eqref{eq:Uniform-CLSP-BS:service-level:inventory-dynamic}, \eqref{e
 Constraint~\eqref{eq:Uniform-CLSP-BS:service-level:service-level} ensures the service level.
 Constraints~\eqref{eq:Uniform-CLSP-BS:service-level:supplied-bound-demand} and \eqref{eq:Uniform-CLSP-BS:service-level:supplied-bound-production} upper bound the supplied part of demand by the demand and the inventory plus the produced quantity.
 Last constraint~\eqref{eq:Uniform-CLSP-BS:service-level:measurability} of the program, written as a {\em measurability constraint}, means that the values of the variables $\va\quantity_{t'}^i$ can only depend on the values taken by the demand before time $t'$ (the planner does not know the future).
+Every constraint of the problem hold almost surely.
 
+\vlil{Définir notation de la measurability constraint?}
 
 The main advantage of this formulation is the adequacy between the mathematical model and Argon objectives described in problem formulation. Indeed, objective is simple (only holding costs) and do not weighs indicators hardly comparable. Moreover, every parameter is easily given by clients.
 
@@ -207,7 +209,7 @@ Indeed, in this case, the optimal solution $q^{r*}$ of~\eqref{eq:newsvendor} sat
 \section{Discussion about modeling}
 \label{sec:stoch-CLSP-BS-discussion}
 
-In the way we formulate the stochastic counterpart of Uniform CLSP-BS, we made some choices. First one is the time when randomness is revealed. There were two possibilities for each period: decision-hazard where decisions are made before the hazard is revealed and hazard-decision which is the opposite. Both make sense in industrial applications but we choose the pessimistic vision that is the demand of period $t$ is revealed at the end of the period after the production decisions were made. However, the methods developed in this thesis can be easily adapted to the case where the demand is revealed at the beginning of the period.
+In the way we formulate the stochastic counterpart of Uniform CLSP-BS, we made some choices. First one is the information structure \ie the time when randomness is revealed. There were two versions for each period: decision-hazard where decisions are made before the hazard is revealed and hazard-decision which is the opposite. Both make sense in industrial applications but we choose the pessimistic vision that is the demand of period $t$ is revealed at the end of the period after the production decisions were made. However, the methods developed in this thesis can be easily adapted to the hazard-decision case where the demand is revealed at the beginning of the period.
 
 
 Second one concerns the feasibility of the planing. In Argon's applications, cover every possible realizations of demand often leads to too expensive production planning or to infeasible planning. An other question is about the undelivered quantities since serving only 95\% of the demand is less critical than serving only 80\%. Thus, Argon aims at reaching a \emph{service level} for delivered quantities. Fill rate service level which is the proportion of demand delivered on time is considered. As previously explained in Chapter~\ref{chap:business-problem}, the cycle service level which is the proportion of command entirely delivered could have been considered but in most of our application, it is less relevant.
