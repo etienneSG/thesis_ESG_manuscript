@@ -1,17 +1,70 @@
 \chapter{Numerical experiments}
-\label{chap:PDP - Numerical experiments}
+\label{chap:PDP:numerical-experiments}
 
 
 
 \section{Simulation}
 
 
+\begin{figure}[h]
+  \centering
+  \includegraphics{main/PDP/images/simulator.tikz}
+  \caption{Scheme of the run of the simulation}
+  \label{fig:simulator}
+\end{figure}
 
-\section{Strategies}
+The simulation emulate the behavior of a people making production planning facing uncertainty. Before the start, we define the data of the assembly line and we give the forecast demand (which is a function of the current period and of the past outcomes). Then, we chose an heuristic to compute the production planing.
 
-\subsection{lot-size and cover-size}
-\subsection{deterministic approximation}
-\subsection{2-stage stochastic approximation}
+We use a repeated approach starting at period $t=1$. For each period $t$, we observe the current inventory level of each item, \ie the inventory at the end of the previous period. Using the forecast demand as it is currently known and the chosen heuristic, we compute the production planing and fix the decision for the current period $t$. In real life, it correspond to setup the production. At the end of the period, we observe the demand outcome for the week $t$ and actualize the inventory level.
+
+At the end of the simulation, we get several \emph{Key Performance Indicators (KPI)} measuring the efficiency of the heuristic.
+
+A scheme of the run of the simulation is given in figure~\ref{fig:simulator}.
+
+
+
+C++11 has been chosen for the implementations and Gurobi 6.5.1 was used to solve the model on a PC with Intel(R) Core(TM) i7-3770 CPU @ 3.40GHz and 8Go RAM.
+\esgil{Change characteristic of the PC. Tests made on the cluster!}
+
+
+
+
+\section{Heuristics}
+
+
+Our method consists in solving (2SA-$m$) at the beginning of each period $t$. We compared it with three other heuristics:
+\begin{itemize}
+  \item deterministic approximation.
+  \item cover-size.
+  \item lot-size.
+\end{itemize}
+
+
+The first heuristic is the deterministic version of the stochastic counter part of Uniform CLSP-BS with backorder~\eqref{eq:Uniform-CLSP-BS-2SA-m:backorder}, where the random demand is replaced by its expectation. Note that it is not the CLSP-BS describe in chapter~\ref{chap:PDP:deterministic} since there are backorder costs.
+
+
+The second one, the {\em lot-size heuristic}, consists in determining before the first week once and for all a value $\ell_i^*$ for each reference $i\in\REF$.
+At time $t$, if the inventory of reference $r$ is below a precomputed safety level, the quantity $\quantity_t^i$ is chosen so that the inventory of reference $r$ exceeds the safety level of exactly $\ell_i^*$.
+In case of capacity issues, the production is postponed and thus backorder costs appear. In addition, if some capacity issues are easily anticipated, the production of a reference $r$ can be activated even if the inventory is not below the safety level.
+
+
+The third one, the {\em cover-size heuristic} is almost the same, but instead of precomputing a fixed quantity for each reference, a duration $\tau_i^*$ is fixed before the first week. When the inventory of reference $r$ is below the safety level, the quantity $\quantity_t^i$ is computed so that the inventory of reference $r$ exceeds the safety level of the expected demand for the next $\tau_i^*$ weeks.
+
+
+The values $\ell_i^*$ and $\tau_i^*$ are determined using results of Part~\ref{chap:lot-size:single-line}. $(\tau_i^*)_{i\in\REF}$ is actually chosen to be the optimal solution of the program~\eqref{eq:cont-rev-det}, which somehow considers the problem at a ``macroscopic'' level
+%(Similar convex programs in the same context have been considered in the literature; see~\cite{Ziegler1982} for example.)
+where the demand $\demand^i$ is chosen equal to $\espe\sqbracket{\sum_{t=1}^{\horizon}\va d_t^i}$.
+
+The parameter $\ell_i^*$ of the lot-size heuristic is then set to $\demand^i\tau_i^*$.
+
+The safety levels have been provided by the partner and are those used in practice.
+
+\esgil{Retrouver la formule donnant les safety level.}
+
+The cover-size heuristic adapts the production to the realization of the demand, contrary to the lot-size heuristic. According to our partner, it makes the cover-size heuristic more suitable for situations with low short term volatility of demand or for overcapacitated lines, while the lot-size heuristic is expected to behave better with high short term volatility of demand or for undercapacitated lines.
+
+Notice that the backorder costs are not taken into account at all for determining the values of the parameters $\ell_i^*$ and $\tau_i^*$.
+But playing with safety levels allows to prevent too large backorder costs. However, in real life it is usually the other way round: the company does not associate costs to backorder and aims at keeping the total amount of unsatisfied demand below some predetermined level. We come back to this point later in Section~\ref{sec:service}.
 
 
 
@@ -20,7 +73,73 @@
 
 \subsection{Historical data}
 
+The instances used are realistic and have been provided by a client of the partner. The client gave actually the figures of seven assembly lines and the demand for each week over an entire quarter.
+This horizon $\horizon$ is the typical one used in practice by this client, namely $\horizon=13$ weeks.
+
+The historical demand are denoted by $\bar\demand_t^i$. As explain in Chapter~\ref{chap:business-context}, the global volume of the forecast demand is constant over every possible outcomes. Then, we obtain the demand via an Dirichlet distribution whose parameters are computed from two values:
+\begin{itemize}
+  \item a ``volatility'' $v$ chosen in $\crbracket{0.2,0.5, 0.8}$. It represents the precision of the forecast demand. The bigger is $v$, the less precise is the forecast demand.
+  \item a number of weeks $\tau$ chosen in $\crbracket{4,7,13}$. The total volume of the forecast demand is constant over the week 1 to $\tau$, then during the week $\tau+1$ to $2\tau$, etc. The chosen values represent a month, half a quarter and a complete quarter.
+\end{itemize}
+Details about the distributions and how its parameters are computed are given in Section~\ref{sec:PDP:numerical-experiments:dirichlet}.
+
+The initial inventory is set to $s_0^i=\frac{1}{3}(\bar\demand_1^i+\bar\demand_2^i+\bar\demand_3^i)$.
+
+The other parameters are provided in Table~\ref{tab:instances-characteristics}.
+%In particular, for each value of $v$, we have considered three possible values of the unit backorder cost $\backorder$, which have been determined following a procedure described in Section~\ref{sec:service}. At the moment, we do not discuss further these values and take them as part of the input, as required by the problem formulation.
+The parameter $C$ is the capacity of the line before normalization. (Recall that problem and the model have been formulated in Section~\ref{sec:PDP:stochastic:model} after normalization.)
+In the column $\tilde{\holding}^i$, we indicate the range of the holding costs before normalization. We obtain the $\holding^i$'s by dividing these costs by $C$ since internal production times $\rate^i$ are unitary.
+
+We also add the loading indicator $\kappa_t$ at period $t$ defined as:
+\begin{equation}
+  \kappa_t = \frac{\sum_{i\in\REF} \bracket{\sum_{t'=1}^{t} \bar\demand_{t'}^i}-\inventory_0^i}{ \sum_{t'=1}^{t} \capacity_{t'}}
+\end{equation}
+It is the ratio cumulative forecast demand up to period $t$ minus the initial inventory over cumulative capacity up to period $t$. If there were no flexibility constraints and if the holding costs were not an issue, then for a period $t$, $\kappa_t \le 100\%$ implies that it is possible to supply the whole demand. As show in table~\ref{tab:instances-characteristics}, the lines $L_0$, $L_1$, $L_2$, $L_3$ and $L_4$ experience overcapacity: the loading indicator is smaller than $100\%$. The lines $L_5$ and $L_6$ experience undercapacity: the loading indicator is larger than $100\%$ at some periods.
+
+\begin{table}[ht]
+\begin{center}
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lrrrrrrr@{\extracolsep{\fill}}}
+\hline
+Instances &
+\multicolumn{7}{c}{Instance characteristics}
+\\\cline{2-8}
+\\
+& $\card{\REF}$
+& $\max(\bar\demand_t^i)$
+& \multicolumn{1}{c}{$\capacity$}
+& \multicolumn{1}{c}{$\nbsetups$}
+& \multicolumn{1}{c}{$\tilde{\holding}^i$}
+& \multicolumn{1}{c}{$\max\bracket{\kappa_t}$}
+& \multicolumn{1}{c}{$\kappa_{\horizon}$}
+\\\hline
+$L_0$ & $21$ & $3780$ & $8518$ & $7$ & $45$--$88$ & $91\%$ & $74\%$
+\\
+$L_1$ & $30$ & $4122$ & $13326$ & $12$ & $52$--$82$ & $66\%$ & $52\%$
+\\
+$L_2$ & $21$ & $4992$ & $10562$ & $7$ & $35$--$61$ & $61\%$ & $61\%$
+\\
+$L_3$ & $13$ & $6220$ & $10394$ & $5$ & $22$--$30$ & $80\%$ & $65\%$
+\\
+$L_4$ & $18$ & $10584$ & $62164$ & $8$ & $12$--$14$ & $40\%$ & $35\%$
+\\
+$L_5$ & $12$ & $11772$ & $7902$ & $6$ & $15$--$17$ & $126\%$ & $98\%$
+\\
+$L_6$ & $22$ & $8640$ & $13299$ & $8$ & $16$--$23$ & $118\%$ & $98\%$
+\\\hline
+\end{tabular*}
+\caption{Instance characteristics}
+\label{tab:instances-characteristics}
+\end{center}
+\end{table}
+
+The number $m$ of scenarios used to solve (2SA-$m$) is fixed to $20$, determined by preliminary experiments showing that it is a good trade-off between accuracy and tractability. The time limit of the solver has been set to $120$ seconds.
+
+
+\esgil{Faire tourner avec un peu plus de scénarios?}
+
+
 \subsection{Generate randomness}
+\label{sec:PDP:numerical-experiments:dirichlet}
 
 \begin{itemize}
   \item Auto-regressive model
@@ -30,6 +149,9 @@
 
 
 \section{Numerical results}
+
+
+\esgil{To do when result will be complete}
 
 \begin{itemize}
   \item Results with backorder costs

@@ -1,9 +1,9 @@
 \chapter{Deterministic CLSP-BS}
-\label{chap:PDP - deterministic}
+\label{chap:PDP:deterministic}
 
 
 \section{Motivations}
-\label{sec:PDP:Motivations}
+\label{sec:PDP:deterministic:Motivations}
 
 Fixing the production level for the forthcoming period is a basic decision to be taken when managing an assembly line. Usually, a demand has to be satisfied at due dates but the limited capacity of the line prevents last minute production. On the other hand, too early productions may lead to unnecessary high inventory costs. The challenge of this kind of problems, known as {\em lot-sizing problems} in the operational research community, consists in finding a trade-off between demand satisfaction and holding costs.
 When several items can be produced on a same line -- the so-called {\em multi-item} lot-sizing problem --, the capacity of the assembly line is often all the more reduced as the number of distinct items produced over the current period is high. Indeed, changing an item in production stops the line for a moment. This additional capacity reduction is usually modeled by setup costs contributing to the total cost.
@@ -114,6 +114,7 @@ For the purpose of notation, the circumflex accent is omitted and the optimizati
 
 
 \section{Theoretical results}
+\label{sec:PDP:deterministic:theoretical-results}
 
 
 \subsection{\NP-completeness}
@@ -152,7 +153,7 @@ Thus, we have a solution for 3-partition problem if and only if we can face the 
 Since Uniform CLSP-BS is a special case of CLSP-BS, CLSP is also \NP-complete. However, complexity of the following cases is still an open problem:
 \begin{itemize}
 \item Uniform CLSP-BS with $\nbsetups=1$ or $\nbsetups=2$.
-\item Uncapacitated CLSP-BS that a version of CLSP-BS without capacity constraints~\eqref{eq:CLSP-BS:capacity} and \eqref{eq:CLSP-BS:big-M}.
+\item Uncapacitated CLSP-BS that a version of CLSP-BS without capacity constraint~\eqref{eq:CLSP-BS:capacity} and with $\capacity_t^i\ge\sum_{\tau\in\range{\horizon}}\demand_{\tau}^i$, for each period $t$ and each item $i$.
 \esgil{Polynomial en Uniform CLSP-BS?}
 \end{itemize}
 
@@ -387,7 +388,7 @@ It is easy to see that the extended formulations~\eqref{eq:extended-CLSP:periods
 
 
 \begin{prop}\label{prop:extended-relaxation}
-The compact formulation~\eqref{eq:CLSP-BS} of CLSP-BS and the extended formulation~\eqref{eq:extended-CLSP:periods} and \eqref{eq:extended-CLSP:items} of CLSP-BS have the same continuous relaxation.
+The compact formulation~\eqref{eq:CLSP-BS} of CLSP-BS and the extended formulation~\eqref{eq:extended-CLSP:periods} and \eqref{eq:extended-CLSP:items} of CLSP-BS have the same continuous relaxations.
 \end{prop}
 
 
@@ -397,104 +398,106 @@ We will prove proposition~\ref{prop:extended-relaxation} showing that each conti
 We start with the relaxation of the extended formulation~\eqref{eq:extended-CLSP:periods} and we need the following lemma.
 
 \begin{lem}\label{lem:cover-vertex}
-Let $R\in\NN^*$ and let $N\in\range{R}$. Let $\bracket{x_1,\ldots,x_R}\in\sqbracket{0,1}^R$ be such that $\sum_{r=1}^Rx_r = N$.
-Then, there exists $\bracket{y_p}_{p\in{R\choose N}}\in\sqbracket{0,1}^{R\choose N}$ such that:
-$$x_r \le \sum_{p\in{R\choose N}~|~r\in p}y_p,\ \forall r\in\range{R} \mbox{ and } \sum_{p\in{R\choose N}}y_p \le 1$$
+Let $I\in\NN^*$ and let $N\in\range{I}$.
+Let $\bracket{x^i,\ldots,x^I}\in\sqbracket{0,1}^I$ be such that $\sum_{i=1}^I x^i = N$.
+Then, there exists $\bracket{y^p}_{p\in{I\choose N}}\in\sqbracket{0,1}^{I\choose N}$ such that:
+$$x^i \le \sum_{p\in{I\choose N}~|~i\in p}y^p,\ \forall i\in\range{I}\ \mbox{and}\ \sum_{p\in{I\choose N}}y^p \le 1$$
 \end{lem}
 
-The proof of the lemma~\ref{lem: cover vertex} is given in section~\ref{sec: proof lemma cover vertex}. We can now prove the equality between the two continuous relaxations (proposition~\ref{prop: equality relaxation}).
+\esgil{Preuve du lemme~\ref{lem:cover-vertex} en annexe ou dans le corps?}
+
+Proof of the lemma~\ref{lem:cover-vertex} is given in annexe~\ref{TODO}. We can now prove the equality between the two continuous relaxations.
 
 
 \begin{proof}
-Let $\bracket{\inventory_t^r, \quantity_t^r, y_p^t}$ be a solution of the continuous relaxation of~\eqref{eq:extended-PP-period}.
-For $t\in\range{\horizon}$ and $r\in\REF$, we set $\setup_t^r=\sum_{p\in{\REF\choose\nbsetups_t}~|~r\in p} y_p^t$.
-Since $\bracket{\inventory_t^r, \quantity_t^r, y_p^t}$ is a solution of the continuous relaxation of~\eqref{eq:extended-PP-period}, we have
+Let $\bracket{\inventory_t^i, \quantity_t^i, y_t^p}$ be a solution of the continuous relaxation of~\eqref{eq:extended-CLSP:periods}.
+For $t\in\range{\horizon}$ and $i\in\REF$, we set $\setup_t^i=\sum_{p\in{\REF\choose\nbsetups_t}~|~i\in p} y_t^p$.
+Since $\bracket{\inventory_t^i, \quantity_t^i, y_t^p}$ is a solution of the continuous relaxation of~\eqref{eq:extended-CLSP:periods}, we have:
 $$
-\setup_t^r
-= \sum_{p\in{\REF\choose\nbsetups_t}~|~r\in p} y_p^t
-\le \sum_{p\in{\REF\choose\nbsetups_t}} y_p^t
+\setup_t^i
+= \sum_{p\in{\REF\choose\nbsetups_t}~|~i\in p} y_t^p
+\le \sum_{p\in{\REF\choose\nbsetups_t}} y_t^p
 \le 1
-\qquad \forall t\in\range{\horizon},\forall r\in\REF,
+\qquad \forall t\in\range{\horizon},\forall i\in\REF,
 $$
 and
 $$
-\sum_{r\in\REF}\setup_t^r
-= \sum_{r\in\REF}\sum_{p\in{\REF\choose\nbsetups_t}~|~r\in p} y_p^t
-= \sum_{p\in{\REF\choose\nbsetups_t}} \nbsetups_t\, y_p^t
-= \nbsetups_t \sum_{p\in{\REF\choose\nbsetups_t}} y_p^t
+\sum_{i\in\REF}\setup_t^i
+= \sum_{i\in\REF}\sum_{p\in{\REF\choose\nbsetups_t}~|~i\in p} y_t^p
+= \sum_{p\in{\REF\choose\nbsetups_t}} \nbsetups_t\, y_t^p
+= \nbsetups_t \sum_{p\in{\REF\choose\nbsetups_t}} y_t^p
 \le \nbsetups_t
 \qquad \forall t\in\range{\horizon}.
 $$
-So $\bracket{\inventory_t^r, \quantity_t^r, \setup_t^r}$  is a solution of the continuous relaxation of~\eqref{eq: compact PP} with the same cost as $\bracket{\inventory_t^r, \quantity_t^r, y_p^t}$.
+So $\bracket{\inventory_t^i, \quantity_t^i, \setup_t^i}$  is a solution of the continuous relaxation of~\eqref{eq:CLSP-BS} with the same cost as $\bracket{\inventory_t^i, \quantity_t^i, y_t^p}$.
 
 
-Let $\bracket{\inventory_t^r, \quantity_t^r, \setup_t^r}$ be a solution of the continuous relaxation of~\eqref{eq: compact PP}. Without loss of generality, we can suppose that $\sum_{r\in\REF}x_t^r=\nbsetups_t$ for each period $t\in\range{\horizon}$.
-For each period $t\in\range{\horizon}$, according to lemma~\ref{lem: cover vertex}, there exists
-$\bracket{y_p^t}_{p\in{\REF\choose\nbsetups_t}}\in\sqbracket{0,1}^{\REF\choose\nbsetups_t}$ such that
-$\setup_t^r \le \sum_{p{\REF\choose\nbsetups_t}~|~r\in p} y_p^t,\ \forall r\in\REF$ and
-$\sum_{p\in{\REF\choose\nbsetups_t}}y_p^t \le 1$.
-Since $\bracket{\inventory_t^r, \quantity_t^r, \setup_t^r}$ is a solution of the continuous relaxation of~\eqref{eq: compact PP}, we have
+Let $\bracket{\inventory_t^i, \quantity_t^i, \setup_t^i}$ be a solution of the continuous relaxation of~\eqref{eq:CLSP-BS}. Without loss of generality, we can suppose that for each period $t\in\range{\horizon}$, $\sum_{i\in\REF}x_t^i=\nbsetups_t$.
+For each period $t\in\range{\horizon}$, according to lemma~\ref{lem:cover-vertex}, there exists
+$\bracket{y_t^p}_{p\in{\REF\choose\nbsetups_t}}\in\sqbracket{0,1}^{\REF\choose\nbsetups_t}$ such that
+$\setup_t^i \le \sum_{p{\REF\choose\nbsetups_t}~|~i\in p} y_t^p,\ \forall i\in\REF$ and
+$\sum_{p\in{\REF\choose\nbsetups_t}}y_t^p \le 1$.
+Since $\bracket{\inventory_t^i, \quantity_t^i, \setup_t^i}$ is a solution of the continuous relaxation of~\eqref{eq:CLSP-BS}, we have
 $$
-\rate_t^r\, \quantity_t^r
-\le \setup_t^r\, \capacity_t^r
-\le \capacity_t^r\, \sum_{p\in{\REF\choose\nbsetups_t}~|~r\in p} y_p^t
-\qquad \forall t\in\range{\horizon},\ \forall r\in\REF.
+\rate_t^i\, \quantity_t^i
+\le \setup_t^i\, \capacity_t^i
+\le \capacity_t^i\, \sum_{p\in{\REF\choose\nbsetups_t}~|~i\in p} y_t^p
+\qquad \forall t\in\range{\horizon},\ \forall i\in\REF.
 $$
-So $\bracket{\inventory_t^r, \quantity_t^r, y_p^t}$ is a solution of the continuous relaxation of~\eqref{eq:extended-PP-period} with the same cost as $\bracket{\inventory_t^r, \quantity_t^r, \isProducedPR{p}{t}}$.
+So $\bracket{\inventory_t^i, \quantity_t^i, y_t^p}$ is a solution of the continuous relaxation of~\eqref{eq:extended-CLSP:periods} with the same cost as $\bracket{\inventory_t^i, \quantity_t^i, y_t^p}$.
 \end{proof}
 
 
 
-\begin{prop}\label{prop: equality relaxation 2}
-The compact formulation~\eqref{eq: compact PP} and the extended formulation~\eqref{eq:extended-PP-ref} have the same continuous relaxation.
-\end{prop}
+We now prove the equality between the relaxations of the extended formulation~\eqref{eq:extended-CLSP:periods} and the compact formulation~\eqref{eq:CLSP-BS}.
 
 
 \begin{proof}
-Let $\bracket{\inventory_t^r, \quantity_t^r, z_{\ell}^r}$ be a solution of the continuous relaxation of~\eqref{eq:extended-PP-ref}.
-For $t\in\range{\horizon}$ and $r\in\REF$, we set $\setup_t^r=\sum_{\ell\subseteq\range{\horizon}~|~t\in\ell} z_{\ell}^r$.
-Since $\bracket{\inventory_t^r, \quantity_t^r, z_{\ell}^r}$ is a solution of the continuous relaxation of~\eqref{eq:extended-PP-period}, we have
+Let $\bracket{\inventory_t^i, \quantity_t^i, z_{\ell}^i}$ be a solution of the continuous relaxation of~\eqref{eq:extended-CLSP:items}.
+For $t\in\range{\horizon}$ and $i\in\REF$, we set $\setup_t^i=\sum_{\ell\subseteq\range{\horizon}~|~t\in\ell} z_{\ell}^i$.
+Since $\bracket{\inventory_t^i, \quantity_t^i, z_{\ell}^i}$ is a solution of the continuous relaxation of~\eqref{eq:extended-CLSP:items}, we have
 $$
-\setup_t^r
-= \sum_{\ell\subseteq\range{\horizon}~|~t\in\ell} z_{\ell}^r
-\le \sum_{\ell\subseteq\range{\horizon}} z_{\ell}^r
+\setup_t^i
+= \sum_{\ell\subseteq\range{\horizon}~|~t\in\ell} z_{\ell}^i
+\le \sum_{\ell\subseteq\range{\horizon}} z_{\ell}^i
 \le 1
-\qquad \forall t\in\range{\horizon},\forall r\in\REF,
+\qquad \forall t\in\range{\horizon},\forall i\in\REF,
 $$
 and
 $$
-\sum_{r\in\REF}\setup_t^r
-= \sum_{r\in\REF}\sum_{\ell\subseteq\range{\horizon}~|~t\in\ell} z_{\ell}^r
+\sum_{i\in\REF}\setup_t^i
+= \sum_{i\in\REF}\sum_{\ell\subseteq\range{\horizon}~|~t\in\ell} z_{\ell}^i
 \le \nbsetups_t
 \qquad \forall t\in\range{\horizon}.
 $$
-So $\bracket{\inventory_t^r, \quantity_t^r, \setup_t^r}$  is a solution of the continuous relaxation of~\eqref{eq: compact PP} with the same cost as $\bracket{\inventory_t^r, \quantity_t^r, z_{\ell}^r}$.
+So $\bracket{\inventory_t^i, \quantity_t^i, \setup_t^i}$  is a solution of the continuous relaxation of the compact formulation~\eqref{eq:CLSP-BS} with the same cost as $\bracket{\inventory_t^i, \quantity_t^i, z_{\ell}^i}$.
 
 
-Let $\bracket{\inventory_t^r, \quantity_t^r, \setup_t^r}$ be a solution of the continuous relaxation of~\eqref{eq: compact PP}. For each reference $r$, we define the sequence $\bracket{\ell_p^r}_p$ of and the associated $z_{\ell_p^r}^r$ as follow:
+Let $\bracket{\inventory_t^i, \quantity_t^i, \setup_t^i}$ be a solution of the continuous relaxation of the compact formulation~\eqref{eq:CLSP-BS}. For each item $i$, we define the sequence $\bracket{\ell_p^i}_p$ of and the associated $z_{\ell_p^i}^i$ as follow:
 $$
 \begin{aligned}
-\ell_1^r       &= \crbracket{t\in\range{\horizon}~|~\setup_t^r>0} \\
-z_{\ell_1^r}^r &= \min\crbracket{\setup_t^r~|~t\in\ell_1^r}
+\ell_1^i       &= \crbracket{t\in\range{\horizon}~|~\setup_t^i>0} \\
+z_{\ell_1^i}^i &= \min\crbracket{\setup_t^i~|~t\in\ell_1^i}
 \end{aligned}
 $$
-And for $p\ge1$, while $\ell_p^r\ne\emptyset$,
+And for $p\ge1$, while $\ell_p^i\ne\emptyset$,
 $$
 \begin{aligned}
-\ell_{p+1}^r       &= \crbracket{t\in\range{\horizon}~\Big|~\setup_t^r-z_{\ell_p^r}^r>0} \\
-z_{\ell_{p+1}^r}^r &= \min\crbracket{\setup_t^r-z_{\ell_p^r}^r~\Big|~t\in\ell_1^r}
+\ell_{p+1}^i       &= \crbracket{t\in\range{\horizon}~\Big|~\setup_t^i-z_{\ell_p^i}^i>0} \\
+z_{\ell_{p+1}^i}^i &= \min\crbracket{\setup_t^i-z_{\ell_p^i}^i~\Big|~t\in\ell_1^i}
 \end{aligned}
 $$
-An example for the definition of the $\bracket{z_{\ell}^r}$ is given on figure~\ref{fig:relaxation-extended-formulation-by-reference}.
+An example for the definition of the $\bracket{z_{\ell}^i}$ is given on figure~\ref{fig:relaxation-extended-formulation-by-reference}.
+
 \begin{figure}[h]
   \centering
-  \includegraphics{relaxation_extended_formulation_by_reference.tikz}
-  \caption{Example of definition of the variables $\bracket{z_{\ell}^r}$ for four periods}
+  \includegraphics{main/PDP/images/relaxation_extended-CLSP_items.tikz}
+  \caption{Example of definition of the variables $\bracket{z_{\ell}^i}$ for four periods}
   \label{fig:relaxation-extended-formulation-by-reference}
 \end{figure}
-\end{proof}
 
-$\bracket{\ell_p^r}_p$ is finite and strictly decreasing and for every $\ell\notin\bracket{\ell_p^r}_p$, we set $z_{\ell}^r=0$. Then, we have $\setup_t^r = \sum_{\ell\subseteq\range{\horizon}~|~t\in\ell} z_{\ell}^r$ and $\bracket{\inventory_t^r, \quantity_t^r, z_{\ell}^r}$ is a solution of continuous relaxation of~\eqref{eq:extended-PP-ref}.
+$\bracket{\ell_p^i}_p$ is finite and strictly decreasing and for every $\ell\notin\bracket{\ell_p^i}_p$, we set $z_{\ell}^i=0$. Then, we have $\setup_t^i = \sum_{\ell\subseteq\range{\horizon}~|~t\in\ell} z_{\ell}^i$ and $\bracket{\inventory_t^i, \quantity_t^i, z_{\ell}^i}$ is a solution of continuous relaxation of the extended formulation~\eqref{eq:extended-CLSP:items}.
+\end{proof}
 
 
 

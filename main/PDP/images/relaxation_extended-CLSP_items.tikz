@@ -1,0 +1,45 @@
+\begin{tikzpicture}[font=\normalsize]
+
+  \tikzstyle{histogram} = [draw, argon orange, fill=argon orange!33]
+  \begin{scope}[local bounding box=ExtendedFormulation, scale=1]
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Rectangle
+    \draw[histogram] (0.1,0) rectangle (0.9,1);
+    \draw[histogram] (2.1,0) rectangle (2.9,1.5);
+    \draw[histogram] (3.1,0) rectangle (3.9,1);
+
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Axis
+
+    % x axis
+    \draw[->] (-.25,0) node[left,anchor=east]{0} -- (5.5,0) node[right,anchor=west]{t};
+    \draw (0.5,0) node[below,anchor=north]{$1$};
+    \draw (1.5,0) node[below,anchor=north]{$2$};
+    \draw (2.5,0) node[below,anchor=north]{$3$};
+    \draw (3.5,0) node[below,anchor=north]{$4$};
+
+    % y axis
+    \draw[->] (0,-.25) -- (0,2.5) node[above,anchor=south]{$\setup_t^i$};
+    \draw (-.25,2) node[left,anchor=east]{1} -- (0.25,2);
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Seuil
+    \draw[dashed,argon gray] (-.25,1) -- (4.75,1);
+    \draw[dashed,argon gray] (-.25,1.5) -- (4.75,1.5);
+
+    \draw[<->] (4.5,0.05) -- node[right,anchor=west]{$z_{\ell_1^i}^i$} (4.5,0.95);
+    \draw[<->] (4.5,1.05) -- node[right,anchor=west]{$z_{\ell_2^i}^i$} (4.5,1.45);
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Line
+    \draw[<->,red] (0,-.75) -- (1,-.75);
+    \draw[<->,red] (2,-.75) -- (4,-.75);
+    \draw[red] (4.5,-.75) node[right,anchor=west]{$\ell_1^i=\crbracket{1,3,4}$};
+
+    \draw[<->,red] (2,-1.5) -- (3,-1.5);
+    \draw[red] (4.5,-1.5) node[right,anchor=west]{$\ell_2^i=\crbracket{3}$};
+  \end{scope}
+
+\end{tikzpicture}
