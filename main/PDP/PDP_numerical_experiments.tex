@@ -72,18 +72,21 @@ But playing with safety levels allows to prevent too large backorder costs. Howe
 \section{Instances}
 
 \subsection{Historical data}
+\label{sec:PDP:numerical-experiments:historical-data}
 
 The instances used are realistic and have been provided by a client of the partner. The client gave actually the figures of seven assembly lines and the demand for each week over an entire quarter.
 This horizon $\horizon$ is the typical one used in practice by this client, namely $\horizon=13$ weeks.
 
-The historical demand are denoted by $\bar\demand_t^i$. As explain in Chapter~\ref{chap:business-context}, the global volume of the forecast demand is constant over every possible outcomes. Then, we obtain the demand via an Dirichlet distribution whose parameters are computed from two values:
+The historical demand are denoted by $\bar{\demand}_t^i$. As explain in Chapter~\ref{chap:business-context}, the global volume of the forecast demand is constant over every possible outcomes. Then, we obtain the demand via an Dirichlet distribution whose parameters are computed from two values:
 \begin{itemize}
   \item a ``volatility'' $v$ chosen in $\crbracket{0.2,0.5, 0.8}$. It represents the precision of the forecast demand. The bigger is $v$, the less precise is the forecast demand.
+
+  For a period $t$ and an item $i$, we try to have $v\simeq\frac{\sqrt{\vari\sqbracket{\va\demand_t^i}}}{\bar{\demand}_t^i}$. If $v$ cannot be the same for every items and every periods, it must be greater for the items and periods with low demand. In practice, we have less incertitude in proportion on best-sellers than on short series.
   \item a number of weeks $\tau$ chosen in $\crbracket{4,7,13}$. The total volume of the forecast demand is constant over the week 1 to $\tau$, then during the week $\tau+1$ to $2\tau$, etc. The chosen values represent a month, half a quarter and a complete quarter.
 \end{itemize}
 Details about the distributions and how its parameters are computed are given in Section~\ref{sec:PDP:numerical-experiments:dirichlet}.
 
-The initial inventory is set to $s_0^i=\frac{1}{3}(\bar\demand_1^i+\bar\demand_2^i+\bar\demand_3^i)$.
+The initial inventory is set to $s_0^i=\frac{1}{3}(\bar{\demand}_1^i+\bar{\demand}_2^i+\bar{\demand}_3^i)$.
 
 The other parameters are provided in Table~\ref{tab:instances-characteristics}.
 %In particular, for each value of $v$, we have considered three possible values of the unit backorder cost $\backorder$, which have been determined following a procedure described in Section~\ref{sec:service}. At the moment, we do not discuss further these values and take them as part of the input, as required by the problem formulation.
@@ -92,7 +95,7 @@ In the column $\tilde{\holding}^i$, we indicate the range of the holding costs b
 
 We also add the loading indicator $\kappa_t$ at period $t$ defined as:
 \begin{equation}
-  \kappa_t = \frac{\sum_{i\in\REF} \bracket{\sum_{t'=1}^{t} \bar\demand_{t'}^i}-\inventory_0^i}{ \sum_{t'=1}^{t} \capacity_{t'}}
+  \kappa_t = \frac{\sum_{i\in\REF} \bracket{\sum_{t'=1}^{t} \bar{\demand}_{t'}^i}-\inventory_0^i}{ \sum_{t'=1}^{t} \capacity_{t'}}
 \end{equation}
 It is the ratio cumulative forecast demand up to period $t$ minus the initial inventory over cumulative capacity up to period $t$. If there were no flexibility constraints and if the holding costs were not an issue, then for a period $t$, $\kappa_t \le 100\%$ implies that it is possible to supply the whole demand. As show in table~\ref{tab:instances-characteristics}, the lines $L_0$, $L_1$, $L_2$, $L_3$ and $L_4$ experience overcapacity: the loading indicator is smaller than $100\%$. The lines $L_5$ and $L_6$ experience undercapacity: the loading indicator is larger than $100\%$ at some periods.
 
@@ -105,7 +108,7 @@ Instances &
 \\\cline{2-8}
 \\
 & $\card{\REF}$
-& $\max(\bar\demand_t^i)$
+& $\max(\bar{\demand}_t^i)$
 & \multicolumn{1}{c}{$\capacity$}
 & \multicolumn{1}{c}{$\nbsetups$}
 & \multicolumn{1}{c}{$\tilde{\holding}^i$}
@@ -141,11 +144,155 @@ The number $m$ of scenarios used to solve (2SA-$m$) is fixed to $20$, determined
 \subsection{Generate randomness}
 \label{sec:PDP:numerical-experiments:dirichlet}
 
-\begin{itemize}
-  \item Auto-regressive model
-  \item Revenir à un bruit gaussien?
-  \item Ouverture: note d'Abdelkadder Sbihi sur les logiciels
-\end{itemize}
+
+As explain in Chapter~\ref{chap:business-context}, the global volume of the forecast demand is constant over every possible outcomes. Thus, we turn to Dirichlet distribution to generate the possible outcomes of demand. This section reminds the definition of Dirichlet distribution, explains how the parameters are computed and how the properties are used in the simulation.
+
+
+\subsubsection{Dirichlet distribution}
+
+We refer to \cite[Chapter 49]{Kotz2000} for the details of the proofs of classical results about Dirichlet distributions.
+
+The \emph{Dirichlet distribution} denoted by $\Dir(\alpha)$ is a family of continuous multivariate probability distributions.
+It is parametrized by a number of categories $K \ge 2$ (integer) and a vector $\alpha=\bracket{\alpha_1,\ldots,\alpha_K}\in\bracket{\RR_+^*}^K$ of positive reals called concentrations parameters.
+Its support is a vector $x=\bracket{x_1,\ldots,x_K}\in\bracket{0,1}^K$ oh the $K-1$ simplex \ie such that $\sum_{k=1}^K x_k = 1$.
+
+The Dirichlet distribution has a probability density function with respect to Lebesgue measure on the Euclidean space $\RR^{K-1}$ given by:
+\begin{equation}\label{eq:dirchlet:probability-density-function}
+  f\bracket{x,\alpha} = \frac{1}{ \Beta\bracket{\alpha}}\prod_{k=1}^K x_k^{\alpha_k-1}
+\end{equation}
+The normalizing constant is the multivariate beta function, which can be expressed in terms of the gamma function:
+\begin{equation}
+  \Beta\bracket{\alpha} =
+  \frac{ \prod_{k=1}^K \Gamma\bracket{\alpha_k} }
+       { \Gamma\bracket{\sum_{k=1}^K \alpha_k} }
+\end{equation}
+
+
+Let $\va x=\bracket{\va x_1,\ldots,\va x_K}\sim \Dir\bracket{\alpha}$. Setting $\alpha_0=\sum_{k=1}^K\alpha_k$, the moments of the Dirichlet distribution are:
+\begin{subequations}\label{eq:dirchlet:moments}
+  \begin{align}
+    \espe\sqbracket{\va x_k} &= \frac{\alpha_k}{\alpha_0} && \forall k\in\range{K},
+    \label{eq:dirchlet:moments:mean}
+    \\
+    \vari\sqbracket{\va x_k} &= \frac{\alpha_k\bracket{\alpha_0-\alpha_k}}{\alpha_0^2\bracket{\alpha_0+1}} && \forall k\in\range{K},
+    \label{eq:dirchlet:moments:mean}
+    \\
+    \cova\sqbracket{\va x_k,\va x_{\ell}} &= \frac{-\alpha_k\alpha_{\ell}}{\alpha_0^2\bracket{\alpha_0+1}} && \forall k\ne\ell,
+    \label{eq:dirchlet:moments:mean}
+  \end{align}
+\end{subequations}
+
+
+Finally, the Dirichlet distribution has the aggregation property~\ref{prop:dirichlet:aggregation}.
+
+\begin{prop}\label{prop:dirichlet:aggregation}
+  If $\va x=\bracket{\va x_1,\ldots,\va x_K}\sim \Dir\bracket{\alpha_1,\ldots,\alpha_K}$ then, if the random variables with index $k$ and $\ell$ are dropped from the vector and replaced by their sum,
+  $$\va x=\bracket{\va x_1,\ldots,\va x_k+\va x_{\ell},\ldots,\va x_K}\sim \Dir\bracket{\alpha_1,\ldots,\alpha_k+\alpha_{\ell},\ldots,\alpha_K}$$
+\end{prop}
+
+
+
+\begin{prop}\label{prop:dirichlet:conditional}
+  Let $\va x=\bracket{\va x_1,\ldots,\va x_K}\sim \Dir\bracket{\alpha_1,\ldots,\alpha_K}$ and $m\in\range[1]{k-1}$.
+  We denote $\va x_{(1)}=\bracket{\va x_1,\ldots,\va x_m}$ and $\va x_{(2)}=\bracket{\va x_{m+1},\ldots,\va x_K}$.
+  So $\va x_{(1)}|\va x_{(2)}=x_{(2)}$ has a scaled Dirichlet distribution, or equivalently,
+  $$
+  \frac{1}{1-1^T x_{(2)}} \va x_{(1)}|\va x_{(2)}=x_{(2)}
+  \sim
+  \Dir\bracket{\alpha_1,\ldots,\alpha_m}
+  $$
+  where $1^T$ is the vector with length $k-m$ and all entries equal to 1.
+\end{prop}
+
+\esgil{Write proof of proposition~\ref{prop:dirichlet:conditional} or find it in a book}
+
+
+
+\subsubsection{Generate Dirichlet distributed variables}
+
+
+Realizations of the random vector $\va x=\bracket{\va x_1,\ldots,\va x_K}\sim\Dir\bracket{\alpha_1,\ldots,\alpha_K}$ can be get from a source of Gamma distributed random variates using the following procedure described in~\cite{Frigyik2010}.
+
+\textbf{Step 1.} \emph{Generate Gamma realization.} For $k=1,\ldots,K$, draw a number $y_k$ from $\Gamma\bracket{\alpha_k,1}$.
+
+\textbf{Step 2.} \emph{Normalize the realization.} For $k=1,\ldots,K$, set $x_k=\frac{y_k}{\sum_{\ell=1}^K y_{\ell}}$. Then, $\bracket{x_1,\ldots,x_K}$ is a realization of $\Dir\bracket{\alpha}$.
+
+The above procedure relies on Proposition~\ref{prop:dirichlet:generation-from-gamma} proved in \cite{Devroye1986}.
+
+\begin{prop}\label{prop:dirichlet:generation-from-gamma}
+  Let $\theta,\alpha_1,\ldots,\alpha_K$ be $K+1$ positive real numbers.
+  For $K$ independently distributed Gamma distributions
+  $\va y_1\sim\Gamma\bracket{\alpha_1,\theta},\ldots,\va y_K\sim\Gamma\bracket{\alpha_K,\theta}$,
+  we have:
+  \begin{subequations}
+    \begin{align*}
+      V &= \sum_{k=1}^K \va y_k \sim \Gamma\bracket{\sum_{k=1}^K \alpha_k,\theta}
+      \\
+      \va x &= \bracket{\va x_1,\ldots,\va x_K} = \bracket{\frac{\va y_1}{V},\ldots,\frac{\va y_K}{V}} \sim \Dir\bracket{\alpha_1,\ldots,\alpha_K}
+    \end{align*}
+  \end{subequations}
+\end{prop}
+
+Other methods exist to generate random variables following a Dirichlet distribution. But this one is easy to understand and to implement because C++ standard library have a gamma generator since 2011 edition.
+
+
+
+
+\subsubsection{Generate samples of demand}
+
+The objective is to generate samples of demand $\bracket{\va\demand_1,\ldots,\va\demand_K}$ such that:
+\begin{subequations}
+  \begin{align}
+    \sum_{k=1}^K \va\demand_k &= \sum_{k=1}^K \bar{\demand}_k && \mbox{almost everywhere},
+    \\
+    \espe\sqbracket{\va\demand_k} &= \bar{\demand}_k && \forall k\in\range{K},
+    \\
+    \vari\sqbracket{\va\demand_k} &= \bracket{v\bar{\demand}_k}^2 && \forall k\in\range{K},
+  \end{align}
+\end{subequations}
+where $v\in\left]0,1\right[$ is the volatility defined in Section~\ref{sec:PDP:numerical-experiments:historical-data}.
+(Only in this chapter, for the sake of simplicity, we use only one index for the demand.)
+We first expose the procedure, then justify it and explain why the three properties can be exactly reached.
+
+\medskip
+
+\textbf{Hypothesis.} We assume that every demand have a positive mean and that there are at least two demands is the set.
+
+\textbf{Step 1.} \emph{Initialize the procedure.}
+Set:
+\begin{subequations}
+  \begin{align*}
+    \bar{\demand} &= \sum_{k=1}^K\bar{\demand}_k
+    \\
+    \gamma &= \min \bracket{1,\
+    \frac
+    {\sum_{k=1}^K\sqrt{\frac{\bar{\demand}-\bar{\demand}_k}{\bar{\demand}_k}}}{\sum_{k=1}^K\frac{\bar{\demand}-\bar{\demand}_k}{\bar{\demand}_k}}\ v}
+    \\
+    \alpha_0 &= \frac{1}{\gamma^2}-1
+  \end{align*}
+\end{subequations}
+For $k=1,\ldots,K$, set $\alpha_k=\frac{\bar{\demand}_k}{\bar{\demand}}\alpha_0$.
+
+\textbf{Step 2.} \emph{Generate Gamma realization.}
+For $k=1,\ldots,K$, draw a number $y_k$ from $\Gamma\bracket{\alpha_k,1}$.
+
+\textbf{Step 3.} \emph{Normalize the realization.}
+For $k=1,\ldots,K$, set $x_k=\frac{y_k}{\sum_{\ell=1}^K y_{\ell}}$.
+
+\textbf{Step 4.} \emph{Return a sample of demand.}
+For $k=1,\ldots,K$, set $d_k = x_k \bar{\demand}$.
+
+Then, $\bracket{\demand_1,\ldots,\demand_K}$ is a realization of the random vector $\bracket{\va\demand_1,\ldots,\va\demand_K}\sim\Dir\bracket{\alpha}$ with:
+\begin{subequations}
+  \begin{align}
+    \sum_{k=1}^K \va\demand_k &= \sum_{k=1}^K \bar{\demand}_k && \mbox{almost everywhere},
+    \\
+    \espe\sqbracket{\va\demand_k} &= \bar{\demand}_k && \forall k\in\range{K},
+    \\
+    \vari\sqbracket{\va\demand_k} &= \gamma^2\bar{\demand_k}\bracket{\bar{\demand}-\bar{\demand}_k} && \forall k\in\range{K},
+  \end{align}
+\end{subequations}
+
 
 
 \section{Numerical results}
