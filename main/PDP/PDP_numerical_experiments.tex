@@ -145,10 +145,56 @@ The number $m$ of scenarios used to solve (2SA-$m$) is fixed to $20$, determined
 \label{sec:PDP:numerical-experiments:dirichlet}
 
 
-As explain in Chapter~\ref{chap:business-context}, the global volume of the forecast demand is constant over every possible outcomes. Thus, we turn to Dirichlet distribution to generate the possible outcomes of demand. This section reminds the definition of Dirichlet distribution, explains how the parameters are computed and how the properties are used in the simulation.
+As explain in Chapter~\ref{chap:business-context}, the global volume of the forecast demand is constant over every possible outcomes. Thus, we turn to Dirichlet distribution to generate the possible outcomes of demand. We first expose the procedure to generate samples of demand. Then, we reminds the definition and the classical properties of Dirichlet distributions, explains how the parameters are computed for the procedure and how the properties are used during the simulation.
+
+Only in this Section, for the sake of simplicity, we use only one index $k\in\range{K}$ for the demand.
 
 
-\subsubsection{Dirichlet distribution}
+
+\subsubsection{Procedure to generate sample of demand}
+
+
+\textbf{Hypothesis.} We assume that every demands have a positive mean and that there are at least two demands is the set.
+
+\textbf{Step 1.} \emph{Initialize the procedure.}
+Set:
+\begin{subequations}
+  \begin{align*}
+    \bar{\demand} &= \sum_{k=1}^K\bar{\demand}_k
+    \\
+    \gamma &= \min \bracket{1,\
+    \frac
+    {\sum_{k=1}^K\sqrt{\frac{\bar{\demand}-\bar{\demand}_k}{\bar{\demand}_k}}}{\sum_{k=1}^K\frac{\bar{\demand}-\bar{\demand}_k}{\bar{\demand}_k}}\ v}
+    \\
+    \alpha_0 &= \frac{1}{\gamma^2}-1
+  \end{align*}
+\end{subequations}
+For $k=1,\ldots,K$, set $\alpha_k=\frac{\bar{\demand}_k}{\bar{\demand}}\alpha_0$.
+
+\textbf{Step 2.} \emph{Generate Gamma realization.}
+For $k=1,\ldots,K$, draw a number $y_k$ from $\Gamma\bracket{\alpha_k,1}$.
+
+\textbf{Step 3.} \emph{Normalize the realization.}
+For $k=1,\ldots,K$, set $x_k=\frac{y_k}{\sum_{\ell=1}^K y_{\ell}}$.
+
+\textbf{Step 4.} \emph{Return a sample of demand.}
+For $k=1,\ldots,K$, set $d_k = x_k \bar{\demand}$.
+
+Then, $\bracket{\demand_1,\ldots,\demand_K}$ is a realization of the random vector $\bracket{\va\demand_1,\ldots,\va\demand_K}$ with:
+\begin{subequations}
+  \begin{align}
+    \sum_{k=1}^K \va\demand_k &= \sum_{k=1}^K \bar{\demand}_k && \mbox{almost everywhere},
+    \\
+    \espe\sqbracket{\va\demand_k} &= \bar{\demand}_k && \forall k\in\range{K},
+    \\
+    \vari\sqbracket{\va\demand_k} &= \gamma^2\bar{\demand_k}\bracket{\bar{\demand}-\bar{\demand}_k} && \forall k\in\range{K}.
+    \label{eq:dirichlet:procedure:variance}
+  \end{align}
+\end{subequations}
+
+
+
+\subsubsection{Dirichlet distributions}
 
 We refer to \cite[Chapter 49]{Kotz2000} for the details of the proofs of classical results about Dirichlet distributions.
 
@@ -189,22 +235,6 @@ Finally, the Dirichlet distribution has the aggregation property~\ref{prop:diric
   If $\va x=\bracket{\va x_1,\ldots,\va x_K}\sim \Dir\bracket{\alpha_1,\ldots,\alpha_K}$ then, if the random variables with index $k$ and $\ell$ are dropped from the vector and replaced by their sum,
   $$\va x=\bracket{\va x_1,\ldots,\va x_k+\va x_{\ell},\ldots,\va x_K}\sim \Dir\bracket{\alpha_1,\ldots,\alpha_k+\alpha_{\ell},\ldots,\alpha_K}$$
 \end{prop}
-
-
-
-\begin{prop}\label{prop:dirichlet:conditional}
-  Let $\va x=\bracket{\va x_1,\ldots,\va x_K}\sim \Dir\bracket{\alpha_1,\ldots,\alpha_K}$ and $m\in\range[1]{k-1}$.
-  We denote $\va x_{(1)}=\bracket{\va x_1,\ldots,\va x_m}$ and $\va x_{(2)}=\bracket{\va x_{m+1},\ldots,\va x_K}$.
-  So $\va x_{(1)}|\va x_{(2)}=x_{(2)}$ has a scaled Dirichlet distribution, or equivalently,
-  $$
-  \frac{1}{1-1^T x_{(2)}} \va x_{(1)}|\va x_{(2)}=x_{(2)}
-  \sim
-  \Dir\bracket{\alpha_1,\ldots,\alpha_m}
-  $$
-  where $1^T$ is the vector with length $k-m$ and all entries equal to 1.
-\end{prop}
-
-\esgil{Write proof of proposition~\ref{prop:dirichlet:conditional} or find it in a book}
 
 
 
@@ -251,49 +281,123 @@ The objective is to generate samples of demand $\bracket{\va\demand_1,\ldots,\va
   \end{align}
 \end{subequations}
 where $v\in\left]0,1\right[$ is the volatility defined in Section~\ref{sec:PDP:numerical-experiments:historical-data}.
-(Only in this chapter, for the sake of simplicity, we use only one index for the demand.)
-We first expose the procedure, then justify it and explain why the three properties can be exactly reached.
+%We first expose the procedure, then justify it and explain why the three properties can be exactly reached.
+
 
 \medskip
 
-\textbf{Hypothesis.} We assume that every demand have a positive mean and that there are at least two demands is the set.
+Before justifying the procedure just note that the objective formulation of the variance given in Section~\ref{sec:PDP:numerical-experiments:historical-data} does not match exactly to the formulation~\eqref{eq:dirichlet:procedure:variance} find at the end of the procedure. However, we succeed in approaching the other objective since the bigger is the demand, the lower is the volatility $v_k=\frac{\sqrt{\vari\sqbracket{\va\demand_k}}}{\bar{\demand}_k} = \gamma\sqrt{\frac{\bar{\demand}}{\bar{\demand_k}}-1}$.
 
-\textbf{Step 1.} \emph{Initialize the procedure.}
-Set:
+
+\medskip
+
+
+We first assume that $\gamma$ is an external parameter of the algorithm and justify it with this hypothesis. Setting $\alpha_0,\ldots,\alpha_K$ as in step 1, we have:
+\begin{equation}
+  \sum_{k=1}^K \alpha_k = \alpha_0 \sum_{k=1}^K\frac{\bar{\demand_k}}{\bar{\demand}} = \alpha_0
+\end{equation}
+According to the procedure previously described for generating random realization of Dirichlet distribution, we know that step 2 and 3 produced a realization $\bracket{x_1,\ldots,x_K}$ of $\Dir\bracket{\alpha}$. Setting $\bracket{\demand_1,\ldots,\demand_K}$ as in step 4, we have a realization of the random vector $\bracket{\va\demand_1,\ldots,\va\demand_K}$ with:
+\begin{align}
+  \sum_{k=1}^K \va\demand_k
+  &= \bar{\demand} \sum_{k=1}^K \va x_k
+  = \bar{\demand}
+  = \sum_{k=1}^K \bar{\demand}_k
+  && \mbox{almost everywhere},
+  \\
+  \espe\sqbracket{\va\demand_k}
+  &= \bar{\demand}\espe\sqbracket{\va x_k}
+  = \bar{\demand}\ \frac{\alpha_k}{\alpha_0}
+  = \bar{\demand}_k
+  && \forall k\in\range{K}.
+\end{align}
+Finally, computing the variance of each variable $\va\demand_k$ gives:
+
 \begin{subequations}
-  \begin{align*}
-    \bar{\demand} &= \sum_{k=1}^K\bar{\demand}_k
-    \\
-    \gamma &= \min \bracket{1,\
-    \frac
-    {\sum_{k=1}^K\sqrt{\frac{\bar{\demand}-\bar{\demand}_k}{\bar{\demand}_k}}}{\sum_{k=1}^K\frac{\bar{\demand}-\bar{\demand}_k}{\bar{\demand}_k}}\ v}
-    \\
-    \alpha_0 &= \frac{1}{\gamma^2}-1
-  \end{align*}
+\begin{align}
+  \vari\sqbracket{\va\demand_k}
+  &= \bar{\demand}^2\vari\sqbracket{\va x_k}
+  = \bar{\demand}^2
+  \frac{\alpha_k\bracket{\alpha_0-\alpha_k}}{\alpha_0^2\bracket{\alpha_0+1}}
+  && \mbox{(variance of Dirichlet distribution)}
+  \\
+  &= \bar{\demand}_k^2 \bracket{\frac{\alpha_0}{\alpha_k}-1}\frac{1}{\alpha_0+1}
+  && \mbox{(definition of $\alpha_k$)}
+  \\
+  &= \bar{\demand}_k^2 \bracket{\frac{\bar{\demand}_0}{\bar{\demand}_k}-1}\gamma^2
+  && \mbox{(definition of $\gamma$)}
+  \\
+  &= \gamma^2 \bar{\demand}_k \bracket{\bar{\demand}_0-\bar{\demand}_k}
+\end{align}
 \end{subequations}
-For $k=1,\ldots,K$, set $\alpha_k=\frac{\bar{\demand}_k}{\bar{\demand}}\alpha_0$.
 
-\textbf{Step 2.} \emph{Generate Gamma realization.}
-For $k=1,\ldots,K$, draw a number $y_k$ from $\Gamma\bracket{\alpha_k,1}$.
+Thus this method gives a volatility for each index $k$
+\begin{equation}
+  v_k
+  = \frac{\sqrt{\vari\sqbracket{\va\demand_k}}}{\bar{\demand}_k}
+  = \gamma\sqrt{\frac{\bar{\demand}}{\bar{\demand_k}}-1}
+\end{equation}
+which differs from the objective of a single volatility for every index.
 
-\textbf{Step 3.} \emph{Normalize the realization.}
-For $k=1,\ldots,K$, set $x_k=\frac{y_k}{\sum_{\ell=1}^K y_{\ell}}$.
-
-\textbf{Step 4.} \emph{Return a sample of demand.}
-For $k=1,\ldots,K$, set $d_k = x_k \bar{\demand}$.
-
-Then, $\bracket{\demand_1,\ldots,\demand_K}$ is a realization of the random vector $\bracket{\va\demand_1,\ldots,\va\demand_K}\sim\Dir\bracket{\alpha}$ with:
+In order to be as close as possible of a single volatility, we solve the optimization problem
+\begin{equation}\label{eq:dirichlet:optimization}
+  \argmin_{\gamma'\in\left]0,1\right[} \norm{\bracket{v_1\bracket{\gamma'},\ldots,v_K\bracket{\gamma'}} - v.e}_2
+\end{equation}
+where $e=\bracket{1,\ldots,1}\in\RR^K$. Then, we look for the arguments of the minimum on $\left]0,1\right[$ of the function
 \begin{subequations}
-  \begin{align}
-    \sum_{k=1}^K \va\demand_k &= \sum_{k=1}^K \bar{\demand}_k && \mbox{almost everywhere},
-    \\
-    \espe\sqbracket{\va\demand_k} &= \bar{\demand}_k && \forall k\in\range{K},
-    \\
-    \vari\sqbracket{\va\demand_k} &= \gamma^2\bar{\demand_k}\bracket{\bar{\demand}-\bar{\demand}_k} && \forall k\in\range{K},
-  \end{align}
+\begin{align}
+  f\bracket{\gamma'}
+  &= \sum_{k=1}^K \bracket{\gamma'\sqrt{\frac{\bar{\demand}}{\bar{\demand_k}}-1}-v}^2
+  \\
+  &= \sum_{k=1}^K
+  \bracket{
+  \bracket{\frac{\bar{\demand}}{\bar{\demand_k}}-1}\gamma'^2
+  - 2v\sqrt{\frac{\bar{\demand}}{\bar{\demand_k}}-1}\gamma'
+  + v^2
+  }
+  \\
+  &= \sum_{k=1}^K\bracket{\frac{\bar{\demand}}{\bar{\demand_k}}-1}\gamma'^2
+  - 2v\bracket{\sum_{k=1}^K\sqrt{\frac{\bar{\demand}}{\bar{\demand_k}}-1}}\gamma'
+  + K v^2
+\end{align}
 \end{subequations}
+$f$ is a quadratic function and reach its minimum for
+\begin{equation}
+  \gamma_0
+  =
+  \frac
+  {v\sum_{k=1}^K\sqrt{\frac{\bar{\demand}}{\bar{\demand_k}}-1}}
+  {\sum_{k=1}^K\bracket{\frac{\bar{\demand}}{\bar{\demand_k}}-1}}
+\end{equation}
+Since $\gamma_0>0$, the best choice for $\gamma$ is $\min\bracket{\gamma_0,1}$.
+
+\esgil{Que se passe-t-il dans le cas égal 1 ? Possible avec deux items si $d_1=d_2$. Possible avec trois ?}
 
 
+
+\subsubsection{Generate sample of demand knowing past demand}
+
+
+During the simulation, past demands are known. In order to generate a new sample of scenarios using this information, we relies on the Proposition~\ref{prop:dirichlet:conditional}.
+
+
+\begin{prop}\label{prop:dirichlet:conditional}
+  Let $\va x=\bracket{\va x_1,\ldots,\va x_K}\sim \Dir\bracket{\alpha_1,\ldots,\alpha_K}$ and $m\in\range[1]{k-1}$.
+  We denote $\va x_{(1)}=\bracket{\va x_1,\ldots,\va x_m}$ and $\va x_{(2)}=\bracket{\va x_{m+1},\ldots,\va x_K}$.
+  So $\va x_{(1)}|\va x_{(2)}=x_{(2)}$ has a scaled Dirichlet distribution, or equivalently,
+  $$
+  \frac{1}{1-1^T x_{(2)}} \va x_{(1)}|\va x_{(2)}=x_{(2)}
+  \sim
+  \Dir\bracket{\alpha_1,\ldots,\alpha_m}
+  $$
+  where $1^T$ is the vector with length $k-m$ and all entries equal to 1.
+\end{prop}
+
+Indeed, knowing the realization of $\bracket{\va\demand_{m+1},\ldots,\va\demand_K}$ is equivalent to know the realization of $\bracket{\va x_{m+1},\ldots,\va x_K}$ and then, we can use the same procedure to generate a new sample of demand.
+
+\begin{proof}[Proof of Proposition~\ref{prop:dirichlet:conditional}]
+\end{proof}
+
+\esgil{Write proof of Proposition~\ref{prop:dirichlet:conditional} or find it in a book}
 
 \section{Numerical results}
 
