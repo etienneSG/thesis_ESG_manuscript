@@ -9,7 +9,7 @@ In Chapter~\ref{chap:PDP:deterministic}, data are deterministic. In practice, pa
 
 As for the Uniform CLSP-BS in Chapter~\ref{chap:PDP - deterministic}, we consider an assembly line producing a set $\REF$ of items over $\horizon$ periods. The number of distinct items produced over a period cannot exceed $\nbsetups$. There is also an upper bound on the total period production (summed over all items) and we normalize all quantities so that this upper bound is equal to $1$.
 
-The production should satisfy a random demand. However, because of uncertainty, backorder (\ie late delivery) is allowed but must be controlled. Part of demand supplied on time must meet a fill rate service level $\servicelvl$ as defined in Chapter~\ref{chap:business-problem}. The demand of item $i$ over period $t$ is a random parameter $\va\demand_t^i$, whose realization is known at the end of period $t$. When production of a item $i$ is not used to satisfy the demand, it can be stored but incurs a unit holding cost $\holding^i>0$ per period. For each item $i$, there is an initial inventory $s_0^i\in\RR_+$.
+The production should satisfy a random demand. However, because of uncertainty, backorder (\ie late delivery) is allowed but must be controlled. Part of demand supplied on time must meet a fill rate service level $\servicelvl$ as defined in Chapter~\ref{chap:business-problem}. The demand of item $i$ over period $t$ is a random parameter $\va\demand_t^i$, whose realization is known at the end of period $t$. When production of an item $i$ is not used to satisfy the demand, it can be stored but incurs a unit holding cost $\holding^i>0$ per period. For each item $i$, there is an initial inventory $s_0^i\in\RR_+$.
 
 Regarding randomness, we assume that for any $i$ and $t$, realizations of $\bracket{\va\demand_t^i,\ldots,\va\demand_{\horizon}^i}$ have finite expectation and can be efficiently sampled, knowing a realization of $\bracket{\va\demand_1^j,\ldots,\va\demand_{t-1}^j}_{j\in\REF}$.
 
@@ -200,7 +200,7 @@ Indeed, in this case, the optimal solution $\quantity^{i*}$ of~\eqref{eq:newsven
 
 
 \begin{rmq}
-Models are not equivalent since backorder is never served in first model whereas second model tries to fulfill past demand.
+Models are not equivalent since backorder is never served in first model whereas second model tries to fulfill past demand. \vl{ref to problems}
 \end{rmq}
 
 
@@ -214,7 +214,7 @@ Models are not equivalent since backorder is never served in first model whereas
 As explained in Section~\ref{sec:PDP:deterministic:theoretical-results}, the deterministic version of CLSP-BS is difficult.
 Therefore, we cannot expect a quick algorithm solving exactly the problem, and this holds especially for the full stochastic version.
 Moreover, one of the requests of the partner was to have an easy to understand method, which can be used and maintained in practice, with short computation times.
-We propose a two-stage approximation consisting in replacing the measurability constraint by
+We propose a two-stage approximation consisting in replacing the measurability constraint by\vl{ref}
 \begin{equation}
 \left\{
 \begin{array}{l@{\quad}l}
@@ -233,7 +233,7 @@ The (2SA) relaxation is then solved by a classical {\em sample average approxima
 We build a set $\scenarios$ of $m$ scenarios sampled uniformly at random.
 Each of these scenarios is a possible realization of $(\va\demand_t^i,\va\demand_{t+1}^i,\ldots,\va\demand_{\horizon}^i)$ for each item $i$. The parameter $m$ is fixed prior to the resolution.
 
-The figure~\ref{} maps the reduction of the scenario space.
+Figure~\ref{} maps the reduction of the scenario space.
 
 \esgil{Ajouter figure de la présentation à Argon}
 
@@ -298,6 +298,8 @@ The following three properties hold when $m$ goes to infinity:
 If the random demand $\va\demand$ is bounded or Gaussian then it satisfies~\eqref{eq:Laplace-caract}. (Some companies work with possibly negative demands. Assuming a normal distribution is hence not irrelevant.) 
 
 \esgil{def of $\varepsilon$-optimal solution?}
+\vlil{A solution whose value is less than $\varepsilon$ from the optimal value.
+We need to do}
 
 The proof of part~\ref{delta-eps-cvgce} relies on the following technical lemma.
 \begin{lem}
@@ -329,7 +331,7 @@ Lipschitz-continuous on $Q_t$. Then, according to \cite[Theorem 5.18]{Shapiro200
 
 \esgil{Check the comprehension}
 
-
+\vlil{I think that we should add comments around this part. Not compulsory.}
 
 \subsubsection{Bounds}
 
@@ -356,6 +358,7 @@ For each $m\in\NN^*$, we have:
   \espe\sqbracket{v^*_{2SA-m}}\le v^*_{2SA}\le v^*_S
 \end{equation}
 \esgil{Justification?}
+\vlil{It could be a good idea to give some details and references, but this all very classical results.}
 Then, we also get a lower bound repeating the resolution of (2SA-$m$) for a small $m$.
 
 
@@ -366,10 +369,10 @@ The efficiency of these two methods are discussed in Chapter~\ref{chap:PDP:numer
 \section{Discussion about modeling}
 \label{sec:stoch-CLSP-BS-discussion}
 
-In the way we formulate the stochastic counterpart of Uniform CLSP-BS, we made some choices. First one is the information structure \ie the time when randomness is revealed. There were two versions for each period: decision-hazard where decisions are made before the hazard is revealed and hazard-decision which is the opposite. Both make sense in industrial applications but we choose the pessimistic version that is the demand of period $t$ is revealed at the end of the period after the production decisions were made. However, the methods developed in this thesis can be easily adapted to the hazard-decision case where the demand is revealed at the beginning of the period.
+In the way we formulate the stochastic counterpart of Uniform CLSP-BS, we made some choices. First one is the information structure \ie the time when randomness is revealed. There were two versions for each period: decision-hazard where decisions are made before the hazard is revealed and hazard-decision which is the opposite. Both make sense in industrial applications but we choose the pessimistic version\vl{decision-hazard} that is the demand of period $t$ is revealed at the end of the period after the production decisions were made. However, the methods developed in this thesis can be easily adapted to the hazard-decision case where the demand is revealed at the beginning of the period.
 
 
-Second one concerns the feasibility of the planing. In Argon's applications, cover every possible realizations of demand often leads to too expensive production planning or to infeasible planning. When it occurs, a part of the demand is not served and the model must return a production planning satisfying every other constraints and reaching an objective service level.
+Second one concerns the feasibility of the planing. In Argon's applications, covering every possible realizations of demand often leads to too expensive production planning or to infeasible planning. When it occurs, a part of the demand is not served and the model must return a production planning satisfying every other constraints and reaching an objective service level.
 
 
 Thus we have to model the undelivered quantities. In many cases, serving only 95\% of the demand is less critical than serving only 80\%. Thus, Argon aims at reaching a \emph{service level} for delivered quantities. Fill rate service level which is the proportion of demand delivered on time is considered. As previously explained in Chapter~\ref{chap:business-context}, the cycle service level which is the proportion of command entirely delivered could have been considered but in most of our application, it is less relevant. An other non-obvious question is the mesh considered for the service level constraint. It can be extremely precise as a service level or each pair (item, period) or extremely general as a global service level for every items and every periods. The aggregation of the KPI can also be done in many ways (\eg average of the service level over items, sum of the supplied quantity over all items and all periods divided by sum of demand over all items and all periods). We were able to get a precise formulation from our partner and from its clients since it depends on the industry or the strategic objectives. However, the methods developed in this thesis can be easily adapted to the different modeling of the fill rate service level. We chose to model the fill rate service level dividing the sum of the supplied quantity over all items and all periods divided by sum of demand over all items and all periods. This modeling enables to not penalized a huge demand of an item for satisfying a small demand of an other one but the drawback is that some items with very small demand may have a bad service level.

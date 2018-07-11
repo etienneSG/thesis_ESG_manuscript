@@ -5,7 +5,7 @@
 \section{Motivations}
 \label{sec:PDP:deterministic:Motivations}
 
-Fixing the production level for the forthcoming period is a basic decision to be taken when managing an assembly line. Usually, a demand has to be satisfied at due dates but the limited capacity of the line prevents last minute production. On the other hand, too early productions may lead to unnecessary high inventory costs. The challenge of this kind of problems, known as {\em lot-sizing problems} in the operational research community, consists in finding a trade-off between demand satisfaction and holding costs.
+Fixing the production level for the forthcoming period is a basic decision to be taken when managing an assembly line. Usually, a demand has to be satisfied at due dates but the limited capacity of the line prevents last minute production. On the other hand, too early productions may lead to unnecessary high inventory costs. The challenge of this kind of problems, known as {\em lot-sizing problems} in the operational\vl{operation ?} research community, consists in finding a trade-off between demand satisfaction and holding costs.
 When several items can be produced on a same line -- the so-called {\em multi-item} lot-sizing problem --, the capacity of the assembly line is often all the more reduced as the number of distinct items produced over the current period is high. Indeed, changing an item in production stops the line for a moment. This additional capacity reduction is usually modeled by setup costs contributing to the total cost.
 
 
@@ -85,7 +85,7 @@ Note that without loss of generality, we can suppose that $\capacity_t^i \le \ca
 
 In the uniform case, holding costs $\holding_t^i$ and internal production times $\rate_t^i$ of item $i$ do not depend on time and is equal to $\rate^i$ and production capacities $\capacity_t^i$ and $\capacity_t$ depend neither on time nor on item and is equal to $\capacity>0$.
 Then, we normalize production variables setting $\widehat{\quantity}_t^i=\frac{\rate^i\quantity_t^i}{\capacity}$ and replace accordingly the other variables and parameters setting $\widehat{\inventory}_t^i=\frac{\rate^i\inventory_t^i}{\capacity}$, $\widehat{\demand}_t^i=\frac{\rate^i\demand_t^i}{\capacity}$ and $\widehat{\holding}^i=\frac{\capacity\holding^i}{\rate^i}$.
-For the purpose of notation, the circumflex accent is omitted and the optimization problem can be written as:
+For the purpose of notation, the circumflex accent\vl{hat} is omitted and the optimization problem can be written as:
 
 \begin{subequations}\label{eq:Uniform-CLSP-BS}
   \begin{align}
@@ -138,7 +138,7 @@ Reducing 3-partition problem to the Uniform CLSP-BS, we show that Uniform CLSP-B
 
 \begin{proof}
 Let $\crbracket{a_1,\ldots,a_{3m}}$ an instance of 3-partition problem. (We can suppose that at least one $a_i$ is not null.)
-
+\vlil{Lets construct a CLSP-BS instance, where the number of periods is $\horizon=m$,...}
 $m$ is the number $\horizon$ of periods.
 The indexes $\crbracket{1,\ldots,3m}$ are the indexes of the items $i\in\REF$.
 $\frac{m\,a_i}{\sum_{j=1}^{3m}a_j}$ is the demand $\demand_{\horizon}^i$ of the item $i$ at the period $\horizon$. Every other demand is null.
@@ -153,7 +153,7 @@ Thus, we have a solution for 3-partition problem if and only if we can face the 
 Since Uniform CLSP-BS is a special case of CLSP-BS, CLSP is also \NP-complete. However, complexity of the following cases is still an open problem:
 \begin{itemize}
 \item Uniform CLSP-BS with $\nbsetups=1$ or $\nbsetups=2$.
-\item Uncapacitated CLSP-BS that a version of CLSP-BS without capacity constraint~\eqref{eq:CLSP-BS:capacity} and with $\capacity_t^i\ge\sum_{\tau\in\range{\horizon}}\demand_{\tau}^i$, for each period $t$ and each item $i$.
+\item Uncapacitated CLSP-BS that is a version of CLSP-BS without capacity constraint~\eqref{eq:CLSP-BS:capacity} and with $\capacity_t^i\ge\sum_{\tau\in\range{\horizon}}\demand_{\tau}^i$, for each period $t$ and each item $i$.
 \esgil{Polynomial en Uniform CLSP-BS?}
 \end{itemize}
 

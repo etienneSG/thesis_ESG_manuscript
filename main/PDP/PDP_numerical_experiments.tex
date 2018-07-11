@@ -1,7 +1,7 @@
 \chapter{Numerical experiments}
 \label{chap:PDP:numerical-experiments}
 
-
+\vlil{Intro}
 
 \section{Simulation}
 
@@ -140,12 +140,12 @@ The number $m$ of scenarios used to solve (2SA-$m$) is fixed to $20$, determined
 
 \esgil{Faire tourner avec un peu plus de scénarios?}
 
-
+\vlil{Generating ?}
 \subsection{Generate randomness}
 \label{sec:PDP:numerical-experiments:dirichlet}
 
 
-As explain in Chapter~\ref{chap:business-context}, the global volume of the forecast demand is constant over every possible outcomes. Thus, we turn to Dirichlet distribution to generate the possible outcomes of demand. We first expose the procedure to generate samples of demand. Then, we reminds the definition and the classical properties of Dirichlet distributions, explains how the parameters are computed for the procedure and how the properties are used during the simulation.
+As explained in Chapter~\ref{chap:business-context}, the global volume of the forecasted demand is constant over every possible outcomes. Thus, we turn to Dirichlet distribution to generate the possible outcomes of demand. We first expose the procedure to generate\vl{simulate} samples of demand. Then, we reminds the definition and the classical properties of Dirichlet distributions, explains how the parameters are computed for the procedure and how these properties are used during the simulation.
 
 Only in this Section, for the sake of simplicity, we use only one index $k\in\range{K}$ for the demand.
 
@@ -183,7 +183,7 @@ For $k=1,\ldots,K$, set $d_k = x_k \bar{\demand}$.
 Then, $\bracket{\demand_1,\ldots,\demand_K}$ is a realization of the random vector $\bracket{\va\demand_1,\ldots,\va\demand_K}$ with:
 \begin{subequations}
   \begin{align}
-    \sum_{k=1}^K \va\demand_k &= \sum_{k=1}^K \bar{\demand}_k && \mbox{almost everywhere},
+    \sum_{k=1}^K \va\demand_k &= \sum_{k=1}^K \bar{\demand}_k && \mbox{almost surely},
     \\
     \espe\sqbracket{\va\demand_k} &= \bar{\demand}_k && \forall k\in\range{K},
     \\
@@ -191,6 +191,7 @@ Then, $\bracket{\demand_1,\ldots,\demand_K}$ is a realization of the random vect
     \label{eq:dirichlet:procedure:variance}
   \end{align}
 \end{subequations}
+\vlil{Define / recall $\Gamma$ distribution}
 
 
 
