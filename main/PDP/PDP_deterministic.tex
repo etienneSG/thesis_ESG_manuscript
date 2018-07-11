@@ -34,13 +34,43 @@ In many of our applications, holding costs $\holding_t^i$ and internal productio
 \section{Bibliography}
 
 
-Lot-sizing problems are a well-studied topic, with many variations (deterministic/stochastic, single/multi item, capacitated/uncapacitated, etc.). Recent surveys have been proposed: see \cite{Gicquel2008,quadt2008capacitated} for the deterministic version and \cite{Mula2006,Aloulou2014,Diaz-Madronero2014} for the stochastic version.
+While there are many variations of lot-sizing problems in industry, they often minimize a combination of holding costs, production costs and setup costs.
+However, production can concern a single or many items and be made on single or several assembly lines.
+It can be constrained by capacity or setup time.
+Backlog, safety stock, minimal productivity, setup times can be considered.
+Review of models are abundant and can be found in \cite{Geunes2014} for single-item models, in \cite{Gicquel2008} for multi-item models or in \cite{Karimi2003} for both models. A proposition of classification of lot-sizing models can be found in~\cite[Chapter 4 and 12]{Pochet2006}.
 
-\esgil{Complete bibliography with examples of models and new features considered since the beginning.}
+We do not propose a complete review of the models and only consider some seminal model on a single assembly line.
 
-\cite{Pochet2006} chapter 12. Joint resource classification
+\medskip
+
+First model was proposed by \cite{Wagner1958}. It is a uncapacitated, single-item model over and $\horizon$ periods. The demand $\demand_t$ is dynamic (\ie time-dependent) and storage is possible between periods. The goal is to minimize holding and setup costs. This model was solved in polynomial time.
+Its generalization with production cost (proportional to the quantity produced) depending on period is called \emph{Uncapacitated Economic Lot-Sizing Problem (UELSP)} and was solved in polynomial time \cite{Federgruen1991,Wagelmans1992,Aggarwal1993}.
+
+
+The \emph{Capacitated Economic Lot-Sizing Problem (CELSP)} is the same model with capacities depending on time. It is one of the simplest lot-sizing problem which is \NP-hard \cite{Florian1980} but have a fully polynomial approximation schemes \cite{vanHoesel2001}.
+
+\medskip
+
+In many applications, a line can produce more than one item. Two sub-classes are often consider big bucket models and small bucket models.
+In big bucket models, many items can be produced during a period.
+The \emph{Capacitated Lot-Sizing Problem (CLSP)} is a natural multi-item extension of the CELSP and therefore is \NP-complete.
+In small bucket model, only one item can be produced during a period. It is called \emph{continuous} when production can be a fractional part of capacity and \emph{discrete} when production must be done at full capacity. The \emph{Capacitated Setup Lot-sizing Problem (CSLP)} is an example of continuous small bucket model and \emph{Discrete Lot sizing and Scheduling problem (DLSP)} an example of discrete one.
+
+\medskip
+
+An other way of modeling flexibility and not used setup costs is constraints on the capacity lost due to setups like in the Kellogg's case in \cite[Chapter 4]{Pochet2006}. Some lot-sizing and scheduling problems (see for example \cite{Guimaraes2014}) also model sequence dependent capacity reduction but keep setup costs.
+
+
+
+%Lot-sizing problems are a well-studied topic, with many variations (deterministic/stochastic, single/multi item, capacitated/uncapacitated, etc.). Recent surveys have been proposed: see \cite{Gicquel2008,quadt2008capacitated} for the deterministic version and \cite{Mula2006,Aloulou2014,Diaz-Madronero2014} for the stochastic version.
+
+\medskip
 
 \vlil{Annonce du plan du chapitre}
+
+According to Argon, capacity reduction constraints are not easy to parametrize in practice at mid-term level since they rely on scheduling which are short-term decisions. Thus, in the follow-up to this chapter, we propose a new model for the flexibility introducing a bounded number of setups per period and show the \NP-completeness and the theoretical difficulties of the model.
+
 
 
 \section{Model formulation}
