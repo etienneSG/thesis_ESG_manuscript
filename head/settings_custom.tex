@@ -122,7 +122,7 @@
 \usepackage{graphicx}
 
 % More maths and chemistry
-\usepackage{amsmath,amssymb,amsfonts,amsthm,dsfont,stmaryrd}
+\usepackage{amssymb,amsfonts,amsthm,dsfont,stmaryrd}
 \usepackage[overload]{empheq}
 \usepackage[version=3]{mhchem} % chemistry
 %\usepackage{physics}  % Physics
@@ -143,9 +143,14 @@
 \newcommand{\inputProblemfr}{\newline\noindent{\bf Entrée.~}}
 \newcommand{\outputProblemfr}{\newline\noindent{\bf Sortie.~}}
 
+
+% automatic number referenced equations
+
+
 %------------------------ Theorems
 %\usepackage{amsmath,amssymb,amsthm}
-\usepackage{cleveref}
+\usepackage[capitalise,noabbrev]{cleveref}
+\usepackage{autonum}
 \usepackage{thmtools}
 \usepackage{thm-restate}
 \usepackage{multirow}
@@ -167,6 +172,7 @@
 
 \theoremstyle{remark}
 \newtheorem{rmq}{Remark}
+\newtheorem{openpb}{Open problem}
 
 % fixes space after and before \left and \right
 \let\originalleft\left
@@ -203,10 +209,10 @@
 \newcommand{\tbc}{\red{\texttt{To be completed}}}
 %\newcommand{\todo}[1]{\red{(TO DO: #1)}}
 \def\ds{\displaystyle}
-\newcommand{\ie}{\emph{i.e.}~}
-\newcommand{\eg}{\emph{e.g.}~}
-\newcommand{\NP}{NP}
-\newcommand{\st}{\text{s.t.}}
+\newcommand{\ie}{i.e.,~}
+\newcommand{\eg}{e.g.,~}
+\newcommand{\NP}{\operatorname{NP}}
+\newcommand{\st}{\operatorname{s.t.}}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

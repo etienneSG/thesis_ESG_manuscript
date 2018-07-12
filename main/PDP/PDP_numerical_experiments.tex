@@ -159,7 +159,7 @@ Only in this Section, for the sake of simplicity, we use only one index $k\in\ra
 \textbf{Step 1.} \emph{Initialize the procedure.}
 Set:
 \begin{subequations}
-  \begin{align*}
+  \begin{align}
     \bar{\demand} &= \sum_{k=1}^K\bar{\demand}_k
     \\
     \gamma &= \min \bracket{1,\
@@ -167,7 +167,7 @@ Set:
     {\sum_{k=1}^K\sqrt{\frac{\bar{\demand}-\bar{\demand}_k}{\bar{\demand}_k}}}{\sum_{k=1}^K\frac{\bar{\demand}-\bar{\demand}_k}{\bar{\demand}_k}}\ v}
     \\
     \alpha_0 &= \frac{1}{\gamma^2}-1
-  \end{align*}
+  \end{align}
 \end{subequations}
 For $k=1,\ldots,K$, set $\alpha_k=\frac{\bar{\demand}_k}{\bar{\demand}}\alpha_0$.
 
@@ -256,11 +256,11 @@ The above procedure relies on Proposition~\ref{prop:dirichlet:generation-from-ga
   $\va y_1\sim\Gamma\bracket{\alpha_1,\theta},\ldots,\va y_K\sim\Gamma\bracket{\alpha_K,\theta}$,
   we have:
   \begin{subequations}
-    \begin{align*}
+    \begin{align}
       V &= \sum_{k=1}^K \va y_k \sim \Gamma\bracket{\sum_{k=1}^K \alpha_k,\theta}
       \\
       \va x &= \bracket{\va x_1,\ldots,\va x_K} = \bracket{\frac{\va y_1}{V},\ldots,\frac{\va y_K}{V}} \sim \Dir\bracket{\alpha_1,\ldots,\alpha_K}
-    \end{align*}
+    \end{align}
   \end{subequations}
 \end{prop}
 

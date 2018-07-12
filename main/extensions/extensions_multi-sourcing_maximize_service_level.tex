@@ -62,12 +62,12 @@ Constraints~\eqref{eq:multi-sourcing - limited capital - nonnegativity} and~\eqr
 
 
 
-\subsection{\NP-completeness}
+\subsection{$\NP$-completeness}
 
 
 
 \begin{prop}
-The deterministic version of the multi-sourcing problem subject to limited capital~\eqref{eq:multi-sourcing - limited capital} is \NP-hard, even if $\horizon=1$, $\capacity_p^r=\capacity_p=1$ and $\affect_p^r=1$, for all $p\in\plants$ and all $r\in\REF$.
+The deterministic version of the multi-sourcing problem subject to limited capital~\eqref{eq:multi-sourcing - limited capital} is $\NP$-hard, even if $\horizon=1$, $\capacity_p^r=\capacity_p=1$ and $\affect_p^r=1$, for all $p\in\plants$ and all $r\in\REF$.
 \end{prop}
 
 \begin{proof}
@@ -76,7 +76,7 @@ The deterministic version of the multi-sourcing problem subject to limited capit
 
 
 \begin{prop}
-The deterministic version of the multi-sourcing problem subject to limited capital~\eqref{eq:multi-sourcing - limited capital} is \NP-hard, even if $\horizon=1$ and $\capacity_p^r=\capacity_p=\infty$ for all $p\in\plants$ and all $r\in\REF$.
+The deterministic version of the multi-sourcing problem subject to limited capital~\eqref{eq:multi-sourcing - limited capital} is $\NP$-hard, even if $\horizon=1$ and $\capacity_p^r=\capacity_p=\infty$ for all $p\in\plants$ and all $r\in\REF$.
 \end{prop}
 
 \begin{proof}
@@ -136,10 +136,10 @@ Like in previous parts, we choose to only consider randomness on demand although
 In this model, bold variables are stochastic whereas normal variable are deterministic. Every constraint has the same meaning than their deterministic counterpart. We also add the constraints \eqref{eq:stochastic multi-sourcing - limited capital - non-anticipation} which are non anticipative constraints and prevent from taking decision knowing the future realizations of randomness.
 
 
-\subsection{\NP-completeness}
+\subsection{$\NP$-completeness}
 
 
-In order to deal with the complexity of stochastic cases, we assume that the encoding of the stochastic version of the problem is polynomial in the size of deterministic data. Since deterministic cases are special cases of stochastic cases, every \NP-hard deterministic case is still \NP-hard when demand is stochastic.
+In order to deal with the complexity of stochastic cases, we assume that the encoding of the stochastic version of the problem is polynomial in the size of deterministic data. Since deterministic cases are special cases of stochastic cases, every $\NP$-hard deterministic case is still $\NP$-hard when demand is stochastic.
 
 For the polynomial deterministic case, we have the following result for its stochastic counterpart.
 
