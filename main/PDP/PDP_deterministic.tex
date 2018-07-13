@@ -161,7 +161,7 @@ For the purpose of notation, the hat are omitted and the optimization problem ca
 \section{Theoretical results}
 \label{sec:PDP:deterministic:theoretical-results}
 
-In this section, we show that our problem is theoretically hard and that classical methods lead to dead end. After showing the $\NP$-completeness in \cref{sec:PDP:deterministic:theoretical-results:NP-completeness}, we show that the number $\nbsetups$ of setup is not captured by the continuous relaxation (\cref{sec:PDP:deterministic:theoretical-results:continuous-relaxation}) nor valid inequality (\cref{sec:PDP:deterministic:theoretical-results:valid-inequality}) nor natural extended formulations (\cref{sec:PDP:deterministic:theoretical-results:extended-formulations}).
+In this section, we show that our problem is theoretically hard and that classical methods lead to dead end. After showing the $\NP$-completeness in \cref{sec:PDP:deterministic:theoretical-results:NP-completeness}, we show that the number $\nbsetups$ of setups is not captured by the continuous relaxation (\cref{sec:PDP:deterministic:theoretical-results:continuous-relaxation}) nor valid inequality (\cref{sec:PDP:deterministic:theoretical-results:valid-inequality}) nor natural extended formulations (\cref{sec:PDP:deterministic:theoretical-results:extended-formulations}).
 
 
 \subsection{$\NP$-completeness}
@@ -198,7 +198,7 @@ We set
   \\
   0 & \mbox{otherwise,}\end{array}
   \right.
-  ,\quad
+  \quad
   \inventory_0^i=0.
 \end{equation}
 Thus, we have a solution for the 3-partition problem if and only if there is a solution to the Uniform CLSP-BS with these parameters. The conclusion follow from the fact that the 3-partition problem is $\NP$-complete in the strong sense.
@@ -206,12 +206,13 @@ Thus, we have a solution for the 3-partition problem if and only if there is a s
 
 
 %Since Uniform CLSP-BS is a special case of CLSP-BS, CLSP is also $\NP$-complete.
-However, complexity of the following cases is still an open problem:
-\begin{itemize}
-\item Uniform CLSP-BS with $\nbsetups=1$ or $\nbsetups=2$.
-\item Uncapacitated CLSP-BS that is a version of CLSP-BS without capacity constraint~\eqref{eq:CLSP-BS:capacity} and with $\capacity_t^i\ge\sum_{\tau\in\range{\horizon}}\demand_{\tau}^i$, for each period $t$ and each item $i$.
-\esgil{Polynomial en Uniform CLSP-BS?}
-\end{itemize}
+Complexity of the following cases is still an open problem.
+\begin{question}
+Complexity of uncapacitated Uniform CLSP-BS with $\nbsetups=1$ is an open question.
+\end{question}
+
+The complexity of the cases with $\nbsetups=2$ are also challenging questions.
+
 
 
 
@@ -220,7 +221,7 @@ However, complexity of the following cases is still an open problem:
 
 \subsubsection{Continuous relaxation}
 
-The goal of this section is to show that unless the capacity production of one item is smaller than the production of the line at each period, continuous relaxation is not a good approach to solve the CLSP-BS
+The goal of this section is to show that unless the capacity production of one item is smaller than the production of the line at each period, continuous relaxation is not a good method to get bound on the CLSP-BS
 
 
 %\begin{prop}\label{prop:relaxation-independant-N:uniform}
@@ -234,8 +235,8 @@ The goal of this section is to show that unless the capacity production of one i
 %\end{prop}
 
 \begin{prop}\label{prop:relaxation-independant-N}
-Assume $\nbsetups_t>0$ for all $t$.
-If $\capacity_t^i\ge\capacity_t$ for all period $i,t$, then the continuous relaxation of CLSP-BS does not depend on $\nbsetups_t$.
+Assume $\nbsetups_t>0$ for all period $t$.
+If $\capacity_t^i\ge\capacity_t$ for all item $i$ and all period $t$, then the continuous relaxation of CLSP-BS does not depend on $\nbsetups_t$.
 \end{prop}
 
 The immediate corollary of this proposition is that the continuous relaxation of Uniform CLSP-BS never depends on $\nbsetups$.
@@ -243,166 +244,256 @@ The immediate corollary of this proposition is that the continuous relaxation of
 
 The following example shows that the conclusion of the proposition does not hold when we relax the condition $\capacity_t^i\ge\capacity_t$ for all $i,t$. Consider the following instance of CLSP-BS:
 \begin{equation}
-  \REF = \crbracket{1,2},\quad etc.   
+\begin{split}
+  \REF=\crbracket{1,2}
+  ,\quad
+  \horizon=2
+  ,\quad
+  \nbsetups_t=1
+  ,\quad
+  \capacity_t=2
+  ,\quad
+  \capacity_t^i=1
+  ,
+\\
+  \rate_t^i=1
+  ,\quad
+  \demand_t^i
+  =\left\{
+  \begin{array}{ll}
+  0 & \mbox{if}\ t=1,
+  \\
+  1 & \mbox{if}\ t=2,\end{array}
+  \right.
+  \quad
+  \holding_t^i=\holding
+  ,\quad
+  \inventory_0^i=0.
+\end{split}
 \end{equation}
-two periods and two items where the holding costs at the end of the first period are $h$ for the two items and 0 at the end of the second period. The assembly line's capacity is $\capacity_t=2$ at each period and the capacity per item at each period is $\capacity_t^i=1$. The number of setups per period is $\nbsetups_t=1$ and the demand is null for the first period and 1 for each reference at the second period. All others parameters are unitary. Then, the optimal solution of the continuous relaxation of CLSP-BS is $h$ whereas the optimal solution of the continuous relaxation of CLSP-BS without the flexibility constraint~\eqref{eq:CLSP-BS:setups} is 0.
+%two periods and two items where the holding costs at the end of the first period are $h$ for the two items and 0 at the end of the second period. The assembly line's capacity is $\capacity_t=2$ at each period and the capacity per item at each period is $\capacity_t^i=1$. The number of setups per period is $\nbsetups_t=1$ and the demand is null for the first period and 1 for each reference at the second period. All others parameters are unitary.
+Then, the optimal solution of the continuous relaxation of formulation~\eqref{eq:CLSP-BS} with these parameters is $h$ whereas the optimal solution of the continuous relaxation of the formulation~\eqref{eq:CLSP-BS} without the flexibility constraint~\eqref{eq:CLSP-BS:setups} is 0.
 
 \esgil{Add figure representing the example}
 
-We now prove Proposition \cref{prop:relaxation-independant-N}.
+We now prove \cref{prop:relaxation-independant-N}.
 
-\begin{proof}[Proof of Proposition~\cref{prop:relaxation-independant-N}]
-Consider an instance of CLSP-BS where $\capacity_t^i\ge\capacity_t$ for all $i,t$.
-Let $v$ denote the optimal value of the continuous relaxation of the CLSP-BS and $\widehat{v}$ the optimal value of the continuous relaxation of CLSP-BS without the flexibility constraint~\eqref{eq:CLSP-BS:setups}. Obviously, we have $v \ge \widehat{v}$. Let us show that $v \le \widehat{v}$.
+\begin{proof}[Proof of \cref{prop:relaxation-independant-N}]
+Consider an instance of CLSP-BS where $\capacity_t^i\ge\capacity_t$ for all period $t$ and all item $i$.
+Let $v$ denote the optimal value of the continuous relaxation of formulation~\eqref{eq:CLSP-BS} and $\widehat{v}$ the optimal value of the continuous relaxation of CLSP-BS without the flexibility constraint~\eqref{eq:CLSP-BS:setups}.
+Obviously, we have $v \ge \widehat{v}$.
+Let us show that $v \le \widehat{v}$.
 
-Let $\bracket{\widehat{\setup}_t^i, \widehat{\quantity}_t^i, \widehat{\inventory}_t^i}_{t\in\range{\horizon},i\in\REF}$ be a feasible solution of the continuous relaxation of CLSP-BS without the flexibility constraint~\eqref{eq:CLSP-BS:setups}.
-For each $t\in\range{\horizon}$ and each $i\in\REF$, we define
-$\setup_t^i=\frac{\rate_t^i\,\widehat{\quantity}_t^i}{\capacity_t^i}$ if $\capacity_t^i>0$ and $\setup_t^i=0$ otherwise, $\quantity_t^i=\widehat{\quantity}_t^i$ and $\inventory_t^i=\widehat{\inventory}_t^i$. We now prove that $\bracket{\setup_t^i, \quantity_t^i, \inventory_t^i}_{t\in\range{\horizon},i\in\REF}$ is a feasible solution of the continuous relaxation of CLSP-BS.
-
-By definition of $\quantity_t^i$ and $\inventory_t^i$, constraints~\eqref{eq:CLSP-BS:inventory-dynamic} and \eqref{eq:CLSP-BS:capacity} of CLSP-BS are satisfied.
-
-If $\capacity_t=0$, since $\bracket{\widehat{\setup}_t^i, \widehat{\quantity}_t^i, \widehat{\inventory}_t^i}_{t\in\range{\horizon},i\in\REF}$ is feasible, we have $\widehat{\quantity}_t^i=0$ and constraint~\eqref{eq:CLSP-BS:big-M} is satisfied. If $\capacity_t>0$, by definition of $\setup_t^i$ and $\quantity_t^i$ constraint~\eqref{eq:CLSP-BS:big-M} of CLSP-BS is satisfied.
-
-Using in this order $\capacity_t^i\ge\capacity_t$, the definition of $\setup_t^i$ and the feasibility of $\bracket{\widehat{\setup}_t^i, \widehat{\quantity}_t^i, \widehat{\inventory}_t^i}_{t\in\range{\horizon},i\in\REF}$, we have:
+Let $\bracket{\widehat{\setup}_t^i, \widehat{\quantity}_t^i, \widehat{\inventory}_t^i}_{t,i}$ be a feasible solution of the continuous relaxation of formulation~\eqref{eq:CLSP-BS} without the flexibility constraint~\eqref{eq:CLSP-BS:setups}.
+For each period $t$ and each item $i$, we define
 \begin{equation}
-\capacity_t\sum_{i\in\REF}\setup_t^i
-\le
-\sum_{i\in\REF}\capacity_t^i\setup_t^i
-=
-\sum_{i\in\REF}\rate_t^i\widehat{\quantity}_t^i
-\le
-\capacity_t
+  \setup_t^i=
+  \left\{
+  \begin{array}{ll}
+  \frac{\rate_t^i\,\widehat{\quantity}_t^i}{\capacity_t^i} & \mbox{if}\ \capacity_t^i>0,
+  \\
+  0 & \mbox{if}\ \capacity_t^i=0,
+  \end{array}
+  \right.
+  \quad
+  \quantity_t^i=\widehat{\quantity}_t^i
+  ,\quad
+  \inventory_t^i=\widehat{\inventory}_t^i
 \end{equation}
-If $\capacity_t>0$, then $\sum_{i\in\REF}\setup_t^i\le 1\le\nbsetups_t$. Otherwise, if $\capacity_t=0$ since $\bracket{\widehat{\setup}_t^i, \widehat{\quantity}_t^i, \widehat{\inventory}_t^i}_{t\in\range{\horizon},i\in\REF}$ is feasible, we have $\quantity_t^i=0$ for each item $i$ and by definition of $\setup_t^i$, we have $\sum_{i\in\REF}\setup_t^i=0\le\nbsetups_t$. In both cases, constraint~\eqref{eq:CLSP-BS:setups} of CLSP-BS is satisfied.
+We now prove that $\bracket{\setup_t^i, \quantity_t^i, \inventory_t^i}_{t,i}$ is a feasible solution of the continuous relaxation of formulation~\eqref{eq:CLSP-BS}.
 
-Finally, if $\capacity_t^i=0$, by definition $\setup_t^i=0$. Otherwise, $\setup_t^i=\frac{\rate_t^i\widehat{\quantity}_t^i}{\capacity_t^i}\le\widehat{\setup}_t^i\le 1$. In both cases, continuous relaxation of constraint~\eqref{eq:CLSP-BS:boolean} of CLSP-BS is satisfied.
+By definition of $\quantity_t^i$ and $\inventory_t^i$, constraints~\eqref{eq:CLSP-BS:inventory-dynamic} and \eqref{eq:CLSP-BS:capacity} of are satisfied.
 
-Thus, we get a feasible solution of the continuous relaxation of CLSP-BS. So $v \le \widehat{v}$.
+If $\capacity_t^i>0$, by definition of $\setup_t^i$ and $\quantity_t^i$ constraint~\eqref{eq:CLSP-BS:big-M} of CLSP-BS is satisfied.
+If $\capacity_t=0$, since $\bracket{\widehat{\setup}_t^i, \widehat{\quantity}_t^i, \widehat{\inventory}_t^i}_{t,i}$ is feasible, we have $\widehat{\quantity}_t^i=0$ and constraint~\eqref{eq:CLSP-BS:big-M} is satisfied. 
+
+If $\capacity_t>0$, we have:
+\begin{subequations}
+\begin{align}
+\capacity_t\sum_{i\in\REF}\setup_t^i
+&\le
+\sum_{i\in\REF}\capacity_t^i\setup_t^i
+&& \mbox{($\capacity_t^i\ge\capacity_t$)}
+\\
+&\le
+\sum_{i\in\REF}\rate_t^i\widehat{\quantity}_t^i
+&& \mbox{(definition of $\setup_t^i$)}
+\\
+&\le
+\capacity_t
+&& \mbox{(feasibility of $\bracket{\widehat{\setup}_t^i, \widehat{\quantity}_t^i, \widehat{\inventory}_t^i}_{t,i}$)}
+\end{align}
+\end{subequations}
+Then $\sum_{i\in\REF}\setup_t^i\le 1\le\nbsetups_t$.
+Otherwise, if $\capacity_t=0$, since $\bracket{\widehat{\setup}_t^i, \widehat{\quantity}_t^i, \widehat{\inventory}_t^i}_{t,i}$ is feasible, we have $\quantity_t^i=0$ for each item $i$ and by definition of $\setup_t^i$, we have $\sum_{i\in\REF}\setup_t^i=0\le\nbsetups_t$.
+In both cases, constraint~\eqref{eq:CLSP-BS:setups} is satisfied.
+
+If $\capacity_t^i>0$, we have $\setup_t^i=\frac{\rate_t^i\widehat{\quantity}_t^i}{\capacity_t^i}\le\widehat{\setup}_t^i\le 1$.
+Otherwise, if $\capacity_t^i=0$, we have by definition $\setup_t^i=0$.
+In both cases, continuous relaxation of constraint~\eqref{eq:CLSP-BS:boolean} is satisfied.
+
+By definition of $\quantity_t^i$ and $\inventory_t^i$, constraints~\eqref{eq:CLSP-BS:positivity} is satisfied.
+
+Thus, we get a feasible solution of the continuous relaxation of formulation~\eqref{eq:CLSP-BS}. So $v \le \widehat{v}$.
 \end{proof}
 
 
 
-\subsubsection{Lagrangian relaxations}
+% \subsubsection{Lagrangian relaxations}
 
 
-The two Lagrangian relaxations described in this section are quite the same for the CLSP-BS and the Uniform CLSP-BS. Thus, for the sake of simplicity, we write them for the Uniform CLSP-BS.
+% The two Lagrangian relaxations described in this section are quite the same for the CLSP-BS and the Uniform CLSP-BS. Thus, for the sake of simplicity, we write them for the Uniform CLSP-BS.
 
 
-A first option consists in dualizing the capacity constraint~\eqref{eq:Uniform-CLSP-BS:item-capacity}. Then, for all $\lambda = \bracket{\lambda_t^i}_{t\in\range{\horizon},\,i\in\REF}\ge 0$, we have:
-\begin{equation}
-  \begin{aligned}
-    \cG_1\bracket{\lambda} &= 
-    \left\{
-      \begin{array}{rll}
-        \min & \multicolumn{2}{l}{\sum_{t=1}^{\horizon} \sum_{i\in\REF} \sqbracket{ \holding^i\inventory_t^i + \lambda_t^i \bracket{\quantity_t^i - \setup_t^i} } } \\
-        \st & \inventory_t^i = \inventory_{t-1}^i + \quantity_t^i - \demand_t^i & \forall t,r \\
-        & \sum_{i\in\REF} \quantity_t^i \le 1 & \forall t \\
-        & \sum_{i\in\REF} \setup_t^i \le \nbsetups & \forall t \\
-        & \setup_t^i \in \crbracket{0,1} & \forall t,r \\
-        & \quantity_t^i,\ \inventory_t^i \ge 0 & \forall t,r
-      \end{array}
-    \right.
-    \\
-    &= 
-    \left\{
-      \begin{array}{rll}
-        \min & \multicolumn{2}{l}{\sum_{t=1}^{\horizon} \sum_{i\in\REF} \bracket{ \holding^i\inventory_t^i + \lambda_t^i \quantity_t^i } } \\
-        \st & \inventory_t^i = \inventory_{t-1}^i + \quantity_t^i - \demand_t^i & \forall t,r \\
-        & \sum_{i\in\REF} \quantity_t^i \le 1 & \forall t \\
-        & \quantity_t^i,\ \inventory_t^i \ge 0 & \forall t,r
-      \end{array}
-    \right.
-    +
-    \left\{
-      \begin{array}{rll}
-        \max & \multicolumn{2}{l}{\sum_{t=1}^{\horizon} \sum_{i\in\REF} \lambda_t^i\setup_t^i } \\
-        \st & \sum_{i\in\REF} \setup_t^i \le \nbsetups & \forall t \\
-        & \setup_t^i \in \crbracket{0,1} & \forall t,r
-      \end{array}
-    \right.
-    \\
-    \cG_1\bracket{\lambda} &= 
-    \left\{
-      \begin{array}{rll}
-        \min & \multicolumn{2}{l}{\sum_{t=1}^{\horizon} \sum_{i\in\REF} \bracket{ \holding^i \inventory_t^i + \lambda_t^i \quantity_t^i } } \\
-        \st & \inventory_t^i = \inventory_{t-1}^i + \quantity_t^i - \demand_t^i & \forall t,r \\
-        & \sum_{i\in\REF} \quantity_t^i \le 1 & \forall t \\
-        & \quantity_t^i,\ \inventory_t^i \ge 0 & \forall t,r
-      \end{array}
-    \right.
-    +
-    \sum_{t=1}^{\horizon}
-    \left\{
-      \begin{array}{rll}
-        \max & \multicolumn{2}{l}{\sum_{i\in\REF} \lambda_t^i \setup_t^i } \\
-        \st & \sum_{i\in\REF} \setup_t^i \le \nbsetups \\
-        & \setup_t^i \in \crbracket{0,1} & \forall r
-      \end{array}
-    \right.\label{eq:Lagrangian:capacity:max-setups}
-  \end{aligned}
-\end{equation}
+% A first option consists in dualizing the capacity constraint~\eqref{eq:Uniform-CLSP-BS:item-capacity}. Then, for all $\lambda = \bracket{\lambda_t^i}_{t\in\range{\horizon},\,i\in\REF}\ge 0$, we have:
+% \begin{equation}
+%   \begin{aligned}
+%     \cG_1\bracket{\lambda} &= 
+%     \left\{
+%       \begin{array}{rll}
+%         \min & \multicolumn{2}{l}{\sum_{t=1}^{\horizon} \sum_{i\in\REF} \sqbracket{ \holding^i\inventory_t^i + \lambda_t^i \bracket{\quantity_t^i - \setup_t^i} } } \\
+%         \st & \inventory_t^i = \inventory_{t-1}^i + \quantity_t^i - \demand_t^i & \forall t,r \\
+%         & \sum_{i\in\REF} \quantity_t^i \le 1 & \forall t \\
+%         & \sum_{i\in\REF} \setup_t^i \le \nbsetups & \forall t \\
+%         & \setup_t^i \in \crbracket{0,1} & \forall t,r \\
+%         & \quantity_t^i,\ \inventory_t^i \ge 0 & \forall t,r
+%       \end{array}
+%     \right.
+%     \\
+%     &= 
+%     \left\{
+%       \begin{array}{rll}
+%         \min & \multicolumn{2}{l}{\sum_{t=1}^{\horizon} \sum_{i\in\REF} \bracket{ \holding^i\inventory_t^i + \lambda_t^i \quantity_t^i } } \\
+%         \st & \inventory_t^i = \inventory_{t-1}^i + \quantity_t^i - \demand_t^i & \forall t,r \\
+%         & \sum_{i\in\REF} \quantity_t^i \le 1 & \forall t \\
+%         & \quantity_t^i,\ \inventory_t^i \ge 0 & \forall t,r
+%       \end{array}
+%     \right.
+%     +
+%     \left\{
+%       \begin{array}{rll}
+%         \max & \multicolumn{2}{l}{\sum_{t=1}^{\horizon} \sum_{i\in\REF} \lambda_t^i\setup_t^i } \\
+%         \st & \sum_{i\in\REF} \setup_t^i \le \nbsetups & \forall t \\
+%         & \setup_t^i \in \crbracket{0,1} & \forall t,r
+%       \end{array}
+%     \right.
+%     \\
+%     \cG_1\bracket{\lambda} &= 
+%     \left\{
+%       \begin{array}{rll}
+%         \min & \multicolumn{2}{l}{\sum_{t=1}^{\horizon} \sum_{i\in\REF} \bracket{ \holding^i \inventory_t^i + \lambda_t^i \quantity_t^i } } \\
+%         \st & \inventory_t^i = \inventory_{t-1}^i + \quantity_t^i - \demand_t^i & \forall t,r \\
+%         & \sum_{i\in\REF} \quantity_t^i \le 1 & \forall t \\
+%         & \quantity_t^i,\ \inventory_t^i \ge 0 & \forall t,r
+%       \end{array}
+%     \right.
+%     +
+%     \sum_{t=1}^{\horizon}
+%     \left\{
+%       \begin{array}{rll}
+%         \max & \multicolumn{2}{l}{\sum_{i\in\REF} \lambda_t^i \setup_t^i } \\
+%         \st & \sum_{i\in\REF} \setup_t^i \le \nbsetups \\
+%         & \setup_t^i \in \crbracket{0,1} & \forall r
+%       \end{array}
+%     \right.\label{eq:Lagrangian:capacity:max-setups}
+%   \end{aligned}
+% \end{equation}
 
-The minimization program of the equation~\eqref{eq:Lagrangian:capacity:max-setups} is a linear program with only continuous variables. So it can be solved in polynomial time. For each $t\in\range{\horizon}$, the maximization program can be solve in polynomial time with a greedy algorithm by sorting the $\lambda_t^i$ in decreasing order. Thus, this Lagrangian relaxation is easy to solve and moreover, it yield an integer solution.
+% The minimization program of the equation~\eqref{eq:Lagrangian:capacity:max-setups} is a linear program with only continuous variables. So it can be solved in polynomial time. For each $t\in\range{\horizon}$, the maximization program can be solve in polynomial time with a greedy algorithm by sorting the $\lambda_t^i$ in decreasing order. Thus, this Lagrangian relaxation is easy to solve and moreover, it yield an integer solution.
 
-\medskip
+% \medskip
 
-A second option consists in using the pseudo-norm
-\begin{equation}
-\begin{array}{lrcl}
-  \norm{\ .\ }_0 :& \RR^n & \longrightarrow & \RR_+ \\
-  & x & \longmapsto & \sum_{i=1}^n \findi{\crbracket{x_i \ne 0}}
-\end{array}
-\end{equation}
-which returns the size of the support of the vector $x$ and in dualizing the flexibility constraint~\eqref{eq:Uniform-CLSP-BS:setups}. Then, for all $\mu=\bracket{\mu_t}_{t\in\range{\horizon}}\ge 0$, we have:
-\begin{equation}
-  \begin{aligned}
-    \cG_2\bracket{\mu} &= 
-    \left\{
-      \begin{array}{rll}
-        \min & \multicolumn{2}{l}{\sum_{t=1}^{\horizon} \sqbracket{ \sum_{i\in\REF} \holding^i \inventory_t^i + \mu_t \bracket{ \norm{\bracket{\quantity_t^i}_{i\in\REF}}_0 - \nbsetups} } } \\
-        \st & \inventory_t^i = \inventory_{t-1}^i + \quantity_t^i - \demand_t^i & \forall t,r \\
-        & \sum_{i\in\REF} \quantity_t^i \le 1 & \forall t \\
-        & \quantity_t^i \le 1 & \forall t,r \\
-        & \quantity_t^i,\ \inventory_t^i \ge 0 & \forall t,r
-      \end{array}
-    \right.
-  \end{aligned}
-  \label{eq:Lagrangian:setups}
-\end{equation}
+% A second option consists in using the pseudo-norm
+% \begin{equation}
+% \begin{array}{lrcl}
+%   \norm{\ .\ }_0 :& \RR^n & \longrightarrow & \RR_+ \\
+%   & x & \longmapsto & \sum_{i=1}^n \findi{\crbracket{x_i \ne 0}}
+% \end{array}
+% \end{equation}
+% which returns the size of the support of the vector $x$ and in dualizing the flexibility constraint~\eqref{eq:Uniform-CLSP-BS:setups}. Then, for all $\mu=\bracket{\mu_t}_{t\in\range{\horizon}}\ge 0$, we have:
+% \begin{equation}
+%   \begin{aligned}
+%     \cG_2\bracket{\mu} &= 
+%     \left\{
+%       \begin{array}{rll}
+%         \min & \multicolumn{2}{l}{\sum_{t=1}^{\horizon} \sqbracket{ \sum_{i\in\REF} \holding^i \inventory_t^i + \mu_t \bracket{ \norm{\bracket{\quantity_t^i}_{i\in\REF}}_0 - \nbsetups} } } \\
+%         \st & \inventory_t^i = \inventory_{t-1}^i + \quantity_t^i - \demand_t^i & \forall t,r \\
+%         & \sum_{i\in\REF} \quantity_t^i \le 1 & \forall t \\
+%         & \quantity_t^i \le 1 & \forall t,r \\
+%         & \quantity_t^i,\ \inventory_t^i \ge 0 & \forall t,r
+%       \end{array}
+%     \right.
+%   \end{aligned}
+%   \label{eq:Lagrangian:setups}
+% \end{equation}
 
-Because of $\norm{\ .\ }_0$ being a pseudo-norm, it is common to replace it with $\norm{\ .\ }_1$ and in this case, the equation~\eqref{eq:Lagrangian:setups} can easily be turned into a linear program with continuous variables.
-
-
-\esgil{Intérêt de cette partie ?}
+% Because of $\norm{\ .\ }_0$ being a pseudo-norm, it is common to replace it with $\norm{\ .\ }_1$ and in this case, the equation~\eqref{eq:Lagrangian:setups} can easily be turned into a linear program with continuous variables.
 
 
-\subsection{Valid inequality}
+% \esgil{Intérêt de cette partie ?}
+
+
+\subsection{Valid inequalities}
 \label{sec:PDP:deterministic:theoretical-results:valid-inequality}
 
-\esgil{suppression de cette partie. L'inégalité valide trouvée existait déjà dans \cite{Geunes2014}}
+Some valid inequalities exists in literature. However, they do not provide relaxation depending on the number $\nbsetups_t$ of setups.
+
+A classical valid inequality relies on the absence of backorder and is given by \cref{prop:valid-inequality:no-backorder}. The statement can be found in \cite{Geunes2014} for the Capacitated Economic Lot-sizing Problem (CELSP).
+\begin{prop}\label{prop:valid-inequality:no-backorder}
+  For all period $t$ and all item $i$, we define $K_t^i = \max_{t'\in\range{t}}\frac{\capacity_{t'}^i}{\rate_{t'}^i}$ and assume that it is positive.
+  Then,
+  \begin{equation}\label{eq:valid-inequality:no-backorder}
+    \sum_{t'=1}^{t}\setup_{t'}^i
+    \ge
+    \left\lceil
+    \frac{1}{K_t^i} \bracket{ \sum_{t'=1}^{t}\demand_{t'}^i-\inventory_0^i }
+    \right\rceil
+  \end{equation}
+  is a valid inequality.
+\end{prop}
 
 
+\begin{proof}
+  At period $t$, initial inventory and cumulative production must at least cover the cumulative past demand. So
+  \begin{equation}
+    \inventory_0^i + \sum_{t'=1}^{t} \quantity_t^i \ge \sum_{t'=1}^{t}\demand_{t'}^i
+  \end{equation}
+  Constraint~\eqref{eq:CLSP-BS:big-M} gives
+  \begin{equation}
+    \quantity_{t'}^i \le \frac{\setup_{t'}^i\capacity_{t'}^i}{\rate_{t'}^i} \le \setup_{t'}^i K_t^i
+  \end{equation}
+  and then
+  \begin{equation}
+    \sum_{t'=1}^t\setup_{t'}^i \ge \frac{1}{K_t^i}\sum_{t'=1}^t\demand_{t'}^i-\inventory_0^i.
+  \end{equation}
+  The conclusion comes from the integrity of $\sum_{t'=1}^t\setup_{t'}^i$.
+\end{proof}
+
+Note that we can be more precise when writing valid inequality~\eqref{eq:valid-inequality:no-backorder}. It is easy to show that we can remove from the sum $\sum_{t'=1}^{t}\setup_{t'}^i$ every index $t'$ such that $\capacity_{t'}^i=0$.
+
+
+
+\esgil{TODO: Prove that the continuous relaxation does not depend on $\nbsetups_t$}
 
 
 \subsection{Extended formulations}
 \label{sec:PDP:deterministic:theoretical-results:extended-formulations}
 
 
-Two natural extended formulations come in mind. Unfortunately, their continuous relaxations are equal to the one of the CLSP-BS as we will show in this section.
+Two natural extended formulations come in mind. Unfortunately, their continuous relaxations are equal to the one of the formulation~\eqref{eq:CLSP-BS} as we will show in this section.
 
 
 
 \subsubsection{Model formulations}
 
-The first extended formulation is given by the program~\eqref{eq:extended-CLSP:periods}.
+The first extended formulation is given by the mixed integer program~\eqref{eq:extended-CLSP:periods}.
 %For each period $t$, we introduce a set of indexes $\crbracket{p\in{\REF\choose\nbsetups_t}}$ which represents every choice of $\nbsetups_t$ items among $\REF$.
-We introduce binary variables $y_t^p$ defined for each $t\in\range{\horizon}$ and each $p\in{\REF\choose\nbsetups_t}$.
+We introduce binary variables $y_t^p$ defined for each period $t\in\range{\horizon}$ and each choice $p\in{\REF\choose\nbsetups_t}$ of items.
 % in place of setups variables $\setup_t^i$.
 $y_t^p$ is equal to 1 if items in $p$ are allowed to be produced at periods $t$.
-It is easy to see that this is a formulation of the CLSP-BS
 
 \begin{subequations}\label{eq:extended-CLSP:periods}
-  \begin{align}
+  \begin{align+}
     \min\quad & \rlap{$\ds \sum_{t=1}^{\horizon} \sum_{i\in\REF} \holding_t^i \inventory_t^i$}
     \label{eq:extended-CLSP:periods:objective}
     \\
@@ -423,14 +514,19 @@ It is easy to see that this is a formulation of the CLSP-BS
     \\
     & \ds \quantity_t^i,\ \inventory_t^i \ge 0 && \forall t\in\range{\horizon},\ \forall i\in\REF,
     \label{eq:extended-CLSP:periods:positivity}
-  \end{align}
+  \end{align+}
 \end{subequations}
 
 
-The second extended formulation is given by the program~\eqref{eq:extended-CLSP:items}. For each item $i$, we introduce a set of indexes $\crbracket{\ell\subseteq\range{\horizon}}$ which represents every choice of periods when item $i$ is produced. We use binary variables $z_{\ell}^i$ defined for each $i\in\REF$ and each $\ell\subseteq\range{\horizon}$ in place of setups variables $\setup_t^i$. $z_{\ell}^i$ is equal to 1 if items $i$ is produced during the periods of $\ell$.
+The second extended formulation is given by the mixed integer program~\eqref{eq:extended-CLSP:items}.
+%For each item $i$, we introduce a set of indexes $\crbracket{\ell\subseteq\range{\horizon}}$ which represents every choice of periods when item $i$ is produced.
+We introduce binary variables $z_{\ell}^i$ defined for each item $i\in\REF$ and each choice $\ell\subseteq\range{\horizon}$ of periods.
+% in place of setups variables $\setup_t^i$.
+$z_{\ell}^i$ is equal to 1 if item $i$ is produced during the periods of $\ell$.
+
 
 \begin{subequations}\label{eq:extended-CLSP:items}
-  \begin{align}
+  \begin{align+}
     \min\quad & \rlap{$\ds \sum_{t=1}^{\horizon} \sum_{i\in\REF} \holding_t^i \inventory_t^i$}
     \label{eq:extended-CLSP:items:objective}
     \\
@@ -454,7 +550,7 @@ The second extended formulation is given by the program~\eqref{eq:extended-CLSP:
     \\
     & \ds \quantity_t^i,\ \inventory_t^i \ge 0 && \forall t\in\range{\horizon},\ \forall i\in\REF,
     \label{eq:extended-CLSP:items:positivity}
-  \end{align}
+  \end{align+}
 \end{subequations}
 
 
@@ -462,35 +558,122 @@ It is easy to see that the extended formulations~\eqref{eq:extended-CLSP:periods
 
 
 
-\subsubsection{Relaxations of extended formulations}
+\subsubsection{Relaxations of extended formulation~\eqref{eq:extended-CLSP:periods}}
 
 
 
-\begin{prop}\label{prop:extended-relaxation}
-The compact formulation~\eqref{eq:CLSP-BS} of CLSP-BS and the extended formulation~\eqref{eq:extended-CLSP:periods} and \eqref{eq:extended-CLSP:items} of CLSP-BS have the same continuous relaxations.
+\begin{prop}\label{prop:extended-relaxation:periods}
+The compact formulation~\eqref{eq:CLSP-BS} of CLSP-BS and the extended formulation~\eqref{eq:extended-CLSP:periods} of CLSP-BS have the same continuous relaxations.
 \end{prop}
 
-
-We will prove proposition~\cref{prop:extended-relaxation} showing that each continuous relaxation of an extended formulation is equal to the continuous relaxation of the compact formulation~\eqref{eq:CLSP-BS} of CLSP-BS.
-
-
-We start with the relaxation of the extended formulation~\eqref{eq:extended-CLSP:periods} and we need the following lemma.
+In order to prove \cref{prop:extended-relaxation:periods}, we need the following lemma.
 
 \begin{lem}\label{lem:cover-vertex}
 Let $I\in\NN^*$ and let $N\in\range{I}$.
-Let $\bracket{x^i,\ldots,x^I}\in\sqbracket{0,1}^I$ be such that $\sum_{i=1}^I x^i = N$.
-Then, there exists $\bracket{y^p}_{p\in{I\choose N}}\in\sqbracket{0,1}^{I\choose N}$ such that:
+Let $\bracket{x_i,\ldots,x_I}\in\sqbracket{0,1}^I$ be such that $\sum_{i=1}^I x_i = N$.
+Then, there exists $\bracket{y_p}_{p\in{I\choose N}}\in\sqbracket{0,1}^{I\choose N}$ such that
 \begin{equation}
-  x^i \le \sum_{p\in{I\choose N}~|~i\in p}y^p,\ \forall i\in\range{I}\ \mbox{and}\ \sum_{p\in{I\choose N}}y^p \le 1
+  \sum_{p\in{I\choose N}}y_p = 1
+  \ \mbox{and for each $i\in\range{I}$,}\ 
+  x_i \le \sum_{p\in{I\choose N}~|~i\in p}y_p
 \end{equation}
 \end{lem}
 
-\esgil{Preuve du lemme~\cref{lem:cover-vertex} en annexe ou dans le corps?}
 
-Proof of the lemma~\cref{lem:cover-vertex} is given in annexe~\cref{TODO}. We can now prove the equality between the two continuous relaxations.
+\begin{rmq}
+In case $N=2$, \cref{lem:cover-vertex} gives the following result on a graph. If $\bracket{x_i}_i$ represents the weighting of the vertexes of a complete graph meeting the hypothesis of the lemma, then there exists a weighting $\bracket{y_p}_p$ of the edges such that the sum of the weights of the edges is lower or equal to 1 and for each vertex, the sum of the weights of incident edges is greater or equal to the weight of the vertex.
+\end{rmq}
 
 
-\begin{proof}
+
+\begin{proof}[Proof of \cref{lem:cover-vertex}]
+Let $I\in\NN^*$ and let $N\in\range{I}$.
+Let $\bracket{x_1,\ldots,x_I}\in\sqbracket{0,1}^I$ be such that $\sum_{i=1}^I x_i = N$.
+To prove the lemma, it is sufficient to prove that the linear program~\eqref{eq:cover-vertex:primal} is feasible and that its optimum is equal to 1.
+\begin{subequations}\label{eq:cover-vertex:primal}
+  \begin{align+}
+    \min\quad & \rlap{$\ds \sum_{p\in{I\choose N}} y_p$}
+    \label{eq:cover-vertex:primal:objective}
+    \\
+    \st\quad & \ds \sum_{p\in{I\choose N}~|~i\in p} y_p \ge x_i && \forall i\in\range{I}
+    \label{eq:cover-vertex:primal:cover}
+    \\
+    & \ds y_p \ge 0 && \forall p\in{I\choose N}
+    \label{eq:cover-vertex:primal:positive}
+  \end{align+}
+\end{subequations}
+
+So it is sufficient to prove that the dual~\eqref{eq:cover-vertex:dual} of program~\eqref{eq:cover-vertex:primal} is feasible and that its optimum $v_D$ is equal to 1.
+
+\begin{subequations}\label{eq:cover-vertex:dual}
+  \begin{align+}
+    \max\quad & \rlap{$\ds \sum_{i=1}^I \lambda_i x_i$}
+    \label{eq:cover-vertex:dual:objective}
+    \\
+    \st\quad & \ds \sum_{i\in p} \lambda_i \le 1 && \forall p\in{I\choose N}
+    \label{eq:cover-vertex:dual:cover}
+    \\
+    & \ds \lambda_i \ge 0 && \forall i\in\range{I}
+    \label{eq:cover-vertex:dual:positive}
+  \end{align+}
+\end{subequations}
+
+First, note that $v_D\ge 1$. Indeed, $\bracket{\lambda_1,\ldots,\lambda_I}=\bracket{\frac{1}{N},\ldots,\frac{1}{N}}$ is feasible and provides the value $1$ to the objective function. Let us show that $v_D\le 1$.
+
+We assume without loss of generality that $x_1\ge\ldots\ge x_I$.
+Let $\lambda^*$ be an optimal solution of program~\eqref{eq:cover-vertex:dual}.
+It is easy to show that we can require
+\begin{equation}
+  \lambda_1^*\ge\ldots\ge\lambda_I^*
+  \ \mbox{and}\ 
+  \sum_{i=1}^N\lambda_i^*=1.
+\end{equation}
+Moreover, since $\sum_{i\in p}\lambda_i^*$ is maximal when $p=[N]$, we can also require that
+\begin{equation}
+  \lambda_N^*=\ldots=\lambda_I^*.
+\end{equation}
+Finally, among all $\lambda^*$ satisfying these requirements, we choose one with maximal $\lambda_1^*$, which exists by compactness. We deal with two cases.
+
+\medskip
+
+{\bf First case:} \emph{$\lambda_1^*<1$.}
+Suppose first for a contradiction that $\lambda_2^*>\lambda_I^*$.
+Then, denote $\ell$ the largest index such that $\lambda_{\ell}^*=\lambda_2^*$.
+The fact that $\lambda_N^*=\ldots=\lambda_I^*$ implies that $\ell<N$.
+Increasing $\lambda_1^*$ by a small $\varepsilon=\lambda_{\ell}^*-\lambda^{{\ell+1}*}>0$ and decreasing $\lambda_{\ell}^*$ by the same amount provides a new optimal solution (feasible because $\sum_{i\in p}\lambda^{i*}$ is maximal when $p=[N]$), with a larger $\lambda_1$.
+This is in contradiction with the definition of $\lambda^*$.
+We have thus $\lambda_2^*=\ldots=\lambda_I^*$ and $v_D$ is upper bounded by the optimal value of
+\begin{subequations}\label{eq:cover-vertex:dual:relaxation}
+  \begin{align+}
+    \max\quad & \rlap{$\ds \lambda_1x_1+\lambda_2\sum_{r=2}^I x_i$}
+    \\
+    \st\quad & \lambda_1 + \bracket{N-1} \lambda_2 = 1
+    \\
+    & \lambda_2 - \lambda_1 + z = 0
+    \\
+    & \lambda_1,\ \lambda_2,\ z\ge 0
+  \end{align+}
+\end{subequations}
+The variable $z$ is introduced so that the program is in standard form.
+Let $(\tilde\lambda_1,\tilde\lambda_2,\tilde z)$ be an optimal basic solution.
+If the optimal basis is $\crbracket{\lambda_1,\lambda_2}$, then $\tilde z=0$ and we have $\tilde\lambda_1=\tilde\lambda_2=1/N$, which gives a value $1$ to the objective function of problem~\eqref{eq:cover-vertex:dual:relaxation}.
+If the optimal basis is $\crbracket{\lambda_1,z}$, then $\tilde\lambda_2=0$ and we have $\tilde\lambda_1=1$, which gives a value $x_1$ to the objective function of problem~\eqref{eq: cover vertex dual relaxation}.
+The basis $\crbracket{\lambda_2,z}$ being not feasible, we get $v_D\leq\max\bracket{x_1,1}=1$.
+
+\medskip
+
+{\bf Second case:} \emph{$\lambda_1^*=1$.}
+We have obviously $\lambda_2^*=\ldots=\lambda_I^*=0$, and thus $v_D=x_1\le 1$.
+
+\medskip
+
+In both cases, $v_D\le 1$, as required. Hence $v_D = 1$ which conclude the proof.
+\end{proof}
+
+
+
+
+\begin{proof}[Proof of \cref{prop:extended-relaxation:periods}]
 Let $\bracket{\inventory_t^i, \quantity_t^i, y_t^p}$ be a solution of the continuous relaxation of~\eqref{eq:extended-CLSP:periods}.
 For $t\in\range{\horizon}$ and $i\in\REF$, we set $\setup_t^i=\sum_{p\in{\REF\choose\nbsetups_t}~|~i\in p} y_t^p$.
 Since $\bracket{\inventory_t^i, \quantity_t^i, y_t^p}$ is a solution of the continuous relaxation of~\eqref{eq:extended-CLSP:periods}, we have:
@@ -530,7 +713,14 @@ So $\bracket{\inventory_t^i, \quantity_t^i, y_t^p}$ is a solution of the continu
 
 
 
-We now prove the equality between the relaxations of the extended formulation~\eqref{eq:extended-CLSP:periods} and the compact formulation~\eqref{eq:CLSP-BS}.
+\subsubsection{Relaxations of extended formulation~\eqref{eq:extended-CLSP:items}}
+
+
+
+\begin{prop}\label{prop:extended-relaxation:items}
+The compact formulation~\eqref{eq:CLSP-BS} of CLSP-BS and the extended formulation~\eqref{eq:extended-CLSP:items} of CLSP-BS have the same continuous relaxations.
+\end{prop}
+
 
 
 \begin{proof}
@@ -554,7 +744,7 @@ and
 So $\bracket{\inventory_t^i, \quantity_t^i, \setup_t^i}$  is a solution of the continuous relaxation of the compact formulation~\eqref{eq:CLSP-BS} with the same cost as $\bracket{\inventory_t^i, \quantity_t^i, z_{\ell}^i}$.
 
 
-Let $\bracket{\inventory_t^i, \quantity_t^i, \setup_t^i}$ be a solution of the continuous relaxation of the compact formulation~\eqref{eq:CLSP-BS}. For each item $i$, we define the sequence $\bracket{\ell_p^i}_p$ of and the associated $z_{\ell_p^i}^i$ as follow:
+Let $\bracket{\inventory_t^i, \quantity_t^i, \setup_t^i}$ be a solution of the continuous relaxation of the compact formulation~\eqref{eq:CLSP-BS}. For each item $i$, we define the sequence $\bracket{\ell_p^i}^p$ of and the associated $z_{\ell_p^i}^i$ as follow:
 \begin{equation}
   \begin{aligned}
   \ell_1^i       &= \crbracket{t\in\range{\horizon}~|~\setup_t^i>0} \\
@@ -577,8 +767,10 @@ An example for the definition of the $\bracket{z_{\ell}^i}$ is given on figure~\
   \label{fig:relaxation-extended-formulation-by-reference}
 \end{figure}
 
-$\bracket{\ell_p^i}_p$ is finite and strictly decreasing and for every $\ell\notin\bracket{\ell_p^i}_p$, we set $z_{\ell}^i=0$. Then, we have $\setup_t^i = \sum_{\ell\subseteq\range{\horizon}~|~t\in\ell} z_{\ell}^i$ and $\bracket{\inventory_t^i, \quantity_t^i, z_{\ell}^i}$ is a solution of continuous relaxation of the extended formulation~\eqref{eq:extended-CLSP:items}.
+$\bracket{\ell_p^i}^p$ is finite and strictly decreasing and for every $\ell\notin\bracket{\ell_p^i}^p$, we set $z_{\ell}^i=0$. Then, we have $\setup_t^i = \sum_{\ell\subseteq\range{\horizon}~|~t\in\ell} z_{\ell}^i$ and $\bracket{\inventory_t^i, \quantity_t^i, z_{\ell}^i}$ is a solution of continuous relaxation of the extended formulation~\eqref{eq:extended-CLSP:items}.
 \end{proof}
+
+
 
 
 \section{Solving the CLSP-BS}

@@ -150,7 +150,6 @@
 %------------------------ Theorems
 %\usepackage{amsmath,amssymb,amsthm}
 \usepackage[capitalise,noabbrev]{cleveref}
-\usepackage{autonum}
 \usepackage{thmtools}
 \usepackage{thm-restate}
 \usepackage{multirow}
@@ -172,7 +171,6 @@
 
 \theoremstyle{remark}
 \newtheorem{rmq}{Remark}
-\newtheorem{openpb}{Open problem}
 
 % fixes space after and before \left and \right
 \let\originalleft\left
@@ -204,6 +202,10 @@
 
 % allows line breaks in \cite
 \usepackage{cite}
+
+% number only the cited equations
+\usepackage{autonum}
+
 
 % Useful shortcut
 \newcommand{\tbc}{\red{\texttt{To be completed}}}
