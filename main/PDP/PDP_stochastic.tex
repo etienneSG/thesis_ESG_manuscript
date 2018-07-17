@@ -4,26 +4,32 @@
 \section{Motivations}
 
 
-In Chapter~\ref{chap:PDP:deterministic}, data are deterministic. In practice, part of data is uncertain. Depending on the industry or on the planing horizon, uncertainty can be on demand forecast, production rate, capacities or any other part of the supply chain. When making a production plan, the main uncertainty in Argon's application cases is on demand forecast. Thus, in this whole chapter, we only consider this source of randomness in the model to get the stochastic counterpart of the Uniform CLSP-BS.
+In \cref{chap:PDP:deterministic}, data are deterministic. In practice, part of data is uncertain. Depending on the industry or on the planing horizon, uncertainty can be on demand forecast, production rate, capacities or any other part of the supply chain. When making a production planning, the main uncertainty in cases given by Argon Consulting comes from demand forecast. Thus, in this whole chapter, we only consider this source of randomness in the model to get the stochastic counterpart of the Uniform CLSP-BS.
 
 
-As for the Uniform CLSP-BS in Chapter~\ref{chap:PDP - deterministic}, we consider an assembly line producing a set $\REF$ of items over $\horizon$ periods. The number of distinct items produced over a period cannot exceed $\nbsetups$. There is also an upper bound on the total period production (summed over all items) and we normalize all quantities so that this upper bound is equal to $1$.
+As for the Uniform CLSP-BS in \cref{chap:PDP:deterministic}, we consider an assembly line producing a set $\REF$ of items over $\horizon$ periods. The number of distinct items produced over a period cannot exceed $\nbsetups$. There is also an upper bound on the total period production (summed over all items). We remind that we normalized all quantities so that this upper bound is equal to 1.
 
-The production should satisfy a random demand. However, because of uncertainty, backorder (\ie late delivery) is allowed but must be controlled. Part of demand supplied on time must meet a fill rate service level $\servicelvl$ as defined in Chapter~\ref{chap:business-problem}. The demand of item $i$ over period $t$ is a random parameter $\va\demand_t^i$, whose realization is known at the end of period $t$. When production of an item $i$ is not used to satisfy the demand, it can be stored but incurs a unit holding cost $\holding^i>0$ per period. For each item $i$, there is an initial inventory $s_0^i\in\RR_+$.
+The production must satisfy a random demand as well as possible. However, because of uncertainty, backorder (\ie late delivery) is allowed but must be controlled. Part of demand satisfied on time must meet a fill rate service level $\servicelvl$ as defined in \cref{chap:business-context}. The demand of item $i$ over period $t$ is a random parameter $\va\demand_t^i$, whose realization is known at the end of period $t$. When production of an item $i$ is not used to satisfy the demand, it can be stored but incurs a unit holding cost $\holding^i>0$ per period. For each item $i$, there is an initial inventory $s_0^i\in\RR_+$.
 
 Regarding randomness, we assume that for any $i$ and $t$, realizations of $\bracket{\va\demand_t^i,\ldots,\va\demand_{\horizon}^i}$ have finite expectation and can be efficiently sampled, knowing a realization of $\bracket{\va\demand_1^j,\ldots,\va\demand_{t-1}^j}_{j\in\REF}$.
 
-Decisions can be made at the beginning of each period knowing past realizations of the demand. In particular, decision for current period are firm decisions, but decisions for the following period may change depending on the realization of the demand at the end of the period. This kind of formulation is called \emph{multi-stage}.
+Decisions can be made at the beginning of each period knowing past realizations of the demand. In particular, decisions for current period are definitive decisions, but decisions for the following period may change depending on the realization of the demand at the end of the period. This kind of formulation is called \emph{multi-stage}.
 
 Finally, model must always be feasible. Indeed, in real applications, model must always return a production planning. That's why some constraints are ``soft constraints''. For example, in case of capacity issue, production must be planned in such a way as to best approach service level even if it cannot reach it.
 
 
 \medskip
 
-Adding uncertainty in the formulation makes the description of the problem incomplete. Then, it requires to make choices in modeling. They will be discussed in Section~\ref{sec:stoch-CLSP-BS-discussion}.
+Adding uncertainty in the formulation makes the description of the problem incomplete. Then, it requires to make choices in modeling. They will be discussed in Section~\cref{sec:stoch-CLSP-BS-discussion}.
 
+
+\medskip
+
+%The following of this chapter presents in \cref{sec:PDP:stochastic:bibliography} a short review of the seminal lot-sizing models, in \cref{sec:PDP:deterministic:model} a formulation of the CLSP-BS as a mixed integer program and in \cref{sec:PDP:deterministic:theoretical-results} results showing the theoretical difficulty of the CLSP-BS.
 
 \section{Bibliography}
+\label{sec:PDP:stochastic:bibliography}
+
 
 \esgil{Add bibliography}
 
@@ -36,18 +42,16 @@ In order to solve the stochastic counterpart of the Uniform CLSP-BS, we introduc
 
 \subsection{Model with service level constraint}
 
-We have to address the service level constraint. For each period $t$ and each item $i$, we introduce the decision variable $\supplied_t^i$ which the part of demand $\demand_t^i$ supplied at the end of period $t$. We decide to model the service level constraint for all item by:
+For each period $t$ and each item $i$, we introduce the decision variable $\supplied_t^i$ which is the part of demand $\demand_t^i$ satisfied at the end of period $t$. We decide to model the service level constraint for all item by
 \begin{equation}
   \label{eq:service-level-constraint}
   \espe\sqbracket{ \frac{\sum_{i\in\REF}\sum_{t=1}^{\horizon}\va\supplied_t^i}{\sum_{i\in\REF}\sum_{t=1}^{\horizon}\va\demand_t^i} }
-  \geq \servicelvl ,
+  \geq \servicelvl.
 \end{equation}
 
-Then, we can write the mathematical program corresponding to our problem at time $t$:
-
-
+Then, we can write the mathematical program corresponding to our problem at time $t$
 \begin{subequations}\label{eq:Uniform-CLSP-BS:service-level}
-  \begin{align}
+  \begin{align+}
     \min\quad & \rlap{$\ds \espe\sqbracket{\sum_{t'=t}^{\horizon} \sum_{i\in\REF} \holding^i\va\inventory_{t'}^i}$}
     \label{eq:Uniform-CLSP-BS:service-level:objective}
     \\
@@ -77,21 +81,21 @@ Then, we can write the mathematical program corresponding to our problem at time
     \\
     & \ds \va\quantity_{t'}^i \preceq \Sfield{\bracket{\va\demand_1^i,\ldots,\va\demand_{t-1}^i}_{i\in\REF}} && \forall t'\in\range[t]{\horizon},\ \forall i\in\REF.
     \label{eq:Uniform-CLSP-BS:service-level:measurability}
-  \end{align}
+  \end{align+}
 \end{subequations}
 
 Objective~\eqref{eq:Uniform-CLSP-BS:service-level:objective} minimizes the real inventory at the end of each period.
 Constraints~\eqref{eq:Uniform-CLSP-BS:service-level:inventory-dynamic}, \eqref{eq:Uniform-CLSP-BS:service-level:capacity}, \eqref{eq:Uniform-CLSP-BS:service-level:big-M} and \eqref{eq:Uniform-CLSP-BS:service-level:setups} have the same meaning t{}han their deterministic counterparts.
 Constraint~\eqref{eq:Uniform-CLSP-BS:service-level:service-level} ensures the service level.
-Constraint~\eqref{eq:Uniform-CLSP-BS:service-level:supplied-bound-demand} upper bound the supplied part of demand by the demand and the inventory plus the produced quantity.
+Constraint~\eqref{eq:Uniform-CLSP-BS:service-level:supplied-bound-demand} upper bound the satisfied part of demand by the demand and the inventory plus the produced quantity.
 Last constraint~\eqref{eq:Uniform-CLSP-BS:service-level:measurability} of the program, written as a {\em measurability constraint}, means that the values of the variables $\va\quantity_{t'}^i$ can only depend on the values taken by the demand before time $t'$ (the planner does not know the future).
 Every constraint of the problem hold almost surely.
 
-One may expect that supplied part of demand $\va\supplied_t^i$ is also bounded by the sum of the previous inventory and the production of the period, but such a constraint is redundant with constraints~\eqref{eq:Uniform-CLSP-BS:service-level:inventory-dynamic} and \eqref{eq:Uniform-CLSP-BS:service-level:positity}.
+One may expect that satisfied part $\va\supplied_t^i$ of demand is also bounded by the sum of the previous inventory and the production of the period, but such a constraint is can be deduced from constraints~\eqref{eq:Uniform-CLSP-BS:service-level:inventory-dynamic} and \eqref{eq:Uniform-CLSP-BS:service-level:positity}.
 
 \vlil{Définir notation de la measurability constraint?}
 
-The main advantage of this formulation is the adequacy between the mathematical model and Argon objectives described in problem formulation. Indeed, objective is simple (only holding costs) and do not weighs indicators hardly comparable. Moreover, every parameter is easily given by clients.
+The main advantage of this formulation is the adequacy between the mathematical model and Argon objectives described in problem formulation. Indeed, the objective is simple (only holding costs) and does not weigh indicators hardly comparable. Moreover, every parameter is easily given by clients.
 
 The drawback of this formulation is the feasibility. Because of the service level constraint~\eqref{eq:Uniform-CLSP-BS:service-level:service-level}, program~\eqref{eq:Uniform-CLSP-BS:service-level} may be infeasible. In this cases, heuristics must be developed to create a production planning which violates as little as possible the constraints.
 
@@ -100,12 +104,12 @@ The drawback of this formulation is the feasibility. Because of the service leve
 \subsection{Model with backorder costs}
 
 
-Service level constraint is a main issue since it may lead to infeasibility of the model. Thus, we remove this constraint and penalize backorder quantities. We introduce new decisions variables. When a demand for item $i$ is not satisfied by the production of the current period or by inventory, it can be satisfied later but incurs a unit backorder cost $\backorder^i$ per period for some coefficient $\backorder^i>0$ and the backorder of item $i$ at the end of the period $t$ is denoted by $\va\backlog_t^i$. We also used the inventory level $\va\level_t^i$ which is the relative value of the inventory of item $i$ at the end of period $t$ (\ie the inventory minus the back order).
+Service level constraint is a main issue since it may lead to infeasibility of the model. Thus, we remove this constraint and penalize backorder quantities. We introduce new decisions variables. When a demand for item $i$ is not satisfied by the production of the current period or by inventory, it can be satisfied later but incurs a unit backorder cost $\backorder^i$ per period for some coefficient $\backorder^i>0$ and the backorder of item $i$ at the end of the period $t$ is denoted by $\va\backlog_t^i$. We also used the inventory level $\va\level_t^i$ which is the relative value of the inventory of item $i$ at the end of period $t$ (\ie the inventory minus the backorder).
 
 Problem can be written as follow:
 
 \begin{subequations}\label{eq:Uniform-CLSP-BS:backorder}
-  \begin{align}
+  \begin{align+}
     \min\quad & \rlap{$\ds \espe\sqbracket{\sum_{t'=t}^{\horizon} \sum_{i\in\REF} \bracket{\holding^i\va\inventory_{t'}^i + \backorder^i\va\backlog_{t'}^i}}$}
     \label{eq:Uniform-CLSP-BS:backorder:objective}
     \\
@@ -132,7 +136,7 @@ Problem can be written as follow:
     \\
     & \ds \va\quantity_{t'}^i \preceq \Sfield{\bracket{\va\demand_1^i,\ldots,\va\demand_{t-1}^i}_{i\in\REF}} && \forall t'\in\range[t]{\horizon},\ \forall i\in\REF.
     \label{eq:Uniform-CLSP-BS:backorder:measurability}
-  \end{align}
+  \end{align+}
 \end{subequations}
 
 In contrast to model~\eqref{eq:Uniform-CLSP-BS:service-level}, objective~\eqref{eq:Uniform-CLSP-BS:backorder:objective} minimizes the sum of inventory and backorder at the end of each period and service level constraint~\eqref{eq:Uniform-CLSP-BS:service-level:service-level} is replaced by constraint~\eqref{eq:Uniform-CLSP-BS:backorder:inventory} which links real inventory and backorder quantities.
@@ -144,8 +148,7 @@ Finally, note that the two models are not equivalent since the service level con
 
 \medskip
 
-When backorder costs are not given by the clients, we propose a way to ``price'' backorder coefficients $\backorder^i$ for each item $i$ before the first period, with the idea to heuristically entice it to choose solutions satisfying service level constraint~\eqref{eq:Uniform-CLSP-BS:service-level:service-level}.
-
+When backorder costs are not given by the clients, we propose a way to ``price'' backorder coefficients $\backorder^i$ for each item $i$ before the first period, with the idea to heuristically entice it to choose solutions satisfying service level constraint~\eqref{eq:Uniform-CLSP-BS:service-level:service-level}. We set
 \begin{equation}
 \backorder^i := \frac{\prob\sqbracket{\va\demand^i \le q^i(\servicelvl)}}{\prob\sqbracket{\va\demand^i>q^i(\servicelvl)}} \holding^i
 \label{eq:delay-service-level-gamma}
@@ -153,12 +156,12 @@ When backorder costs are not given by the clients, we propose a way to ``price''
 with
 \begin{equation}
 \quantity^i(\servicelvl) :=
-\min \crbracket{
+\inf \crbracket{
   \quantity\in \RR_+ \; \Bigg| \; \espe\sqbracket{\frac{\min(\va\demand^i,\quantity)}{\va\demand^i}} \ge \servicelvl
 }
 \label{eq:delay-service-level-ell}
 \end{equation}
-where $\va\demand^i = \sum_{t=1}^{\horizon} \va \demand_t^i$ is the demand of item $i$ aggregated over time. Since $\va \demand^i$ is integrable, $\quantity^i(\servicelvl)$ is well-defined
+where $\va\demand^i = \sum_{t=1}^{\horizon} \va \demand_t^i$ is the demand of item $i$ aggregated over time. Since $\va \demand^i$ is measurable\esg{replace \emph{integrable}}, $\quantity^i(\servicelvl)$ is well-defined
 (we set $\frac{0}{0}=\servicelvl$ so that items with no demand would not impact the constraint).
 Computing an approximate value of $\quantity^i(\servicelvl)$ at an arbitrary precision can easily be performed by binary search.
 
@@ -200,7 +203,7 @@ Indeed, in this case, the optimal solution $\quantity^{i*}$ of~\eqref{eq:newsven
 
 
 \begin{rmq}
-Models are not equivalent since backorder is never served in first model whereas second model tries to fulfill past demand. \vl{ref to problems}
+Models are not equivalent since backorder is never served in model~\eqref{eq:Uniform-CLSP-BS:service-level} whereas model~\eqref{eq:Uniform-CLSP-BS:backorder} tries to fulfill past demand.
 \end{rmq}
 
 
@@ -211,10 +214,10 @@ Models are not equivalent since backorder is never served in first model whereas
 
 
 
-As explained in Section~\ref{sec:PDP:deterministic:theoretical-results}, the deterministic version of CLSP-BS is difficult.
+As explained in Section~\cref{sec:PDP:deterministic:theoretical-results}, the deterministic version of CLSP-BS is difficult.
 Therefore, we cannot expect a quick algorithm solving exactly the problem, and this holds especially for the full stochastic version.
 Moreover, one of the requests of the partner was to have an easy to understand method, which can be used and maintained in practice, with short computation times.
-We propose a two-stage approximation consisting in replacing the measurability constraint by\vl{ref}
+We propose a two-stage approximation consisting in replacing the measurability constraint~\eqref{eq:Uniform-CLSP-BS:backorder:measurability} by
 \begin{equation}
 \left\{
 \begin{array}{l@{\quad}l}
@@ -233,15 +236,18 @@ The (2SA) relaxation is then solved by a classical {\em sample average approxima
 We build a set $\scenarios$ of $m$ scenarios sampled uniformly at random.
 Each of these scenarios is a possible realization of $(\va\demand_t^i,\va\demand_{t+1}^i,\ldots,\va\demand_{\horizon}^i)$ for each item $i$. The parameter $m$ is fixed prior to the resolution.
 
-Figure~\ref{} maps the reduction of the scenario space.
+\cref{fig:scenario-space-reduction} gives a scheme of the two steps involved in reduction of the scenario space.
 
-\esgil{Ajouter figure de la présentation à Argon}
+\begin{figure}[h]
+  \centering
+  \includegraphics{main/PDP/images/stochastic_approximations.tikz}
+  \caption{Scheme of the reduction of the scenario space}
+  \label{fig:scenario-space-reduction}
+\end{figure}
 
 We get the following mixed integer program (2SA-$m$), solved by any standard MIP solver.
-
-
 \begin{subequations}\label{eq:Uniform-CLSP-BS-2SA-m:backorder}
-  \begin{align}
+  \begin{align+}
     \min\quad & \rlap{$\ds \frac{1}{m}\sum_{\omega\in\scenarios} \sum_{t'=t}^{\horizon} \sum_{i\in\REF} \bracket{\holding^i\inventory_{t',\omega}^i + \backorder^i\backlog_{t',\omega}^i}$}
     \label{eq:Uniform-CLSP-BS-2SA-m:backorder:objective}
     \\
@@ -271,7 +277,7 @@ We get the following mixed integer program (2SA-$m$), solved by any standard MIP
     \\
     & \ds \quantity_t^i,\ \quantity_{t',\omega}^i,\ \inventory_{t',\omega}^i,\ \backlog_{t',\omega}^i \ge 0 && \forall\omega\in\scenarios,\, \forall t'\in\range[t]{\horizon},\, \forall i\in\REF,
     \label{eq:Uniform-CLSP-BS-2SA-m:backorder:positity}
-  \end{align}
+  \end{align+}
 \end{subequations}
 
 
@@ -301,7 +307,7 @@ If the random demand $\va\demand$ is bounded or Gaussian then it satisfies~\eqre
 \vlil{A solution whose value is less than $\varepsilon$ from the optimal value.
 We need to do}
 
-The proof of part~\ref{delta-eps-cvgce} relies on the following technical lemma.
+The proof of part~\cref{delta-eps-cvgce} relies on the following technical lemma.
 \begin{lem}
 \label{lem:Laplace-caract}
 Consider $g(d) = \inf_{y \in Y} G(y,d)$, where $Y$ is non-empty and where the function $G$
@@ -316,14 +322,14 @@ We then have $ \EE[e^{u g(\va d)}] \leq  \EE[e^{uG(y_0,0)} e^{\kappa u \|\va d\|
 For $u\leq 0$, by non-negativity of $G$ we have $g({\va d}) \geq 0$, hence $\EE[e^{u g(\va d)}] \leq 1$.
 \end{proof}
 
-\begin{proof}[Proof of Proposition~\ref{prop:cvgce-2SAm}]
+\begin{proof}[Proof of Proposition~\cref{prop:cvgce-2SAm}]
 Let $Q_t$ be the (bounded) set of feasible values for the first-stage variables $q_t=(q_t^i)_{i\in\REF}$ in (2SA).
 Denote by $F(q_t,d)$ the minimal cost of (2SA) that can be reached when the first stage-variables are fixed to $q_t\in Q_t$  and the realization of the demand is $d=(d_{t'}^i)_{t' \geq t, i\in\REF}$.
 We introduce the map $f\colon q_t\mapsto \espe\sqbracket{F(q_t,\va d)}$, which associates to a given choice of $q_t\in Q_t$ the expected minimal cost, and similarly the map $\hat f_m$, which associates to a $q_t\in Q_t$ the minimal cost of $\textup{(2SA-$m$)}$ when the first-stage variables are set to this $q_t$.
 
 The map $f$ is continuous and $Q_t$ is compact. Thus $f$ is bounded, and, by \cite[Theorem 7.48]{Shapiro2009}, we have that $(\hat f_m(q_t))_{m\in\mathbb{Z}_+}$ converges to $f(q_t)$ uniformly on $Q_t$. Then (i) and (ii) are direct consequences of \cite[Theorem 5.3]{Shapiro2009}.
 
-By Lemma~\ref{lem:Laplace-caract}, there exist $K$ and $C$ such that for any $q_t \in Q_t$, $F(q_t,\va d)$ satisfy~\eqref{eq:Laplace-caract}.
+By Lemma~\cref{lem:Laplace-caract}, there exist $K$ and $C$ such that for any $q_t \in Q_t$, $F(q_t,\va d)$ satisfy~\eqref{eq:Laplace-caract}.
 Consequently there exists $\sigma >0$ such that for all $q_t, q'_t \in Q_t$, the random variable $[F(q_t,\va d) - f(q_t)] - [F(q'_t,\va d) - f(q'_t)] $ is $\sigma$-subgaussian, (see e.g., \cite{Vershynin2010}).
 Furthermore, for any demand $d$, the map $F(\cdot,d)$ is %$T|\REF|\delay$
 Lipschitz-continuous on $Q_t$. Then, according to \cite[Theorem 5.18]{Shapiro2009}, for every $\alpha\in(0,1)$, there exists $M \in \mathbb{Z}_+$ such that for $m\geq M$, we have $ \PP(\cQ_m^{\delta}\subseteq\cQ^{\varepsilon}) > 1 - \alpha$.
@@ -338,42 +344,55 @@ Lipschitz-continuous on $Q_t$. Then, according to \cite[Theorem 5.18]{Shapiro200
 
 Ideally, we want to find a solution of the stochastic counterpart of Uniform CLSP-BS. Since it is intractable, we made two approximations (2SA) and (2SA-$m$). The objective is to determine how good are this approximations.
 
-We obtain lower bounds on the stochastic counterpart of Uniform CLSP-BS solving (2SA-$m$) with $m$ large enough or solving many time (2SA-$m$) with $m$ small.
+We obtain lower bounds on the stochastic counterpart of Uniform CLSP-BS solving (2SA-$m$) with $m$ large enough or solving many time (2SA-$m$) with $m$ small. This result relies on \cref{prop:CLSP-BS:stochastic:bounds}
 
-
-indeed, the two-stage approximation (2SA) is a relaxation of the original problem. Then we get:
+\begin{prop}\label{prop:CLSP-BS:stochastic:bounds}
+For each $m\in\NN^*$, we have the following inequalities on the optimal value.
 \begin{equation}
-  v^*_{2SA} \le v^*
+  \espe\sqbracket{v^*_{2SA-m}}\le v^*_{2SA}\le v^*
 \end{equation}
-where $v^*$ is the optimal value of stochastic counterpart of Uniform CLSP-BS and $v^*_{2SA}$ is the optimal value of (2SA).
-Then, according to Proposition~\ref{prop:cvgce-2SAm}, the optimal value of the sample average approximation (2SA-$m$) converge almost surely to the optimal value of (2SA) when $m$ goes to infinity and we have:
+Where $v^*_{2SA-m}$ is the optimal value of (2SA-$m$), $v^*_{2SA}$ is the optimal value of (2SA) and $v^*$ is the optimal value of stochastic counterpart of Uniform CLSP-BS.
+\end{prop}
+
+
+\begin{proof}
+The two-stage approximation (2SA) is a relaxation of the original problem. Then we get:
+\begin{equation}
+  v^*_{2SA} \le v^*.
+\end{equation}
+Then, according to Proposition~\cref{prop:cvgce-2SAm}, the optimal value of the sample average approximation (2SA-$m$) converge almost surely to the optimal value of (2SA) when $m$ goes to infinity and we have:
 \begin{equation}
   v^*_{2SA-m}  \xrightarrow[m\to\infty]{} v^*_{2SA} \quad a.s.
 \end{equation}
-where $v^*_{2SA-m}$ is the optimal value of (2SA-$m$).
 Thus, for $m$ large enough, the optimal value of (2SA-$m$) (or at least a lower bound on this value) is a lower bound of the original problem.
+\end{proof}
 
-For each $m\in\NN^*$, we have:
-\begin{equation}
-  \espe\sqbracket{v^*_{2SA-m}}\le v^*_{2SA}\le v^*_S
-\end{equation}
-\esgil{Justification?}
+
+\esgil{Preuve à revoir. Je ne suis pas du tout convaincu par ce que j'ai écrit.}
+
 \vlil{It could be a good idea to give some details and references, but this all very classical results.}
-Then, we also get a lower bound repeating the resolution of (2SA-$m$) for a small $m$.
 
 
-The efficiency of these two methods are discussed in Chapter~\ref{chap:PDP:numerical-experiments}.
+
+The efficiency of these two methods are discussed in Chapter~\cref{chap:PDP:numerical-experiments}.
 
 
 
 \section{Discussion about modeling}
 \label{sec:stoch-CLSP-BS-discussion}
 
-In the way we formulate the stochastic counterpart of Uniform CLSP-BS, we made some choices. First one is the information structure \ie the time when randomness is revealed. There were two versions for each period: decision-hazard where decisions are made before the hazard is revealed and hazard-decision which is the opposite. Both make sense in industrial applications but we choose the pessimistic version\vl{decision-hazard} that is the demand of period $t$ is revealed at the end of the period after the production decisions were made. However, the methods developed in this thesis can be easily adapted to the hazard-decision case where the demand is revealed at the beginning of the period.
+In the way we formulate the stochastic counterpart of Uniform CLSP-BS, we made some choices.
+First one is the information structure \ie the time when randomness is revealed.
+Relying on the denominations used in \cite{Carpentier2015}, there were two versions for each period: decision-hazard where decisions are made before the hazard is revealed and hazard-decision which is the opposite.
+Both make sense in industrial applications but we choose the decision-hazard version that is the demand of period $t$ is revealed at the end of the period after the production decisions were made.
+This version is more pessimistic than the hazard-decision version.
+However, the methods developed in this thesis can be easily adapted to the hazard-decision case where the demand is revealed at the beginning of the period.
 
 
-Second one concerns the feasibility of the planing. In Argon's applications, covering every possible realizations of demand often leads to too expensive production planning or to infeasible planning. When it occurs, a part of the demand is not served and the model must return a production planning satisfying every other constraints and reaching an objective service level.
+Second one concerns the feasibility of the planing. In Argon's applications, covering every possible realizations of demand often leads to too expensive production planning or to infeasible planning. When it occurs, a part of the demand is not satisfied and the model must return a production planning satisfying every other constraints and reaching an objective service level.
 
 
-Thus we have to model the undelivered quantities. In many cases, serving only 95\% of the demand is less critical than serving only 80\%. Thus, Argon aims at reaching a \emph{service level} for delivered quantities. Fill rate service level which is the proportion of demand delivered on time is considered. As previously explained in Chapter~\ref{chap:business-context}, the cycle service level which is the proportion of command entirely delivered could have been considered but in most of our application, it is less relevant. An other non-obvious question is the mesh considered for the service level constraint. It can be extremely precise as a service level or each pair (item, period) or extremely general as a global service level for every items and every periods. The aggregation of the KPI can also be done in many ways (\eg average of the service level over items, sum of the supplied quantity over all items and all periods divided by sum of demand over all items and all periods). We were able to get a precise formulation from our partner and from its clients since it depends on the industry or the strategic objectives. However, the methods developed in this thesis can be easily adapted to the different modeling of the fill rate service level. We chose to model the fill rate service level dividing the sum of the supplied quantity over all items and all periods divided by sum of demand over all items and all periods. This modeling enables to not penalized a huge demand of an item for satisfying a small demand of an other one but the drawback is that some items with very small demand may have a bad service level.
+Thus we have to model the undelivered quantities. In many cases, serving only 95\% of the demand is less critical than serving only 80\%. Thus, Argon aims at reaching a \emph{service level} for delivered quantities. Fill rate service level which is the proportion of demand satisfied on time is considered. As previously explained in Chapter~\cref{chap:business-context}, the cycle service level which is the proportion of command entirely satisfied could have been considered but in most of our application, it is less relevant.
+
+An other non-obvious question is the mesh considered for the service level constraint. It can be extremely precise as a service level or each pair (item, period) or extremely general as a global service level for every items and every periods. The aggregation of the KPI can also be done in many ways (\eg average of the service level over items, sum of the satisfied demand over all items and all periods divided by sum of demand over all items and all periods). We were not able to get a precise formulation from our partner and from its clients since it depends on the industry or the strategic objectives. However, the methods developed in this thesis can be easily adapted to the different modeling of the fill rate service level. We chose to model the fill rate service level dividing the sum of the satisfied demand over all items and all periods divided by sum of demand over all items and all periods. This modeling enables to not penalized a huge demand of an item for satisfying a small demand of an other one but the drawback is that some items with very small demand may have a bad service level.
 

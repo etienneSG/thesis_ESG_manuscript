@@ -1,10 +1,25 @@
 \chapter{Numerical experiments}
 \label{chap:PDP:numerical-experiments}
 
-\vlil{Intro}
+This thesis was motivated by a real problem from the industry. The objective is not only theoretical but also applied. After retrieving the data from the Argon Consulting's clients, we test our method on real world instances and empirically show than the method we propose lead to great improvement in inventory management.
+
+
 
 \section{Simulation}
 
+Every method used is an heuristic since it cannot guarantee to reach the optimum.
+Moreover, we are not able to prove than a method is theoretically better than an other one.
+Thus, in order to compare their efficiency, we used simulations.
+In the following of this chapter, each method used to compute a production planning is called an \emph{heuristic}.
+
+
+The simulation emulates the behavior of people making production planning facing uncertainty. Before the start, we define the data of the assembly line and we give the forecast demand (which is a function of the current period and of the past outcomes). Then, we chose an heuristic to compute the production planning.
+
+We use a repeated approach starting at period $t=1$. For each period $t$, we observe the current inventory level of each item, \ie the inventory at the end of the previous period. Using the forecast demand as it is currently known and the chosen heuristic, we compute the production planing and fix the decision for the current period $t$. In real life, it correspond to setup the production. At the end of the period, we observe the demand outcome for the week $t$ and actualize the inventory level.
+
+At the end of the simulation, we get several \emph{Key Performance Indicators (KPI)} measuring the efficiency of the heuristic.
+
+A scheme of the run of the simulation is given in \cref{fig:simulator}.
 
 \begin{figure}[h]
   \centering
@@ -13,17 +28,8 @@
   \label{fig:simulator}
 \end{figure}
 
-The simulation emulate the behavior of a people making production planning facing uncertainty. Before the start, we define the data of the assembly line and we give the forecast demand (which is a function of the current period and of the past outcomes). Then, we chose an heuristic to compute the production planing.
 
-We use a repeated approach starting at period $t=1$. For each period $t$, we observe the current inventory level of each item, \ie the inventory at the end of the previous period. Using the forecast demand as it is currently known and the chosen heuristic, we compute the production planing and fix the decision for the current period $t$. In real life, it correspond to setup the production. At the end of the period, we observe the demand outcome for the week $t$ and actualize the inventory level.
-
-At the end of the simulation, we get several \emph{Key Performance Indicators (KPI)} measuring the efficiency of the heuristic.
-
-A scheme of the run of the simulation is given in figure~\ref{fig:simulator}.
-
-
-
-C++11 has been chosen for the implementations and Gurobi 6.5.1 was used to solve the model on a PC with Intel(R) Core(TM) i7-3770 CPU @ 3.40GHz and 8Go RAM.
+C++11 has been chosen for the implementations and Gurobi 6.5.1~\cite{gurobi} was used to solve the model on a PC with Intel(R) Core(TM) i7-3770 CPU @ 3.40GHz and 8Go RAM.
 \esgil{Change characteristic of the PC. Tests made on the cluster!}
 
 
@@ -32,7 +38,7 @@ C++11 has been chosen for the implementations and Gurobi 6.5.1 was used to solve
 \section{Heuristics}
 
 
-Our method consists in solving (2SA-$m$) at the beginning of each period $t$. We compared it with three other heuristics:
+Our heuristic consists in solving (2SA-$m$) as defined in \cref{chap:PDP:stochastic} at the beginning of each period $t$. We compared it with three other heuristics:
 \begin{itemize}
   \item deterministic approximation.
   \item cover-size.
@@ -40,64 +46,81 @@ Our method consists in solving (2SA-$m$) at the beginning of each period $t$. We
 \end{itemize}
 
 
-The first heuristic is the deterministic version of the stochastic counter part of Uniform CLSP-BS with backorder~\eqref{eq:Uniform-CLSP-BS-2SA-m:backorder}, where the random demand is replaced by its expectation. Note that it is not the CLSP-BS describe in chapter~\ref{chap:PDP:deterministic} since there are backorder costs.
+The first heuristic is the deterministic version of the stochastic counter part of Uniform CLSP-BS with backorder~\eqref{eq:Uniform-CLSP-BS-2SA-m:backorder}, where the random demand is replaced by its expectation. Note that it is not the CLSP-BS described in \cref{chap:PDP:deterministic} since there are backorder costs.
 
 
-The second one, the {\em lot-size heuristic}, consists in determining before the first week once and for all a value $\ell_i^*$ for each reference $i\in\REF$.
-At time $t$, if the inventory of reference $r$ is below a precomputed safety level, the quantity $\quantity_t^i$ is chosen so that the inventory of reference $r$ exceeds the safety level of exactly $\ell_i^*$.
-In case of capacity issues, the production is postponed and thus backorder costs appear. In addition, if some capacity issues are easily anticipated, the production of a reference $r$ can be activated even if the inventory is not below the safety level.
+The second one, the {\em lot-size heuristic}, consists in determining before the first week once and for all a value $\ell_i^*$ for each item $i\in\REF$.
+At time $t$, if the inventory of item $r$ is below a precomputed safety stock, the quantity $\quantity_t^i$ is chosen so that the inventory of item $r$ exceeds the safety stock of exactly $\ell_i^*$.
+Indeed, as shown in \cref{fig:lot-size-production}, the inventory level at the end of a period may be lower than the safety stock.
+In case of capacity issues, the production is postponed and thus backorder costs appear. In addition, if some capacity issues are easily anticipated, the production of a item $r$ can be activated even if the inventory is not below the safety stock.
+
+\begin{figure}[h]
+  \centering
+  \esgil{Add figure to represent the production for the lot-size heuristic.}
+%  \includegraphics{main/PDP/images/simulator.tikz}
+  \caption{Computation of quantity to produce using lot-size heuristic}
+  \label{fig:lot-size-production}
+\end{figure}
 
 
-The third one, the {\em cover-size heuristic} is almost the same, but instead of precomputing a fixed quantity for each reference, a duration $\tau_i^*$ is fixed before the first week. When the inventory of reference $r$ is below the safety level, the quantity $\quantity_t^i$ is computed so that the inventory of reference $r$ exceeds the safety level of the expected demand for the next $\tau_i^*$ weeks.
+The third one, the {\em cover-size heuristic} is almost the same, but instead of precomputing a fixed quantity for each item, a duration $\tau_i^*$ is fixed before the first week. When the inventory of item $r$ is below the safety stock, the quantity $\quantity_t^i$ is computed so that the inventory of item $r$ exceeds the safety stock of the expected demand for the next $\tau_i^*$ weeks. An example is given on \cref{fig:cover-size-production}.
+
+\begin{figure}[h]
+  \centering
+  \esgil{Add figure to represent the production for the cover-size heuristic.}
+%  \includegraphics{main/PDP/images/simulator.tikz}
+  \caption{Computation of quantity to produce using cover-size heuristic}
+  \label{fig:cover-size-production}
+\end{figure}
 
 
-The values $\ell_i^*$ and $\tau_i^*$ are determined using results of Part~\ref{chap:lot-size:single-line}. $(\tau_i^*)_{i\in\REF}$ is actually chosen to be the optimal solution of the program~\eqref{eq:cont-rev-det}, which somehow considers the problem at a ``macroscopic'' level
+The values $\ell_i^*$ and $\tau_i^*$ are determined using results of \cref{chap:lot-size:single-line}. $(\tau_i^*)_{i\in\REF}$ is actually chosen to be the optimal solution Program~\eqref{eq:cont-rev-det}, which somehow considers the problem at a ``macroscopic'' level
 %(Similar convex programs in the same context have been considered in the literature; see~\cite{Ziegler1982} for example.)
 where the demand $\demand^i$ is chosen equal to $\espe\sqbracket{\sum_{t=1}^{\horizon}\va d_t^i}$.
 
-The parameter $\ell_i^*$ of the lot-size heuristic is then set to $\demand^i\tau_i^*$.
+For each item $i$, the parameter $\ell_i^*$ of the lot-size heuristic is then set to $\demand^i\tau_i^*$.
 
-The safety levels have been provided by the partner and are those used in practice.
+There is no universal formula for safety stocks $\bracket{\safety^i}_i$. Thus we used the formula provided by Argon Consulting and used in practice. In our case, since the production is decided at the beginning of the period and the demand revealed at the end of the period, the lead time is one period (and is certain). Thus the safety stock of each item $i$ is
+\begin{equation}
+  \safety^i = k_{\servicelvl} \sqrt{\vari\sqbracket{\va\demand^i}}
+\end{equation}
+where $\va\demand^i=\sum_{t=1}^{\horizon}\va\demand_t^i$ and $k_{\servicelvl}$ is given in an abacus and depends on the desired fill rate service level $\servicelvl$. 
 
-\esgil{Retrouver la formule donnant les safety level.}
+\esgil{Citer les formations internes d'Argon ou un livre.}
 
-The cover-size heuristic adapts the production to the realization of the demand, contrary to the lot-size heuristic. According to our partner, it makes the cover-size heuristic more suitable for situations with low short term volatility of demand or for overcapacitated lines, while the lot-size heuristic is expected to behave better with high short term volatility of demand or for undercapacitated lines.
+\medskip
 
-Notice that the backorder costs are not taken into account at all for determining the values of the parameters $\ell_i^*$ and $\tau_i^*$.
-But playing with safety levels allows to prevent too large backorder costs. However, in real life it is usually the other way round: the company does not associate costs to backorder and aims at keeping the total amount of unsatisfied demand below some predetermined level. We come back to this point later in Section~\ref{sec:service}.
+The cover-size heuristic adapts the production to the realization of the demand, contrary to the lot-size heuristic. According to Argon Consulting, it makes the cover-size heuristic more suitable for situations with low short term volatility of demand or for overcapacitated lines, while the lot-size heuristic is expected to behave better with high short term volatility of demand or for undercapacitated lines.
+
+Note that the backorder costs are not taken into account at all for determining the values of the parameters $\ell_i^*$ and $\tau_i^*$.
+But playing with safety stocks allows to prevent too large backorder costs. However, in real life it is usually the other way round: the company does not associate costs to backorder and aims at keeping the total amount of unsatisfied demand below some predetermined level. We come back to this point later in Section~\cref{sec:service}.
 
 
 
 
-\section{Instances}
+\section{Instances and probabilistic model}
 
-\subsection{Historical data}
+\subsection{Data}
 \label{sec:PDP:numerical-experiments:historical-data}
 
-The instances used are realistic and have been provided by a client of the partner. The client gave actually the figures of seven assembly lines and the demand for each week over an entire quarter.
-This horizon $\horizon$ is the typical one used in practice by this client, namely $\horizon=13$ weeks.
+The instances used are realistic and have been provided by a client of Argon Consulting.
+The client gave actually the figures of seven assembly lines and the demand for each week over an full quarter.
+The horizon $\horizon$ is the typical one used in practice by this client, namely $\horizon=13$ weeks.
 
-The historical demand are denoted by $\bar{\demand}_t^i$. As explain in Chapter~\ref{chap:business-context}, the global volume of the forecast demand is constant over every possible outcomes. Then, we obtain the demand via an Dirichlet distribution whose parameters are computed from two values:
-\begin{itemize}
-  \item a ``volatility'' $v$ chosen in $\crbracket{0.2,0.5, 0.8}$. It represents the precision of the forecast demand. The bigger is $v$, the less precise is the forecast demand.
-
-  For a period $t$ and an item $i$, we try to have $v\simeq\frac{\sqrt{\vari\sqbracket{\va\demand_t^i}}}{\bar{\demand}_t^i}$. If $v$ cannot be the same for every items and every periods, it must be greater for the items and periods with low demand. In practice, we have less incertitude in proportion on best-sellers than on short series.
-  \item a number of weeks $\tau$ chosen in $\crbracket{4,7,13}$. The total volume of the forecast demand is constant over the week 1 to $\tau$, then during the week $\tau+1$ to $2\tau$, etc. The chosen values represent a month, half a quarter and a complete quarter.
-\end{itemize}
-Details about the distributions and how its parameters are computed are given in Section~\ref{sec:PDP:numerical-experiments:dirichlet}.
+The historical demand are denoted by $\bar{\demand}_t^i$.
 
 The initial inventory is set to $s_0^i=\frac{1}{3}(\bar{\demand}_1^i+\bar{\demand}_2^i+\bar{\demand}_3^i)$.
 
-The other parameters are provided in Table~\ref{tab:instances-characteristics}.
-%In particular, for each value of $v$, we have considered three possible values of the unit backorder cost $\backorder$, which have been determined following a procedure described in Section~\ref{sec:service}. At the moment, we do not discuss further these values and take them as part of the input, as required by the problem formulation.
-The parameter $C$ is the capacity of the line before normalization. (Recall that problem and the model have been formulated in Section~\ref{sec:PDP:stochastic:model} after normalization.)
+The other parameters are provided in \cref{tab:instances-characteristics}.
+%In particular, for each value of $v$, we have considered three possible values of the unit backorder cost $\backorder$, which have been determined following a procedure described in Section~\cref{sec:service}. At the moment, we do not discuss further these values and take them as part of the input, as required by the problem formulation.
+The parameter $C$ is the capacity of the line before normalization. (Recall that the problem and the model have been formulated in \cref{sec:PDP:stochastic:model} after normalization.)
 In the column $\tilde{\holding}^i$, we indicate the range of the holding costs before normalization. We obtain the $\holding^i$'s by dividing these costs by $C$ since internal production times $\rate^i$ are unitary.
 
 We also add the loading indicator $\kappa_t$ at period $t$ defined as:
 \begin{equation}
   \kappa_t = \frac{\sum_{i\in\REF} \bracket{\sum_{t'=1}^{t} \bar{\demand}_{t'}^i}-\inventory_0^i}{ \sum_{t'=1}^{t} \capacity_{t'}}
 \end{equation}
-It is the ratio cumulative forecast demand up to period $t$ minus the initial inventory over cumulative capacity up to period $t$. If there were no flexibility constraints and if the holding costs were not an issue, then for a period $t$, $\kappa_t \le 100\%$ implies that it is possible to supply the whole demand. As show in table~\ref{tab:instances-characteristics}, the lines $L_0$, $L_1$, $L_2$, $L_3$ and $L_4$ experience overcapacity: the loading indicator is smaller than $100\%$. The lines $L_5$ and $L_6$ experience undercapacity: the loading indicator is larger than $100\%$ at some periods.
+It is the ratio cumulative forecast demand up to period $t$ minus the initial inventory over cumulative capacity up to period $t$. If there were no flexibility constraints and if the holding costs were not an issue, then for a period $t$, $\kappa_t \le 100\%$ implies that it is possible to supply the whole demand. As shown in \cref{tab:instances-characteristics}, the lines $L_0$, $L_1$, $L_2$, $L_3$ and $L_4$ experience overcapacity: the loading indicator is smaller than $100\%$. The lines $L_5$ and $L_6$ experience undercapacity: the loading indicator is larger than $100\%$ at some periods.
 
 \begin{table}[ht]
 \begin{center}
@@ -140,164 +163,111 @@ The number $m$ of scenarios used to solve (2SA-$m$) is fixed to $20$, determined
 
 \esgil{Faire tourner avec un peu plus de scénarios?}
 
-\vlil{Generating ?}
-\subsection{Generate randomness}
+
+
+\subsection{Probabilistic model}
+\label{sec:PDP:numerical-experiments:probabilistic-model}
+
+Before presenting the probabilistic model, we introduce the \emph{coefficient of variation} also known as the \emph{relative standard deviation} \cite{Everitt1998}.
+\begin{defn}
+The coefficient of variation $\CV\sqbracket{\va X}$ of a random variable $\va X$ is defined as the ratio of the standard deviation $\sigma\bracket{\va X}$ to the mean $\espe\sqbracket{\va X}$:
+\begin{equation}
+  \CV\sqbracket{\va X} = \frac{\sigma\bracket{\va X}}{\espe\sqbracket{\va X}}.
+\end{equation}
+\end{defn}
+
+As explained in \cref{chap:business-context}, the global volume $\sum_{t,i}\va\demand_t^i$ of the forecast demand is constant over every possible outcomes. Then, we obtain the demand via Dirichlet distributions whose parameters are computed from two values.
+\begin{itemize}
+  \item A ``volatility'' $v$ chosen in $\crbracket{20\%, 50\%, 80\%}$.
+  It represents the accuracy of the forecast demand.
+  The bigger is $v$, the less precise is the forecast demand.
+
+  For each period $t$ and each item $i$, the coefficient of variation of demand $\va\demand_t^i$ must satisfy as well as possible $\CV\sqbracket{\va\demand_t^i}=v$.
+  If, due to other constraints, it cannot be equal to the volatility $v$, it must be greater for the items and periods with low expected demand.
+  Indeed, in practice, we have more accuracy in proportion on best-sellers than on short series.
+  \item A number of weeks $\tau$ chosen in $\crbracket{4,7,13}$. The total volume of the forecast demand is constant over the week 1 to $\tau$, then during the week $\tau+1$ to $2\tau$, etc. The chosen values represent a month, half a quarter and a complete quarter.
+\end{itemize}
+%Details about the distributions and how its parameters are computed are given in Section~\cref{sec:PDP:numerical-experiments:dirichlet}.
+
+
+
+\subsection{Generating randomness}
 \label{sec:PDP:numerical-experiments:dirichlet}
 
 
-As explained in Chapter~\ref{chap:business-context}, the global volume of the forecasted demand is constant over every possible outcomes. Thus, we turn to Dirichlet distribution to generate the possible outcomes of demand. We first expose the procedure to generate\vl{simulate} samples of demand. Then, we reminds the definition and the classical properties of Dirichlet distributions, explains how the parameters are computed for the procedure and how these properties are used during the simulation.
+As explained in Chapter~\cref{chap:business-context}, the global volume of the forecast demand is constant over every possible outcomes.
+Thus, we turn to Dirichlet distributions to generate the possible outcomes of demand.
+Reminders about Gamma and Dirichlet distributions are given in \cref{sec:reminders:gamma-and-dirichlet-distributions}.
+We first expose the procedure to generate samples of demand.
+Then, we remind the definition and the classical properties of Dirichlet distributions, explains how the parameters are computed for the procedure and how these properties are used during the simulation.
 
-Only in this Section, for the sake of simplicity, we use only one index $k\in\range{K}$ for the demand.
+Only in this section, for the sake of simplicity, we use only one index $k\in\range{K}$ to designated a pair $(t,i)$.
 
 
+\medskip
 
-\subsubsection{Procedure to generate sample of demand}
+
+%\subsubsection{Procedure to generate sample of demand}
 
 
-\textbf{Hypothesis.} We assume that every demands have a positive mean and that there are at least two demands is the set.
+%\textbf{Hypothesis.} We assume that every demand has a positive mean and that there are at least two demands is the set.
+
+For any $\gamma\in\bracket{0,1}$ and any $\bar{\demand}_1,\ldots,\bar{\demand}_K$ positive, we define the following procedure.
+\begin{proc}\label{proc:demand:initial-sampling}
+\emph{Initial Sampling}
 
 \textbf{Step 1.} \emph{Initialize the procedure.}
-Set:
-\begin{subequations}
-  \begin{align}
-    \bar{\demand} &= \sum_{k=1}^K\bar{\demand}_k
-    \\
-    \gamma &= \min \bracket{1,\
-    \frac
-    {\sum_{k=1}^K\sqrt{\frac{\bar{\demand}-\bar{\demand}_k}{\bar{\demand}_k}}}{\sum_{k=1}^K\frac{\bar{\demand}-\bar{\demand}_k}{\bar{\demand}_k}}\ v}
-    \\
-    \alpha_0 &= \frac{1}{\gamma^2}-1
-  \end{align}
-\end{subequations}
+Set
+%\begin{subequations}
+%  \begin{align+}
+%    \bar{\demand} &= \sum_{k=1}^K\bar{\demand}_k
+%    \\
+%    \gamma &= \min \bracket{1,\
+%    \frac
+%    {\sum_{k=1}^K\sqrt{\frac{\bar{\demand}-\bar{\demand}_k}{\bar{\demand}_k}}}{\sum_{k=1}^K\frac{\bar{\demand}-\bar{\demand}_k}{\bar{\demand}_k}}\ v}
+%    \\
+%    \alpha_0 &= \frac{1}{\gamma^2}-1
+%  \end{align+}
+%\end{subequations}
+\begin{equation}
+    \bar{\demand} = \sum_{k=1}^K\bar{\demand}_k
+    \ \mbox{and}\ 
+    \alpha_0 = \frac{1}{\gamma^2}-1.
+\end{equation}
 For $k=1,\ldots,K$, set $\alpha_k=\frac{\bar{\demand}_k}{\bar{\demand}}\alpha_0$.
 
-\textbf{Step 2.} \emph{Generate Gamma realization.}
-For $k=1,\ldots,K$, draw a number $y_k$ from $\Gamma\bracket{\alpha_k,1}$.
+\textbf{Step 2.} \emph{Generate Gamma realizations.}
+For $k=1,\ldots,K$, draw a number $y_k$ from gamma distribution $\Gamma\bracket{\alpha_k,1}$.
 
-\textbf{Step 3.} \emph{Normalize the realization.}
+\textbf{Step 3.} \emph{Normalize the realizations.}
 For $k=1,\ldots,K$, set $x_k=\frac{y_k}{\sum_{\ell=1}^K y_{\ell}}$.
 
 \textbf{Step 4.} \emph{Return a sample of demand.}
 For $k=1,\ldots,K$, set $d_k = x_k \bar{\demand}$.
+\end{proc}
 
-Then, $\bracket{\demand_1,\ldots,\demand_K}$ is a realization of the random vector $\bracket{\va\demand_1,\ldots,\va\demand_K}$ with:
+\begin{thm}
+For any $\gamma\in\bracket{0,1}$ and any $\bar{\demand}_1,\ldots,\bar{\demand}_K$ positive, \cref{proc:demand:initial-sampling} produces a realization $\bracket{\demand_1,\ldots,\demand_K}$ of the random vector $\bracket{\va\demand_1,\ldots,\va\demand_K}$ with
 \begin{subequations}
-  \begin{align}
+  \begin{align+}
     \sum_{k=1}^K \va\demand_k &= \sum_{k=1}^K \bar{\demand}_k && \mbox{almost surely},
     \\
     \espe\sqbracket{\va\demand_k} &= \bar{\demand}_k && \forall k\in\range{K},
     \\
     \vari\sqbracket{\va\demand_k} &= \gamma^2\bar{\demand_k}\bracket{\bar{\demand}-\bar{\demand}_k} && \forall k\in\range{K}.
     \label{eq:dirichlet:procedure:variance}
-  \end{align}
+  \end{align+}
 \end{subequations}
-\vlil{Define / recall $\Gamma$ distribution}
+\end{thm}
 
 
-
-\subsubsection{Dirichlet distributions}
-
-We refer to \cite[Chapter 49]{Kotz2000} for the details of the proofs of classical results about Dirichlet distributions.
-
-The \emph{Dirichlet distribution} denoted by $\Dir(\alpha)$ is a family of continuous multivariate probability distributions.
-It is parametrized by a number of categories $K \ge 2$ (integer) and a vector $\alpha=\bracket{\alpha_1,\ldots,\alpha_K}\in\bracket{\RR_+^*}^K$ of positive reals called concentrations parameters.
-Its support is a vector $x=\bracket{x_1,\ldots,x_K}\in\bracket{0,1}^K$ oh the $K-1$ simplex \ie such that $\sum_{k=1}^K x_k = 1$.
-
-The Dirichlet distribution has a probability density function with respect to Lebesgue measure on the Euclidean space $\RR^{K-1}$ given by:
-\begin{equation}\label{eq:dirchlet:probability-density-function}
-  f\bracket{x,\alpha} = \frac{1}{ \Beta\bracket{\alpha}}\prod_{k=1}^K x_k^{\alpha_k-1}
-\end{equation}
-The normalizing constant is the multivariate beta function, which can be expressed in terms of the gamma function:
+\begin{proof}
+We set $\bar{\demand}$ and $\alpha_0,\ldots,\alpha_K$ as in step 1. We have
 \begin{equation}
-  \Beta\bracket{\alpha} =
-  \frac{ \prod_{k=1}^K \Gamma\bracket{\alpha_k} }
-       { \Gamma\bracket{\sum_{k=1}^K \alpha_k} }
+  \sum_{k=1}^K \alpha_k = \alpha_0 \sum_{k=1}^K\frac{\bar{\demand_k}}{\bar{\demand}} = \alpha_0.
 \end{equation}
-
-
-Let $\va x=\bracket{\va x_1,\ldots,\va x_K}\sim \Dir\bracket{\alpha}$. Setting $\alpha_0=\sum_{k=1}^K\alpha_k$, the moments of the Dirichlet distribution are:
-\begin{subequations}\label{eq:dirchlet:moments}
-  \begin{align}
-    \espe\sqbracket{\va x_k} &= \frac{\alpha_k}{\alpha_0} && \forall k\in\range{K},
-    \label{eq:dirchlet:moments:mean}
-    \\
-    \vari\sqbracket{\va x_k} &= \frac{\alpha_k\bracket{\alpha_0-\alpha_k}}{\alpha_0^2\bracket{\alpha_0+1}} && \forall k\in\range{K},
-    \label{eq:dirchlet:moments:mean}
-    \\
-    \cova\sqbracket{\va x_k,\va x_{\ell}} &= \frac{-\alpha_k\alpha_{\ell}}{\alpha_0^2\bracket{\alpha_0+1}} && \forall k\ne\ell,
-    \label{eq:dirchlet:moments:mean}
-  \end{align}
-\end{subequations}
-
-
-Finally, the Dirichlet distribution has the aggregation property~\ref{prop:dirichlet:aggregation}.
-
-\begin{prop}\label{prop:dirichlet:aggregation}
-  If $\va x=\bracket{\va x_1,\ldots,\va x_K}\sim \Dir\bracket{\alpha_1,\ldots,\alpha_K}$ then, if the random variables with index $k$ and $\ell$ are dropped from the vector and replaced by their sum,
-  $$\va x=\bracket{\va x_1,\ldots,\va x_k+\va x_{\ell},\ldots,\va x_K}\sim \Dir\bracket{\alpha_1,\ldots,\alpha_k+\alpha_{\ell},\ldots,\alpha_K}$$
-\end{prop}
-
-
-
-\subsubsection{Generate Dirichlet distributed variables}
-
-
-Realizations of the random vector $\va x=\bracket{\va x_1,\ldots,\va x_K}\sim\Dir\bracket{\alpha_1,\ldots,\alpha_K}$ can be get from a source of Gamma distributed random variates using the following procedure described in~\cite{Frigyik2010}.
-
-\textbf{Step 1.} \emph{Generate Gamma realization.} For $k=1,\ldots,K$, draw a number $y_k$ from $\Gamma\bracket{\alpha_k,1}$.
-
-\textbf{Step 2.} \emph{Normalize the realization.} For $k=1,\ldots,K$, set $x_k=\frac{y_k}{\sum_{\ell=1}^K y_{\ell}}$. Then, $\bracket{x_1,\ldots,x_K}$ is a realization of $\Dir\bracket{\alpha}$.
-
-The above procedure relies on Proposition~\ref{prop:dirichlet:generation-from-gamma} proved in \cite{Devroye1986}.
-
-\begin{prop}\label{prop:dirichlet:generation-from-gamma}
-  Let $\theta,\alpha_1,\ldots,\alpha_K$ be $K+1$ positive real numbers.
-  For $K$ independently distributed Gamma distributions
-  $\va y_1\sim\Gamma\bracket{\alpha_1,\theta},\ldots,\va y_K\sim\Gamma\bracket{\alpha_K,\theta}$,
-  we have:
-  \begin{subequations}
-    \begin{align}
-      V &= \sum_{k=1}^K \va y_k \sim \Gamma\bracket{\sum_{k=1}^K \alpha_k,\theta}
-      \\
-      \va x &= \bracket{\va x_1,\ldots,\va x_K} = \bracket{\frac{\va y_1}{V},\ldots,\frac{\va y_K}{V}} \sim \Dir\bracket{\alpha_1,\ldots,\alpha_K}
-    \end{align}
-  \end{subequations}
-\end{prop}
-
-Other methods exist to generate random variables following a Dirichlet distribution. But this one is easy to understand and to implement because C++ standard library have a gamma generator since 2011 edition.
-
-
-
-
-\subsubsection{Generate samples of demand}
-
-The objective is to generate samples of demand $\bracket{\va\demand_1,\ldots,\va\demand_K}$ such that:
-\begin{subequations}
-  \begin{align}
-    \sum_{k=1}^K \va\demand_k &= \sum_{k=1}^K \bar{\demand}_k && \mbox{almost everywhere},
-    \\
-    \espe\sqbracket{\va\demand_k} &= \bar{\demand}_k && \forall k\in\range{K},
-    \\
-    \vari\sqbracket{\va\demand_k} &= \bracket{v\bar{\demand}_k}^2 && \forall k\in\range{K},
-  \end{align}
-\end{subequations}
-where $v\in\left]0,1\right[$ is the volatility defined in Section~\ref{sec:PDP:numerical-experiments:historical-data}.
-%We first expose the procedure, then justify it and explain why the three properties can be exactly reached.
-
-
-\medskip
-
-Before justifying the procedure just note that the objective formulation of the variance given in Section~\ref{sec:PDP:numerical-experiments:historical-data} does not match exactly to the formulation~\eqref{eq:dirichlet:procedure:variance} find at the end of the procedure. However, we succeed in approaching the other objective since the bigger is the demand, the lower is the volatility $v_k=\frac{\sqrt{\vari\sqbracket{\va\demand_k}}}{\bar{\demand}_k} = \gamma\sqrt{\frac{\bar{\demand}}{\bar{\demand_k}}-1}$.
-
-
-\medskip
-
-
-We first assume that $\gamma$ is an external parameter of the algorithm and justify it with this hypothesis. Setting $\alpha_0,\ldots,\alpha_K$ as in step 1, we have:
-\begin{equation}
-  \sum_{k=1}^K \alpha_k = \alpha_0 \sum_{k=1}^K\frac{\bar{\demand_k}}{\bar{\demand}} = \alpha_0
-\end{equation}
-According to the procedure previously described for generating random realization of Dirichlet distribution, we know that step 2 and 3 produced a realization $\bracket{x_1,\ldots,x_K}$ of $\Dir\bracket{\alpha}$. Setting $\bracket{\demand_1,\ldots,\demand_K}$ as in step 4, we have a realization of the random vector $\bracket{\va\demand_1,\ldots,\va\demand_K}$ with:
+According to the \cref{proc:dirichlet:generation} given in \cref{sec:reminders:gamma-and-dirichlet-distributions} for generating random realization of Dirichlet distributions, we know that step 2 and 3 produced a realization $\bracket{x_1,\ldots,x_K}$ of $\Dir\bracket{\alpha}$.
+Setting $\bracket{\demand_1,\ldots,\demand_K}$ as in step 4, we have a realization of the random vector $\bracket{\va\demand_1,\ldots,\va\demand_K}$ with
 \begin{align}
   \sum_{k=1}^K \va\demand_k
   &= \bar{\demand} \sum_{k=1}^K \va x_k
@@ -311,8 +281,7 @@ According to the procedure previously described for generating random realizatio
   = \bar{\demand}_k
   && \forall k\in\range{K}.
 \end{align}
-Finally, computing the variance of each variable $\va\demand_k$ gives:
-
+Finally, computing the variance of each variable $\va\demand_k$ gives
 \begin{subequations}
 \begin{align}
   \vari\sqbracket{\va\demand_k}
@@ -330,32 +299,134 @@ Finally, computing the variance of each variable $\va\demand_k$ gives:
   &= \gamma^2 \bar{\demand}_k \bracket{\bar{\demand}_0-\bar{\demand}_k}
 \end{align}
 \end{subequations}
+which conclude the proof.
+\end{proof}
 
-Thus this method gives a volatility for each index $k$
+
+\subsection{Fitting the parameters to the probabilistic model}
+
+%\subsubsection{Dirichlet distributions}
+
+
+
+%\subsubsection{Generate samples of demand}
+
+The objective is to generate samples of demand $\bracket{\va\demand_1,\ldots,\va\demand_K}$ such that:
+\begin{subequations}
+  \begin{align}
+    \sum_{k=1}^K \va\demand_k &= \sum_{k=1}^K \bar{\demand}_k && \mbox{almost everywhere},
+    \label{eq:demand:generation:constant-sum}
+    \\
+    \espe\sqbracket{\va\demand_k} &= \bar{\demand}_k && \forall k\in\range{K},
+    \label{eq:demand:generation:mean}
+    \\
+    \vari\sqbracket{\va\demand_k} &= \bracket{v\bar{\demand}_k}^2 && \forall k\in\range{K},
+    \label{eq:demand:generation:variance}
+  \end{align}
+\end{subequations}
+where $v\in\bracket{0,1}$ is the volatility defined in Section~\cref{sec:PDP:numerical-experiments:probabilistic-model}.
+%We first expose the procedure, then justify it and explain why the three properties can be exactly reached.
+
+
+However, we were not able to control the random variables satisfying simultaneously constraints \eqref{eq:demand:generation:constant-sum}, \eqref{eq:demand:generation:mean} and \eqref{eq:demand:generation:variance}.
+Thus, as explained in the probabilistic model, constraints \eqref{eq:demand:generation:constant-sum} and \eqref{eq:demand:generation:mean} are first satisfied and constraint \eqref{eq:demand:generation:variance} is approximate as well as possible.
+\cref{prop:demand:generation:gamma-choice} gives a possible choice of parameter $\gamma$ for the \cref{proc:demand:initial-sampling}.
+
+For any $\gamma\in\bracket{0,1}$ and for each index $k$, we denote by $v_k\bracket{\gamma}=\CV\sqbracket{\va\demand_k}$ the coefficient of variation of the random variable $\va\demand_k$ whose realization is produced by \cref{proc:demand:initial-sampling}.
+% \begin{equation}
+%   v_k
+%   = \frac{\sqrt{\vari\sqbracket{\va\demand_k}}}{\bar{\demand}_k}
+%   = \gamma\sqrt{\frac{\bar{\demand}}{\bar{\demand_k}}-1}
+% \end{equation}
+% which differs from the objective of a single volatility for every index.
+
+\begin{prop}\label{prop:demand:generation:gamma-choice}
+For any $v\in\bracket{0,1}$ and any $\bar{\demand}_1,\ldots,\bar{\demand}_K$ positive, initialize \cref{proc:demand:initial-sampling} with
 \begin{equation}
-  v_k
-  = \frac{\sqrt{\vari\sqbracket{\va\demand_k}}}{\bar{\demand}_k}
-  = \gamma\sqrt{\frac{\bar{\demand}}{\bar{\demand_k}}-1}
+  \gamma
+  =
+  v\frac
+  {\sum_{k=1}^K\sqrt{\frac{\bar{\demand}}{\bar{\demand_k}}-1}}
+  {\sum_{k=1}^K\bracket{\frac{\bar{\demand}}{\bar{\demand_k}}-1}}
 \end{equation}
-which differs from the objective of a single volatility for every index.
+minimize the quantity
+$\norm{\bracket{v_1(\gamma')-v,\ldots,v_K(\gamma')-v}}_2$.
+\end{prop}
 
-In order to be as close as possible of a single volatility, we solve the optimization problem
-\begin{equation}\label{eq:dirichlet:optimization}
-  \argmin_{\gamma'\in\left]0,1\right[} \norm{\bracket{v_1\bracket{\gamma'},\ldots,v_K\bracket{\gamma'}} - v.e}_2
+
+Note that the norm $\norm{\ .\ }_2$ has been chosen. One advantage is the close formula for the value of $\gamma$. If $\norm{\ .\ }_1$ or $\norm{\ .\ }_{\infty}$ have been chosen, finding the best $\gamma$ would be done with classical linearization methods and the use of a linear solver.
+
+
+%Before justifying the procedure just note that the objective formulation of the variance given in Section~\cref{sec:PDP:numerical-experiments:historical-data} does not match exactly to the formulation~\eqref{eq:dirichlet:procedure:variance} find at the end of the procedure. However, we succeed in approaching the other objective since the bigger is the demand, the lower is the volatility $v_k=\frac{\sqrt{\vari\sqbracket{\va\demand_k}}}{\bar{\demand}_k} = \gamma\sqrt{\frac{\bar{\demand}}{\bar{\demand_k}}-1}$.
+
+
+% We first assume that $\gamma$ is an external parameter of the algorithm and justify it with this hypothesis. Setting $\alpha_0,\ldots,\alpha_K$ as in step 1, we have:
+% \begin{equation}
+%   \sum_{k=1}^K \alpha_k = \alpha_0 \sum_{k=1}^K\frac{\bar{\demand_k}}{\bar{\demand}} = \alpha_0
+% \end{equation}
+% According to the procedure previously described for generating random realization of Dirichlet distribution, we know that step 2 and 3 produced a realization $\bracket{x_1,\ldots,x_K}$ of $\Dir\bracket{\alpha}$. Setting $\bracket{\demand_1,\ldots,\demand_K}$ as in step 4, we have a realization of the random vector $\bracket{\va\demand_1,\ldots,\va\demand_K}$ with:
+% \begin{align}
+%   \sum_{k=1}^K \va\demand_k
+%   &= \bar{\demand} \sum_{k=1}^K \va x_k
+%   = \bar{\demand}
+%   = \sum_{k=1}^K \bar{\demand}_k
+%   && \mbox{almost everywhere},
+%   \\
+%   \espe\sqbracket{\va\demand_k}
+%   &= \bar{\demand}\espe\sqbracket{\va x_k}
+%   = \bar{\demand}\ \frac{\alpha_k}{\alpha_0}
+%   = \bar{\demand}_k
+%   && \forall k\in\range{K}.
+% \end{align}
+% Finally, computing the variance of each variable $\va\demand_k$ gives:
+
+% \begin{subequations}
+% \begin{align}
+%   \vari\sqbracket{\va\demand_k}
+%   &= \bar{\demand}^2\vari\sqbracket{\va x_k}
+%   = \bar{\demand}^2
+%   \frac{\alpha_k\bracket{\alpha_0-\alpha_k}}{\alpha_0^2\bracket{\alpha_0+1}}
+%   && \mbox{(variance of Dirichlet distribution)}
+%   \\
+%   &= \bar{\demand}_k^2 \bracket{\frac{\alpha_0}{\alpha_k}-1}\frac{1}{\alpha_0+1}
+%   && \mbox{(definition of $\alpha_k$)}
+%   \\
+%   &= \bar{\demand}_k^2 \bracket{\frac{\bar{\demand}_0}{\bar{\demand}_k}-1}\gamma^2
+%   && \mbox{(definition of $\gamma$)}
+%   \\
+%   &= \gamma^2 \bar{\demand}_k \bracket{\bar{\demand}_0-\bar{\demand}_k}
+% \end{align}
+% \end{subequations}
+
+\medskip
+
+
+\begin{proof}[Proof of \cref{prop:demand:generation:gamma-choice}]
+Let $v$ be a real number in $\bracket{0,1}$ and $\bar{\demand}_1,\ldots,\bar{\demand}_K$ be positive real numbers.
+For each index $k$, \cref{proc:demand:initial-sampling} gives
+\begin{equation}
+  v_k\bracket{\gamma}
+  = \frac{\sqrt{\vari\sqbracket{\va\demand_k}}}{\espe\sqbracket{\va\demand_k}}
+  = \gamma\sqrt{\frac{\bar{\demand}}{\bar{\demand_k}}-1}.
 \end{equation}
-where $e=\bracket{1,\ldots,1}\in\RR^K$. Then, we look for the arguments of the minimum on $\left]0,1\right[$ of the function
+
+Then, solving the optimization problem
+\begin{equation}\label{eq:dirichlet:optimization}
+  \argmin_{\gamma'\in\bracket{0,1}} \norm{\bracket{v_1(\gamma')-v,\ldots,v_K(\gamma')-v}}_2
+\end{equation}
+is equivalent to look for the arguments of the minimum on $\bracket{0,1}$ of the function
 \begin{subequations}
 \begin{align}
   f\bracket{\gamma'}
   &= \sum_{k=1}^K \bracket{\gamma'\sqrt{\frac{\bar{\demand}}{\bar{\demand_k}}-1}-v}^2
   \\
-  &= \sum_{k=1}^K
-  \bracket{
-  \bracket{\frac{\bar{\demand}}{\bar{\demand_k}}-1}\gamma'^2
-  - 2v\sqrt{\frac{\bar{\demand}}{\bar{\demand_k}}-1}\gamma'
-  + v^2
-  }
-  \\
+  % &= \sum_{k=1}^K
+  % \bracket{
+  % \bracket{\frac{\bar{\demand}}{\bar{\demand_k}}-1}\gamma'^2
+  % - 2v\sqrt{\frac{\bar{\demand}}{\bar{\demand_k}}-1}\gamma'
+  % + v^2
+  % }
+  % \\
   &= \sum_{k=1}^K\bracket{\frac{\bar{\demand}}{\bar{\demand_k}}-1}\gamma'^2
   - 2v\bracket{\sum_{k=1}^K\sqrt{\frac{\bar{\demand}}{\bar{\demand_k}}-1}}\gamma'
   + K v^2
@@ -363,22 +434,37 @@ where $e=\bracket{1,\ldots,1}\in\RR^K$. Then, we look for the arguments of the m
 \end{subequations}
 $f$ is a quadratic function and reach its minimum for
 \begin{equation}
-  \gamma_0
+  \gamma
   =
-  \frac
-  {v\sum_{k=1}^K\sqrt{\frac{\bar{\demand}}{\bar{\demand_k}}-1}}
+  v\frac
+  {\sum_{k=1}^K\sqrt{\frac{\bar{\demand}}{\bar{\demand_k}}-1}}
   {\sum_{k=1}^K\bracket{\frac{\bar{\demand}}{\bar{\demand_k}}-1}}
 \end{equation}
-Since $\gamma_0>0$, the best choice for $\gamma$ is $\min\bracket{\gamma_0,1}$.
+Assuming $\gamma\le 1$, since $\gamma>0$ and $v\in\bracket{0,1}$, we have $\gamma\in\bracket{0,1}$ and the result follow.
 
-\esgil{Que se passe-t-il dans le cas égal 1 ? Possible avec deux items si $d_1=d_2$. Possible avec trois ?}
+\medskip
 
+Let prove that $\gamma\le 1$.
+We define
+\begin{equation}
+  \delta^{K-1} = \crbracket{\bracket{x_1,\ldots,x_K}\in\bracket{0,1}^K \bigg| \sum_{k=1}^K x_k = 1}
+\end{equation}
+and
+\begin{equation}
+  \begin{array}{rccl}
+  g: & \delta^{K-1} & \rightarrow & \RR_+ \\
+     & x & \mapsto & \frac{\sum_{k=1}^K\sqrt{\frac{1}{x_k}-1}}{\sum_{k=1}^K\bracket{\frac{1}{x_k}-1}}
+  \end{array}
+\end{equation}
+Since $v<1$, it is sufficient to prove that 1 is an upper bound on $g$.
+\esgil{To complete (True. Done on draft.)}
+\end{proof}
 
 
 \subsubsection{Generate sample of demand knowing past demand}
 
 
-During the simulation, past demands are known. In order to generate a new sample of scenarios using this information, we relies on the Proposition~\ref{prop:dirichlet:conditional}.
+During the simulation, past demands are known. In order to generate a new sample of scenarios using this information, we relies on the Proposition~\cref{prop:dirichlet:conditional}.
 
 
 \begin{prop}\label{prop:dirichlet:conditional}
@@ -395,10 +481,10 @@ During the simulation, past demands are known. In order to generate a new sample
 
 Indeed, knowing the realization of $\bracket{\va\demand_{m+1},\ldots,\va\demand_K}$ is equivalent to know the realization of $\bracket{\va x_{m+1},\ldots,\va x_K}$ and then, we can use the same procedure to generate a new sample of demand.
 
-\begin{proof}[Proof of Proposition~\ref{prop:dirichlet:conditional}]
+\begin{proof}[Proof of \cref{prop:dirichlet:conditional}]
 \end{proof}
 
-\esgil{Write proof of Proposition~\ref{prop:dirichlet:conditional} or find it in a book}
+\esgil{Write proof of \cref{prop:dirichlet:conditional} or find it in a book}
 
 \section{Numerical results}
 
@@ -409,3 +495,126 @@ Indeed, knowing the realization of $\bracket{\va\demand_{m+1},\ldots,\va\demand_
   \item Results with backorder costs
   \item Results with fill rate service level constraint
 \end{itemize}
+
+
+
+
+\section{Reminders on Gamma and Dirichlet distributions}
+\label{sec:reminders:gamma-and-dirichlet-distributions}
+
+
+
+\subsection{Gamma distributions}
+
+The \emph{gamma distribution} denoted by $\Gamma(k,\theta)$ is a family of continuous two-parameter probability distributions.
+Its definition can be found in \cite[Appendix A]{Delmas2006}.
+It is parametrized by a shape parameter $k>0$ and a scale parameter $\theta>0$.
+Its support is $\RR_+$.
+
+The gamma distribution has a probability density function with respect to Lebesgue measure on $\RR_+$ given by
+\begin{equation}\label{eq:dirchlet:probability-density-function}
+  f\bracket{x,k,\theta} = \frac{x^{k-1}e^{-\frac{x}{\theta}}}{ \theta^k\Gamma\bracket{k} }
+\end{equation}
+where the gamma function is expressed for any $z\in\RR_+^*$ by
+\begin{equation}
+  \Gamma\bracket{z} = \int_0^{\infty} x^{z-1}e^{-x} \diff x.
+\end{equation}
+
+
+\subsection{Dirichlet distributions}
+
+We refer to \cite[Chapter 49]{Kotz2000} for the details of the proofs of classical results about Dirichlet distributions.
+
+
+\subsubsection{Definition}
+
+
+The \emph{Dirichlet distribution} denoted by $\Dir(\alpha)$ is a family of continuous multivariate probability distributions.
+It is parametrized by a number of categories $K \ge 2$ (integer) and a vector $\alpha=\bracket{\alpha_1,\ldots,\alpha_K}\in\bracket{\RR_+^*}^K$ of positive reals called concentrations parameters.
+Its support is a vector $x=\bracket{x_1,\ldots,x_K}\in\bracket{0,1}^K$ oh the $K-1$ simplex \ie such that $\sum_{k=1}^K x_k = 1$.
+
+The Dirichlet distribution has a probability density function with respect to Lebesgue measure on the Euclidean space $\RR^{K-1}$ given by
+\begin{equation}\label{eq:dirchlet:probability-density-function}
+  f\bracket{x,\alpha} = \frac{1}{ \Beta\bracket{\alpha}}\prod_{k=1}^K x_k^{\alpha_k-1}.
+\end{equation}
+The normalizing constant is the multivariate beta function, which can be expressed in terms of the gamma function
+\begin{equation}
+  \Beta\bracket{\alpha} =
+  \frac{ \prod_{k=1}^K \Gamma\bracket{\alpha_k} }
+       { \Gamma\bracket{\sum_{k=1}^K \alpha_k} }
+\end{equation}
+where the gamma function is expressed for any $z\in\RR_+^*$ by
+\begin{equation}
+  \Gamma\bracket{z} = \int_0^{\infty} x^{z-1}e^{-x} \diff x.
+\end{equation}
+
+
+\subsubsection{Moments}
+
+
+Let $\va x=\bracket{\va x_1,\ldots,\va x_K}\sim \Dir\bracket{\alpha}$. Setting $\alpha_0=\sum_{k=1}^K\alpha_k$, the moments of the Dirichlet distribution are
+\begin{subequations}\label{eq:dirchlet:moments}
+  \begin{align}
+    \espe\sqbracket{\va x_k} &= \frac{\alpha_k}{\alpha_0} && \forall k\in\range{K},
+    \label{eq:dirchlet:moments:mean}
+    \\
+    \vari\sqbracket{\va x_k} &= \frac{\alpha_k\bracket{\alpha_0-\alpha_k}}{\alpha_0^2\bracket{\alpha_0+1}} && \forall k\in\range{K},
+    \label{eq:dirchlet:moments:mean}
+    \\
+    \cova\sqbracket{\va x_k,\va x_{\ell}} &= \frac{-\alpha_k\alpha_{\ell}}{\alpha_0^2\bracket{\alpha_0+1}} && \forall k\ne\ell.
+    \label{eq:dirchlet:moments:mean}
+  \end{align}
+\end{subequations}
+
+
+\subsubsection{Aggregation property}
+
+
+The Dirichlet distribution has the aggregation property given by \cref{prop:dirichlet:aggregation}.
+
+\begin{prop}\label{prop:dirichlet:aggregation}
+  If $\va x=\bracket{\va x_1,\ldots,\va x_K}\sim \Dir\bracket{\alpha_1,\ldots,\alpha_K}$ then, if the random variables with index $k$ and $\ell$ are dropped from the vector and replaced by their sum,
+  $$\va x=\bracket{\va x_1,\ldots,\va x_k+\va x_{\ell},\ldots,\va x_K}\sim \Dir\bracket{\alpha_1,\ldots,\alpha_k+\alpha_{\ell},\ldots,\alpha_K}$$
+\end{prop}
+
+
+
+\subsubsection{Generating Dirichlet distributed variables}
+
+
+Realizations of the random vector $\va x=\bracket{\va x_1,\ldots,\va x_K}\sim\Dir\bracket{\alpha_1,\ldots,\alpha_K}$ can be get from a source of Gamma distributed random variates using \cref{proc:dirichlet:generation} described in~\cite{Frigyik2010}.
+
+
+\begin{proc}\label{proc:dirichlet:generation}
+\emph{Generating Dirichlet distributed variables}
+
+\textbf{Step 1.} \emph{Generate Gamma realization.} For $k=1,\ldots,K$, draw a number $y_k$ from $\Gamma\bracket{\alpha_k,1}$.
+
+\textbf{Step 2.} \emph{Normalize the realization.} For $k=1,\ldots,K$, set $x_k=\frac{y_k}{\sum_{\ell=1}^K y_{\ell}}$.
+\end{proc}
+
+
+\begin{prop}
+For any $\alpha_1,\ldots,\alpha_K$ positive, \cref{proc:dirichlet:generation} produces a realization $\bracket{x_1,\ldots,x_K}$ of the Dirichlet distribution $\Dir\bracket{\alpha}$.
+\end{prop}
+
+
+The above procedure relies on \cref{prop:dirichlet:generation-from-gamma} proved in \cite{Devroye1986}.
+
+\begin{prop}\label{prop:dirichlet:generation-from-gamma}
+Let $\theta,\alpha_1,\ldots,\alpha_K$ be $K+1$ positive real numbers.
+For $K$ independently distributed Gamma distributions
+$\va y_1\sim\Gamma\bracket{\alpha_1,\theta},\ldots,\va y_K\sim\Gamma\bracket{\alpha_K,\theta}$,
+we have:
+\begin{subequations}
+  \begin{align}
+    V &= \sum_{k=1}^K \va y_k \sim \Gamma\bracket{\sum_{k=1}^K \alpha_k,\theta}
+    \\
+    \va x &= \bracket{\va x_1,\ldots,\va x_K} = \bracket{\frac{\va y_1}{V},\ldots,\frac{\va y_K}{V}} \sim \Dir\bracket{\alpha_1,\ldots,\alpha_K}
+  \end{align}
+\end{subequations}
+\end{prop}
+
+Other methods exist to generate random variables following a Dirichlet distribution. But this one is easy to understand and to implement because C++ standard library have a gamma generator since 2011 edition.
+
+

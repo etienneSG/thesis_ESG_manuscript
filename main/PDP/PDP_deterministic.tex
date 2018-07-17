@@ -657,7 +657,7 @@ We have thus $\lambda_2^*=\ldots=\lambda_I^*$ and $v_D$ is upper bounded by the 
 The variable $z$ is introduced so that the program is in standard form.
 Let $(\tilde\lambda_1,\tilde\lambda_2,\tilde z)$ be an optimal basic solution.
 If the optimal basis is $\crbracket{\lambda_1,\lambda_2}$, then $\tilde z=0$ and we have $\tilde\lambda_1=\tilde\lambda_2=1/N$, which gives a value $1$ to the objective function of problem~\eqref{eq:cover-vertex:dual:relaxation}.
-If the optimal basis is $\crbracket{\lambda_1,z}$, then $\tilde\lambda_2=0$ and we have $\tilde\lambda_1=1$, which gives a value $x_1$ to the objective function of problem~\eqref{eq: cover vertex dual relaxation}.
+If the optimal basis is $\crbracket{\lambda_1,z}$, then $\tilde\lambda_2=0$ and we have $\tilde\lambda_1=1$, which gives a value $x_1$ to the objective function of problem~\eqref{eq:cover-vertex:dual:relaxation}.
 The basis $\crbracket{\lambda_2,z}$ being not feasible, we get $v_D\leq\max\bracket{x_1,1}=1$.
 
 \medskip
@@ -674,15 +674,18 @@ In both cases, $v_D\le 1$, as required. Hence $v_D = 1$ which conclude the proof
 
 
 \begin{proof}[Proof of \cref{prop:extended-relaxation:periods}]
-Let $\bracket{\inventory_t^i, \quantity_t^i, y_t^p}$ be a solution of the continuous relaxation of~\eqref{eq:extended-CLSP:periods}.
-For $t\in\range{\horizon}$ and $i\in\REF$, we set $\setup_t^i=\sum_{p\in{\REF\choose\nbsetups_t}~|~i\in p} y_t^p$.
-Since $\bracket{\inventory_t^i, \quantity_t^i, y_t^p}$ is a solution of the continuous relaxation of~\eqref{eq:extended-CLSP:periods}, we have:
+Let $\bracket{\inventory_t^i, \quantity_t^i, y_t^p}_{t,i,p}$ be a solution of the continuous relaxation of~\eqref{eq:extended-CLSP:periods}.
+For each period $t$ and each item $i$, we set
+\begin{equation}
+  \setup_t^i=\sum_{p\in{\REF\choose\nbsetups_t}~|~i\in p} y_t^p.
+\end{equation}
+Since $\bracket{\inventory_t^i, \quantity_t^i, y_t^p}_{t,i,p}$ is a feasible solution of the continuous relaxation of~\eqref{eq:extended-CLSP:periods}, we have
 \begin{equation}
 \setup_t^i
 = \sum_{p\in{\REF\choose\nbsetups_t}~|~i\in p} y_t^p
 \le \sum_{p\in{\REF\choose\nbsetups_t}} y_t^p
 \le 1
-\qquad \forall t\in\range{\horizon},\forall i\in\REF,
+\qquad \forall t\in\range{\horizon},\ \forall i\in\REF,
 \end{equation}
 and
 \begin{equation}
@@ -693,22 +696,26 @@ and
 \le \nbsetups_t
 \qquad \forall t\in\range{\horizon}.
 \end{equation}
-So $\bracket{\inventory_t^i, \quantity_t^i, \setup_t^i}$  is a solution of the continuous relaxation of~\eqref{eq:CLSP-BS} with the same cost as $\bracket{\inventory_t^i, \quantity_t^i, y_t^p}$.
+So $\bracket{\inventory_t^i, \quantity_t^i, \setup_t^i}_{t,i}$  is a solution of the continuous relaxation of~\eqref{eq:CLSP-BS} with the same cost as $\bracket{\inventory_t^i, \quantity_t^i, y_t^p}$.
 
 
-Let $\bracket{\inventory_t^i, \quantity_t^i, \setup_t^i}$ be a solution of the continuous relaxation of~\eqref{eq:CLSP-BS}. Without loss of generality, we can suppose that for each period $t\in\range{\horizon}$, $\sum_{i\in\REF}x_t^i=\nbsetups_t$.
-For each period $t\in\range{\horizon}$, according to lemma~\cref{lem:cover-vertex}, there exists
+Let $\bracket{\inventory_t^i, \quantity_t^i, \setup_t^i}_{t,i}$ be a solution of the continuous relaxation of~\eqref{eq:CLSP-BS}.
+Without loss of generality, we can suppose that for each period $t$, we have $\sum_{i\in\REF}x_t^i=\nbsetups_t$.
+For each period $t$, according to \cref{lem:cover-vertex}, there exists
 $\bracket{y_t^p}_{p\in{\REF\choose\nbsetups_t}}\in\sqbracket{0,1}^{\REF\choose\nbsetups_t}$ such that
-$\setup_t^i \le \sum_{p{\REF\choose\nbsetups_t}~|~i\in p} y_t^p,\ \forall i\in\REF$ and
-$\sum_{p\in{\REF\choose\nbsetups_t}}y_t^p \le 1$.
-Since $\bracket{\inventory_t^i, \quantity_t^i, \setup_t^i}$ is a solution of the continuous relaxation of~\eqref{eq:CLSP-BS}, we have
+\begin{equation}
+  \sum_{p\in{\REF\choose\nbsetups_t}}y_t^p = 1
+  \ \mbox{and for each $i\in\range{I}$,}\ 
+  \setup_t^i \le \sum_{p{\REF\choose\nbsetups_t}~|~i\in p} y_t^p.
+\end{equation}
+Since $\bracket{\inventory_t^i, \quantity_t^i, \setup_t^i}_{t,i}$ is a solution of the continuous relaxation of~\eqref{eq:CLSP-BS}, we have
 \begin{equation}
 \rate_t^i\, \quantity_t^i
 \le \setup_t^i\, \capacity_t^i
 \le \capacity_t^i\, \sum_{p\in{\REF\choose\nbsetups_t}~|~i\in p} y_t^p
 \qquad \forall t\in\range{\horizon},\ \forall i\in\REF.
 \end{equation}
-So $\bracket{\inventory_t^i, \quantity_t^i, y_t^p}$ is a solution of the continuous relaxation of~\eqref{eq:extended-CLSP:periods} with the same cost as $\bracket{\inventory_t^i, \quantity_t^i, y_t^p}$.
+So $\bracket{\inventory_t^i, \quantity_t^i, y_t^p}_{t,i,p}$ is a solution of the continuous relaxation of~\eqref{eq:extended-CLSP:periods} with the same cost as $\bracket{\inventory_t^i, \quantity_t^i, \setup_t^i}_{t,i}$.
 \end{proof}
 
 
@@ -724,9 +731,12 @@ The compact formulation~\eqref{eq:CLSP-BS} of CLSP-BS and the extended formulati
 
 
 \begin{proof}
-Let $\bracket{\inventory_t^i, \quantity_t^i, z_{\ell}^i}$ be a solution of the continuous relaxation of~\eqref{eq:extended-CLSP:items}.
-For $t\in\range{\horizon}$ and $i\in\REF$, we set $\setup_t^i=\sum_{\ell\subseteq\range{\horizon}~|~t\in\ell} z_{\ell}^i$.
-Since $\bracket{\inventory_t^i, \quantity_t^i, z_{\ell}^i}$ is a solution of the continuous relaxation of~\eqref{eq:extended-CLSP:items}, we have
+Let $\bracket{\inventory_t^i, \quantity_t^i, z_{\ell}^i}_{t,i,\ell}$ be a solution of the continuous relaxation of~\eqref{eq:extended-CLSP:items}.
+For each period $t$ and each item $i$, we set
+\begin{equation}
+  \setup_t^i=\sum_{\ell\subseteq\range{\horizon}~|~t\in\ell} z_{\ell}^i.
+\end{equation}
+Since $\bracket{\inventory_t^i, \quantity_t^i, z_{\ell}^i}_{t,i,\ell}$ is a feasible solution of the continuous relaxation of~\eqref{eq:extended-CLSP:items}, we have
 \begin{equation}
 \setup_t^i
 = \sum_{\ell\subseteq\range{\horizon}~|~t\in\ell} z_{\ell}^i
@@ -741,33 +751,33 @@ and
 \le \nbsetups_t
 \qquad \forall t\in\range{\horizon}.
 \end{equation}
-So $\bracket{\inventory_t^i, \quantity_t^i, \setup_t^i}$  is a solution of the continuous relaxation of the compact formulation~\eqref{eq:CLSP-BS} with the same cost as $\bracket{\inventory_t^i, \quantity_t^i, z_{\ell}^i}$.
+So $\bracket{\inventory_t^i, \quantity_t^i, \setup_t^i}_{t,i}$  is a solution of the continuous relaxation of the compact formulation~\eqref{eq:CLSP-BS} with the same cost as $\bracket{\inventory_t^i, \quantity_t^i, z_{\ell}^i}_{t,i,\ell}$.
 
 
-Let $\bracket{\inventory_t^i, \quantity_t^i, \setup_t^i}$ be a solution of the continuous relaxation of the compact formulation~\eqref{eq:CLSP-BS}. For each item $i$, we define the sequence $\bracket{\ell_p^i}^p$ of and the associated $z_{\ell_p^i}^i$ as follow:
+Let $\bracket{\inventory_t^i, \quantity_t^i, \setup_t^i}_{t,i}$ be a solution of the continuous relaxation of the compact formulation~\eqref{eq:CLSP-BS}. For each item $i$, we define the sequence $\bracket{\ell_p^i}_p$ of subsets of $\range{\horizon}$ and the associated sequence $\bracket{z_{\ell_p^i}^i}_p$ of integers as follow
 \begin{equation}
   \begin{aligned}
-  \ell_1^i       &= \crbracket{t\in\range{\horizon}~|~\setup_t^i>0} \\
-  z_{\ell_1^i}^i &= \min\crbracket{\setup_t^i~|~t\in\ell_1^i}
+  \ell_1^i       &= \crbracket{t\in\range{\horizon}~\Big|~\setup_t^i>0} \\
+  z_{\ell_1^i}^i &= \min\crbracket{\setup_t^i~\Big|~t\in\ell_1^i}
   \end{aligned}
 \end{equation}
-And for $p\ge1$, while $\ell_p^i\ne\emptyset$,
+and for $p\ge1$, while $\ell_p^i\ne\emptyset$,
 \begin{equation}
   \begin{aligned}
   \ell_{p+1}^i       &= \crbracket{t\in\range{\horizon}~\Big|~\setup_t^i-z_{\ell_p^i}^i>0} \\
-  z_{\ell_{p+1}^i}^i &= \min\crbracket{\setup_t^i-z_{\ell_p^i}^i~\Big|~t\in\ell_1^i}
+  z_{\ell_{p+1}^i}^i &= \min\crbracket{\setup_t^i-z_{\ell_p^i}^i~\Big|~t\in\ell_p^i}
   \end{aligned}
 \end{equation}
-An example for the definition of the $\bracket{z_{\ell}^i}$ is given on figure~\cref{fig:relaxation-extended-formulation-by-reference}.
+An example for the definition of the $\bracket{z_{\ell}^i}_p$ is given on \cref{fig:relaxation-extended-formulation-by-reference}.
 
 \begin{figure}[h]
   \centering
   \includegraphics{main/PDP/images/relaxation_extended-CLSP_items.tikz}
-  \caption{Example of definition of the variables $\bracket{z_{\ell}^i}$ for four periods}
+  \caption{Example of definition of the variables $\bracket{z_{\ell}^i}_p$ for four periods}
   \label{fig:relaxation-extended-formulation-by-reference}
 \end{figure}
 
-$\bracket{\ell_p^i}^p$ is finite and strictly decreasing and for every $\ell\notin\bracket{\ell_p^i}^p$, we set $z_{\ell}^i=0$. Then, we have $\setup_t^i = \sum_{\ell\subseteq\range{\horizon}~|~t\in\ell} z_{\ell}^i$ and $\bracket{\inventory_t^i, \quantity_t^i, z_{\ell}^i}$ is a solution of continuous relaxation of the extended formulation~\eqref{eq:extended-CLSP:items}.
+Sequence $\bracket{\ell_p^i}_p$ is finite and strictly decreasing and for each $\ell\notin\bracket{\ell_p^i}_p$, we set $z_{\ell}^i=0$. Then, we have $\setup_t^i = \sum_{\ell\subseteq\range{\horizon}~|~t\in\ell} z_{\ell}^i$ and $\bracket{\inventory_t^i, \quantity_t^i, z_{\ell}^i}_{t,i,\ell}$ is a solution of continuous relaxation of the extended formulation~\eqref{eq:extended-CLSP:items}.
 \end{proof}
 
 
@@ -776,17 +786,51 @@ $\bracket{\ell_p^i}^p$ is finite and strictly decreasing and for every $\ell\not
 \section{Solving the CLSP-BS}
 \label{sec:PDP:deterministic:solving}
 
-\subsection{Of-the shelf solver}
+Even if the CLSP-BS is theoretically hard, we are able to solve it for the data provided by clients of Argon Consulting. The numerical results will be discuss in \cref{chap:PDP:numerical-experiments}.
 
 
-\subsection{Pénalisation en norme O}
+\subsection{Off-the-shelf solver}
+
+
+C++11 has been chosen for the implementation of the mixed integer program of compact formulation~\eqref{eq:CLSP-BS} and Gurobi 6.5.1~\cite{gurobi} was used to solve the model on a PC with Intel(R) Core(TM) i7-3770 CPU @ 3.40GHz and 8Go RAM. These characteristics correspond to a standard computer in consultancy firm.
+
+In the data provided by clients, we have at most 30 items and 13 periods. So the number of binary variables is always lower to 400 in deterministic case. Thus, we succeed in getting the optimal solution in less than 20 seconds.
+
+
+\subsection{Using the pseudo-norm $\norm{\ .\ }_0$}
+
+
+An other option consists in using the pseudo-norm
+\begin{equation}
+\begin{array}{lccl}
+  \norm{\ .\ }_0 :& \RR^n & \longrightarrow & \RR_+
+  \\
+  & x & \longmapsto & \sum_{i=1}^n \findi{\crbracket{x_i \ne 0}}
+\end{array}
+\end{equation}
+which returns the size of the support of the vector $x$ and in dualizing the flexibility constraint~\eqref{eq:Uniform-CLSP-BS:setups}. Then, for all $\mu=\bracket{\mu_t}_{t\in\range{\horizon}}\ge 0$, we have:
+\begin{equation}\label{eq:Lagrangian:setups}
+  \begin{aligned}
+    \min\quad & \rlap{$\ds \sum_{t=1}^{\horizon} \sqbracket{ \sum_{i\in\REF} \holding^i \inventory_t^i + \mu_t \bracket{ \norm{\bracket{\quantity_t^i}_{i\in\REF}}_0 - \nbsetups} }$}
+    \\
+    \st\quad & \ds \inventory_t^i = \inventory_{t-1}^i + \quantity_t^i - \demand_t^i && \forall t\in\range{\horizon},\ \forall i\in\REF,
+    \\
+    & \ds \sum_{i\in\REF} \quantity_t^i \le 1 && \forall t\in\range{\horizon},
+    \\
+    & \ds \quantity_t^i \le 1 && \forall t\in\range{\horizon},\ \forall i\in\REF,
+    \\
+    & \ds \quantity_t^i,\ \inventory_t^i \ge 0 && \forall t\in\range{\horizon},\ \forall i\in\REF,
+  \end{aligned}
+\end{equation}
+
+Because of $\norm{\ .\ }_0$ being a pseudo-norm, it is common to replace it with $\norm{\ .\ }_1$ and in this case, the equation~\eqref{eq:Lagrangian:setups} can easily be turned into a linear program with continuous variables.
 
 
 
-\subsection{Complexité paramétrée: résultats à $\REF$ fixé}
+\subsection{Dynamic programming with fixed $\REF$}
 
 \esgil{TODO}
 
 \begin{itemize}
-  \item polynomial à R fixé par programmation dynamique
+  \item polynomial à $\REF$ fixé par programmation dynamique
 \end{itemize}
