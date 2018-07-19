@@ -1,0 +1,98 @@
+\begin{tikzpicture}
+
+\pgfmathsetmacro{\lvlwidth}{2}
+\pgfmathsetmacro{\lvlheight}{.5}
+
+
+\tikzstyle{treenode}         = [shape=rectangle, draw, anchor=center, font=\tiny]
+\tikzstyle{root}             = [treenode, font=\small, draw=argon orange, fill=argon orange!50]
+\tikzstyle{future}           = [treenode, draw=argon orange, fill=argon orange!25]
+\tikzstyle{alea}             = [treenode, draw=argon gray, fill=argon gray!25]
+\tikzstyle{edge from parent} = [draw, -latex]
+
+\begin{scope}[local bounding box=CompleteTree, scale=1.2]
+% level 0
+\node[root] (present) at (0,{2.5*\lvlheight}) {Present};
+
+% level 1
+\foreach \x in {1,2,...,3} \node[alea,font=\scriptsize] (alea\x) at (\lvlwidth,{(6.5-2*\x)*\lvlheight}) {Hazard \x};
+\foreach \x in {1,2,...,3} \node[future,font=\scriptsize] (future\x) at ({2*\lvlwidth},{(6.5-2*\x)*\lvlheight}) {Future \x};
+
+% level 2
+\foreach \x in {1,2,...,3} \foreach \y in {1,2,...,2} \node[alea] (alea\x\y) at ({3*\lvlwidth},{(8-2*\x-\y)*\lvlheight}) {Hazard \x.\y};
+\foreach \x in {1,2,...,3} \foreach \y in {1,2,...,2} \node[future] (future\x\y) at ({4*\lvlwidth},{(8-2*\x-\y)*\lvlheight}) {Future \x.\y};
+
+\foreach \x in {1,2,...,3} \draw[edge from parent] (present.east) -- (alea\x.west);
+\foreach \x in {1,2,...,3} \draw[edge from parent] (alea\x.east) -- (future\x.west);
+\foreach \x in {1,2,...,3} \foreach \y in {1,2,...,2} \draw[edge from parent] (future\x.east) -- (alea\x\y.west);
+\foreach \x in {1,2,...,3} \foreach \y in {1,2,...,2} \draw[edge from parent] (alea\x\y.east) -- (future\x\y.west);
+\foreach \x in {1,2,...,3} \foreach \y in {1,2,...,2} \draw[edge from parent] (future\x\y.east) -- ($(future\x\y.east)+({.5*\lvlwidth},{.25*\lvlheight})$) node[anchor=west]{$\ldots$};
+\foreach \x in {1,2,...,3} \foreach \y in {1,2,...,2} \draw[edge from parent] (future\x\y.east) -- ($(future\x\y.east)+({.5*\lvlwidth},{-.25*\lvlheight})$) node[anchor=west]{$\ldots$};
+
+\draw[edge from parent] (present.east) -- ($(alea3.west)-(0,{\lvlheight})$) node[anchor=west]{$\ldots$};
+\end{scope}
+
+\node[anchor=east, inner sep=2pt, draw=argon gray!25, fill=argon gray!25] (all-future) at ($(CompleteTree.west)-(.25,0)$)
+{
+  \small
+  \begin{minipage}{.85cm}
+    \center\rotatebox{90}{\begin{minipage}{3.25cm}\center Complete\\scenario space\end{minipage}}
+  \end{minipage}
+};
+
+
+\begin{scope}[shift={(0,-2.5)}, local bounding box=twostage, scale=1.2]
+% level 0
+\node[root] (present) at (0,{1.5*\lvlheight}) {Present};
+
+% level 1
+\foreach \x in {1,2,...,3} \node[alea,font=\scriptsize] (alea\x) at (\lvlwidth,{(3.5-\x)*\lvlheight}) {Hazard \x};
+\foreach \x in {1,2,...,3} \node[future,font=\scriptsize] (future\x) at ({2*\lvlwidth},{(3.5-\x)*\lvlheight}) {Future \x};
+
+% level 2
+\foreach \x in {1,2,...,3} \node[future] (future{\x}x) at ({4*\lvlwidth},{(3.5-\x)*\lvlheight}) {Future \x.x};
+
+\foreach \x in {1,2,...,3} \draw[edge from parent] (present.east) -- (alea\x.west);
+\foreach \x in {1,2,...,3} \draw[edge from parent] (alea\x.east) -- (future\x.west);
+\foreach \x in {1,2,...,3} \foreach \y in {1,2,...,2} \draw[edge from parent] (future\x.east) -- (future{\x}x.west);
+\foreach \x in {1,2,...,3} \foreach \y in {1,2,...,2} \draw[edge from parent] (future{\x}x.east) -- ($(future{\x}x.east)+({.5*\lvlwidth},0)$) node[anchor=west]{$\ldots$};
+
+\draw[edge from parent] (present.east) -- ($(alea3.west)-(0,{\lvlheight})$) node[anchor=west]{$\ldots$};
+\end{scope}
+
+\node[anchor=east, inner sep=2pt, draw=argon gray!25, fill=argon gray!25] (2SA) at ($(twostage.west)-(.25,0)$)
+{
+  \small
+  \begin{minipage}{.85cm}
+    \center\rotatebox{90}{\begin{minipage}{2.25cm}\center Two-stage\\approximation\end{minipage}}
+  \end{minipage}
+};
+
+\begin{scope}[shift={(0,-5.5)}, local bounding box=sample, scale=1.2]
+% level 0
+\node[root] (present) at (0,{2*\lvlheight}) {Present};
+
+% level 1
+\foreach \x in {1,2,...,2} \node[alea,font=\scriptsize] (alea\x) at (\lvlwidth,{(3.5-\x)*\lvlheight}) {Hazard \x};
+\foreach \x in {1,2,...,2} \node[future,font=\scriptsize] (future\x) at ({2*\lvlwidth},{(3.5-\x)*\lvlheight}) {Future \x};
+
+% level 2
+\foreach \x in {1,2,...,2} \node[future] (future{\x}x) at ({4*\lvlwidth},{(3.5-\x)*\lvlheight}) {Future \x.x};
+
+\foreach \x in {1,2,...,2} \draw[edge from parent] (present.east) -- (alea\x.west);
+\foreach \x in {1,2,...,2} \draw[edge from parent] (alea\x.east) -- (future\x.west);
+\foreach \x in {1,2,...,2} \foreach \y in {1,2,...,2} \draw[edge from parent] (future\x.east) -- (future{\x}x.west);
+\foreach \x in {1,2,...,2} \foreach \y in {1,2,...,2} \draw[edge from parent] (future{\x}x.east) -- ($(future{\x}x.east)+({.5*\lvlwidth},0)$) node[anchor=west]{$\ldots$};
+\end{scope}
+
+\node[anchor=east, inner sep=2pt, draw=argon gray!25, fill=argon gray!25] (Sampling) at ($(sample.west)-(.25,0)$)
+{
+  \small
+  \begin{minipage}{.85cm}
+    \center\rotatebox{90}{\begin{minipage}{1.40cm}\center Sampling\end{minipage}}
+  \end{minipage}
+};
+
+
+
+\end{tikzpicture}
