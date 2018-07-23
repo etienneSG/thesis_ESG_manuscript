@@ -456,9 +456,40 @@ and
      & x & \mapsto & \frac{\sum_{k=1}^K\sqrt{\frac{1}{x_k}-1}}{\sum_{k=1}^K\bracket{\frac{1}{x_k}-1}}
   \end{array}
 \end{equation}
-Since $v<1$, it is sufficient to prove that 1 is an upper bound on $g$.
-\esgil{To complete (True. Done on draft.)}
+Since $v<1$, it is sufficient to prove that 1 is an upper bound on $g$. For each index $k$, we define
+\begin{equation}
+  y_k\bracket{x} = \frac{\frac{1}{x_k}-1}{\lambda\bracket{x}}
+  \quad\mbox{with}\quad
+  \lambda\bracket{x} = \sum_{\ell=1}^K\bracket{\frac{1}{x_{\ell}}-1}
+  ,\quad\mbox{and}\quad 
+  \mu\bracket{y} = \sum_{\ell=1}^K \sqrt{y_{\ell}}.
+\end{equation}
+Then we get
+\begin{equation}
+  g\bracket{x} = \frac{\sum_{k=1}^K\sqrt{\lambda\bracket{x}y_k\bracket{x}}}{\lambda\bracket{x}}
+  = \frac{\mu\bracket{y\bracket{x}}}{\sqrt{\lambda\bracket{x}}}
+  \le \frac{\sup_{y\in\delta^{K-1}}\mu\bracket{y}}{\sqrt{\inf_{x\in\delta^{K-1}}\lambda\bracket{x}}}.
+\end{equation}
+$\mu$ being concave and symmetric, we get
+\begin{equation}
+  \sup_{y\in\delta^{K-1}}\mu\bracket{y} = \mu\bracket{\frac{1}{K},\ldots,\frac{1}{K}} = \sqrt{K}.
+\end{equation}
+$\lambda$ being convex and symmetric, we get
+\begin{equation}
+  \sup_{x\in\delta^{K-1}}\lambda\bracket{x} = \lambda\bracket{\frac{1}{K},\ldots,\frac{1}{K}} = K\bracket{K-1}.
+\end{equation}
+Then, we have for each $x\in\delta^{K-1}$
+\begin{equation}
+  g\bracket{x} \le \frac{1}{\sqrt{K-1}} \le 1
+\end{equation}
+which concludes the proof.
 \end{proof}
+
+
+\begin{rmq}
+  Actually, the previous proof shows that the maximum of $\gamma$ is reached for $\demand_k=\frac{\bar{\demand_k}}{K}$. Thus, we can easily extend the definition of $\gamma$ for values of volatility $v\in\bracket{0,\sqrt{K-1}}$.
+\end{rmq}
+
 
 
 \subsubsection{Generate sample of demand knowing past demand}

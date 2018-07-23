@@ -280,7 +280,7 @@ We now prove \cref{prop:relaxation-independant-N}.
 
 \begin{proof}[Proof of \cref{prop:relaxation-independant-N}]
 Consider an instance of CLSP-BS where $\capacity_t^i\ge\capacity_t$ for all period $t$ and all item $i$.
-Let $v$ denote the optimal value of the continuous relaxation of formulation~\eqref{eq:CLSP-BS} and $\widehat{v}$ the optimal value of the continuous relaxation of CLSP-BS without the flexibility constraint~\eqref{eq:CLSP-BS:setups}.
+Let $v$ denote the optimal value of the continuous relaxation of formulation~\eqref{eq:CLSP-BS} and $\widehat{v}$ the optimal value of the continuous relaxation of formulation~\eqref{eq:CLSP-BS} without the flexibility constraint~\eqref{eq:CLSP-BS:setups}.
 Obviously, we have $v \ge \widehat{v}$.
 Let us show that $v \le \widehat{v}$.
 
@@ -304,10 +304,10 @@ We now prove that $\bracket{\setup_t^i, \quantity_t^i, \inventory_t^i}_{t,i}$ is
 
 By definition of $\quantity_t^i$ and $\inventory_t^i$, constraints~\eqref{eq:CLSP-BS:inventory-dynamic} and \eqref{eq:CLSP-BS:capacity} of are satisfied.
 
-If $\capacity_t^i>0$, by definition of $\setup_t^i$ and $\quantity_t^i$ constraint~\eqref{eq:CLSP-BS:big-M} of CLSP-BS is satisfied.
-If $\capacity_t=0$, since $\bracket{\widehat{\setup}_t^i, \widehat{\quantity}_t^i, \widehat{\inventory}_t^i}_{t,i}$ is feasible, we have $\widehat{\quantity}_t^i=0$ and constraint~\eqref{eq:CLSP-BS:big-M} is satisfied. 
+If $\capacity_t^i>0$, by definition of $\setup_t^i$ and $\quantity_t^i$ constraint~\eqref{eq:CLSP-BS:big-M} of formulation~\eqref{eq:CLSP-BS} is satisfied.
+If $\capacity_t^i=0$, since $\bracket{\widehat{\setup}_t^i, \widehat{\quantity}_t^i, \widehat{\inventory}_t^i}_{t,i}$ is feasible, we have $\widehat{\quantity}_t^i=0$ and constraint~\eqref{eq:CLSP-BS:big-M} is satisfied. 
 
-If $\capacity_t>0$, we have:
+We have
 \begin{subequations}
 \begin{align}
 \capacity_t\sum_{i\in\REF}\setup_t^i
@@ -320,11 +320,11 @@ If $\capacity_t>0$, we have:
 && \mbox{(definition of $\setup_t^i$)}
 \\
 &\le
-\capacity_t
+\capacity_t.
 && \mbox{(feasibility of $\bracket{\widehat{\setup}_t^i, \widehat{\quantity}_t^i, \widehat{\inventory}_t^i}_{t,i}$)}
 \end{align}
 \end{subequations}
-Then $\sum_{i\in\REF}\setup_t^i\le 1\le\nbsetups_t$.
+If $\capacity_t>0$, then $\sum_{i\in\REF}\setup_t^i\le 1\le\nbsetups_t$.
 Otherwise, if $\capacity_t=0$, since $\bracket{\widehat{\setup}_t^i, \widehat{\quantity}_t^i, \widehat{\inventory}_t^i}_{t,i}$ is feasible, we have $\quantity_t^i=0$ for each item $i$ and by definition of $\setup_t^i$, we have $\sum_{i\in\REF}\setup_t^i=0\le\nbsetups_t$.
 In both cases, constraint~\eqref{eq:CLSP-BS:setups} is satisfied.
 

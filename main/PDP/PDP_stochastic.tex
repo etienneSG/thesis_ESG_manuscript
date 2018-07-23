@@ -353,7 +353,7 @@ The validity of this method for solving (2SA) is supported by the following prop
 
 \begin{prop}
 \label{prop:cvgce-2SAm}
-The following three properties hold when $m$ goes to infinity:
+The following three properties hold when $m$ goes to infinity.
 \begin{enumerate}[label=\textup{(\roman*)}]
 \item \label{optimal-value-cvgce} The optimal value of \textup{(2SA-$m$)} converges almost surely to the optimal value of \textup{(2SA)}.
 
@@ -372,14 +372,14 @@ Then for every $\alpha \in (0,1)$, we have $ \PP\sqbracket{\cQ_m^{\delta}\subset
 \end{prop}
 
 
-% \cref{optimal-value-cvgce} is easy to understand.
+\cref{optimal-value-cvgce} show that it is worth using many scenarios to get an approximation of the optimal value of (2SA). Indeed, for a given probability $\alpha\in\bracket{0,1}$, for $m$ large enough, the probability that 
 % Solving (2SA-$m$) for $m$ large enough gives a good approximation of the optimal value of (2SA).
 
 
 % \cref{optimal-solution-cvgce} is more precise since 
 
 \cref{eq:Laplace-caract} is a technical condition.
-However, it just mean than distribution are not heavy-tailed.
+However, it just mean than distributions are not heavy-tailed.
 If the random demand $\va\demand$ is bounded or positive part of Gaussian then it satisfies~\eqref{eq:Laplace-caract}.
 Conversely, exponential distributions does not satisfied~\eqref{eq:Laplace-caract}.
 
@@ -402,6 +402,7 @@ We then have $ \EE[e^{u g(\va d)}] \leq  \EE[e^{uG(y_0,0)} e^{\kappa u \|\va d\|
 For $u\leq 0$, by non-negativity of $G$ we have $g({\va d}) \geq 0$, hence $\EE[e^{u g(\va d)}] \leq 1$.
 \end{proof}
 
+
 \begin{proof}[Proof of \cref{prop:cvgce-2SAm}]
 Let $Q_t$ be the (bounded) set of feasible values for the first-stage variables $q_t=(q_t^i)_{i\in\REF}$ in (2SA).
 Denote by $F(q_t,d)$ the minimal cost of (2SA) that can be reached when the first stage-variables are fixed to $q_t\in Q_t$  and the realization of the demand is $d=(d_{t'}^i)_{t' \geq t, i\in\REF}$.
@@ -410,7 +411,7 @@ We introduce the map $f\colon q_t\mapsto \espe\sqbracket{F(q_t,\va d)}$, which a
 
 The map $f$ is continuous and $Q_t$ is compact.
 Thus $f$ is bounded, and, by \cite[Theorem 7.48]{Shapiro2009}, we have that $(\hat f_m(q_t))_{m\in\mathbb{Z}_+}$ converges to $f(q_t)$ uniformly on $Q_t$.
-Then (i) and (ii) are direct consequences of \cite[Theorem 5.3]{Shapiro2009}.
+Then \cref{optimal-value-cvgce} and \cref{optimal-solution-cvgce} are direct consequences of \cite[Theorem 5.3]{Shapiro2009}.
 
 
 By Lemma~\cref{lem:Laplace-caract}, there exist $K$ and $C$ such that for any $q_t \in Q_t$, $F(q_t,\va d)$ satisfy~\eqref{eq:Laplace-caract}.
@@ -424,6 +425,7 @@ Then, according to \cite[Theorem 5.18]{Shapiro2009}, for every $\alpha\in(0,1)$,
 
 \vlil{I think that we should add comments around this part. Not compulsory.}
 
+
 \subsubsection{Bounds}
 
 
@@ -431,36 +433,25 @@ Ideally, we want to find a solution of the stochastic counterpart of Uniform CLS
 Since it is intractable, we made two approximations (2SA) and (2SA-$m$).
 The objective is to determine how good are this approximations.
 
+
 We obtain lower bounds on the stochastic counterpart of Uniform CLSP-BS solving (2SA-$m$) with $m$ large enough or solving many time (2SA-$m$) with $m$ small.
 This result relies on \cref{prop:CLSP-BS:stochastic:bounds} which are application of classical stochastic results (see for example \cite{Shapiro2009}).
 
 \begin{prop}\label{prop:CLSP-BS:stochastic:bounds}
-For each $m\in\NN^*$, we have the following inequalities on the optimal value.
+For each $m\in\ZZ_+^*$, we have the following inequalities on the optimal values.
 \begin{equation}
-  \espe\sqbracket{v^*_{2SA-m}}\le v^*_{2SA}\le v^*
+  \espe\sqbracket{v^*_{2SA-m}}
+  \le\espe\sqbracket{v^*_{2SA-(m+1)}}
+  \le v^*_{2SA}
+  \le v^*
 \end{equation}
 Where $v^*_{2SA-m}$ is the optimal value of (2SA-$m$), $v^*_{2SA}$ is the optimal value of (2SA) and $v^*$ is the optimal value of stochastic counterpart of Uniform CLSP-BS.
 \end{prop}
 
 
 \begin{proof}
-The two-stage approximation (2SA) is a relaxation of the original problem.
-Then we get:
-\begin{equation}
-  v^*_{2SA} \le v^*.
-\end{equation}
-Then, according to \cref{prop:cvgce-2SAm}, the optimal value of the sample average approximation (2SA-$m$) converge almost surely to the optimal value of (2SA) when $m$ goes to infinity and we have:
-\begin{equation}
-  v^*_{2SA-m}  \xrightarrow[m\to\infty]{} v^*_{2SA} \quad a.s.
-\end{equation}
-Thus, for $m$ large enough, the optimal value of (2SA-$m$) (or at least a lower bound on this value) is a lower bound of the original problem.
+Two-stage approximation (2SA) being a relaxation of the original problem, we get $v^*_{2SA} \le v^*$. The other inequalities are proved in \cite[Proposition 5.6]{Shapiro2009}.
 \end{proof}
-
-
-\esgil{Preuve à revoir. Je ne suis pas du tout convaincu par ce que j'ai écrit.}
-
-\vlil{It could be a good idea to give some details and references, but this all very classical results.}
-
 
 
 The efficiency of these two methods are discussed in \cref{chap:PDP:numerical-experiments}.
