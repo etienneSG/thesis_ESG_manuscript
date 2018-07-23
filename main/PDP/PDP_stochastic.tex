@@ -135,7 +135,7 @@ In this cases, heuristics must be developed to create a production planning whic
 
 
 \subsection{Model with backorder costs}
-
+\label{sec:PDP:stochastic:model:backorder}
 
 Service level constraint is a main issue since it may lead to infeasibility of the model.
 Thus, we remove this constraint and penalize backorder quantities.
@@ -360,7 +360,7 @@ The following three properties hold when $m$ goes to infinity.
 \item \label{optimal-solution-cvgce} For every $m$, we consider the values $(\hat\quantity_{t,m}^i,\hat\setup_{t,m}^i)_{i\in\REF}$ of the decision variables for period $t$ of an optimal solution of \textup{(2SA-$m$)}.
 Any limit point of these values is an optimal solution of \textup{(2SA)}.
 
-\item \label{delta-eps-cvgce}Let $\varepsilon> \delta > 0$.
+\item \label{delta-eps-cvgce} Let $\varepsilon> \delta > 0$.
 Assume that the random demand $(\va\demand_{t'}^i)_{t'\geq t, i\in\REF}$ is such that
 \begin{equation}
 \exists C,K, \quad \forall u \in \RR, \qquad \EE[e^{u \|\va d\|}] \leq C e^{u^2 K} .
@@ -372,19 +372,19 @@ Then for every $\alpha \in (0,1)$, we have $ \PP\sqbracket{\cQ_m^{\delta}\subset
 \end{prop}
 
 
-\cref{optimal-value-cvgce} show that it is worth using many scenarios to get an approximation of the optimal value of (2SA). Indeed, for a given probability $\alpha\in\bracket{0,1}$, for $m$ large enough, the probability that 
-% Solving (2SA-$m$) for $m$ large enough gives a good approximation of the optimal value of (2SA).
+\cref{optimal-value-cvgce} is a result on the convergence of the optimal values of (2SA-$m$) toward the optimal value of (2SA).
 
 
-% \cref{optimal-solution-cvgce} is more precise since 
+\cref{optimal-solution-cvgce} is a result on the convergence of the optimal solutions of (2SA-$m$) toward an optimal solution of (2SA).
+However, it requires the existence of the limits of the optimal solutions of (2SA-$m$).
 
+
+\cref{delta-eps-cvgce} is a result on the convergence of the set of $\delta$-optimal solutions of (2SA-$m$) toward the set of $\varepsilon$-optimal solutions of (2SA).
 \cref{eq:Laplace-caract} is a technical condition.
-However, it just mean than distributions are not heavy-tailed.
+It just means than distributions are not heavy-tailed.
 If the random demand $\va\demand$ is bounded or positive part of Gaussian then it satisfies~\eqref{eq:Laplace-caract}.
 Conversely, exponential distributions does not satisfied~\eqref{eq:Laplace-caract}.
 
-
-\esgil{Faire un paragraphe expliquant les différent point en terme français.}
 
 
 The proof of \cref{delta-eps-cvgce} relies on the following technical lemma.
