@@ -58,7 +58,8 @@ Among other sectors with specific rules,
 Argon Consulting began as a consultancy company specialized in logistic.
 Growing, it acquired expertise at every level of Supply Chain.
 Argon Consulting describes itself as a multi-specialized firm whose competitive advantage comes from its ability to quantify their studies.
-Through this thesis, the objective is to find a unified framework for some recurrent problem which must be scientifically tested.
+Through this thesis, the objective is to find a unified framework for some recurrent problems.
+Moreover, Argon Consulting wants to scientifically tested the accuracy and efficiency of the models developed.
 
 
 
@@ -98,18 +99,6 @@ Identify the best organization for an industry is critical to define which decis
   \caption{Exemple d'organisation de la Supply Chain d'un acteur du luxe}
   \label{fig:supply-chain-models}
 \end{figure}
-
-
-
-
-\medskip
-
-
-Our work in this thesis always takes into account flexibility either as constraint or as decision variable.
-Indeed, as long as it does not implies huge stock or huge manufacturing costs, ability to face geographic, temporal or in products mix variations of demand is most of the time an efficient lever to increase competitiveness.
-
-Capacitative reactivity is always consider as a constraint.
-In
 
 
 
@@ -194,24 +183,40 @@ We address two models for the production planning problem in this thesis. First,
 
 
 Multi-sourcing of production also concerns the production function of the Supply Chain.
+This problem comes before production decisions and its objective is to define the flexibility level of means of production.
 
+
+At strategic level, companies defined the service level they wanted to achieve.
+Thus, service level is a constraint in our model.
+
+\esgil{TODO when \cref{part:multi-sourcing} will be partially written.}
 
 
 \subsection{Assumption of the models}
 
 
-The goal of our work is to face variability in the product mix.
-Then, in the considered models, the global volume of demand is the same in each possible outcome of the demand.
-This hypothesis comes from two remarks.
-First, decisions about production capacity were made before production decisions (\cref{sec:business-context:argon:pdp}) and before multi-sourcing decisions (\cref{sec:business-context:argon:multi-sourcing}).
-In undercapacitated cases, new capacity must be add and implies long-term decisions.
-It also depend on the strategy of the company.
-For example, some luxury industries does not care about few stock-out because rarity is also part of their brand image.
-Then optimizing this cases is another problem since facing variability in the product mix is not the main problem.
-Secondly, in many cases, there is a \emph{cannibalization} between the products.
-This means that if demand for some products increases, demand for other decreases.
+As long as it does not implies huge stock or huge manufacturing costs, ability to face geographic or temporal variations of demand is most of the time an efficient lever to increase competitiveness.
+Then, our work in this thesis always takes into account flexibility and capacitative reactivity.
+However, they do not have the same role in each problem.
+In production planning problems (\cref{part:continuous-review-inventory-model,part:production planning}), both are considered as constraints: flexibility is the number of setups and capacitative reactivity is the production capacity of the assembly line.
+But in multi-sourcing problems (\cref{part:multi-sourcing}), flexibility is a decision variable (item affectation to plants) whereas capacitative reactivity remains a constraint (production capacity of plants).
+Explanation is simple.
+Capacity decisions are long-term decisions whereas multi-sourcing decisions are between long and mid-term decisions and production decision are mid-term decisions.
+
+
+Since we do not have any control on capacities in our model, an increase of the demand often leads to infeasible problems.
+In practice, industrial must reconsider their capacity decision and our models become irrelevant.
+Thus, in the considered models, the global volume of demand is assume constant in each possible outcome of the demand.
+
+
+Even if it seems to be a strong hypothesis, it is realistic in many cases for this horizon of decisions.
+Indeed, in many cases, there is a \emph{cannibalization} between products, \ie if demand for some products increases, demand for other decreases.
+Promotions, seasonality or simply offsets between error can cause cannibalization.
 For example, the consumption of dessert is the same during the year but ice cream demand will represent a bigger part in summer.
-The cannibalization can also come for promotions.
+
+
+According to Argon Consulting, it is probably for luxury industry and mass distribution than ability to face variation of products mix is the most critical.
+
 
 
 
