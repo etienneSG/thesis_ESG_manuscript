@@ -119,6 +119,7 @@ This problem concerns directly the production function of the Supply Chain.
 In Assemble-To-Order and Make-To-Stock organizations, inventory must be sufficient to serve demand at due date.
 Then, production planning answers to both questions: when production starts and which quantity is produced.
 
+
 Difficulties of this problem comes from many factors which prevent last minute production.
 First, production capacities are limited.
 Thus, production must be anticipated in order to deliver peak selling season, promotion program, vacation shutdown, etc.
@@ -129,7 +130,8 @@ To prevent it, a \emph{safety stock} is made.
 Finally, \emph{flexibility} of means of production is limited.
 Flexibility is the ability to change the item produced on a assembly line or in a plant.
 Flexibility enables to face variations in the product mix.
-Since it remains limited, \emph{lot-size inventories} also called \emph{cycle stocks} are needed. They are the portion of inventory that decreases gradually as customers’ orders come in and that are replenished cyclically when suppliers’ orders are received.
+Since it remains limited, \emph{lot-size inventories} also called \emph{cycle stocks} are needed.
+They are the portion of inventory that decreases gradually as customers’ orders come in and that are replenished cyclically when suppliers’ orders are received.
 
 
 In Assemble-To-Order and Make-To-Stock production planning problems, stock is a main issue and decision-makers have a huge control on it.
@@ -165,16 +167,17 @@ Another way is a loss of capacity.
 Indeed, changing the item produced on an assembly take time.
 Then, it is reasonable to simply decrease the capacity by the time loss at each new setup.
 However, the time needed for a new setup often depend on the previous and the next items produced.
-Thus, scheduling must be optimize in the same time which is not possible since it is short-term decisions.
-Or, an average setup time must be defined.
-In practice, industrial prefer define a number of setups per period rather than an average setup time.
+Thus, scheduling must be optimized in the same time which is not possible since it is short-term decisions or an average setup time must be defined.
+In practice, industrials prefer define a number of setups per period rather than an average setup time.
 We propose to model flexibility following their recommendation and adding a constraint on the number of setups.
 
 
 \medskip
 
 
-We address two models for the production planning problem in this thesis. First, we propose in \cref{part:continuous-review-inventory-model} continuous-review inventory models whose main objective is to optimize the cycle stock. Second, we propose in \cref{part:production planning} lot-size models which use a discretization of the time and which optimize simultaneously the three parts of the inventory.
+We address two models for the production planning problem in this thesis.
+First, we propose in \cref{part:continuous-review-inventory-model} continuous-review inventory models whose main objective is to optimize the cycle stock.
+Second, we propose in \cref{part:production planning} lot-size models which use a discretization of the time and which optimize simultaneously the three parts of the inventory.
 
 
 

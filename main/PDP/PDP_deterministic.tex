@@ -22,7 +22,7 @@ To the best of our knowledge, the problem addressed in this chapter is original 
 
 The problem considers an assembly line producing a set $\REF$ of items over $\horizon$ periods. The number of distinct items produced over a period $t$ cannot exceed $\nbsetups_t>0$. There is also an upper bound $\capacity_t$ on the total period production (summed over all items) and an upper bound $\capacity_t^i$ on the production of item $i$ at period $t$. The capacity needed (in time units) to produce one unit of $i$ in period $t$ is $\rate_t^i>0$.
 
-The production of item $i$ must satisfy a demand $\demand_t^i$ at the end of period $t$. When production of a item $i$ is not used to satisfy the demand, it can be stored but incurs a unit holding cost $\holding_t^i>0$ per period. For each item $i$, there is an initial inventory $s_0^i\in\mathbb{R}_+$.
+The production of item $i$ must satisfy a demand $\demand_t^i$ at the end of period $t$. When production of a item $i$ is not used to satisfy the demand, it can be stored but incurs a unit holding cost $\holding_t^i>0$ per period. For each item $i$, there is an initial inventory $s_0^i\in\RR_+$.
 
 The goal is to satisfy the whole demand at minimum cost.
 
