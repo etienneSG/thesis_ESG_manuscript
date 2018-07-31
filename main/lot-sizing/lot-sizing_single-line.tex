@@ -40,9 +40,10 @@ Both are used by industrials (and are equivalent when demand does not depend on 
 
 
 The problem described by Argon Consulting considers an assembly line producing a set $\REF$ of items over an infinite horizon.
-The capacity needed (in time units) to produce one unit of item $i$ is $\rate_i$.
+%The capacity needed (in time units) to produce one unit of item $i$ is $\rate_i$.
+The internal production time of item $i$ (\ie the number of item $i$ produced in one time unit) is $\rate_i$.
 Inventory $\inventory_i$ of item $i$ must satisfy demand, known in advance.
-Then it continuously decreases by $\demand_i$ units per time unit when there is no production and continuously increases by $\rate_i-\demand_i$ units per time unit when item $i$ is produced.
+Then it continuously decreases by $\demand_i<\rate_i$ units per time unit when there is no production and continuously increases by $\rate_i-\demand_i$ units per time unit when item $i$ is produced.
 
 
 We call \emph{order of production} of an item $i$ an interval of time $[t_1,t_2]$ dedicated to the production of $i$ such that $t_1<t_2$ production starts at $t_1$ and stops at $t_2$.
@@ -133,8 +134,7 @@ Classical policy: Zero Inventory Ordering policy $(r,q)$ (Order quantity $q$ whe
 \medskip
 
 
-\subsection{Models}
-\label{sec:lot-size:single-line:models}
+%\subsection{Models}
 
 % The exact problem in which Argon Consulting was interested in is the following.
 
@@ -191,7 +191,8 @@ Classical policy: Zero Inventory Ordering policy $(r,q)$ (Order quantity $q$ whe
 
 %\subsection{Deterministic model}
 
-\subsection{Unconstrained frequencies}
+\subsection{Model with unconstrained frequencies}
+\label{sec:lot-size:single-line:models:unconstraint}
 
 
 %Using the average value of the inventory of each product over time, the optimization problem can be written as follow:
@@ -199,18 +200,20 @@ Classical policy: Zero Inventory Ordering policy $(r,q)$ (Order quantity $q$ whe
 We claim that the following optimization problem is a correct model of the problem described in \cref{sec:lot-size:single-line:motivations} in its unconstrained version:
 \begin{subequations}\label{eq:lot-size:single-line:deterministic:unconstraint}
   \begin{align}
-  \min & \ds\sum_{i\in\REF} \frac{1}{2}\holding_i\demand_i\cover_i
+  \min\quad & \ds\sum_{i\in\REF} \frac{1}{2}\holding_i\tilde{\demand}_i\cover_i
   \label{eq:lot-size:single-line:deterministic:unconstraint:objective}
   \\
-  \st  & \ds\sum_{i\in\REF} \frac{1}{\cover_i} \le \nbsetups
+  \st\quad  & \ds\sum_{i\in\REF} \frac{1}{\cover_i} \le \nbsetups
   \label{eq:lot-size:single-line:deterministic:unconstraint:flexibility}
   \\
-       & \cover_i > 0 && \forall i\in\REF.
+       & \cover_i > 0 && \forall i\in\REF,
   \label{eq:lot-size:single-line:deterministic:unconstraint:positivity}
   \end{align}
 \end{subequations}
-The correctness is however not necessarily immediate: note that the optimal policy could be not \emph{Zero-Inventory-Ordering (ZIO)}.
-We recall that a policy is said to be ZIO an order occurs only if the inventory is zero.
+where $\tilde{\demand}_i=\bracket{1-\frac{\demand_i}{\rate_i}}\demand_i$ is the reduced value of the demand.
+
+The correctness is however not necessarily immediate: note that model~\eqref{eq:lot-size:single-line:deterministic:unconstraint} assumes that optimal policy is \emph{Zero-Inventory-Ordering (ZIO)} and directly give the average values for objective and constraint.
+We recall that a policy is said to be ZIO if an order occurs only if the inventory is zero.
 \esgil{Citer la definition exacte.}
 We state thus this fact, with a complete proof.
 
@@ -220,61 +223,108 @@ Let $t_i$ be the first production setup of item $i$.
 Then, according to problem description in \cref{sec:lot-size:single-line:motivations}, production setups occur at times $t_i+k\,\cover_i$ with $k\in\ZZ_+$.
 
 
-\begin{prop}
-For each item $i$, average number $\freq_i$ of setups per time unit over the infinite horizon is equal to $\frac{1}{\cover_i}$ where $\cover_i$ is the cover.
+\begin{prop}\label{prop:lot-size:single-line:models:average-setup}
+For each item $i$, average number $\freq_i$ of setups per time unit over the infinite horizon is equal to $\frac{1}{\cover_i}$ where $\cover_i$ is the cover and flexibility constraint described in \cref{sec:lot-size:single-line:motivations} can be written as
+\begin{equation}
+  \sum_{i\in\REF} \frac{1}{\cover_i} \le \nbsetups.
+\end{equation}
 \end{prop}
 
 
-\begin{proof}\label{prop:lot-size:single-line:models:average-setup}
+\begin{proof}
 For a time $t>t_i$, the average number of setups per time unit during the interval $[0,t)$ is
 $\frac{1}{t}\left\lfloor\frac{t-t_i}{\cover_i}\right\rfloor$
 which converges to $\frac{1}{\cover_i}$ when $t$ goes to infinity.
+
+\cref{eq:lot-size:single-line:deterministic:unconstraint:flexibility} of the flexibility constraint described in \cref{sec:lot-size:single-line:motivations} immediately follows.
 \end{proof}
 
 
-\cref{eq:lot-size:single-line:deterministic:unconstraint:flexibility} of the flexibility constraint described in \cref{sec:lot-size:single-line:motivations} immediately follows from \cref{prop:lot-size:single-line:models:average-setup}.
 Note that this formulation is independent of the first production setup $t_i$.
 Then choice of $t_i$ is only constraint by positive inventory.
 
 
-\begin{prop}
-There exist an optimal policy which is Zero-Inventory-Ordering.
-\end{prop}
-
-
-\begin{proof}
-For a contradiction, assume that there exists $k\in\ZZ_+^*$ such that $\inventory_i\bracket{t_i+k\,\cover_i}>0$.
-Let $\delta$ be the size of the $(k-1)$-th order of production of item $i$.
-Decreasing the size of the $(k-1)$-th order of production by a small amount $\vareps=\min(\delta,\frac{\inventory_i}{\rate_i})$ give an admissible solution whose cost is strictly better
-\esgil{Add figure to show the reduction.}
-\end{proof}
-
-
-Then, if such a limit exists, we must have
+\begin{prop}\label{prop:lot-size:single-line:models:ZIO}
+Optimal policy is Zero-Inventory-Ordering and its cost is given by
 \begin{equation}
-  \limsup_{t\rightarrow\infty}\frac{1}{t} \sum_{i\in\REF}\freq_i\bracket{t}\le\nbsetups.
+  \sum_{i\in\REF}\frac{1}{2}\holding_i\bracket{1-\frac{\demand_i}{\rate_i}}\demand_i\cover_i^*
 \end{equation}
-
-
-\begin{proof}
-Scheme of proof:
-\begin{itemize}
-  \item expression of the constraint
-  \item ZIO policy
-  \item expression of the objective
-\end{itemize}
-\end{proof}
-
-\begin{prop}
-Problem~\eqref{eq:cont-rev-det} has a unique optimal solution $(\cover_i^*)_{i\in\REF}$, which provides the optimal cover values for the unconstrained version of the problem described in Section~\ref{sec:prob-cont-rev}.
+where $\cover_i^*$ is the cover of item $i$ in such a policy.
 \end{prop}
 
+
 \begin{proof}
-\tbc
+Consider an admissible policy and let $\delta_i$ be the size of the order of production of item $i$.
+By definition of the cover $\cover_i$, the produced quantity is exactly the demand for the next $\cover_i$ time unit.
+Thus, we have $\rate_i\delta_i=\demand_i\cover_i$ and inventory level is the same at each production setup and is equal to $\inventory_i(0)-\demand_i t_i \ge 0$.
+Cycle stock between $k^{th}$ and $\bracket{k+1}^{th}$ setup is given by
+\begin{equation}
+  S_{i,k}
+  =
+  \int_{t_i+k\cover_i}^{t_i+\bracket{k+1}\cover_i}\inventory_i(t)dt
+  =
+  \bracket{\inventory_i(0)-\demand_i t_i}\cover_i
+  + \frac{1}{2}\bracket{1-\frac{\demand_i}{\rate_i}}\demand_i\cover_i^2.
+\end{equation}
+For each time $\horizon$, the average cycle stock is
+\begin{equation}
+  S_i\bracket{\horizon} = \frac{1}{\horizon} \int_0^{\horizon}\inventory_i(t)dt
+\end{equation}
+and we have the following inequalities.
+\begin{equation}
+  \frac{1}{\horizon} \int_0^{t_i}\inventory_i(t)dt
+  + \frac{1}{\horizon} \sum_{k=0}^{\left\lfloor\frac{\horizon-t_i}{\cover_i}\right\rfloor} S_{i,k}
+  \le
+  S\bracket{\horizon}
+  \le
+  \frac{1}{\horizon} \int_0^{t_i}\inventory_i(t)dt
+  + \frac{1}{\horizon} \sum_{k=0}^{\left\lceil\frac{\horizon-t_i}{\cover_i}\right\rceil} S_{i,k}
+\end{equation}
+Then, the average cycle stock on infinite horizon for item $i$ is
+\begin{equation}
+  \lim_{\horizon\rightarrow\infty} S_i\bracket{\horizon}
+  =
+  \inventory_i(0)-\demand_i t_i
+  + \frac{1}{2}\bracket{1-\frac{\demand_i}{\rate_i}}\demand_i\cover_i.
+\end{equation}
+Thanks to \cref{prop:lot-size:single-line:models:average-setup}, this policy is admissible for each $(t_i)_i$ such that $\inventory_i(0)-\demand_i t_i\ge 0$.
+In particular, for a given $\bracket{\cover_i}_i$, a ZIO policy (\ie such that $\inventory_i(0)=\demand_i t_i$) is admissible and cheaper which concludes the proof.
 \end{proof}
 
-Solving Problem~\eqref{eq:cont-rev-det} is straightforward using the Karush-Kuhn-Tucker condition since it is a convex problem:
-$$\cover_i^*= \frac{\sum_{s\in\REF}\sqrt{\holding_s\demand_s}}{\nbsetups\sqrt{\holding_i\demand_i}}\qquad\forall i\in\REF.$$
+
+Thanks to \cref{prop:lot-size:single-line:models:average-setup} and \cref{prop:lot-size:single-line:models:ZIO}, problem \eqref{eq:lot-size:single-line:deterministic:unconstraint} is a correctly models the unconstrained version of the problem described \cref{sec:lot-size:single-line:motivations}.
+
+
+Before giving the optimal policy, note that model simply adapts to case where production is considered instantaneous (\ie $\rate_i\rightarrow\infty$).
+In this case, just use real demand $\demand_i$ instead of reduced demand $\bracket{1-\frac{\demand_i}{\rate_i}}\demand_i$.
+
+% Then, if such a limit exists, we must have
+% \begin{equation}
+%   \limsup_{t\rightarrow\infty}\frac{1}{t} \sum_{i\in\REF}\freq_i\bracket{t}\le\nbsetups.
+% \end{equation}
+
+
+% \begin{proof}
+% Scheme of proof:
+% \begin{itemize}
+%   \item expression of the constraint
+%   \item ZIO policy
+%   \item expression of the objective
+% \end{itemize}
+% \end{proof}
+
+\begin{prop}
+Problem~\eqref{eq:lot-size:single-line:deterministic:unconstraint} has a unique optimal solution $(\cover_i^*)_{i\in\REF}$, which provides the optimal cover values for the unconstrained version of the problem described \cref{sec:lot-size:single-line:motivations}.
+\end{prop}
+
+
+\begin{proof}
+Solving Problem~\eqref{eq:lot-size:single-line:deterministic:unconstraint} is straightforward using the Karush-Kuhn-Tucker condition since it is a convex problem and gives the unique solution
+\begin{equation}
+  \cover_i^*= \frac{\sum_{j\in\REF}\sqrt{\holding_j\tilde{\demand}_j}}{\nbsetups\sqrt{\holding_i\tilde{\demand}_i}}\qquad\forall i\in\REF.
+\end{equation}
+\end{proof}
+
 
 % Using the production frequencies $\freq_i=\frac{1}{\cover_i}$ of product $r$, we get the optimal frequencies:
 % \begin{equation}
@@ -289,27 +339,26 @@ $$\cover_i^*= \frac{\sum_{s\in\REF}\sqrt{\holding_s\demand_s}}{\nbsetups\sqrt{\h
 
 
 
-Thus, for each item $i$, we have $\inventory_i:\RR_+\longrightarrow\RR_+$ and almost everywhere, $\dot{\inventory}_i=\rate_i-\demand_i$ during production of item $i$ and $\dot{\inventory}_i=-\demand_i$ otherwise.
-
-Let $n_i\bracket{t}$ be the number of setups of item $i$ between time 0 and $t$.
-Then, if such a limit exists, we must have
-\begin{equation}
-  \limsup_{t\rightarrow\infty}\frac{1}{t} \sum_{i\in\REF}n_i\bracket{t}\le\nbsetups.
-\end{equation}
+\subsection{Model with integer frequencies}
 
 
+In some cases, it is easier for industrial to use integer frequencies.
+As explained in \cref{sec:lot-size:single-line:models:unconstraint}, dealing with finite or infinite internal production time $\rate_i$ is very similar since, it is sufficient to use the demand $\demand_i$ or the reduced demand $\tilde{\demand}_i$ in problem \eqref{eq:lot-size:single-line:deterministic:unconstraint}.
+Thus, we only write the case with infinite internal production time.
+\begin{subequations}\label{eq:lot-size:single-line:deterministic:integer}
+  \begin{align}
+  \min\quad & \ds\sum_{i\in\REF} \frac{1}{2}\holding_i\demand_i\frac{1}{\freq_i}
+  \label{eq:lot-size:single-line:deterministic:integer:objective}
+  \\
+  \st\quad  & \ds\sum_{i\in\REF} \freq_i \le \nbsetups
+  \label{eq:lot-size:single-line:deterministic:integer:flexibility}
+  \\
+       & \freq_i \in \ZZ_+^* && \forall i\in\REF,
+  \label{eq:lot-size:single-line:deterministic:integer:positivity}
+  \end{align}
+\end{subequations}
+where $\freq_i$ is the average number of setups per time unit over the infinite horizon.
 
-\subsection{Integer frequencies}
-
-
-In some cases, it is easier for industrial to use integer frequencies. When dealing with internal production time, it is sufficient to multiply the holding costs by a correcting factor to get the same optimization than without internal production time. Thus, we only write the case without internal production time.
-\begin{equation}
-  \begin{array}{lll}
-  \min & \ds\sum_{i\in\REF} \frac{1}{2}\holding_i\demand_i\frac{1}{\freq_i} \\
-  \st  & \ds\sum_{i\in\REF} \freq_i \le \nbsetups \\
-       & \freq_i \in \ZZ_+^* & \forall i\in\REF
-  \end{array}
-\end{equation}
 
 This formulation is a special case of the integer simple resource allocation problem:
 \begin{equation}
