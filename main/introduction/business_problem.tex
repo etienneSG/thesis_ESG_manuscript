@@ -2,34 +2,153 @@
 \label{chap:business-context}
 
 
-A Supply Chain is a system of organizations, people, activities, information, and resources involved in moving a product or service from supplier to customer.
+A Supply Chain is a system of organizations, people, activities, information, and resources involved in producing, transforming or moving a product or service from supplier to customer.
+It can be considered for a subsidiary, a whole company or for many companies working together.
 Its activities extends from the recovery of raw material to their transformation into finished product and their delivery to the costumer.
+
+Supply Chain can fulfill several functions.
+Most common are procurement, production, distribution, storage, shipping, sales and billing, and customer relationship.
+Works of this thesis deal with optimization of production and storage within companies.
 
 
 \section{Supply Chain objectives}
 
 
-Satisfaction clients is based on a trade-off between low cost, appropriate and quality product or service and short delivery lead time.
-To reach this optimum, \ie be competitive, companies and their Supply Chain must face many objectives often contradictory.
+
+Supply Chain management consists in finding the right balance between conflicting objectives.
+%Customer satisfaction is based on a trade-off between low cost, appropriate and quality product or service and short delivery lead time.
+%To achieve this balance, \ie be competitive, companies and their Supply Chain must face many conflicting objectives.
 %Because resources are finite and because of the wide variety of its activities, Supply Chain faces many objectives sometimes contradictory. 
-They can be classified in three categories.
+They can be classified into three categories: \emph{costs}, \emph{stocks} and \emph{service}.
+
+
+Costs are burdens paid by companies as part of their activities.
+It can be fixed or variable and direct or indirect.
+Fixed costs does not depend on the volume of the business activity like rent, insurance and investment costs (as buying machines).
+Opposite, variable costs like shipping or energy costs directly increase with the volume of the business activity.
+Direct costs are linked to resources entirely dedicated to the product manufacturing like procurement of raw material or worker salaries.
+Indirect costs are linked to support functions which are not directly involved in production like marketing, administration.
+Commonality of costs is the ability to measure it using a common currency.
+
+
+Stocks, also called \emph{inventory}, are not a cost.
+They are similar to working capital.
+It is locked-in money until they are transformed (for raw material) or sold (for finished products).
+Moreover, storage of stocks requires space an time to check that real stock correspond to registered stock (part of stock could have been broken, depreciated, or stolen).
+Thus, because of their specificity, they must form their own category in optimization process.
+
+
+Service or \emph{service level} measures the ability of Supply Chain to deliver the right product to customer with respect to deadlines.
+There are many indicators to measure service level but we can identify two main categories: \emph{cycle service level} and \emph{fill rate service level}.
+Cycle service level is the expected probability of not hitting a stock-out during the next replenishment cycle, and thus, it is also the probability of not losing sales.
+Fill rate service level represents the fraction of demand that is delivered without delays or lost sales.
+The choice of the indicator depends on the industry.
+Indeed, in case of complex products like in aeronautics, if one item is missing in the command, it can delay the whole project.
+Thus delivering the whole command is more important.
+In case of simple products like in mass distribution, it is more relevant to measure the part of demand delivered at due date.
+
+
+\medskip
+
+
+Automotive and luxury industries are good example of these conflicting objectives.
+In automotive industry, high stock is impossible because of depreciation and diversity of products.
+However, service level must be high due to high competition.
+In luxury industry, availability of the right product in the right store is more critical than production cost but high stock are still impossible.
+
+
+In general, \emph{industrial agility} which is the ability to face variations in customers' demand is an efficient way to be competitive if two conditions are satisfied.
+First cost of agility must be reasonable and second, agility must not be achieve thanks to high stocks.
+For a company, defining its agility is therefore exactly finding a balance between cost, stock and service.
+
+
+Industrial agility can be split in two parts: \emph{capacitative reactivity} and \emph{flexibility}.
+Capacitative reactivity is the ability to face variations on the global volume.
+A common way to deal with it is an industrial overcapacity.
+Capacitative reactivity is more critical in sector like process industry since adding overcapacity is extremely expensive and outsourcing can be extremely hard.
+Flexibility is the ability to face variations of the products mix.
+Multi-sourced its production enables more flexibility but decreases productivity.
+Another way to increase flexibility is increasing stocks.
+Among other, flexibility enables to adapt to an unexpected cannibalization of a product by another.
+Luxury industry and mass distribution are probably the sectors where being flexible is the most critical due to the huge number of products.
+
+
+Defining its agility depends on the industry but also on decision level: strategic (long-term), tactic (mid-term) or operational (short-term).
+%Definition of long-term, mid-term and short-term horizon are not expressed in term of days but in term of kind of decision.
+At strategic level, executive committee has expressed the desired agility and wants to decide investment in production capacities.
+Then, agility is a constraint, cost is an objective to minimize and stock is secondary if not considered.
+At the frontier of strategic and tactic level, capacitative reactivity cannot be changed, S\&OP process has expressed a desired service level and wants to decide multi-sourcing.
+Then, service level is a constraint and cost is an objective.
+At tactic level, service level is an input for the production planning and stock and production are the lever.
+Then, service level is a constraint, stock is an objective to minimize and production are the decisions.
+At operational level, last-minute trade-offs are made like scheduling.
+
+
+
+% \begin{itemize}
+%   \item \emph{Costs.} Standard examples are investment costs (purchase of plants, warehouse or machines), production costs (salaries) or shipping costs (regardless of transportation mode, of rental or purchase).
+
+%   \item \emph{Stocks.} Even if it looks like a cost, stocks have their own characteristics.
+%   They correspond to working capital and they cannot be compared to industrial costs.
+%   - argent immobilise
+%   - vol
+%   - faire inventaire
+%   - dépréciation
+
+%   \item \emph{Service.} It measures the ability of Supply Chain to deliver the right product with respect to deadlines.
+% \end{itemize}
+% \esgil{Faire un paragraphe ? \emph{Flexibility}, which is the ability to face variations of the products mix, or \emph{capacitative reactivity}, which is the ability to face variations on the global volume, are also costs since it implies investments.}
+
+% \esgil{Faire trois paragraphe plus fourni sur chacune des parties.}
+
+% In an ideal case, cost and stock must be very low whereas service must be very high.
+% However, it is easy to see the contradictions.
+% In automotive industry, high stock is impossible because of depreciation an diversity of products.
+% However, service level must be high which requires a huge flexibility.
+% In luxury industry, availability of the right product in the right store is more critical than manufacturing cost.
+% Among other examples, over-capacity increases flexibility but is expensive or specialization of assembly lines or plants increases productivity but often reduces flexibility.
+% Depending on the industry, a trade-off between these three incomparable objectives must be found.
+% The decision-maker must define which one is the objective and which ones are constraints or simply ignored.
+
+
+\section{Supply Chain organizations}
+
+
+Supply Chain organizations can be classified into four main models \cite{arnold2007} which are represented in \cref{fig:supply-chain-models}.
 \begin{itemize}
-  \item \emph{Costs.} Classic examples are production costs (purchase of plants, warehouse or machines, salaries) or shipping costs (regardless of transportation mode, of rental or purchase).
-  \emph{Flexibility}, which is the ability to face variations of the products mix, or \emph{capacitative reactivity}, which is the ability to face variations on the global volume, are also costs since it implies investments.
+  \item \emph{Engineer-To-Order (ETO).}
+  The customer is involved in the design and gives engineering requirements and specifications which enables much customization and a specific design.
+  The consequences are long delivery lead times due to purchasing of raw material and to designing.
+  Classical domains are aeronautic or aerospace industries.
 
-  \item \emph{Stocks.} Even if it looks like a cost, stocks have their own characteristics.
-  They correspond to working capital and they cannot be compared to industrial costs.
+  \item \emph{Make-To-Order (MTO).}
+  Products are made from standard items but with custom-designed components.
+  Therefore, inventory are only composed of raw material and delivery lead time are still long.
+  For example, marine energy turbines can be produced with a MTO organization.
 
-  \item \emph{Service.} It measures the ability of Supply Chain to deliver the right product with respect to deadlines.
+  \item \emph{Assemble-To-Order (ATO).}
+  Customer involvement is limited to selection of component options.
+  Thus, inventory is only composed of semi-finished products ready for assembly items and delivery lead time are short.
+  Production of laptops partially follows this organization.
+
+  \item \emph{Make-To-Stock (MTS).}
+  Customer has very little involvement in the design.
+  Products are engineered and manufactured to fill stocks which supplied clients demand.
+  This organization enables the shortest delivery lead time.
+  The majority of mass distribution products uses this organization.
 \end{itemize}
-In an ideal case, cost and stock must be very low whereas service must be very high.
-However, it is easy to see the contradictions.
-In automotive industry, high stock is impossible because of depreciation an diversity of products.
-However, service level must be high which implies a huge flexibility.
-In luxury industry, availability of the right product in the right store is more critical than manufacturing cost.
-Among other examples, over-capacity increases flexibility but is expensive or specialization of assembly lines or plants increases productivity but often reduces flexibility.
-Depending on the industry, a trade-off between these three incomparable quantities must be found.
-The decision-maker must define which one is the objective and which ones are constraints or simply ignored.
+For some products, best organization is obvious due to size of series.
+For example, a French aeronautic company produces engine of an aircraft carrier with a ETO organization  turboshaft of chopper with MTO organization.
+For other industries, identifying the best organization also depend on the commercial strategy (laptops may also be produced with MTS organization) and is critical to define which decisions are short-term, mid-term or long-term and to know when costs, stock and service can be impacted.
+
+
+\begin{figure}[h]
+  \centering
+%  \includegraphics[width=\textwidth]{main/introduction/images/.tikz}
+  \esgil{Include figure of the 5 supply chain models ou celle de la formation APICS (slide 4)}
+  \caption{Scheme of Supply Chain organizations}
+  \label{fig:supply-chain-models}
+\end{figure}
 
 
 
@@ -37,18 +156,18 @@ The decision-maker must define which one is the objective and which ones are con
 
 
 Argon Consulting is an international, independent consulting firm whose mission is to help its clients achieve sustainable competitive advantage through operational excellence.
-It begin its consultancy activity in 2001 and employs over 230 consultants in six offices: Paris, London, Atlanta, Singapore, Melbourne and Mumbai.
+It began its consultancy activity in 2001 and employs over 230 consultants in six offices: Paris, London, Atlanta, Singapore, Melbourne and Mumbai.
 
 
-Argon consulting have assisted many companies in operational transformation projects (R\&D, Procurement, Manufacturing, Supply Chain, Distribution, Services, SG\&A, Performance Management, Change Management).
+Argon consulting has supported many companies in operational transformation projects (R\&D, Procurement, Manufacturing, Supply Chain, Distribution, Services, SG\&A, Performance Management, Change Management).
 Industries served cover
 \emph{Aerospace \& Defense} (Lat\'eco\`ere, Safran, Thales) and
 \emph{Discrete Manufacturing} (Alstom, SNCF, DCNS) which have small-series and large program logic as well as
 \emph{Retail} (ADEO, Carrefour, Cdiscount) which sells products or services to large number of customers through multiple channels of distribution.
 In the mid of these extremes, we also find
-\emph{Automotive} (Michelin, PSA, Valeo) where innovation performance and diversity of products is challenging,
-\emph{Consumer Packaged Goods} (Bel, Danone, L'Oréal) where decreasing consumption and fluctuation of productions costs reduce profitability and
-\emph{Textile} (Galeries Lafayette, Cama\"ieu, Kiabi) where fast product renewal and fast evolution of sourcing is critical at operational level.
+\emph{Automotive} (Michelin, PSA, Valeo) where innovation performance and diversity of products are challenging,
+\emph{Consumer Packaged Goods} (Bel, Danone, L'Oréal) where decreasing consumption and fluctuation of productions costs reduce profitability, and
+\emph{Textile} (Galeries Lafayette, Cama\"ieu, Kiabi) where fast product renewal and fast evolution of sourcing are critical at operational level.
 Among other sectors with specific rules,
 \emph{Luxury Goods} has highly erratic demand and is extremely competitive,
 \emph{Pharmaceutical Industry} (Merck, Sanofi, Servier) has economic pressure applied by state authorities due to imbalance of the health insurance systems and
@@ -63,112 +182,68 @@ Moreover, Argon Consulting wants to scientifically tested the accuracy and effic
 
 
 
-\section{Supply Chain organizations}
-
-
-Supply Chain organizations can be classified into four main models \cite{arnold2007} which are represented in \cref{fig:supply-chain-models}.
-Identify the best organization for an industry is critical to define which decisions are short-term, mid term or long-term and to know when costs, stock and service can be impacted.
-\begin{itemize}
-  \item \emph{Engineer-To-Order (ETO).}
-  Client is involved in the design and gives engineering requirements and specifications which enables much customization and a specific design.
-  The consequences are long delivery lead times due to purchasing of raw material and to designing.
-  Classical domains are aeronautic or aerospace industries.
-
-  \item \emph{Make-To-Order (MTO).}
-  Products are made from standard items but with custom-designed components.
-  Therefore, inventory are only composed of raw material and delivery lead time are still long.
-  For example, marine energy turbines can be produced with a MTO organization.
-
-  \item \emph{Assemble-To-Order (ATO).}
-  Customer involvement is limited to selecting the component options.
-  Thus, inventory are only composed of semi-finished products ready for assembly items and delivery lead time are short.
-  Part of production of laptop follow this organization.
-
-  \item \emph{Make-To-Stock (MTS).}
-  Customer has very little involvement in the design.
-  Products are engineered and manufactured to fill stocks which supplied clients demand.
-  This organization enables the shortest delivery lead time.
-  The majority of mass distribution products used this organization.
-\end{itemize}
-
-
-\begin{figure}[h]
-  \centering
-%  \includegraphics[width=\textwidth]{main/introduction/images/.tikz}
-  \esgil{Include figure of the 5 supply chain models ou celle de la formation APICS (slide 4)}
-  \caption{Exemple d'organisation de la Supply Chain d'un acteur du luxe}
-  \label{fig:supply-chain-models}
-\end{figure}
 
 
 
 \section{Argon Consulting's clients cases}
 
 
-Argon Consulting's application cases considered in this thesis are Assemble-To-Order and Make-To-Stock organizations.
-We studied two applications in this thesis.
-First one is mid-term and aims at minimize stocks.
-Second one is long-term and aims at minimize industrial costs.
+Argon Consulting's clients cases considered in this thesis fall into Assemble-To-Order and Make-To-Stock organizations.
+We study two cases in this thesis.
+First case is tactic.
+It occurs when flexibility of means of production is already defined and aims at deciding stock and production which enable to achieve the desired service level.
+Second case is more strategic.
+It occurs when capacity reactivity is already defined and aims at deciding the multi-sourcing of production which will ensure enough flexibility at tactic and operational level.
 
 
 \subsection{Production planning}
 \label{sec:business-context:argon:pdp}
 
 
-This problem concerns directly the production function of the Supply Chain.
-In Assemble-To-Order and Make-To-Stock organizations, inventory must be sufficient to serve demand at due date.
-Then, production planning answers to both questions: when production starts and which quantity is produced.
+Production planning is part of the production function of the Supply Chain and occurs at tactic level when flexibility of means of production is already defined.
+In Assemble-To-Order and Make-To-Stock organizations, stocks are the last levers on flexibility and must be sufficient to serve demand at due date.
+Then, production planning problem consists in deciding the orders of production, \ie when production starts and how much is produced, which defines stocks and enables to achieve the desired service level.
 
 
-Difficulties of this problem comes from many factors which prevent last minute production.
+Difficulties of this problem come from many factors which prevent last minute production.
 First, production capacities are limited.
 Thus, production must be anticipated in order to deliver peak selling season, promotion program, vacation shutdown, etc.
 It leads to inventory called \emph{anticipation inventory}.
-Second, demand has random variations.
-If demand or lead times are greater than forecast, a stock-out can occur.
-To prevent it, a \emph{safety stock} is made.
-Finally, \emph{flexibility} of means of production is limited.
-Flexibility is the ability to change the item produced on a assembly line or in a plant.
-Flexibility enables to face variations in the product mix.
-Since it remains limited, \emph{lot-size inventories} also called \emph{cycle stocks} are needed.
-They are the portion of inventory that decreases gradually as customers’ orders come in and that are replenished cyclically when suppliers’ orders are received.
+Second, demand and lead time have random variations.
+If demand or lead time are greater than forecast, a stock-out can occur.
+To prevent it, \emph{safety stocks} are kept as a reserve.
+Finally, since \emph{flexibility} of means of production is limited, \emph{lot-size inventories} also called \emph{cycle stocks} are needed.
+%They form the portion of inventory that decreases gradually as customers demand is satisfied and that are replenished cyclically when suppliers’ orders are received.
+They form the portion of stocks that varies over time due to production and demand satisfaction.
+\esgil{Ajouter la figure en dent de scie avec les différents stock}
 
 
-In Assemble-To-Order and Make-To-Stock production planning problems, stock is a main issue and decision-makers have a huge control on it.
-Indeed, production decisions directly impacts inventory level.
-Thus, its minimization is the objective of the problem.
+\medskip
 
 
-Service level is a constraint.
-In our applications, Argon Consulting's clients want to reach a service level.
-This service level objective depends on the strategy of the company.
-It was a trade-off between several objective as loss of reputation, intended costs, risk, benefits, etc.
-For production planning problems, we take it as an input.
-There are many indicators to measure service level.
-A main distinction is between \emph{cycle service level} and \emph{fill rate service level}.
-Cycle service corresponds to deliver a whole command at due date whereas fill rate service level measures the part of demand delivered at due date.
-The choice depends on the industry.
-Indeed, in case of complex products like in aeronautics, if one item is missing in the command, it can delayed the whole project.
-Thus delivered the whole command is more important.
-In case of simple products like in mass distribution, it more relevant to measure the part of demand delivered at due date.
-Since we are interested in Assemble-To-Order and Make-To-Stock models, we will consider in majority fill rate service level.
+Production planning aims at minimizing stocks subject to constraints defined at higher level.
 
 
-Industrial costs are also a constraint.
-In our cases, they are modeled by capacity and \emph{flexibility}.
-Indeed, capacities of plants or assembly lines and flexibility are long term-decisions.
+Service level is a the first constraint.
+In our case, Argon Consulting's clients want to reach a desired service level which depends on the strategy of the company.
+It is a trade-off between several objective as loss of reputation, intended costs, risk, benefits, etc.
+Production planning problems take it as an input since service level is a long-term decision whereas production decisions are mid-term decisions.
+Since we are interested in Assemble-To-Order and Make-To-Stock models, we will consider mainly fill rate service level.
+
+
+Industrial costs are another constraint.
+In our case, they are modeled by capacity and \emph{flexibility}.
+Indeed, capacities of plants or assembly lines and their flexibility are strategic decisions whereas production decisions are mid-term decision.
 Then, when production planning problems occur they cannot be changed.
 Capacity is easy to model.
-Conversely, literature propose several model for flexibility.
-A classical way is setup costs.
-The drawback of this formulation is a multi-objective optimization problem since stock is already in the objective.
+Conversely, literature addresses several models for flexibility.
+A standard way is setup costs.
+The drawback of this formulation is a multi-objective optimization problem since stocks is already in the objective.
 Moreover, discussions with Argon Consulting's clients show that it is hard to quantify the setup costs.
-Another way is a loss of capacity.
-Indeed, changing the item produced on an assembly take time.
-Then, it is reasonable to simply decrease the capacity by the time loss at each new setup.
+Another way consists in decreasing the capacity by the time loss at each new setup.
 However, the time needed for a new setup often depend on the previous and the next items produced.
 Thus, scheduling must be optimized in the same time which is not possible since it is short-term decisions or an average setup time must be defined.
-In practice, industrials prefer define a number of setups per period rather than an average setup time.
+In practice, industrials prefer to define a number of setups per period rather than an average setup time.
 We propose to model flexibility following their recommendation and adding a constraint on the number of setups.
 
 
@@ -186,7 +261,8 @@ Second, we propose in \cref{part:production planning} lot-size models which use 
 
 
 Multi-sourcing of production also concerns the production function of the Supply Chain.
-This problem comes before production decisions and its objective is to define the flexibility level of means of production.
+This problem comes when capacity reactivity is already defined and before production decisions.
+Its objective is to define the flexibility level of means of production.
 
 
 At strategic level, companies defined the service level they wanted to achieve.
@@ -195,30 +271,30 @@ Thus, service level is a constraint in our model.
 \esgil{TODO when \cref{part:multi-sourcing} will be partially written.}
 
 
-\subsection{Assumption of the models}
+\section{Assumption of the models}
 
 
-As long as it does not implies huge stock or huge manufacturing costs, ability to face geographic or temporal variations of demand is most of the time an efficient lever to increase competitiveness.
+We decide to focus in this thesis on mid-term and long-term decision.
+
+
+As long as it does not imply huge stock or huge manufacturing costs, ability to face geographic or temporal variations of demand is most of the time an efficient lever to increase competitiveness.
 Then, our work in this thesis always takes into account flexibility and capacitative reactivity.
 However, they do not have the same role in each problem.
 In production planning problems (\cref{part:continuous-review-inventory-model,part:production planning}), both are considered as constraints: flexibility is the number of setups and capacitative reactivity is the production capacity of the assembly line.
 But in multi-sourcing problems (\cref{part:multi-sourcing}), flexibility is a decision variable (item affectation to plants) whereas capacitative reactivity remains a constraint (production capacity of plants).
-Explanation is simple.
 Capacity decisions are long-term decisions whereas multi-sourcing decisions are between long and mid-term decisions and production decision are mid-term decisions.
 
 
-Since we do not have any control on capacities in our model, an increase of the demand often leads to infeasible problems.
-In practice, industrial must reconsider their capacity decision and our models become irrelevant.
-Thus, in the considered models, the global volume of demand is assume constant in each possible outcome of the demand.
+Since we do not have any control on capacities in our model, increase of the demand may lead to infeasible problems.
+Industrial would reconsider their capacity decision and our models become irrelevant.
+In order to avoid this issue in the considered models, the global volume of demand is assume constant in each possible outcome and the only randomness in demand comes from products mix.
 
 
-Even if it seems to be a strong hypothesis, it is realistic in many cases for this horizon of decisions.
+Even if it seems to be a strong hypothesis, it is realistic for this horizon of decisions.
 Indeed, in many cases, there is a \emph{cannibalization} between products, \ie if demand for some products increases, demand for other decreases.
 Promotions, seasonality or simply offsets between error can cause cannibalization.
 For example, the consumption of dessert is the same during the year but ice cream demand will represent a bigger part in summer.
 
-
-According to Argon Consulting, it is probably for luxury industry and mass distribution than ability to face variation of products mix is the most critical.
 
 
 

@@ -1,35 +1,35 @@
 \chapter{Numerical experiments}
 \label{chap:PDP:numerical-experiments}
 
-This thesis was motivated by a industrial problem.
+This thesis was motivated by an industrial problem.
 The objective being both theoretical and applied, after retrieving data from Argon Consulting's clients, we test our method on real world instances and empirically show that the method we propose lead to great improvement in inventory management.
 
-
+\esgil{Rendre le paragraphe plus spécifique au model tactique.}
 
 \section{Simulation}
 
 
-In the following of this chapter, each method used to compute a production planning is called an \emph{heuristic} since it cannot guarantee to reach the optimum.
-Moreover, we are not able to prove than one heuristic is theoretically better than another one.
-Thus, in order to compare their efficiency, we used simulations.
+In this chapter, each method used to compute a production planning is called an \emph{heuristic} since it cannot guarantee to reach the optimum.
+Moreover, we are not able to prove than one heuristic is theoretically better than another.
+Thus, in order to compare their efficiency, we use simulations.
 
 
 The simulation emulates the behavior of people making production planning facing uncertainty.
 First, we define assembly line data and a forecast demand which is a function of the current period and of the past outcomes.
-Then, we chose an heuristic to compute the production planning.
+Then, we choose a heuristic to compute the production planning.
 
 
 We use a repeated approach starting at period $t=1$.
 For each period $t$, we observe the current inventory level of each item, \ie the inventory at the end of the previous period.
 Using the forecast demand function and the chosen heuristic, we compute the production planing and fix the decision for the current period $t$.
 In real life, it correspond to start the production for the current period without deviate from the planning.
-At the end of the period, we observe the demand outcome for period $t$ and actualize the inventory level.
+At the end of the period, we observe the demand outcome for period $t$ and update the inventory level.
 
 
 At the end of the simulation, we get several \emph{Key Performance Indicators (KPI)} measuring the efficiency of the heuristic.
 
 
-A scheme of the run of the simulation is given in \cref{fig:simulator}.
+A scheme of a typical run of the simulation is given in \cref{fig:simulator}.
 
 \begin{figure}[h]
   \centering
@@ -52,8 +52,8 @@ Our heuristic consists in solving (2SA-$m$) as defined in \cref{chap:PDP:stochas
 We compared it with three other heuristics:
 \begin{itemize}
   \item deterministic approximation,
-  \item cover-size,
-  \item lot-size.
+  \item lot-size,
+  \item cover-size.
 \end{itemize}
 
 

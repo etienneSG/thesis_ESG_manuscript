@@ -40,11 +40,13 @@ When inventory level of item $i$ reaches level $r$, quantity produced is the cum
 Both are used by industrials (and are equivalent when demand does not depend on time).
 
 
+\subsection{Problems}
+
 The problem described by Argon Consulting considers an assembly line producing a set $\REF$ of items over an infinite horizon.
 %The capacity needed (in time units) to produce one unit of item $i$ is $\rate_i$.
 The internal production time of item $i$ (\ie the number of item $i$ produced in one time unit) is $\rate_i$.
 Inventory $\inventory_i$ of item $i$ must satisfy demand, known in advance.
-Then it continuously decreases by $\demand_i<\rate_i$ units per time unit when there is no production and continuously increases by $\rate_i-\demand_i$ units per time unit when item $i$ is produced.
+Thus, it continuously decreases by $\demand_i<\rate_i$ units per time unit when there is no production and continuously increases by $\rate_i-\demand_i$ units per time unit when item $i$ is produced.
 
 
 We call \emph{order of production} of an item $i$ an interval of time $[t_1,t_2]$ dedicated to the production of $i$ such that $t_1<t_2$ production starts at $t_1$ and stops at $t_2$.
