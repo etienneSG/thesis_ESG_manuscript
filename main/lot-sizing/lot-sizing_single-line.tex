@@ -1,3 +1,4 @@
+%!TEX root=../../thesis_ESG.tex
 \chapter{Production on a single line}
 \label{chap:lot-size:single-line}
 
@@ -13,7 +14,7 @@
 % \end{itemize}
 
 
-As explained in \cref{sec:business-context:argon:pdp}, the objective is to reduce inventory.
+As explained in \cref{sec:business-context:argon:pdp}, the objective is to reduce inventory.\vl{cumulated inventory}
 This chapter presents a model whose aims at deciding the optimal cycle stocks.
 
 
@@ -21,9 +22,9 @@ This chapter presents a model whose aims at deciding the optimal cycle stocks.
 \section{Motivations}
 \label{sec:lot-size:single-line:motivations}
 
-Cycle stocks form the portion of stocks that varies over time due to production and demand satisfaction.
+Cycle stocks form the portion of stocks\vl{inventory ?} that varies over time due to production and demand satisfaction.
 Low cycle stocks contribute to globally decrease inventory but it requires a high flexibility of means of production.
-At this level of decision, flexibility is fixed and industrial aims at deciding the values of cycle stocks of each item which minimize the global inventory.
+At this level of decision,\vl{rappeler qu'on parle du niveau tactique} flexibility is fixed and industrial aims at deciding the values of cycle stocks of each item which minimize the global inventory.
 
 
 Many production systems are managed using $(r,\lot)$ policies or similar ones.
@@ -89,7 +90,7 @@ Objective is to find the covers which minimize the average cycle stock over infi
 \begin{equation}
   \limsup_{\horizon\rightarrow+\infty}\ \frac{1}{\horizon} \sum_{i\in\REF} \holding_i \int_0^{\horizon}\inventory_i\bracket{t}dt
 \end{equation}
-while satisfying every constraints.
+while satisfying every constraints.\vl{cite constraint or write the whole problem}
 
 % The problem can be written as
 % \begin{subequations}\label{eq:lot-size:single-line:deterministic}
@@ -232,10 +233,10 @@ Moreover, the optimal solution of Problem~\eqref{eq:lot-size:single-line:determi
 
 Formulation \eqref{eq:lot-size:single-line:deterministic:unconstrained} have many advantages.
 First, it is much simpler than the original formulation of \cref{sec:lot-size:single-line:deterministic:problems}.
-Second, it removes from the formulation the first setups of production $\bracket{t_i}_i$ which are not an desired output.
+Second, it removes from the formulation the first setups of production $\bracket{t_i}_i$ which are not a desired output.
 
 
-The correctness is however not necessarily immediate.
+The correctness\vl{unclear: the link between both problem} is however not necessarily immediate.
 As we will see, formulation \eqref{eq:lot-size:single-line:deterministic:unconstrained} assumes that optimal policy is \emph{Zero-Inventory-Ordering (ZIO)}.
 We recall that a policy is said to be ZIO if an order occurs only if the inventory is zero.
 Due to flexibility constraint \eqref{eq:lot-size:single-line:deterministic:motivations:flexibility}, production would have to be anticipated before inventory reach zero.
@@ -278,12 +279,12 @@ Equivalence immediately follows.
 
 
 Note that this formulation is independent of the first production setup $t_i$.
-Then, choice of $t_i$ is only constraint by positive inventory.
+Then, choice of $t_i$ is only constrained by positive inventory.
 
 
 \begin{lem}\label{lem:lot-size:single-line:models:ZIO}
 Let $\bracket{t_i^*,\cover_i^*}_{i\in\REF}$ be an optimal solution of unconstrained EPQ-BS.
-Then, this solution is Zero-Inventory-Ordering, its cost is given by
+Then, this solution is Zero-Inventory-Ordering, and its cost is given by
 \begin{equation}
   \sum_{i\in\REF}\frac{1}{2}\holding_i\bracket{1-\frac{\demand_i}{\rate_i}}\demand_i\cover_i^*
 \end{equation}
@@ -450,7 +451,7 @@ Moreover, $\va\demand_i$ is assumed to be almost surely lower than $\rate_i$.
 Orders of production of item $i$ can be placed at any time, even simultaneously but the cover $\cover_i$ of a given item $i$ has to be the same over the infinite horizon.
 Covers are decided before the demand is revealed.
 When demand is revealed once and for all, the duration $\theta_i$ of the order of production is fixed at value $\frac{\demand_i}{\rate_i}\cover_i$.
-Covers $\bracket{\cover_i}_i$ are called \emph{first-stage decision} since they are decided before hazard realization whereas first setups $\bracket{\va t_i}_i$ and durations $\bracket{\va\theta_i}_i$ are called second-stage decisions.
+Covers $\bracket{\cover_i}_i$ are called \emph{first-stage decision} since they are decided before hazard realization whereas first setups $\bracket{\va t_i}_i$ and durations $\bracket{\va\theta_i}_i$ are called second-stage decisions.\vl{(or recourse).}
 
 Thus, for each item $i$, inventory $\va\inventory_i\bracket{t}$ is nonnegative and follows almost surely the dynamic
 \begin{equation}\label{eq:lot-size:single-line:deterministic:motivations:dynamic}
@@ -566,8 +567,10 @@ Moreover, the optimal solution of Problem~\eqref{eq:lot-size:single-line:stochas
 \end{thm}
 
 
-Assuming that this formulation is correct, adaption of results of deterministic cases (unconstrained and integer frequencies) to stochastic cases is straightforward.
-Moreover, when the only randomness comes from the demand, we also show that the optimal solution is completely determine by the expectation and the variance of each of the demand $\va\demand_i$.
+Assuming that this formulation is correct\vl{?}, adaptation of results from deterministic cases (unconstrained and integer frequencies) to stochastic cases is straightforward.
+Moreover, when the only randomness comes from the demand, we also show that the optimal solution is completely determined by the expectation and the variance of each of the demand $\va\demand_i$.
+
+\vlil{faire une remarque sur le fait que ce n'est pas la solution donnée en remplacant d_i par son espérance.}
 
 
 \esgil{Complete the correctness of the model.}
