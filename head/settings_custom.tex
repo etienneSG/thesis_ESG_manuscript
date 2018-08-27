@@ -384,10 +384,12 @@
 
 
 % Strategic modeling
-\newcommand\plants{\cP}       % Set of factories
+\newcommand\plants{\cP}       % Set of plants
 \newcommand\capital{K}        % Available capital to invest in flexible production capacities
-\newcommand\affect{c}         % Cost for assigning the capactity of production to a factory
-\newcommand\produce{p}        % Cost for producing one unit of a product
-\newcommand\assign{y}         % 1 if factory can produce product and 0 otherwise
-\newcommand\open{z}           % 1 if factory got the ability to produce during previous period and 0 otherwise
+\newcommand\affect{c}         % Cost for assigning the capacity of production to a factory
+\newcommand\produce{p}        % Cost for producing one unit of a reference
+\newcommand\open{y}           % 1 if factory can produce reference and 0 otherwise
 \newcommand\servicelvl{\beta} % Service shortage (1 - service level)
+
+\newcommand\lb{\ell}          % lower bound on production
+\newcommand\ub{u}          % upper bound on production
