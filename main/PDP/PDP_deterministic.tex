@@ -112,7 +112,7 @@ The CLSP-BS can be written as
     \label{eq:CLSP-BS:objective}
     \\
     \st\quad & \ds \inventory_t^i = \inventory_{t-1}^i + \quantity_t^i - \demand_t^i && \forall t\in\range{\horizon},\ \forall i\in\REF,
-    \label{eq:CLSP-BS:inventory-dynamic}
+    \label{eq:CLSP-BS:inventory-balance}
     \\
     & \ds \sum_{i\in\REF} \rate_t^i \quantity_t^i \le \capacity_t && \forall t\in\range{\horizon},
     \label{eq:CLSP-BS:capacity}
@@ -132,7 +132,7 @@ The CLSP-BS can be written as
 \end{subequations}
 
 Objective~\eqref{eq:CLSP-BS:objective} minimize the holding costs.
-Constraint~\eqref{eq:CLSP-BS:inventory-dynamic} is the inventory dynamic.
+Constraint~\eqref{eq:CLSP-BS:inventory-balance} is the inventory balance.
 Capacity of the assembly line is ensured by constraint~\eqref{eq:CLSP-BS:capacity}.
 Constraint~\eqref{eq:CLSP-BS:big-M} is both a ``big-M'' constraint and a capacity of the production of a single item.
 Constraint~\eqref{eq:CLSP-BS:setups} limits the number of setups at each period.
@@ -141,10 +141,9 @@ Note that without loss of generality, we can suppose that $\capacity_t^i \le \ca
 
 \medskip
 
-In the uniform case, holding costs $\holding_t^i$ and internal production times $\rate_t^i$ of item $i$ do not depend on time and is equal to $\rate^i$ and production capacities $\capacity_t^i$ and $\capacity_t$ depend neither on time nor on item and is equal to $\capacity>0$.
+In the uniform case, holding costs $\holding_t^i$ and internal production times $\rate_t^i$ of item $i$ do not depend on time and production capacities $\capacity_t^i$ and $\capacity_t$ depend neither on time nor on item and are equal to $\capacity>0$.
 Then, we normalize production variables setting $\widehat{\quantity}_t^i=\frac{\rate^i\quantity_t^i}{\capacity}$ and replace accordingly the other variables and parameters setting $\widehat{\inventory}_t^i=\frac{\rate^i\inventory_t^i}{\capacity}$, $\widehat{\demand}_t^i=\frac{\rate^i\demand_t^i}{\capacity}$ and $\widehat{\holding}^i=\frac{\capacity\holding^i}{\rate^i}$.
 For the purpose of notation, the hat are omitted and the optimization problem can be written as
-
 \begin{subequations}\label{eq:Uniform-CLSP-BS}
   \begin{align+}
     \min\quad & \rlap{$\ds \sum_{t=1}^{\horizon} \sum_{i\in\REF} \holding^i \inventory_t^i$}
@@ -315,7 +314,7 @@ For each period $t$ and each item $i$, we define
 \end{equation}
 We now prove that $\bracket{\setup_t^i, \quantity_t^i, \inventory_t^i}_{t,i}$ is a feasible solution of the continuous relaxation of formulation~\eqref{eq:CLSP-BS}.
 
-By definition of $\quantity_t^i$ and $\inventory_t^i$, constraints~\eqref{eq:CLSP-BS:inventory-dynamic} and \eqref{eq:CLSP-BS:capacity} of are satisfied.
+By definition of $\quantity_t^i$ and $\inventory_t^i$, constraints~\eqref{eq:CLSP-BS:inventory-balance} and \eqref{eq:CLSP-BS:capacity} of are satisfied.
 
 If $\capacity_t^i>0$, by definition of $\setup_t^i$ and $\quantity_t^i$ constraint~\eqref{eq:CLSP-BS:big-M} of formulation~\eqref{eq:CLSP-BS} is satisfied.
 If $\capacity_t^i=0$, since $\bracket{\widehat{\setup}_t^i, \widehat{\quantity}_t^i, \widehat{\inventory}_t^i}_{t,i}$ is feasible, we have $\widehat{\quantity}_t^i=0$ and constraint~\eqref{eq:CLSP-BS:big-M} is satisfied. 
@@ -511,7 +510,7 @@ $y_t^p$ is equal to 1 if items in $p$ are allowed to be produced at periods $t$.
     \label{eq:extended-CLSP:periods:objective}
     \\
     \st\quad & \ds \inventory_t^i = \inventory_{t-1}^i + \quantity_t^i - \demand_t^i && \forall t\in\range{\horizon},\ \forall i\in\REF,
-    \label{eq:extended-CLSP:periods:inventory-dynamic}
+    \label{eq:extended-CLSP:periods:inventory-balance}
     \\
     & \ds \sum_{i\in\REF} \rate_t^i \quantity_t^i \le \capacity_t && \forall t\in\range{\horizon},
     \label{eq:extended-CLSP:periods:capacity}
@@ -544,7 +543,7 @@ $z_{\ell}^i$ is equal to 1 if item $i$ is produced during the periods of $\ell$.
     \label{eq:extended-CLSP:items:objective}
     \\
     \st\quad & \ds \inventory_t^i = \inventory_{t-1}^i + \quantity_t^i - \demand_t^i && \forall t\in\range{\horizon},\ \forall i\in\REF,
-    \label{eq:extended-CLSP:items:inventory-dynamic}
+    \label{eq:extended-CLSP:items:inventory-balance}
     \\
     & \ds \sum_{i\in\REF} \rate_t^i \quantity_t^i \le \capacity_t && \forall t\in\range{\horizon},
     \label{eq:extended-CLSP:items:capacity}

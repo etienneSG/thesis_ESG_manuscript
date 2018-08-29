@@ -1,24 +1,97 @@
 \chapter{Stochastic multi-sourcing}
+\label{chap:multi-sourcing:stochastic}
 
 
-       ``High long term service level''
+\section{Motivations}
+
+In \cref{chap:multi-sourcing:deterministic}, data are deterministic.
+In practice, part of data is uncertain.
+Indeed, multi-sourcing decisions are long-term decision and it is unlikely that forecast demand is perfectly accurate.
+As in production planning decision, uncertainty may come from efficiency of machine (and affect time needed for the production of one item), capacities (due to breakdown, strike) or any other part of the supply chain like the procurement of raw materials.
+When making multi-sourcing decisions, Argon Consulting identifies that uncertainty on forecast demand is the main issue for its clients.
+More precisely, since it addresses the question of flexibility (see \cref{chap:business-context}), the relevant uncertainty comes from variation in the product mix and not from variations of global volume of demand nor from other sources.
 
 
-       Worst cases ``not too bad''
+Dealing with uncertainty leads to consider possible undelivered quantities.
+It goes from the more conservative which does not allow stock-out to method controlling stock-out probability, stock-out quantity or other relevant indicators.
+Discussions with Argon Consulting raise two characteristics of undelivered quantities.
+First, multi-sourcing decisions should lead to ``high long term service level''.
+Indeed, multi-sourcing decisions take time to be implemented.
+Thus, service level on the first periods can be low due to augmentation of capabilities and should be less relevant than service level in steady state.
+The measure used for service level should not be too sensitive to sparse failure at the beginning.
+Second, worst cases be not ``not too bad''.
+Multi-sourcing decisions are long-term decisions and cannot be easily changed.
+However, when bad outcomes occur, it should be controlled and remain reasonable since it will impact the company competitiveness for long periods.
+Thus, when making service level decisions, optimization should take into account worst cases and not just optimize good ones.
 
-     Model must not be too dependent of the industry
 
-       versatility for Argon Consulting
+These two characteristics lead to ill-defined constraints.
+Several models are possible and will be discuss in \cref{sec:multi-sourcing:stochastic:model:discussion}.
+
+
+\medskip
+
+
+As in its deterministic version, the problem considers a set $\plants$ of plants producing a set $\REF$ of items over $\horizon$ periods.
+There is an upper bound $\capacity_{pt}$ on the total period production of plant $p$ (summed over all items).
+
+Giving a plant $p$ the ability to produce an item $i$ has a cost $\affect_p^i$.
+This cost is paid once and for all for the whole horizon.
+When a plant $p$ is able to produce item $i$, there is an upper (resp. lower) bound $\ub_{pt}^i$ (resp. $\lb_{pt}^i$) on the production of item $i$ in plant $p$ at period $t$.
+The capacity needed (in time units) to produce one unit of item $i$ in plant $p$ in period $t$ is $\rate_{pt}^i>0$.
+
+
+The production of item $i$ (summed over all plants) must satisfy a random demand $\va\demand_t^i$ at the end of period $t$.
+When production of an item $i$ is not used to satisfy the demand, it can be stored and incurs no cost.
+For each item $i$, there is an initial inventory $\inventory_0^i\in\RR_+$.
+
+
+We introduce a parameter $\servicelvl\in\sqbracket{0,1}$ which controls the desired service level.
+As service level measure is not already defined, this parameter is not the service level but its variations should imply same sense variations of the service level.
+
+
+The goal is to satisfy the desired service level at minimum cost.
+
+
+We called this problem the \emph{stochastic multi-sourcing problem}.
+
 
 \section{Bibliography}
 
 
 \section{Model formulation}
 
-\subsection{Expectation, robustness and average value at risk ($\AVaR$)}
+
+\subsection{Preliminary definitions}
+
+
+In order to measure and control the service level, we use the \emph{Average Value at Risk} which is a \emph{coherent measure of risk} widely studied by Rockafellar and Uryasev (see for example \cite{Rockafellar2000,Rockafellar2002}) and chose the definition given in \cite{Follmer2004}.
+
+
+\begin{defn}
+Fix some level $\lambda\in\left]0,1\right[$. For a random variable $\va X:\scenarios\to\RR$, we define its \emph{Value at Risk at level $\lambda\in\bracket{0,1}$} as
+$$\VaR_{\lambda}\bracket{\va X} = \inf\crbracket{m\in\RR\left|\prob\crbracket{\va X+m<0}\le\lambda\right.}.$$
+\end{defn}
+For the inventory, $\VaR_{1-\servicelvl}\bracket{\va\inventory}$ might correspond to the safety stock in the case of a cycle service level $\servicelvl$.
+More precisely, adding this quantity to the inventory keeps the probability of a stock-out below the level $1-\servicelvl$.
+The main drawback of the Value at Risk is that it only controls the probability of a stock-out and not its size.
+Thus, we use the following coherent measure of risk defined from the Value at Risk.
+
+
+\begin{defn}
+Fix some level $\lambda\in\left]0,1\right[$. For a random variable $\va X:\scenarios\to\RR$, we define its \emph{Average Value at Risk at level $\lambda\in\bracket{0,1}$} as
+$$\AVaR_{\lambda}\bracket{\va X} = \frac{1}{\lambda}\int_0^{\lambda}\VaR_{\gamma}\bracket{\va X}\diff\gamma.$$
+\end{defn}
+For the inventory, $\AVaR_{1-\servicelvl}\bracket{\va\inventory}$ seems like the safety stock in the case of a fill rate service level $\servicelvl$.
+More precisely, $\AVaR_{1-\servicelvl}\bracket{\va\inventory}\le 0$ means the average of safety stocks needed to ensure service level from $\servicelvl$ to 1 is negative (\ie it does not need safety stocks).
 
 
 \subsection{Model}
+
+
+
+\subsection{Expectation, robustness and average value at risk ($\AVaR$)}
+\label{sec:multi-sourcing:stochastic:model:discussion}
 
 
 \section{Simple example}
