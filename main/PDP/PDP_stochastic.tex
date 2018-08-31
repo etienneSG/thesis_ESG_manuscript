@@ -117,7 +117,7 @@ Constraints~\eqref{eq:Uniform-CLSP-BS:service-level:inventory-balance}, \eqref{e
 Constraint~\eqref{eq:Uniform-CLSP-BS:service-level:service-level} ensures the service level.
 Constraint~\eqref{eq:Uniform-CLSP-BS:service-level:supplied-bound-demand} upper bound the satisfied part of demand by the demand and the inventory plus the produced quantity.
 Last constraint~\eqref{eq:Uniform-CLSP-BS:service-level:measurability} of the program, written as a {\em measurability constraint}, means that the values of the variables $\va\quantity_{t'}^i$ can only depend on the values taken by the demand before time $t'$ (the planner does not know the future).
-Every constraint of the problem, except the service level constraint constraint~\eqref{eq:Uniform-CLSP-BS:service-level:service-level}, hold almost surely.
+Every constraint of the problem, except the service level constraint~\eqref{eq:Uniform-CLSP-BS:service-level:service-level}, hold almost surely.
 
 
 One may expect that satisfied part $\va\supplied_t^i$ of demand is also bounded by the sum of the previous inventory and the production of the period, but such a constraint can be deduced from constraints~\eqref{eq:Uniform-CLSP-BS:service-level:inventory-balance} and \eqref{eq:Uniform-CLSP-BS:service-level:positity}.

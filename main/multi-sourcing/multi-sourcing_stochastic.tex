@@ -3,6 +3,8 @@
 
 
 \section{Motivations}
+\label{sec:multi-sourcing:stochastic:motivations}
+
 
 In \cref{chap:multi-sourcing:deterministic}, data are deterministic.
 In practice, part of data is uncertain.
@@ -37,7 +39,7 @@ There is an upper bound $\capacity_{pt}$ on the total period production of plant
 
 Giving a plant $p$ the ability to produce an item $i$ has a cost $\affect_p^i$.
 This cost is paid once and for all for the whole horizon.
-When a plant $p$ is able to produce item $i$, there is an upper (resp. lower) bound $\ub_{pt}^i$ (resp. $\lb_{pt}^i$) on the production of item $i$ in plant $p$ at period $t$.
+When a plant $p$ is able to produce item $i$, there is an upper (resp. lower) bound $\ub_{pt}^i\ge 0$ (resp. $\lb_{pt}^i\ge 0$) on the production of item $i$ in plant $p$ at period $t$.
 The capacity needed (in time units) to produce one unit of item $i$ in plant $p$ in period $t$ is $\rate_{pt}^i>0$.
 
 
@@ -62,10 +64,14 @@ We called this problem the \emph{stochastic multi-sourcing problem}.
 \section{Model formulation}
 
 
+Since some constraints of the problem are ill-defined, we first introduce preliminary definitions, then we present the model and finally discuss the choices made.
+
+
 \subsection{Preliminary definitions}
 
 
 In order to measure and control the service level, we use the \emph{Average Value at Risk} which is a \emph{coherent measure of risk} widely studied by Rockafellar and Uryasev (see for example \cite{Rockafellar2000,Rockafellar2002}) and chose the definition given in \cite{Follmer2004}.
+In financial context, measures of risk are used to quantify the risk of a position.
 
 
 \begin{defn}
@@ -86,12 +92,141 @@ For the inventory, $\AVaR_{1-\servicelvl}\bracket{\va\inventory}$ seems like the
 More precisely, $\AVaR_{1-\servicelvl}\bracket{\va\inventory}\le 0$ means the average of safety stocks needed to ensure service level from $\servicelvl$ to 1 is negative (\ie it does not need safety stocks).
 
 
+\begin{figure}[h]
+  \centering
+  \includegraphics{main/multi-sourcing/images/avar-example.tikz}
+  \caption{Example of risk measures for the inventory}
+  \label{fig:avar-examples}
+\end{figure}
+
+
+\cref{fig:avar-examples} represents the Value at Risk and the Average Value at Risk in the case of a Gaussian distribution of the stock $\va\inventory_t^i$
+
+
 \subsection{Model}
 
 
+In order to solve the stochastic multi-sourcing problem, we introduce the following decision variables.
+The quantity of item $i$ produced at period $t$ by plant $p$ is denoted by $\va\quantity_{pt}^i$ and the inventory at the end of the period is denoted by $\va\inventory_t^i$ .
+We also introduce a binary variable $\open_p^t$ which takes the value 1 if plant $p$ is given the ability to produce item $i$.
+All these variables are random and may depend on the past realizations of the random demand $\bracket{\va\demand_1^j,\ldots,\va\demand_{t-1}^j}_{j\in\REF}$.
 
-\subsection{Expectation, robustness and average value at risk ($\AVaR$)}
+
+We model the stochastic multi-sourcing problem as
+\begin{subequations}\label{eq:stoch-multi-sourcing}
+  \begin{align+}
+    \min\quad & \rlap{$\ds \sum_{i\in\REF}\sum_{p\in\plants}\affect_p^i \open_p^i$}
+    \label{eq:stoch-multi-sourcing:objective}
+    \\
+    \st\quad & \ds \va\inventory_t^i = \va\inventory_{t-1}^i + \sum_{p\in\plants}\va\quantity_{pt}^i - \va\demand_t^i && \forall t\in\range{\horizon},\ \forall i\in\REF,
+    \label{eq:stoch-multi-sourcing:inventory-dynamic}
+    \\
+    & \ds \sum_{i\in\REF}\rate_{pt}^i\va\quantity_{pt}^i \leq \capacity_{pt} && \forall t\in\range{\horizon},\ \forall p\in\plants,
+    \label{eq:stoch-multi-sourcing:capacity}
+    \\
+    & \ds \lb_{pt}^i \open_p^i \le \rate_{pt}^i\va\quantity_{pt}^i \le \ub_{pt}^i \open_p^i && \forall t\in\range{\horizon},\ \forall p\in\plants, \forall i\in\REF,
+    \label{eq:stoch-multi-sourcing:big-M}
+    \\
+    & \AVaR_{1-\servicelvl}\bracket{\va\inventory_t^i} \le 0 && \forall t\in\range{\horizon},\ \forall i\in\REF,
+    \label{eq:stoch-multi-sourcing:AVaR}
+    \\
+    & \ds \open_p^i \in \crbracket{0,1} && \forall p\in\plants, \forall i\in\REF,
+    \label{eq:stoch-multi-sourcing:boolean}
+    \\
+    & \ds  \va\quantity_{pt}^i\ \mbox{is}\ \Sfield{\bracket{\va\demand_1^i,\ldots,\va\demand_{t-1}^i}_{i\in\REF}}\mbox{--measurable} && \forall t\in\range{\horizon},\ \forall i\in\REF.
+    \label{eq:stoch-multi-sourcing:measurability}
+  \end{align+}
+\end{subequations}
+
+
+Objective~\eqref{eq:stoch-multi-sourcing:objective} still minimizes the affectation costs.
+Constraints~\eqref{eq:stoch-multi-sourcing:inventory-dynamic}, \eqref{eq:stoch-multi-sourcing:capacity}, \eqref{eq:stoch-multi-sourcing:big-M} have the same meaning than their deterministic counterpart.
+Constraint~\eqref{eq:stoch-multi-sourcing:AVaR} enables to control the service level using Average Value at Risk.
+It will be discussed in \cref{sec:multi-sourcing:stochastic:model:discussion}.
+Last constraint~\eqref{eq:stoch-multi-sourcing:measurability} of the program, written as a {\em measurability constraint}, means that the values of the variables $\va\quantity_{pt}^i$ can only depend on the values taken by the demand before time $t$ (the decision maker does not know the future).
+Every constraint of the problem, except the Average Value at Risk constraint~\eqref{eq:stoch-multi-sourcing:AVaR}, hold almost surely.
+
+
+\subsection{Expectation, robust, probabilistic and average value at risk constraints}
 \label{sec:multi-sourcing:stochastic:model:discussion}
+
+
+As explained in \cref{sec:multi-sourcing:stochastic:motivations}, multi-sourcing decision must lead to ``high long term service level'' and a good control on ``worst cases''.
+These constrains are ill-defined.
+Many way of model it are possible.
+We choose to use the Average Value at Risk and compare its pros and cons to the ones of expectation, robust and probabilistic constraints.
+\cref{tab:constraint-properties-comparison} summarizes this comparison.
+
+
+\begin{table}[h]
+  \centering
+  \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lcccc@{\extracolsep{\fill}}}
+  \hline
+  \multicolumn{1}{c}{Properties} & \multicolumn{4}{c}{Constraints} \\
+  \cline{2-5}
+                                         & $\AVaR$      & Expectation  & Robust       & Probabilistic \\
+  \hline
+  Easy writing                           & \bulletminus & \bulletplus  & \bulletminus & \bulletminus \\ 
+  Easy linearization                     & \bulletplus  & \bulletplus  & \bulletplus  & \bulletminus \\
+  Easy interpretation                    & $\sim$       & \bulletminus & \bulletplus  & \bulletplus  \\
+  Control proportion of worst cases      & \bulletplus  & \bulletminus & \bulletminus & \bulletplus  \\
+  Control value of worst cases           & \bulletplus  & \bulletminus & \bulletplus  & \bulletminus \\
+  Control increase of objective function & \bulletplus  & \bulletminus & \bulletminus & \bulletplus  \\ 
+  Few feasibility issues                 & $\sim$       & \bulletplus  & \bulletminus & $\sim$       \\ 
+  Computational complexity               & $\sim$       & \bulletplus  & \bulletplus  & \bulletminus \\
+  \hline
+  \end{tabular*}
+  \caption{Comparison of constraint properties}
+  \label{tab:constraint-properties-comparison}
+\end{table}
+
+
+We do not pretend to state general truth but rather general trend on common cases.
+We propose eight criterion to compare the constraints.
+First, the ease to write the constraint and to linearize it if needed.
+In many cases, expectation constraint is very easy to write since it is often a sum, an integral or a combination of the two.
+More, it is often already linear making it easy to use.
+On the other hand, probabilistic constraint is hard to write and to linearize since it is hardly never convex.
+Robust and $\AVaR$ constraint are both not easy to write.
+Every possible outcome must be considered in robust case and definition of $\AVaR$ makes it hard to use.
+However, robust and $\AVaR$ constraints are convex.
+Using scenarios often enables to get linear formulation of robust constraint of reasonable size and as shown in \cref{sec:multi-sourcing:stochastic:avar-linearization}, $\AVaR$ can also be linearized.
+
+
+Interpretation of robust and probabilistic constraints are quite easy.
+Even though expectation constraint seems easy to interpret, in practice, knowing the behavior of the mean does not give any information on the behavior of the other outcome.
+Thus, it is very hard to say something from only this information.
+Understanding $\AVaR$ constraint at level $\lambda\%$ is not straightforward.
+However, it means that $\bracket{1-\lambda}$ per cent of cases satisfies the constraint and that the mean over the $\lambda$ remaining per cent also satisfy the constraint.
+
+
+Thus, we easily see that $\AVaR$ constraint enables to control the proportion of bad cases and their value.
+On the other extreme, expectation constraint does not control any of them.
+Being very conservative, robust constraint does not enable to control the proportion of bad case: you must cover every outcome but it ensure that every outcome value satisfies the constraint.
+On the other hand, probabilistic constraint enable to choose the proportion of worst case but it is done at costs of control on their value.
+
+
+Another advantage of $\AVaR$ and probabilistic constraint is the possibility to choose the level of conservativeness.
+Indeed, the decision-maker can easily see the price implied by the service level constraint and eventually relax partially this constraint with a single parameter.
+On the other hand, there is not any way of changing the robust and probabilistic constraint behavior.
+
+
+Feasibility issues of each of this constraint is directly linked to it level of conservativeness.
+Robust constraint is the most conservative and a single very bad outcome lead to an infeasible model.
+At the other extreme, expectation constraint is much more easy to satisfy.
+Choice of the type of constraint for this criteria is strongly linked to the distribution of the random variable.
+
+
+Finally, as expected, the flexibility offered by $\AVaR$ and probabilistic constraint have a price paid in computational complexity.
+On the other hand, expectation and robust constraint are often easier to deal with.
+
+
+\medskip
+
+
+To summarize, we choose $\AVaR$ constraint because of its linearization properties and the possible interpretation for industrial application.
+Moreover, as wanted by Argon Consulting, $\AVaR$ enables to control proportion of worst cases and their value.
+The price for this is the computational complexity.
 
 
 \section{Simple example}
@@ -100,6 +235,7 @@ More precisely, $\AVaR_{1-\servicelvl}\bracket{\va\inventory}\le 0$ means the av
 \section{Theoretical results}
 
 \subsection{Linearization of $\AVaR$}
+\label{sec:multi-sourcing:stochastic:avar-linearization}
 
 \subsection{Bender decomposition}
 

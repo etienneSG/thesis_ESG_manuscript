@@ -33,7 +33,7 @@ There is an upper bound $\capacity_{pt}$ on the total period production of plant
 
 Giving a plant $p$ the ability to produce an item $i$ has a cost $\affect_p^i$.
 This cost is paid once and for all for the whole horizon.
-When a plant $p$ is able to produce item $i$, there is an upper (resp. lower) bound $\ub_{pt}^i$ (resp. $\lb_{pt}^i$) on the production of item $i$ in plant $p$ at period $t$.
+When a plant $p$ is able to produce item $i$, there is an upper (resp. lower) bound $\ub_{pt}^i\ge 0$ (resp. $\lb_{pt}^i\ge 0$) on the production of item $i$ in plant $p$ at period $t$.
 The capacity needed (in time units) to produce one unit of item $i$ in plant $p$ in period $t$ is $\rate_{pt}^i>0$.
 
 
@@ -110,16 +110,16 @@ The deterministic multi-sourcing problem can be written as
     & \ds \lb_{pt}^i \open_p^i \le \rate_{pt}^i\quantity_{pt}^i \le \ub_{pt}^i \open_p^i && \forall t\in\range{\horizon},\ \forall p\in\plants, \forall i\in\REF,
     \label{eq:det-multi-sourcing:big-M}
     \\
+    & \ds \inventory_t^i \ge 0 && \forall t\in\range{\horizon},\ \forall p\in\plants, \forall i\in\REF.
+    \label{eq:det-multi-sourcing:positivity}
+    \\
     & \ds \open_p^i \in \crbracket{0,1} && \forall p\in\plants, \forall i\in\REF,
     \label{eq:det-multi-sourcing:boolean}
-    \\
-    & \ds \quantity_{pt}^i,\ \inventory_t^i \ge 0 && \forall t\in\range{\horizon},\ \forall p\in\plants, \forall i\in\REF.
-    \label{eq:det-multi-sourcing:positivity}
   \end{align+}
 \end{subequations}
 
 
-Objective~\eqref{eq:det-multi-sourcing:objective} minimize the affectation costs.
+Objective~\eqref{eq:det-multi-sourcing:objective} minimizes the affectation costs.
 Constraint~\eqref{eq:det-multi-sourcing:inventory-dynamic} is the inventory dynamic.
 Capacity of each plant is ensured by constraint~\eqref{eq:det-multi-sourcing:capacity}.
 Constraint~\eqref{eq:det-multi-sourcing:big-M} is both a ``big-M'' constraint and a bound on the production of each item in each plant.
