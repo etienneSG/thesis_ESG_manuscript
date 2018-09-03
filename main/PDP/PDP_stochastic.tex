@@ -260,14 +260,13 @@ Models are not equivalent since backorder is never served in model~\eqref{eq:Uni
 \end{rmq}
 
 
-\section{Algorithm and theoretical results}
+\section{Solving method and theoretical results}
 
 
-\subsection{Algorithm of resolution}
-\esgil{Rediscuter du titre du paragraphe avec Frédéric}
+\subsection{Solving method}
+\label{sec:PDP:stochastic:solving-method:solving-method}
 
-
-As explained in \cref{sec:PDP:deterministic:theoretical-results}, the deterministic version of CLSP-BS is difficult.
+As explained in \cref{sec:PDP:deterministic:theoretical-results}, the deterministic version of CLSP-BS is hard.
 Therefore, we cannot expect a quick algorithm solving exactly the problem, and this holds especially for the full stochastic version.
 Indeed, consider than $\card{\REF}=10$, $\horizon=10$ and that at each period $t$, the demand $\demand_t^i$ of item $i$ can take 2 different values.
 Then, we get $2^{\card{\REF}\horizon}\simeq10^{30}$ possible realizations of the demand which gives as many variables.
@@ -285,11 +284,11 @@ We propose a two-stage approximation consisting in replacing the measurability c
 \end{array}
 \right.
 \end{equation}
-which provides a relaxation of the initial program: the production decisions for the current week $t$ can still not depend on the future, but now the subsequent production decisions depend on the future demand.
+which provides a relaxation of the initial program: the production decisions for the current period $t$ can still not depend on the future, but now the subsequent production decisions depend on the future demand.
 We denote this relaxation by (2SA).
 
 
-This approximation is a \emph{two-stage approximation} as we distinguish between two levels of information over the uncertainty: production decisions for the first week are the \emph{first stage} variables, while all other decisions are \emph{second stage} variables.
+This approximation is a \emph{two-stage approximation} as we distinguish between two levels of information over the uncertainty: production decisions for the first period are the \emph{first stage} variables, while all other decisions are \emph{second stage} variables.
 Three-stages or more generally multistage approximation would give better approximations of stochastic Uniform CLSP-BS but increases exponentially the number of variables.
 We chose for practicability reasons to stick to the two-stage approximation.
 
@@ -345,7 +344,7 @@ We get the following mixed integer program (2SA-$m$), solved by any standard MIP
 \end{subequations}
 
 
-At week $t$, the production is then set to be the solution $(\quantity_t^i)_{i\in\REF}$ found by the solver.
+At period $t$, the production is then set to be the solution $(\quantity_t^i)_{i\in\REF}$ found by the solver.
 
 
 The validity of this method for solving (2SA) is supported by the following proposition.
