@@ -22,7 +22,7 @@ However, because of uncertainty, backorder (\ie late delivery) is allowed.
 Part of demand satisfied on time must meet a fill rate service level $\servicelvl$ as defined in \cref{chap:business-context}.
 The demand of item $i$ over period $t$ is a random parameter $\va\demand_t^i$, whose realization is known at the end of period $t$.
 When production of an item $i$ is not used to satisfy the demand, it can be stored but incurs a unit holding cost $\holding^i>0$ per period.
-For each item $i$, there is an initial inventory $s_0^i\in\RR_+$.
+For each item $i$, there is an initial inventory $\inventory_0^i\in\RR_+$.
 
 
 Regarding randomness, we assume that for any $i$ and $t$, realizations of $\bracket{\va\demand_t^i,\ldots,\va\demand_{\horizon}^i}$ have finite expectation and can be efficiently sampled, knowing a realization of $\bracket{\va\demand_1^j,\ldots,\va\demand_{t-1}^j}_{j\in\REF}$.

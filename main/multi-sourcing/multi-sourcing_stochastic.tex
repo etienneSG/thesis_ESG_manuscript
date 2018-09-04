@@ -8,27 +8,27 @@
 
 In \cref{chap:multi-sourcing:deterministic}, data are deterministic.
 In practice, part of data is uncertain.
-Indeed, multi-sourcing decisions are long-term decision and it is unlikely that forecast demand is perfectly accurate.
-As in production planning decision, uncertainty may come from efficiency of machine (and affect time needed for the production of one item), capacities (due to breakdown, strike) or any other part of the supply chain like the procurement of raw materials.
+Indeed, multi-sourcing decisions are long-term decisions and it is unlikely that forecast demand is perfectly accurate.
+As for production planning decisions, uncertainty may come from efficiency of machine (and affect time needed for the production of one item), capacities (due to breakdown, strike) or any other part of the supply chain like the procurement of raw materials.
 When making multi-sourcing decisions, Argon Consulting identifies that uncertainty on forecast demand is the main issue for its clients.
 More precisely, since it addresses the question of flexibility (see \cref{chap:business-context}), the relevant uncertainty comes from variation in the product mix and not from variations of global volume of demand nor from other sources.
 
 
 Dealing with uncertainty leads to consider possible undelivered quantities.
-It goes from the more conservative which does not allow stock-out to method controlling stock-out probability, stock-out quantity or other relevant indicators.
+It goes from the more conservative which does not allow stock-out to methods controlling stock-out probability, stock-out quantity or other relevant indicators.
 Discussions with Argon Consulting raise two characteristics of undelivered quantities.
 First, multi-sourcing decisions should lead to ``high long term service level''.
 Indeed, multi-sourcing decisions take time to be implemented.
 Thus, service level on the first periods can be low due to augmentation of capabilities and should be less relevant than service level in steady state.
 The measure used for service level should not be too sensitive to sparse failure at the beginning.
-Second, worst cases be not ``not too bad''.
+Second, worst cases must be not ``not too bad''.
 Multi-sourcing decisions are long-term decisions and cannot be easily changed.
-However, when bad outcomes occur, it should be controlled and remain reasonable since it will impact the company competitiveness for long periods.
+However, when bad outcomes occur, it should be controlled and should remained reasonable since it will impact the company competitiveness for long periods.
 Thus, when making service level decisions, optimization should take into account worst cases and not just optimize good ones.
 
 
 These two characteristics lead to ill-defined constraints.
-Several models are possible and will be discuss in \cref{sec:multi-sourcing:stochastic:model:discussion}.
+Several models are possible and will be discussed in \cref{sec:multi-sourcing:stochastic:model:discussion}.
 
 
 \medskip
@@ -37,22 +37,29 @@ Several models are possible and will be discuss in \cref{sec:multi-sourcing:stoc
 As in its deterministic version, the problem considers a set $\plants$ of plants producing a set $\REF$ of items over $\horizon$ periods.
 There is an upper bound $\capacity_{pt}$ on the total period production of plant $p$ (summed over all items).
 
+
 Giving a plant $p$ the ability to produce an item $i$ has a cost $\affect_p^i$.
 This cost is paid once and for all for the whole horizon.
 When a plant $p$ is able to produce item $i$, there is an upper (resp. lower) bound $\ub_{pt}^i\ge 0$ (resp. $\lb_{pt}^i\ge 0$) on the production of item $i$ in plant $p$ at period $t$.
 The capacity needed (in time units) to produce one unit of item $i$ in plant $p$ in period $t$ is $\rate_{pt}^i>0$.
 
 
-The production of item $i$ (summed over all plants) must satisfy a random demand $\va\demand_t^i$ at the end of period $t$.
-When production of an item $i$ is not used to satisfy the demand, it can be stored and incurs no cost.
+The production must satisfy a random demand as well as possible.
+However, because of uncertainty, backorder (\ie late delivery) is allowed.
+We introduce a parameter $\servicelvl\in\sqbracket{0,1}$ which controls the part of demand delivered on time.
+As service level measure is not already defined, this parameter is not the service level but its variations should imply same sense variations of the service level.
+The demand of item $i$ over period $t$ is a random parameter $\va\demand_t^i$, whose realization is known at the end of period $t$.
+When production of an item $i$ (summed over all plants) is not used to satisfy the demand, it can be stored and incurs no cost.
 For each item $i$, there is an initial inventory $\inventory_0^i\in\RR_+$.
 
 
-We introduce a parameter $\servicelvl\in\sqbracket{0,1}$ which controls the desired service level.
-As service level measure is not already defined, this parameter is not the service level but its variations should imply same sense variations of the service level.
+Regarding randomness, we assume that for any $i$ and $t$, realizations of $\bracket{\va\demand_t^i,\ldots,\va\demand_{\horizon}^i}$ have finite expectation and can be efficiently sampled, knowing a realization of $\bracket{\va\demand_1^j,\ldots,\va\demand_{t-1}^j}_{j\in\REF}$.
+Multi-sourcing decisions are made before knowing any realizations of the demand.
+Production decisions can be made at the beginning of each period knowing past realizations of the demand.
+This kind of formulation is called \emph{multi-stage}.
 
 
-The goal is to satisfy the desired service level at minimum cost.
+The goal is to satisfy the service level measure at minimum cost.
 
 
 We called this problem the \emph{stochastic multi-sourcing problem}.
@@ -89,7 +96,7 @@ Fix some level $\lambda\in\bracket{0,1}$. For a random variable $\va X:\scenario
 $$\AVaR_{\lambda}\bracket{\va X} = \frac{1}{\lambda}\int_0^{\lambda}\VaR_{\gamma}\bracket{\va X}\diff\gamma.$$
 \end{defn}
 For the inventory, $\AVaR_{1-\servicelvl}\bracket{\va\inventory}$ seems like the safety stock in the case of a fill rate service level $\servicelvl$.
-More precisely, $\AVaR_{1-\servicelvl}\bracket{\va\inventory}\le 0$ means the average of safety stocks needed to ensure service level from $\servicelvl$ to 1 is negative (\ie it does not need safety stocks).
+More precisely, $\AVaR_{1-\servicelvl}\bracket{\va\inventory}\le 0$ means that the average of safety stocks needed to ensure cycle service level from $\servicelvl$ to 1 is negative (\ie it does not need safety stocks).
 
 
 \begin{figure}[h]
@@ -100,7 +107,7 @@ More precisely, $\AVaR_{1-\servicelvl}\bracket{\va\inventory}\le 0$ means the av
 \end{figure}
 
 
-\cref{fig:avar-examples} represents the Value at Risk and the Average Value at Risk in the case of a Gaussian distribution of the stock $\va\inventory_t^i$
+\cref{fig:avar-examples} represents the Value at Risk and the Average Value at Risk in the case of a Gaussian distribution of the stock $\va\inventory_t^i$.
 
 
 \subsection{Model}
@@ -144,7 +151,7 @@ Constraints~\eqref{eq:stoch-multi-sourcing:inventory-dynamic}, \eqref{eq:stoch-m
 Constraint~\eqref{eq:stoch-multi-sourcing:AVaR} enables to control the service level using Average Value at Risk.
 It will be discussed in \cref{sec:multi-sourcing:stochastic:model:discussion}.
 Last constraint~\eqref{eq:stoch-multi-sourcing:measurability} of the program, written as a {\em measurability constraint}, means that the values of the variables $\va\quantity_{pt}^i$ can only depend on the values taken by the demand before time $t$ (the decision maker does not know the future).
-Every constraint of the problem, except the Average Value at Risk constraint~\eqref{eq:stoch-multi-sourcing:AVaR}, hold almost surely.
+Every constraints of the problem, except the Average Value at Risk constraint~\eqref{eq:stoch-multi-sourcing:AVaR}, hold almost surely.
 
 
 \subsection{Expectation, robust, probabilistic and average value at risk constraints}
@@ -153,7 +160,7 @@ Every constraint of the problem, except the Average Value at Risk constraint~\eq
 
 As explained in \cref{sec:multi-sourcing:stochastic:motivations}, multi-sourcing decision must lead to ``high long term service level'' and a good control on ``worst cases''.
 These constrains are ill-defined.
-Many way of model it are possible.
+Many way of modeling it are possible.
 We choose to use the Average Value at Risk and compare its pros and cons to the ones of expectation, robust and probabilistic constraints.
 \cref{tab:constraint-properties-comparison} summarizes this comparison.
 
@@ -185,7 +192,7 @@ We do not pretend to state general truth but rather general trend on common case
 We propose eight criterion to compare the constraints.
 First, the ease to write the constraint and to linearize it if needed.
 In many cases, expectation constraint is very easy to write since it is often a sum, an integral or a combination of the two.
-More, it is often already linear making it easy to use.
+More, it is already linear making it easy to use.
 On the other hand, probabilistic constraint is hard to write and to linearize since it is hardly never convex.
 Robust and $\AVaR$ constraint are both not easy to write.
 Every possible outcome must be considered in robust case and definition of $\AVaR$ makes it hard to use.
@@ -202,7 +209,7 @@ However, it means that $\bracket{1-\lambda}$ per cent of cases satisfies the con
 
 Thus, we easily see that $\AVaR$ constraint enables to control the proportion of bad cases and their value.
 On the other extreme, expectation constraint does not control any of them.
-Being very conservative, robust constraint does not enable to control the proportion of bad case: you must cover every outcome but it ensure that every outcome value satisfies the constraint.
+Being very conservative, robust constraint does not enable to control the proportion of bad case: you must cover every outcome but it ensures that every outcome value satisfies the constraint.
 On the other hand, probabilistic constraint enable to choose the proportion of worst case but it is done at costs of control on their value.
 
 
@@ -217,7 +224,7 @@ At the other extreme, expectation constraint is much more easy to satisfy.
 Choice of the type of constraint for this criteria is strongly linked to the distribution of the random variable.
 
 
-Finally, as expected, the flexibility offered by $\AVaR$ and probabilistic constraint have a price paid in computational complexity.
+Finally, as expected, the flexibility offered by $\AVaR$ and probabilistic constraint leads to computational complexity.
 On the other hand, expectation and robust constraint are often easier to deal with.
 
 
@@ -225,7 +232,7 @@ On the other hand, expectation and robust constraint are often easier to deal wi
 
 
 To summarize, we choose $\AVaR$ constraint because of its linearization properties and the possible interpretation for industrial application.
-Moreover, as wanted by Argon Consulting, $\AVaR$ enables to control proportion of worst cases and their value.
+Moreover, as wanted by Argon Consulting, $\AVaR$ enables to control proportion of worst cases and their values.
 The price for this is the computational complexity.
 
 
@@ -355,7 +362,7 @@ This mixed-integer program can be solved by any linear solver for small dataset 
 \subsection{Heuristic to solve MIP~\eqref{eq:stoch-multi-sourcing:linearized}}
 
 
-When working on big dataset, LP solver are enable to find feasible solutions (see \cref{}).
+When working on big dataset, LP solver are unable to find feasible solutions (see \cref{sec:multi-sourcing:numerical-experiments:numerical-results}).
 Thus, we propose a simple heuristic to find a solution in reasonable time.
 
 

@@ -10,7 +10,7 @@ Objective is to compare multi-sourcing currently used in industry and multi-sour
 
 Simulation is based on real dataset from Argon Consulting’s clients.
 We first retrieve the historical data and the current multi-sourcing to establish a comparison point.
-Objective of this part is to identify the available information when multi-sourcing decisions were made and only used this one.
+%Objective of this part is to identify the available information when multi-sourcing decisions were made and only used this one.
 
 
 The simulation emulates the behavior of people making multi-sourcing decisions.
@@ -116,10 +116,10 @@ Argon Consulting's client want to compare its actual multi-sourcing to the ideal
 
 
 \section{Numerical results}
-
+\label{sec:multi-sourcing:numerical-experiments:numerical-results}
 
 Simulation results for Mel dataset without using the heuristic are given in \cref{tab:multi-sourcing:results:mel:without-heuristic} and using heuristic in \cref{tab:multi-sourcing:results:mel:with-heuristic}.
-Simulation results for Lux dataset with heuristic are given in \cref{tab:multi-sourcing:results:lux:with-heuristic}.
+Simulation results for Lux dataset using heuristic are given in \cref{tab:multi-sourcing:results:lux:with-heuristic}.
 
 
 We remind that parameter $\servicelvl$ enables to control the desired service level.
@@ -137,9 +137,9 @@ The list of outputs are decomposed as follow.
   \item \emph{Cycle service level} and \emph{fill rate service level} are measured out-of-sample meaning they are measured on the sample of realizations generated after multi-sourcing decision was fixed and after the deterministic second stage was solved.
   Their values are computed for each item $i$ and each period $t$.
   Then, the table show the average over all items and all periods.
-  \item \emph{GAP} is the gap between the best value return by the solver or the heuristic and the best known lower bound on the problem.
-  \item \emph{Solver lower  bound} lower is the best lower bound found by the solver when the solver is frontally used to solve Program \eqref{eq:stoch-multi-sourcing:linearized}.
-  \item \emph{Continuous relaxation} is the value of the continuous relaxation of program \eqref{eq:stoch-multi-sourcing:linearized}.
+  \item \emph{GAP} is the gap between the best value returned by the solver or the heuristic and the best known lower bound on the problem.
+  \item \emph{Solver lower  bound} is the best lower bound found by the solver when the solver is frontally used to solve Program \eqref{eq:stoch-multi-sourcing:linearized}.
+  \item \emph{Continuous relaxation} is the value of the continuous relaxation of Program \eqref{eq:stoch-multi-sourcing:linearized}.
   \item \emph{Time for bound} is the time needed to get the bound written on the previous line of the table.
 \end{itemize}
 
@@ -272,12 +272,12 @@ $\beta$ & \multicolumn{6}{c|}{Volatility} & \multicolumn{1}{c}{Output}
 \end{table}
 
 
-First, note that we do not provide result for Lux dataset without the heuristic.
+First, note that we do not provide results for Lux dataset without the heuristic.
 Indeed, we do not succeed in finding solution in the allowed time (20 minutes).
 Moreover, for the Lux dataset, it is even impossible compute the continuous relaxation in less than 24 hours for a volatility equal to $1\%$, $50\%$ and $80\%$.
 
 
-Second important point, on small data set, the frontal used of a solver gives always better results than the heuristic even if this gap decreasing with the increase of volatility.
+Second important point, on small data set, the frontal used of a solver gives always better results than the heuristic even if this gap decrease with the increase of volatility.
 However, on huge dataset, we never get a solution from a frontal used of a solver.
 
 

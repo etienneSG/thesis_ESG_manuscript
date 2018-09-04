@@ -3,7 +3,7 @@
 
 \section{Introduction}
 
-% In \cref{part:production planning}, we studied production planing problem which are mid-term decisions.
+% In \cref{part:production planning}, we studied production planning problem which are mid-term decisions.
 % A main constraint of this problem was the flexibility of the assembly line (which can be easily understand as the flexibility of any production resource).
 % Thus, it was an input of the previous problem.
 % This part aims at deciding the flexibility of plants (or any other production resources) and is a long-term decision.
@@ -11,9 +11,9 @@
 
 Deciding production multi-sourcing is a basic decision when companies expand their product portfolio.
 Production multi-sourcing is a long-term decision consisting in deciding if a plant should have the ability to produce an item.
-Note that several plants can be able to produce the same item that why this problem is called \emph{multi-sourcing}.
+Note that several plants may be able to produce the same item that is why this problem is called \emph{multi-sourcing}.
 Because of their costs and of the time needed to implement them, multi-sourcing decisions cannot be easily changed.
-Thus, they have a high impact on competitiveness when deciding production planing (mid-term decision) and scheduling (short-term decision).
+Thus, they have a high impact on competitiveness when deciding production planning (mid-term decision) and scheduling (short-term decision).
 One could think that a complete flexibility of each plant is the safest solution to ensure future high service level.
 However, multi-sourced the production of every item leads to unnecessary high affectation costs.
 The challenge of this kind of problem is to find a trade-off between affectation cost and demand satisfaction.
@@ -22,6 +22,8 @@ The challenge of this kind of problem is to find a trade-off between affectation
 Studying this problem, Argon Consulting aims at getting a versatile model which can be used in many situation.
 Thus, model must not be too dependent of the industry.
 For this reason, an another objective is to address a model which captures the essential part and the difficulties of the multi-sourcing problem and which can be easily specialized for particular clients cases.
+For example, inventory cost at the end end of a period will not be taken into account but a particular client may want to bound it.
+Thus model have to be able to add this constraint.
 Resolution method must also be able to adapt to model modifications.
 
 
@@ -55,7 +57,7 @@ Some parameters or their time dependence may seem unusual.
 First, the lower bound on the production.
 When a company give a plant $p$ the ability to produce an item $i$, some of them impose a minimal production $\lb_{pt}^i$ for period $t$.
 In this particular case, these minimal productions are usually constant and positive during the first periods after affectation and null during the last periods.
-Second, the capacity needed to produce an item may depends on time.
+Second, the capacity needed to produce one item may depends on time.
 This is often the case when people are involved in production since they become more efficient as time goes by.
 Finally, their are no production nor holding costs.
 We are interest in multi-sourcing decisions.
@@ -80,6 +82,7 @@ $$
 \section{Bibliography}
 
 
+\esgil{TODO}
 
 Johnzen et al (2010): mesure de flexibilité
  
@@ -120,13 +123,14 @@ The deterministic multi-sourcing problem can be written as
 
 
 Objective~\eqref{eq:det-multi-sourcing:objective} minimizes the affectation costs.
-Constraint~\eqref{eq:det-multi-sourcing:inventory-dynamic} is the inventory dynamic.
+Constraint~\eqref{eq:det-multi-sourcing:inventory-dynamic} is the inventory balance.
 Capacity of each plant is ensured by constraint~\eqref{eq:det-multi-sourcing:capacity}.
 Constraint~\eqref{eq:det-multi-sourcing:big-M} is both a ``big-M'' constraint and a bound on the production of each item in each plant.
 Note that without loss of generality, we can suppose that $\ub_{pt}^i \le \capacity_{pt}$ for each period $t$, each plant $p$ and each item $i$.
 
 
 \medskip
+
 
 The simplifications made for the uniform deterministic multi-sourcing problem lead to the following linear program
 \begin{subequations}\label{eq:det-multi-sourcing}
@@ -161,18 +165,18 @@ The deterministic multi-sourcing problem is $\NP$-hard in the strong sense.
 
 
 \begin{thm}\label{thm:deterministic-multi-sourcing:strong-NP-hard}
-Deciding if there is a solution with cost $\card{\REF}$ of the uniform deterministic multi-sourcing problem is $\NP$-complete even with affectation costs and one period.
+Deciding if there is a solution with cost $\card{\REF}$ of the uniform deterministic multi-sourcing problem is $\NP$-complete even with unit affectation costs and one period.
 \end{thm}
 
 
-Reducing 3-partition problem to uniform deterministic multi-sourcing problem, we show that deciding if there is a solution with cost $\card{\REF}$ of the deterministic multi-sourcing problem is $\NP$-complete. We remind that the 3-partition problem consists in deciding whether a given multiset of integers can be partitioned into triples that all have the same sum. This problem is known to be $\NP$-complete in the strong sense (see~\cite{Garey1979}) even if $\frac{B}{4} < a_i < \frac{B}{2}$ for each $i$ with $B=\frac{1}{m}\sum_{i=1}^{3m}a_i$.
+Reducing 3-partition problem to uniform deterministic multi-sourcing problem, we show that deciding if there is a solution with cost $\card{\REF}$ of the deterministic multi-sourcing problem is $\NP$-complete. We remind that the 3-partition problem consists in deciding whether a given multiset $\crbracket{a_1,\ldots,a_{3m}}$ of integers can be partitioned into triples that all have the same sum. This problem is known to be $\NP$-complete in the strong sense (see~\cite{Garey1979}) even if $\frac{B}{4} < a_i < \frac{B}{2}$ for each $i$ with $B=\frac{1}{m}\sum_{i=1}^{3m}a_i$.
 
 
 
 \begin{proof}
 Let $\crbracket{a_1,\ldots,a_{3m}}$ be an instance of the 3-partition problem such that $\frac{B}{4} < a_i < \frac{B}{2}$ for each $i$ with $B=\frac{1}{m}\sum_{i=1}^{3m}a_i$.
 We reduce polynomially this problem to an instance of the deterministic multi-sourcing problem.
-Without loss of generality, we can assume that sum of the $a_i$'s is positive.
+%Without loss of generality, we can assume that sum of the $a_i$'s is positive.
 We set
 $$
   \horizon=1
@@ -277,7 +281,7 @@ Then, we solve the resulting linear program to get the optimal solution of the d
 
 \emph{Case 2: deterministic multi-sourcing problem without affectation cost.}
 
-For each plant $p$ and each item $i$, we set $\open_1^i=1$.
+For each plant $p$ and each item $i$, we set $\open_p^i=1$.
 These decisions do not affect the cost in the objective function.
 Then, we solve the resulting linear program to get the optimal solution of the deterministic multi-sourcing problem.
 (It eventually returns that problem is infeasible.)
