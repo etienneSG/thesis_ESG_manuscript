@@ -1,3 +1,4 @@
+%!TEX root=../../thesis_ESG.tex
 \chapter{Deterministic multi-sourcing}
 \label{chap:multi-sourcing:deterministic}
 
@@ -8,29 +9,31 @@
 % Thus, it was an input of the previous problem.
 % This part aims at deciding the flexibility of plants (or any other production resources) and is a long-term decision.
 
-
+\vlil{Deciding which plants should have the ability to produce a (new) item is a long-term decision that companies have
+to answer when expanding their product portfolio. Note that several plants may be able to produce the same item that is why this problem is called \emph{multi-sourcing}.}
 Deciding production multi-sourcing is a basic decision when companies expand their product portfolio.
 Production multi-sourcing is a long-term decision consisting in deciding if a plant should have the ability to produce an item.
 Note that several plants may be able to produce the same item that is why this problem is called \emph{multi-sourcing}.
 Because of their costs and of the time needed to implement them, multi-sourcing decisions cannot be easily changed.
 Thus, they have a high impact on competitiveness when deciding production planning (mid-term decision) and scheduling (short-term decision).
 One could think that a complete flexibility of each plant is the safest solution to ensure future high service level.
-However, multi-sourced the production of every item leads to unnecessary high affectation costs.
-The challenge of this kind of problem is to find a trade-off between affectation cost and demand satisfaction.
+However, multi-sourcing the production of every item leads to unnecessary high affectation costs.
+The challenge is to find a trade-off between affectation cost and demand satisfaction.
 
 
 Studying this problem, Argon Consulting aims at getting a versatile model which can be used in many situation.
-Thus, model must not be too dependent of the industry.
-For this reason, an another objective is to address a model which captures the essential part and the difficulties of the multi-sourcing problem and which can be easily specialized for particular clients cases.
+Thus, the model must not be too dependent of the industry.
+For this reason, another objective is to address a model which captures the essential parts and difficulties of the multi-sourcing problem
+and which can be easily adapted to particular clients cases.
 For example, inventory cost at the end end of a period will not be taken into account but a particular client may want to bound it.
-Thus model have to be able to add this constraint.
+Thus the model have to be able to add this constraint.
 Resolution method must also be able to adapt to model modifications.
 
 
 \medskip
 
 
-The problem considers a set $\plants$ of plants producing a set $\REF$ of items over $\horizon$ periods.
+We considers a set $\plants$ of plants producing a set $\REF$ of items over $\horizon$ periods.
 There is an upper bound $\capacity_{pt}$ on the total period production of plant $p$ (summed over all items).
 
 Giving a plant $p$ the ability to produce an item $i$ has a cost $\affect_p^i$.
@@ -47,7 +50,7 @@ For each item $i$, there is an initial inventory $\inventory_0^i\in\RR_+$.
 The goal is to satisfy the whole demand at minimum cost.
 
 
-We called this problem the \emph{deterministic multi-sourcing problem}.
+We call this problem the \emph{deterministic multi-sourcing problem}.
 
 
 \medskip
@@ -59,10 +62,10 @@ When a company give a plant $p$ the ability to produce an item $i$, some of them
 In this particular case, these minimal productions are usually constant and positive during the first periods after affectation and null during the last periods.
 Second, the capacity needed to produce one item may depends on time.
 This is often the case when people are involved in production since they become more efficient as time goes by.
-Finally, their are no production nor holding costs.
-We are interest in multi-sourcing decisions.
+Finally, as we are interested in multi-sourcing decisions, we do not consider production nor holding costs.
+
 Thus, comparing future holding costs to actual affectation cost is hard.
-However, extending the model adding holding or production cost or bounding the inventory between each period is straightforward.
+However, extending the model by adding holding or production cost or bounding the inventory between each period is straightforward.
 
 
 \medskip
@@ -77,6 +80,8 @@ $$
 \ub_{pt}^i = \capacity_{pt} = 1
 .
 $$
+
+\vlil{Je pense qu'il faudrait annoncer les résultats principaux du chapitre}
 
 
 \section{Bibliography}
@@ -205,7 +210,7 @@ The conclusion follows from the fact that the 3-partition problem is $\NP$-compl
 \end{proof}
 
 
-\cref{thm:deterministic-multi-sourcing:strong-NP-hard} prove the strong $\NP$-hardness but proof needs that instances of the deterministic multi-sourcing problem has many plants.
+\cref{thm:deterministic-multi-sourcing:strong-NP-hard} prove the strong $\NP$-hardness but the proof require instances of the deterministic multi-sourcing problem with many plants.
 One can ask for simpler cases.
 \cref{thm:deterministic-multi-sourcing:NP-hard:2-plants} shows that deterministic multi-sourcing problem remains $\NP$-hard with one period and two plants and \cref{prop:deterministic-multi-sourcing:polynomial-cases} gives some polynomial cases.
 
@@ -275,7 +280,7 @@ $$
 \right.
 $$
 Then, we solve the resulting linear program to get the optimal solution of the deterministic multi-sourcing problem.
-(It eventually returns that problem is infeasible.)
+(It eventually\vl{may} returns that problem is infeasible.)
 
 \medskip
 
@@ -284,7 +289,7 @@ Then, we solve the resulting linear program to get the optimal solution of the d
 For each plant $p$ and each item $i$, we set $\open_p^i=1$.
 These decisions do not affect the cost in the objective function.
 Then, we solve the resulting linear program to get the optimal solution of the deterministic multi-sourcing problem.
-(It eventually returns that problem is infeasible.)
+(It may returns that problem is infeasible.)
 
 \medskip
 
@@ -302,7 +307,7 @@ $$
 \right.
 $$
 Then, we solve the resulting linear program to get the optimal solution of the deterministic multi-sourcing problem.
-(It eventually returns that problem is infeasible.)
+(It may returns that problem is infeasible.)
 \end{proof}
 
 

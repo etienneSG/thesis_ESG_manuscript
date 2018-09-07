@@ -1,3 +1,4 @@
+%!TEX root=../../thesis_ESG.tex
 \chapter{Stochastic multi-sourcing}
 \label{chap:multi-sourcing:stochastic}
 
@@ -21,7 +22,7 @@ First, multi-sourcing decisions should lead to ``high long term service level''.
 Indeed, multi-sourcing decisions take time to be implemented.
 Thus, service level on the first periods can be low due to augmentation of capabilities and should be less relevant than service level in steady state.
 The measure used for service level should not be too sensitive to sparse failure at the beginning.
-Second, worst cases must be not ``not too bad''.
+Second, worst cases must be not ``not too bad''.\vl{2 negations}
 Multi-sourcing decisions are long-term decisions and cannot be easily changed.
 However, when bad outcomes occur, it should be controlled and should remained reasonable since it will impact the company competitiveness for long periods.
 Thus, when making service level decisions, optimization should take into account worst cases and not just optimize good ones.
@@ -59,10 +60,10 @@ Production decisions can be made at the beginning of each period knowing past re
 This kind of formulation is called \emph{multi-stage}.
 
 
-The goal is to satisfy the service level measure at minimum cost.
+The goal is to satisfy the service level measure\vl{constraint} at minimum cost.
 
 
-We called this problem the \emph{stochastic multi-sourcing problem}.
+We call this problem the \emph{stochastic multi-sourcing problem}.
 
 
 \section{Bibliography}
@@ -77,7 +78,7 @@ Since some constraints of the problem are ill-defined, we first introduce prelim
 \subsection{Preliminary definitions}
 
 
-In order to measure and control the service level, we use the \emph{Average Value at Risk} which is a \emph{coherent measure of risk} widely studied by Rockafellar and Uryasev (see for example \cite{Rockafellar2000,Rockafellar2002}) and chose the definition given in \cite{Follmer2004}.
+In order to measure and control the service level, we use the \emph{Average Value at Risk} which is a \emph{coherent measure of risk}\vl{coherent risk measure} widely studied by Rockafellar and Uryasev (see for example \cite{Rockafellar2000,Rockafellar2002}) and chose the definition given in \cite{Follmer2004}.\vl{cite Delbaen et al}
 In financial context, measures of risk are used to quantify the risk of a position.
 
 
@@ -86,7 +87,7 @@ Fix some level $\lambda\in\bracket{0,1}$. For a random variable $\va X:\scenario
 $$\VaR_{\lambda}\bracket{\va X} = \inf\sqbracket{m\in\RR\left|\prob\crbracket{\va X+m<0}\le\lambda\right.}.$$
 \end{defn}
 For the inventory, $\VaR_{1-\servicelvl}\bracket{\va\inventory}$ might correspond to the safety stock in the case of a cycle service level $\servicelvl$.
-More precisely, adding this quantity to the inventory keeps the probability of a stock-out below the level $1-\servicelvl$.
+More precisely, adding this quantity to the inventory keeps the probability of a stock-out below $1-\servicelvl$.
 The main drawback of the Value at Risk is that it only controls the probability of a stock-out and not its size.
 Thus, we use the following coherent measure of risk defined from the Value at Risk.
 
@@ -109,6 +110,8 @@ More precisely, $\AVaR_{1-\servicelvl}\bracket{\va\inventory}\le 0$ means that t
 
 \cref{fig:avar-examples} represents the Value at Risk and the Average Value at Risk in the case of a Gaussian distribution of the stock $\va\inventory_t^i$.
 
+
+\vlil{Je ne comprends pas les deux flèches}
 
 \subsection{Model}
 
@@ -145,6 +148,7 @@ We model the stochastic multi-sourcing problem as
   \end{align+}
 \end{subequations}
 
+\vlil{$p$ undefined in \eqref{eq:stoch-multi-sourcing:measurability}}
 
 Objective~\eqref{eq:stoch-multi-sourcing:objective} still minimizes the affectation costs.
 Constraints~\eqref{eq:stoch-multi-sourcing:inventory-dynamic}, \eqref{eq:stoch-multi-sourcing:capacity}, \eqref{eq:stoch-multi-sourcing:big-M} have the same meaning than their deterministic counterpart.
@@ -187,24 +191,26 @@ We choose to use the Average Value at Risk and compare its pros and cons to the 
   \label{tab:constraint-properties-comparison}
 \end{table}
 
+\vlil{il faut définir ce que l'on entends par ces différentes contraintes, et noter que l'on ne considère qu'un cas simple de "robust constraint", qui est d'ailleurs un cas extreme de AVAR et Proba constraint}
 
 We do not pretend to state general truth but rather general trend on common cases.
 We propose eight criterion to compare the constraints.
-First, the ease to write the constraint and to linearize it if needed.
+First, the ease to write\vl{representability of} the constraint and to linearize it if needed.
 In many cases, expectation constraint is very easy to write since it is often a sum, an integral or a combination of the two.
-More, it is already linear making it easy to use.
-On the other hand, probabilistic constraint is hard to write and to linearize since it is hardly never convex.
+Moreover, it is already linear making it easy to use.
+On the other hand, probabilistic constraint is hard to write and to linearize since it is hardly ever\vl{not really true} convex.
 Robust and $\AVaR$ constraint are both not easy to write.
+\vlil{the discussion over "easiness of writing" is not very convincing}
 Every possible outcome must be considered in robust case and definition of $\AVaR$ makes it hard to use.
 However, robust and $\AVaR$ constraints are convex.
 Using scenarios often enables to get linear formulation of robust constraint of reasonable size and as shown in \cref{sec:multi-sourcing:stochastic:avar-linearization}, $\AVaR$ can also be linearized.
 
 
-Interpretation of robust and probabilistic constraints are quite easy.
-Even though expectation constraint seems easy to interpret, in practice, knowing the behavior of the mean does not give any information on the behavior of the other outcome.
-Thus, it is very hard to say something from only this information.
+Interpretation of robust and probabilistic constraints are quite easy. \vlil{alors il faut les donner}
+Even though expectation constraint seems easy to interpret, in practice, knowing the behavior of the mean does not give any information on the behavior of the other\vlil{la moyenne n'est pas nécessairement un outcome} outcome.
+Thus, it is very hard to say something\vl{reformulate} from only this information.
 Understanding $\AVaR$ constraint at level $\lambda\%$ is not straightforward.
-However, it means that $\bracket{1-\lambda}$ per cent of cases satisfies the constraint and that the mean over the $\lambda$ remaining per cent also satisfy the constraint.
+However, it means that $\bracket{1-\lambda}$ per cent\vl{techniquement x100} of cases satisfies the constraint and that the mean over the $\lambda$ remaining per cent also satisfy the constraint.
 
 
 Thus, we easily see that $\AVaR$ constraint enables to control the proportion of bad cases and their value.
@@ -213,7 +219,7 @@ Being very conservative, robust constraint does not enable to control the propor
 On the other hand, probabilistic constraint enable to choose the proportion of worst case but it is done at costs of control on their value.
 
 
-Another advantage of $\AVaR$ and probabilistic constraint is the possibility to choose the level of conservativeness.
+Another advantage of $\AVaR$ and probabilistic constraints is the possibility to choose the level of conservativeness.
 Indeed, the decision-maker can easily see the price implied by the service level constraint and eventually relax partially this constraint with a single parameter.
 On the other hand, there is not any way of changing the robust and probabilistic constraint behavior.
 
@@ -405,7 +411,7 @@ Second, $\tau$ is the maximal time spent to solve the deterministic version~\eqr
 
 \esgil{Reprendre cette partie. Ajouter le lien vers un papier expliquant Bender. Expliquer en quoi cela correspond à notre cas.}
 
-Formulation \eqref{eq:stoch-multi-sourcing:linearized} has a structure which may fit with decomposition methods as Bender decomposition.
+Formulation \eqref{eq:stoch-multi-sourcing:linearized} has a structure which may fit with decomposition methods as Bender decomposition. \vlil{L-shaped method citer le livre Stochastic Programming de Birge}
 Indeed, introducing the vector $z$ of first-step variables (affectation variables $\bracket{\open_p^i}_{p,i}$ and auxiliary variables $\bracket{m_t^i}_{t,i}$) and for each scenario $\omega$, the vector $w_{\omega}$ of second-step variables (inventory variables $\bracket{\inventory_{t,\omega}^i}_{t,i,\omega}$, production variables $\bracket{\quantity_{pt,\omega}^i}_{p,t,i}$ and auxiliary variables $\bracket{\alpha_{t,\omega}^i}_{t,i,\omega}$, we get the following program
 \begin{subequations}\label{eq:stoch-multi-sourcing:bender}
   \begin{align+}
