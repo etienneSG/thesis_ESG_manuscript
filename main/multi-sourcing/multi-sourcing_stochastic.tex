@@ -3,40 +3,48 @@
 \label{chap:multi-sourcing:stochastic}
 
 
-\section{Motivations}
-\label{sec:multi-sourcing:stochastic:motivations}
+\section{Introduction}
+\label{sec:multi-sourcing:stochastic:introduction}
+
+
+\subsection{Motivations}
+\label{sec:multi-sourcing:stochastic:introduction:motivations}
 
 
 In \cref{chap:multi-sourcing:deterministic}, data are deterministic.
 In practice, part of data is uncertain.
 Indeed, multi-sourcing decisions are long-term decisions and it is unlikely that forecast demand is perfectly accurate.
-As for production planning decisions, uncertainty may come from efficiency of machine (and affect time needed for the production of one item), capacities (due to breakdown, strike) or any other part of the supply chain like the procurement of raw materials.
-When making multi-sourcing decisions, Argon Consulting identifies that uncertainty on forecast demand is the main issue for its clients.
-More precisely, since it addresses the question of flexibility (see \cref{chap:business-context}), the relevant uncertainty comes from variation in the product mix and not from variations of global volume of demand nor from other sources.
+As for production planning decisions, uncertainty may come from efficiency of machines (and affect time needed for the production of one item), capacities (due to breakdown, strike) or any other part of the supply chain like the procurement of raw materials.
+For multi-sourcing decisions, Argon Consulting has identified uncertainty on forecast demand as the main issue for its clients.
+Since multi-sourcing problem addresses the question of flexibility (see \cref{chap:business-context}), the relevant uncertainty comes from variation in the product mix and not from variations of global volume of demand nor from other sources.
 
 
-Dealing with uncertainty leads to consider possible undelivered quantities.
-It goes from the more conservative which does not allow stock-out to methods controlling stock-out probability, stock-out quantity or other relevant indicators.
-Discussions with Argon Consulting raise two characteristics of undelivered quantities.
+Dealing with uncertainty leads to consider possible unsatisfied demand.
+Methods to face uncertainty goes from the more conservative which does not allow stock-out in any outcome to methods controlling stock-out probability, stock-out quantity or other relevant indicators.
+Discussions with Argon Consulting raise two characteristics of unsatisfied demand.
 First, multi-sourcing decisions should lead to ``high long term service level''.
 Indeed, multi-sourcing decisions take time to be implemented.
 Thus, service level on the first periods can be low due to augmentation of capabilities and should be less relevant than service level in steady state.
 The measure used for service level should not be too sensitive to sparse failure at the beginning.
-Second, worst cases must be not ``not too bad''.\vl{2 negations}
-Multi-sourcing decisions are long-term decisions and cannot be easily changed.
-However, when bad outcomes occur, it should be controlled and should remained reasonable since it will impact the company competitiveness for long periods.
-Thus, when making service level decisions, optimization should take into account worst cases and not just optimize good ones.
+Second, worst cases must be ``not too bad''.
+Multi-sourcing decisions are long-term decisions which impact the company competitiveness for long periods since cannot be easily changed.
+Thus, while remaining not too expansive, multi-sourcing decisions should be efficient enough to control the loss when bad outcomes occur.
+%Thus, when making service level decisions, optimization should take into account worst cases and not just optimize good ones.
 
 
-These two characteristics lead to ill-defined constraints.
-Several models are possible and will be discussed in \cref{sec:multi-sourcing:stochastic:model:discussion}.
+These two characteristics are not easy to take into account.
+Several approaches are possible and will be discussed in \cref{sec:multi-sourcing:stochastic:model:discussion}.
 
 
-\medskip
+
+\subsection{Problem statement}
+\label{sec:multi-sourcing:stochastic:introduction:problem-statement}
 
 
-As in its deterministic version, the problem considers a set $\plants$ of plants producing a set $\REF$ of items over $\horizon$ periods.
-There is an upper bound $\capacity_{pt}$ on the total period production of plant $p$ (summed over all items).
+For the sake of completeness, we do it in full details but it is very close to the deterministic one.
+We consider a set $\plants$ of plants producing a set $\REF$ of items over $\horizon$ periods.
+There is an upper bound $\capacity_{pt}$ on the total period production of plant $p$ at period $t$ (summed over all items).
+This upper bound is expressed in time unit since it correspond to available working hours.
 
 
 Giving a plant $p$ the ability to produce an item $i$ has a cost $\affect_p^i$.
@@ -47,8 +55,12 @@ The capacity needed (in time units) to produce one unit of item $i$ in plant $p$
 
 The production must satisfy a random demand as well as possible.
 However, because of uncertainty, backorder (\ie late delivery) is allowed.
-We introduce a parameter $\servicelvl\in\sqbracket{0,1}$ which controls the part of demand delivered on time.
-As service level measure is not already defined, this parameter is not the service level but its variations should imply same sense variations of the service level.
+We introduce a parameter $\servicelvl\in\bracket{0,1}$ which controls the part of demand delivered on time.
+It first defines the proportion of cases for which demand has to be satisfied.
+Second, in the remaining cases (\ie the ``worst cases''), the expectation of the sum of inventory and backorder must be nonnegative.
+%As service level measure is not already defined, this parameter is not the service level but its variations should imply same sense variations of the service level.
+
+
 The demand of item $i$ over period $t$ is a random parameter $\va\demand_t^i$, whose realization is known at the end of period $t$.
 When production of an item $i$ (summed over all plants) is not used to satisfy the demand, it can be stored and incurs no cost.
 For each item $i$, there is an initial inventory $\inventory_0^i\in\RR_+$.
@@ -60,42 +72,59 @@ Production decisions can be made at the beginning of each period knowing past re
 This kind of formulation is called \emph{multi-stage}.
 
 
-The goal is to satisfy the service level measure\vl{constraint} at minimum cost.
+The goal is to satisfy the service level constraint at minimum cost.
 
 
 We call this problem the \emph{stochastic multi-sourcing problem}.
 
 
+\subsection{Main results}
+\label{sec:multi-sourcing:stochastic:introduction:main-results}
+
+
+We propose a model for the stochastic multi-sourcing problem in \cref{sec:multi-sourcing:stochastic:model-formulation} using the \emph{Average Value at Risk $\AVaR$}.
+In \cref{sec:multi-sourcing:stochastic:solving-method}, we develop a method to solve it by linearizing the $\AVaR$ and a heuristic to speed up the resolution on big dataset.
+In \cref{sec:multi-sourcing:stochastic:discussion}, we discuss the choice made to model the uncertainty.
+
+
+
 \section{Bibliography}
+\label{sec:multi-sourcing:stochastic:bibliography}
 
 
 \section{Model formulation}
+\label{sec:multi-sourcing:stochastic:model-formulation}
 
 
-Since some constraints of the problem are ill-defined, we first introduce preliminary definitions, then we present the model and finally discuss the choices made.
+To model the constraint on the backorder, we first introduce the Average Value at Risk and then present the model.
+Choices made to model the risk will be discuss in \cref{sec:multi-sourcing:stochastic:discussion}.
 
 
-\subsection{Preliminary definitions}
+\subsection{Average Value at Risk}
 
 
-In order to measure and control the service level, we use the \emph{Average Value at Risk} which is a \emph{coherent measure of risk}\vl{coherent risk measure} widely studied by Rockafellar and Uryasev (see for example \cite{Rockafellar2000,Rockafellar2002}) and chose the definition given in \cite{Follmer2004}.\vl{cite Delbaen et al}
+In order to measure and control the service level, we use the \emph{Average Value at Risk ($\AVaR$)} which is a \emph{coherent risk measure} widely studied (see for example \cite{Artzner1999,Rockafellar2000,Rockafellar2002}) and chose the definition given in \cite{Follmer2004}.
 In financial context, measures of risk are used to quantify the risk of a position.
 
 
-\begin{defn}
-Fix some level $\lambda\in\bracket{0,1}$. For a random variable $\va X:\scenarios\to\RR$, we define its \emph{Value at Risk at level $\lambda$} as
-$$\VaR_{\lambda}\bracket{\va X} = \inf\sqbracket{m\in\RR\left|\prob\crbracket{\va X+m<0}\le\lambda\right.}.$$
-\end{defn}
+Fix some level $\lambda\in\bracket{0,1}$. For a random variable $\va X:\scenarios\to\RR$, its \emph{Value at Risk at level $\lambda$} is defined as
+\begin{equation}
+\VaR_{\lambda}\bracket{\va X} = \inf\sqbracket{m\in\RR\left|\prob\crbracket{\va X+m<0}\le\lambda\right.}.
+\end{equation}
+
+
 For the inventory, $\VaR_{1-\servicelvl}\bracket{\va\inventory}$ might correspond to the safety stock in the case of a cycle service level $\servicelvl$.
 More precisely, adding this quantity to the inventory keeps the probability of a stock-out below $1-\servicelvl$.
 The main drawback of the Value at Risk is that it only controls the probability of a stock-out and not its size.
-Thus, we use the following coherent measure of risk defined from the Value at Risk.
+Thus, we use the following coherent risk measure defined from the Value at Risk.
 
 
-\begin{defn}
-Fix some level $\lambda\in\bracket{0,1}$. For a random variable $\va X:\scenarios\to\RR$, we define its \emph{Average Value at Risk at level $\lambda$} as
-$$\AVaR_{\lambda}\bracket{\va X} = \frac{1}{\lambda}\int_0^{\lambda}\VaR_{\gamma}\bracket{\va X}\diff\gamma.$$
-\end{defn}
+Fix some level $\lambda\in\bracket{0,1}$. For a random variable $\va X:\scenarios\to\RR$, its \emph{Average Value at Risk at level $\lambda$} is defined as
+\begin{equation}
+\AVaR_{\lambda}\bracket{\va X} = \frac{1}{\lambda}\int_0^{\lambda}\VaR_{\gamma}\bracket{\va X}\diff\gamma.
+\end{equation}
+
+
 For the inventory, $\AVaR_{1-\servicelvl}\bracket{\va\inventory}$ seems like the safety stock in the case of a fill rate service level $\servicelvl$.
 More precisely, $\AVaR_{1-\servicelvl}\bracket{\va\inventory}\le 0$ means that the average of safety stocks needed to ensure cycle service level from $\servicelvl$ to 1 is negative (\ie it does not need safety stocks).
 
@@ -111,7 +140,9 @@ More precisely, $\AVaR_{1-\servicelvl}\bracket{\va\inventory}\le 0$ means that t
 \cref{fig:avar-examples} represents the Value at Risk and the Average Value at Risk in the case of a Gaussian distribution of the stock $\va\inventory_t^i$.
 
 
-\vlil{Je ne comprends pas les deux flèches}
+\esgil{Add example of the $\AVaR$ with one item and four plants.}
+
+
 
 \subsection{Model}
 
@@ -140,17 +171,16 @@ We model the stochastic multi-sourcing problem as
     & \AVaR_{1-\servicelvl}\bracket{\va\inventory_t^i} \le 0 && \forall t\in\range{\horizon},\ \forall i\in\REF,
     \label{eq:stoch-multi-sourcing:AVaR}
     \\
-    & \ds \open_p^i \in \crbracket{0,1} && \forall p\in\plants, \forall i\in\REF,
+    & \ds \open_p^i \in \crbracket{0,1} && \forall p\in\plants,\ \forall i\in\REF,
     \label{eq:stoch-multi-sourcing:boolean}
     \\
-    & \ds  \va\quantity_{pt}^i\ \mbox{is}\ \Sfield{\bracket{\va\demand_1^i,\ldots,\va\demand_{t-1}^i}_{i\in\REF}}\mbox{--measurable} && \forall t\in\range{\horizon},\ \forall i\in\REF.
+    & \ds  \va\quantity_{pt}^i\ \mbox{is}\ \Sfield{\bracket{\va\demand_1^i,\ldots,\va\demand_{t-1}^i}_{i\in\REF}}\mbox{--measurable} && \forall t\in\range{\horizon},\  \forall p\in\plants,\ \forall i\in\REF.
     \label{eq:stoch-multi-sourcing:measurability}
   \end{align+}
 \end{subequations}
 
-\vlil{$p$ undefined in \eqref{eq:stoch-multi-sourcing:measurability}}
 
-Objective~\eqref{eq:stoch-multi-sourcing:objective} still minimizes the affectation costs.
+Objective~\eqref{eq:stoch-multi-sourcing:objective} still minimizes the assignment costs.
 Constraints~\eqref{eq:stoch-multi-sourcing:inventory-dynamic}, \eqref{eq:stoch-multi-sourcing:capacity}, \eqref{eq:stoch-multi-sourcing:big-M} have the same meaning than their deterministic counterpart.
 Constraint~\eqref{eq:stoch-multi-sourcing:AVaR} enables to control the service level using Average Value at Risk.
 It will be discussed in \cref{sec:multi-sourcing:stochastic:model:discussion}.
@@ -158,8 +188,211 @@ Last constraint~\eqref{eq:stoch-multi-sourcing:measurability} of the program, wr
 Every constraints of the problem, except the Average Value at Risk constraint~\eqref{eq:stoch-multi-sourcing:AVaR}, hold almost surely.
 
 
-\subsection{Expectation, robust, probabilistic and average value at risk constraints}
-\label{sec:multi-sourcing:stochastic:model:discussion}
+
+
+\section{Solving method and theoretical results}
+\label{sec:multi-sourcing:stochastic:solving-method}
+
+
+Due to the obvious hardness of program~\eqref{eq:stoch-multi-sourcing}, we turn to an approximate method.
+
+
+\subsection{Linearization of $\AVaR$}
+\label{sec:multi-sourcing:stochastic:avar-linearization}
+
+
+Linearization of $\AVaR$ constraint can be efficiently made in case of a finite probability space $\Omega$.
+\cref{lem:linearize-AVaR}, based on results by \cite{Rockafellar2000}, gives the complete definition of the polyhedron defined by $\AVaR$ constraint in case of a finite probability space.
+
+
+\begin{lem}\label{lem:linearize-AVaR}
+For a random variable $\va X$ taking its values at random in a set $\{X_{\omega}\colon\omega\in\Omega\}$ with probability $\{p_{\omega}\colon\omega\in\Omega\}$ and for $\lambda\in\bracket{0,1}$, the inequality 
+$\AVaR_{\lambda}\bracket{\va X} \le 0$ holds if and only if the following polyhedron is nonempty:
+$$
+\left\{
+\bracket{\alpha,m}\in\RR_+^{\Omega}\times\RR
+\;\left|\;
+\frac{1}{\card{\Omega}}\sum_{\omega\in\Omega}p_{\omega}\alpha_{\omega}\leq \lambda m
+\quad\mbox{\textup{and}}\quad
+\alpha_{\omega}\geq m-X_{\omega}\;
+\mbox{\textup{for all}}\;\omega\in\Omega
+\right.
+\right\}.
+$$
+\end{lem}
+
+
+\begin{proof}
+We have the following equivalences.
+\begin{subequations}
+  \begin{align}
+    \ds\AVaR_{\lambda}\bracket{\va X} \le 0 &\ds\iff \frac{1}{\lambda} \inf_{m\in\RR}\bracket{\espe\sqbracket{\bracket{m-\va X}^+}-\lambda m} \le 0
+    \label{eq:follmer-and-schied-proposition}
+    \\
+    &\ds\iff \frac{1}{\lambda} \inf_{m\in\RR}\bracket{\sum_{\omega\in\Omega}p_{\omega}\bracket{m-X_{\omega}}^+ - \lambda m} \le 0
+    \label{eq:discrete-space probability}
+    \\
+    &\ds\iff \exists m\in\RR \colon\; \frac{1}{\lambda}    \bracket{ \sum_{\omega\in\Omega}p_{\omega}\bracket{m-X_{\omega} }^+ - \lambda m} \le 0
+    \\
+    &\ds\iff \exists \bracket{\alpha,m}\in\RR_+^{\Omega}\times\RR\colon\;
+    \left\{
+      \begin{array}{l}
+        \ds\frac{1}{\lambda}\bracket{\sum_{\omega\in\Omega}p_{\omega}\alpha_{\omega}-\lambda m} \le 0 \\
+        \ds\alpha_{\omega}\ge m-X_{\omega},\ \forall\omega\in\Omega
+      \end{array}
+    \right.
+  \end{align}
+\end{subequations}
+Equivalence~\eqref{eq:follmer-and-schied-proposition} is given by Proposition~4.37 in \cite{Follmer2004}.
+Equivalence~\eqref{eq:discrete-space probability} comes from the finite space probability.
+\end{proof}
+
+
+\subsection{Solving method}
+\label{sec:multi-sourcing:stochastic:solving-method:solving-method}
+
+
+As shown in \cref{sec:multi-sourcing:deterministic:NP-completeness}, deterministic multi-sourcing problem is hard.
+Therefore, we cannot expect a quick algorithm solving exactly the problem, and this holds especially for the full stochastic version.
+Like stochastic production planning problems (see \cref{part:production planning}), stochastic multi-sourcing problems are hard to solve.
+
+
+We use the same approximation method than for solving Stochastic CLSP-BS (see \cref{sec:PDP:stochastic:solving-method:solving-method}).
+We propose a two-stage approximation consisting in replacing the measurability constraint~\eqref{eq:stoch-multi-sourcing:measurability} by
+\begin{equation}
+\va\quantity_{pt}^i\ \mbox{is}\ \Sfield{\bracket{\va\demand_1^i,\ldots,\va\demand_{\horizon}^i}_{i\in\REF}}\mbox{--measurable} \quad \forall t\in\range{\horizon},\ \forall i\in\REF
+\end{equation}
+which provides a relaxation of the initial program: the assignment decisions can still not depend on the future, but now the production decisions depend on the future demand.
+(Relaxing the measurability constraint means that once the $\open_p^r$ has been chosen, the demand over the whole horizon is supposed to be revealed.)
+We denote this relaxation by (2SA).
+
+
+This approximation is a \emph{two-stage approximation} as we distinguish between two levels of information over the uncertainty: assignment decisions are the \emph{first stage} variables, while all other decisions are \emph{second stage} variables.
+
+
+The (2SA) relaxation is then solved by a classical {\em sample average approximation} (see~\cite{Kleywegt2002} for a presentation of the method).
+We build a set $\scenarios$ of $m$ scenarios sampled uniformly at random.
+Each of these scenarios is a possible realization of $(\va\demand_1^i,\ldots,\va\demand_{\horizon}^i)$ for each item $i$.
+The parameter $m$ is fixed prior to the resolution.
+
+
+In order to linearize $\AVaR$ constraint \eqref{eq:stoch-multi-sourcing:AVaR}, we introduce for each period $t$ and each item $i$ auxiliary variables $m_t^i\in\RR$ and $\bracket{\alpha_{t,\omega}^i}_{\omega}\in\RR_+^{\scenarios}$.
+Thanks to \cref{lem:linearize-AVaR}, we get the following mixed integer program (2SA-$m$).
+\begin{subequations}\label{eq:stoch-multi-sourcing:linearized}
+  \begin{align+}
+    \min\quad & \rlap{$\ds \sum_{i\in\REF}\sum_{p\in\plants}\affect_p^i \open_p^i$}
+    \label{eq:stoch-multi-sourcing:linearized:objective}
+    \\
+    \st\quad & \ds \inventory_{t,\omega}^i = \inventory_{t-1,\omega}^i + \sum_{p\in\plants}\quantity_{pt,\omega}^i - \demand_{t,\omega}^i && \forall\omega\in\scenarios,\ \forall t\in\range{\horizon},\ \forall i\in\REF,
+    \label{eq:stoch-multi-sourcing:linearized:inventory-dynamic}
+    \\
+    & \ds \sum_{i\in\REF}\rate_{pt}^i\quantity_{pt,\omega}^i \leq \capacity_{pt} && \forall\omega\in\scenarios,\ \forall t\in\range{\horizon},\ \forall p\in\plants,
+    \label{eq:stoch-multi-sourcing:linearized:capacity}
+    \\
+    & \ds \lb_{pt}^i \open_p^i \le \rate_{pt}^i\quantity_{pt,\omega}^i \le \ub_{pt}^i \open_p^i && \forall\omega\in\scenarios,\ \forall t\in\range{\horizon},\ \forall p\in\plants, \forall i\in\REF,
+    \label{eq:stoch-multi-sourcing:linearized:big-M}
+    \\
+    & \frac{1}{\card{\Omega}}\sum_{\omega\in\Omega}\alpha_{t,\omega}^i\leq (1-\beta)m_t^i && \forall t\in\range{\horizon},\ \forall i\in\REF,
+    \label{eq:stoch-multi-sourcing:linearized:AVaR:1}
+    \\
+    & \alpha_{t,\omega}^i\geq m_t^i-s_{t,\omega}^i && \forall\omega\in\scenarios,\ \forall t\in\range{\horizon},\ \forall i\in\REF,
+    \label{eq:stoch-multi-sourcing:linearized:AVaR:2}
+    \\
+    & \ds \quantity_{pt,\omega}^i,\ \alpha_{t,\omega}^i \ge 0 && \forall\omega\in\scenarios,\ \forall t\in\range{\horizon},\ \forall i\in\REF,
+    \label{eq:stoch-multi-sourcing:linearized:positivity}
+    \\
+    & \ds \open_p^i \in \crbracket{0,1} && \forall p\in\plants, \forall i\in\REF.
+    \label{eq:stoch-multi-sourcing:linearized:boolean}
+  \end{align+}
+\end{subequations}
+This mixed-integer program can be solved by any linear solver for small dataset but needs heuristics or decomposition methods for big dataset.
+
+
+\subsection{Heuristic to solve MIP~\eqref{eq:stoch-multi-sourcing:linearized}}
+
+
+When working on big dataset, LP solver are unable to find feasible solutions (see \cref{sec:multi-sourcing:numerical-experiments:numerical-results}).
+Thus, we propose a simple heuristic to find a solution in reasonable time.
+
+
+As explained in \cref{sec:multi-sourcing:stochastic:motivations}, randomness comes from the variations of product mix and not from the global volume which is assumed constant.
+Basic idea of the heuristic is to scale the demand of every item at every period with a factor $\alpha\ge1$ and to solve the deterministic version~\eqref{eq:det-multi-sourcing} got with this demand.
+Then, the obtained assignment should be feasible for $\alpha$ large enough.
+
+
+The heuristic has two parameters.
+First, $N$ is the number of values tried for $\alpha$.
+Second, $\tau$ is the maximal time spent to solve the deterministic version~\eqref{eq:det-multi-sourcing} with demand scaled by $\alpha$.
+
+
+\esgil{Completer après le point avec Fabrice du 05/09. Ne pas oublier les preuves dans les mails IWLS.}
+
+
+% \begin{algorithm}[H]
+%   \SetLine
+%   \KwIn{MIP~\eqref{eq:stoch-multi-sourcing:linearized}}
+%   \KwOut{Feasible multi-sourcing}
+%   \KwParameters{$N$, $\tau$}
+%   \KwResult{}
+
+%   initialization\;
+%   \While{not at end of this document}{
+%   read current\;
+%   \eIf{understand}{
+%     go to next section\;
+%     current section becomes this one\;
+%     }{
+%     go back to the beginning of current section\;
+%   }
+%   }
+%   \caption{Heuristic to solve MIP~\eqref{eq:stoch-multi-sourcing:linearized}}
+%   \label{alg:multi-sourcing:MIP:heuristic}
+% \end{algorithm}
+
+
+\subsection{Bender decomposition}
+
+\esgil{Reprendre cette partie. Ajouter le lien vers un papier expliquant Bender. Expliquer en quoi cela correspond à notre cas.}
+
+Formulation \eqref{eq:stoch-multi-sourcing:linearized} has a structure which may fit with decomposition methods as Bender decomposition. \vlil{L-shaped method citer le livre Stochastic Programming de Birge}
+Indeed, introducing the vector $z$ of first-step variables (assignment variables $\bracket{\open_p^i}_{p,i}$ and auxiliary variables $\bracket{m_t^i}_{t,i}$) and for each scenario $\omega$, the vector $w_{\omega}$ of second-step variables (inventory variables $\bracket{\inventory_{t,\omega}^i}_{t,i,\omega}$, production variables $\bracket{\quantity_{pt,\omega}^i}_{p,t,i}$ and auxiliary variables $\bracket{\alpha_{t,\omega}^i}_{t,i,\omega}$, we get the following program
+\begin{subequations}\label{eq:stoch-multi-sourcing:bender}
+  \begin{align+}
+    \min\quad & \rlap{$\ds f\bracket{z}$}
+    \label{eq:stoch-multi-sourcing:bender:objective}
+    \\
+    \st\quad & B z + A w_{\omega} = D_{\omega} && \forall\omega\in\scenarios,
+    \label{eq:stoch-multi-sourcing:bender:constraint}
+    \\
+    & \ds w_{\omega}\in \cW && \forall\omega\in\scenarios,
+    \label{eq:stoch-multi-sourcing:bender:second-step}
+    \\
+    & \ds z\in \cZ.
+    \label{eq:stoch-multi-sourcing:bender:first-step}
+  \end{align+}
+\end{subequations}
+where constraint \eqref{eq:stoch-multi-sourcing:bender:constraint} regroups constraints~\eqref{eq:stoch-multi-sourcing:linearized:inventory-dynamic} to \eqref{eq:stoch-multi-sourcing:linearized:AVaR:2} and $\cW$ and $\cZ$ are positivity or binary constraints.
+
+
+
+
+% \begin{tikzpicture}
+%   \matrix [matrix of math nodes,left delimiter=(,right delimiter=)] (m)
+%   {              
+%       B           & A &   &        &             \\               
+%       B           &   & A &        &             \\
+%       \vdots      &   &   & \ddots &             \\
+%       B           &   &   &        & A           \\
+%   };
+% \end{tikzpicture}
+
+
+\esgil{To do}
+
+
+
+\section{Focused discussion on expectation, robust, probabilistic and average value at risk constraints}
+\label{sec:multi-sourcing:stochastic:discussion}
 
 
 As explained in \cref{sec:multi-sourcing:stochastic:motivations}, multi-sourcing decision must lead to ``high long term service level'' and a good control on ``worst cases''.
@@ -167,6 +400,9 @@ These constrains are ill-defined.
 Many way of modeling it are possible.
 We choose to use the Average Value at Risk and compare its pros and cons to the ones of expectation, robust and probabilistic constraints.
 \cref{tab:constraint-properties-comparison} summarizes this comparison.
+
+
+\esgil{Add the end of the example with 4 plants and 1 item. DO NOT forget to write each constraint.}
 
 
 \begin{table}[h]
@@ -240,210 +476,4 @@ On the other hand, expectation and robust constraint are often easier to deal wi
 To summarize, we choose $\AVaR$ constraint because of its linearization properties and the possible interpretation for industrial application.
 Moreover, as wanted by Argon Consulting, $\AVaR$ enables to control proportion of worst cases and their values.
 The price for this is the computational complexity.
-
-
-\section{Simple example}
-
-
-\esgil{Show to Frederic and Vincent before writing it.}
-
-
-\section{Solving method and theoretical results}
-
-
-Due to the obvious hardness of program~\eqref{eq:stoch-multi-sourcing}, we turn to an approximate method.
-
-
-\subsection{Linearization of $\AVaR$}
-\label{sec:multi-sourcing:stochastic:avar-linearization}
-
-
-Linearization of $\AVaR$ constraint can be efficiently made in case of a finite probability space $\Omega$.
-\cref{lem:linearize-AVaR}, based on results by \cite{Rockafellar2000}, gives the complete definition of the polyhedron defined by $\AVaR$ constraint in case of a finite probability space.
-
-
-\begin{lem}\label{lem:linearize-AVaR}
-For a random variable $\va X$ taking its values at random in a set $\{X_{\omega}\colon\omega\in\Omega\}$ with probability $\{p_{\omega}\colon\omega\in\Omega\}$ and for $\lambda\in\bracket{0,1}$, the inequality 
-$\AVaR_{\lambda}\bracket{\va X} \le 0$ holds if and only if the following polyhedron is nonempty:
-$$
-\left\{
-\bracket{\alpha,m}\in\RR_+^{\Omega}\times\RR
-\;\left|\;
-\frac{1}{\card{\Omega}}\sum_{\omega\in\Omega}p_{\omega}\alpha_{\omega}\leq \lambda m
-\quad\mbox{\textup{and}}\quad
-\alpha_{\omega}\geq m-X_{\omega}\;
-\mbox{\textup{for all}}\;\omega\in\Omega
-\right.
-\right\}.
-$$
-\end{lem}
-
-
-\begin{proof}
-We have the following equivalences.
-\begin{subequations}
-  \begin{align}
-    \ds\AVaR_{\lambda}\bracket{\va X} \le 0 &\ds\iff \frac{1}{\lambda} \inf_{m\in\RR}\bracket{\espe\sqbracket{\bracket{m-\va X}^+}-\lambda m} \le 0
-    \label{eq:follmer-and-schied-proposition}
-    \\
-    &\ds\iff \frac{1}{\lambda} \inf_{m\in\RR}\bracket{\sum_{\omega\in\Omega}p_{\omega}\bracket{m-X_{\omega}}^+ - \lambda m} \le 0
-    \label{eq:discrete-space probability}
-    \\
-    &\ds\iff \exists m\in\RR \colon\; \frac{1}{\lambda}    \bracket{ \sum_{\omega\in\Omega}p_{\omega}\bracket{m-X_{\omega} }^+ - \lambda m} \le 0
-    \\
-    &\ds\iff \exists \bracket{\alpha,m}\in\RR_+^{\Omega}\times\RR\colon\;
-    \left\{
-      \begin{array}{l}
-        \ds\frac{1}{\lambda}\bracket{\sum_{\omega\in\Omega}p_{\omega}\alpha_{\omega}-\lambda m} \le 0 \\
-        \ds\alpha_{\omega}\ge m-X_{\omega},\ \forall\omega\in\Omega
-      \end{array}
-    \right.
-  \end{align}
-\end{subequations}
-Equivalence~\eqref{eq:follmer-and-schied-proposition} is given by Proposition~4.37 in \cite{Follmer2004}.
-Equivalence~\eqref{eq:discrete-space probability} comes from the finite space probability.
-\end{proof}
-
-
-\subsection{Solving method}
-\label{sec:multi-sourcing:stochastic:solving-method:solving-method}
-
-
-As shown in \cref{sec:multi-sourcing:deterministic:NP-completeness}, deterministic multi-sourcing problem is hard.
-Therefore, we cannot expect a quick algorithm solving exactly the problem, and this holds especially for the full stochastic version.
-Like stochastic production planning problems (see \cref{part:production planning}), stochastic multi-sourcing problems are hard to solve.
-
-
-We use the same approximation method than for solving Stochastic CLSP-BS (see \cref{sec:PDP:stochastic:solving-method:solving-method}).
-We propose a two-stage approximation consisting in replacing the measurability constraint~\eqref{eq:stoch-multi-sourcing:measurability} by
-\begin{equation}
-\va\quantity_{pt}^i\ \mbox{is}\ \Sfield{\bracket{\va\demand_1^i,\ldots,\va\demand_{\horizon}^i}_{i\in\REF}}\mbox{--measurable} \quad \forall t\in\range{\horizon},\ \forall i\in\REF
-\end{equation}
-which provides a relaxation of the initial program: the affectation decisions can still not depend on the future, but now the production decisions depend on the future demand.
-(Relaxing the measurability constraint means that once the $\open_p^r$ has been chosen, the demand over the whole horizon is supposed to be revealed.)
-We denote this relaxation by (2SA).
-
-
-This approximation is a \emph{two-stage approximation} as we distinguish between two levels of information over the uncertainty: affectation decisions are the \emph{first stage} variables, while all other decisions are \emph{second stage} variables.
-
-
-The (2SA) relaxation is then solved by a classical {\em sample average approximation} (see~\cite{Kleywegt2002} for a presentation of the method).
-We build a set $\scenarios$ of $m$ scenarios sampled uniformly at random.
-Each of these scenarios is a possible realization of $(\va\demand_1^i,\ldots,\va\demand_{\horizon}^i)$ for each item $i$.
-The parameter $m$ is fixed prior to the resolution.
-
-
-In order to linearize $\AVaR$ constraint \eqref{eq:stoch-multi-sourcing:AVaR}, we introduce for each period $t$ and each item $i$ auxiliary variables $m_t^i\in\RR$ and $\bracket{\alpha_{t,\omega}^i}_{\omega}\in\RR_+^{\scenarios}$.
-Thanks to \cref{lem:linearize-AVaR}, we get the following mixed integer program (2SA-$m$).
-\begin{subequations}\label{eq:stoch-multi-sourcing:linearized}
-  \begin{align+}
-    \min\quad & \rlap{$\ds \sum_{i\in\REF}\sum_{p\in\plants}\affect_p^i \open_p^i$}
-    \label{eq:stoch-multi-sourcing:linearized:objective}
-    \\
-    \st\quad & \ds \inventory_{t,\omega}^i = \inventory_{t-1,\omega}^i + \sum_{p\in\plants}\quantity_{pt,\omega}^i - \demand_{t,\omega}^i && \forall\omega\in\scenarios,\ \forall t\in\range{\horizon},\ \forall i\in\REF,
-    \label{eq:stoch-multi-sourcing:linearized:inventory-dynamic}
-    \\
-    & \ds \sum_{i\in\REF}\rate_{pt}^i\quantity_{pt,\omega}^i \leq \capacity_{pt} && \forall\omega\in\scenarios,\ \forall t\in\range{\horizon},\ \forall p\in\plants,
-    \label{eq:stoch-multi-sourcing:linearized:capacity}
-    \\
-    & \ds \lb_{pt}^i \open_p^i \le \rate_{pt}^i\quantity_{pt,\omega}^i \le \ub_{pt}^i \open_p^i && \forall\omega\in\scenarios,\ \forall t\in\range{\horizon},\ \forall p\in\plants, \forall i\in\REF,
-    \label{eq:stoch-multi-sourcing:linearized:big-M}
-    \\
-    & \frac{1}{\card{\Omega}}\sum_{\omega\in\Omega}\alpha_{t,\omega}^i\leq (1-\beta)m_t^i && \forall t\in\range{\horizon},\ \forall i\in\REF,
-    \label{eq:stoch-multi-sourcing:linearized:AVaR:1}
-    \\
-    & \alpha_{t,\omega}^i\geq m_t^i-s_{t,\omega}^i && \forall\omega\in\scenarios,\ \forall t\in\range{\horizon},\ \forall i\in\REF,
-    \label{eq:stoch-multi-sourcing:linearized:AVaR:2}
-    \\
-    & \ds \quantity_{pt,\omega}^i,\ \alpha_{t,\omega}^i \ge 0 && \forall\omega\in\scenarios,\ \forall t\in\range{\horizon},\ \forall i\in\REF,
-    \label{eq:stoch-multi-sourcing:linearized:positivity}
-    \\
-    & \ds \open_p^i \in \crbracket{0,1} && \forall p\in\plants, \forall i\in\REF.
-    \label{eq:stoch-multi-sourcing:linearized:boolean}
-  \end{align+}
-\end{subequations}
-This mixed-integer program can be solved by any linear solver for small dataset but needs heuristics or decomposition methods for big dataset.
-
-
-\subsection{Heuristic to solve MIP~\eqref{eq:stoch-multi-sourcing:linearized}}
-
-
-When working on big dataset, LP solver are unable to find feasible solutions (see \cref{sec:multi-sourcing:numerical-experiments:numerical-results}).
-Thus, we propose a simple heuristic to find a solution in reasonable time.
-
-
-As explained in \cref{sec:multi-sourcing:stochastic:motivations}, randomness comes from the variations of product mix and not from the global volume which is assumed constant.
-Basic idea of the heuristic is to scale the demand of every item at every period with a factor $\alpha\ge1$ and to solve the deterministic version~\eqref{eq:det-multi-sourcing} got with this demand.
-Then, the obtained affectation should be feasible for $\alpha$ large enough.
-
-
-The heuristic has two parameters.
-First, $N$ is the number of values tried for $\alpha$.
-Second, $\tau$ is the maximal time spent to solve the deterministic version~\eqref{eq:det-multi-sourcing} with demand scaled by $\alpha$.
-
-
-\esgil{Completer après le point avec Fabrice du 05/09. Ne pas oublier les preuves dans les mails IWLS.}
-
-
-% \begin{algorithm}[H]
-%   \SetLine
-%   \KwIn{MIP~\eqref{eq:stoch-multi-sourcing:linearized}}
-%   \KwOut{Feasible multi-sourcing}
-%   \KwParameters{$N$, $\tau$}
-%   \KwResult{}
-
-%   initialization\;
-%   \While{not at end of this document}{
-%   read current\;
-%   \eIf{understand}{
-%     go to next section\;
-%     current section becomes this one\;
-%     }{
-%     go back to the beginning of current section\;
-%   }
-%   }
-%   \caption{Heuristic to solve MIP~\eqref{eq:stoch-multi-sourcing:linearized}}
-%   \label{alg:multi-sourcing:MIP:heuristic}
-% \end{algorithm}
-
-
-\subsection{Bender decomposition}
-
-\esgil{Reprendre cette partie. Ajouter le lien vers un papier expliquant Bender. Expliquer en quoi cela correspond à notre cas.}
-
-Formulation \eqref{eq:stoch-multi-sourcing:linearized} has a structure which may fit with decomposition methods as Bender decomposition. \vlil{L-shaped method citer le livre Stochastic Programming de Birge}
-Indeed, introducing the vector $z$ of first-step variables (affectation variables $\bracket{\open_p^i}_{p,i}$ and auxiliary variables $\bracket{m_t^i}_{t,i}$) and for each scenario $\omega$, the vector $w_{\omega}$ of second-step variables (inventory variables $\bracket{\inventory_{t,\omega}^i}_{t,i,\omega}$, production variables $\bracket{\quantity_{pt,\omega}^i}_{p,t,i}$ and auxiliary variables $\bracket{\alpha_{t,\omega}^i}_{t,i,\omega}$, we get the following program
-\begin{subequations}\label{eq:stoch-multi-sourcing:bender}
-  \begin{align+}
-    \min\quad & \rlap{$\ds f\bracket{z}$}
-    \label{eq:stoch-multi-sourcing:bender:objective}
-    \\
-    \st\quad & B z + A w_{\omega} = D_{\omega} && \forall\omega\in\scenarios,
-    \label{eq:stoch-multi-sourcing:bender:constraint}
-    \\
-    & \ds w_{\omega}\in \cW && \forall\omega\in\scenarios,
-    \label{eq:stoch-multi-sourcing:bender:second-step}
-    \\
-    & \ds z\in \cZ.
-    \label{eq:stoch-multi-sourcing:bender:first-step}
-  \end{align+}
-\end{subequations}
-where constraint \eqref{eq:stoch-multi-sourcing:bender:constraint} regroups constraints~\eqref{eq:stoch-multi-sourcing:linearized:inventory-dynamic} to \eqref{eq:stoch-multi-sourcing:linearized:AVaR:2} and $\cW$ and $\cZ$ are positivity or binary constraints.
-
-
-
-
-% \begin{tikzpicture}
-%   \matrix [matrix of math nodes,left delimiter=(,right delimiter=)] (m)
-%   {              
-%       B           & A &   &        &             \\               
-%       B           &   & A &        &             \\
-%       \vdots      &   &   & \ddots &             \\
-%       B           &   &   &        & A           \\
-%   };
-% \end{tikzpicture}
-
-
-\esgil{To do}
-
 

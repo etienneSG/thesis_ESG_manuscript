@@ -2,7 +2,8 @@
 
 
 In order to test the efficiency of our approach, we test our method on datasets from Argon Consulting’s clients.
-Objective is to compare multi-sourcing currently used in industry and multi-sourcing computed from method based on their cost, generated stock-out, etc.
+The objective is to compare the multi-sourcing currently in use by the client to the multi-sourcing computed from our method.
+In addition to compare their cost, several KPI will be used as the generated stock-out, the probability of stock-out, the load of plants, etc.
 
 
 \section{Simulation}
@@ -36,7 +37,7 @@ C++11 has been chosen for the implementations and Gurobi 6.5.1~\cite{gurobi} was
 \section{Instance}
 
 
-In practice, we have access to every technical characteristics of the plant (as capacity, internal production time) or affectation costs.
+In practice, we have access to every technical characteristics of the plant (as capacity, internal production time) or assignment costs.
 We also have the forecast demand and the quantities really produced.
 However, as usual, we do not have access to the real demand.
 Indeed, it is almost always impossible to trace if, after a stock-out, a client changes its mind for another item or do not buy anything.
@@ -67,7 +68,7 @@ Capacity for an item & $\ub_p^i$ & $1539$ &--& $7242$ & $721$ &--& $12753$
 \\
 Internal production time & $\rate_{pt}^i$ & $0.4$ &--& $1.1$ & $0.4$ &--& $9.0$
 \\
-Affectation cost & $\affect_p^i$ & $8392$ &--& $82196$ & $3516$ &--& $62234$ 
+Assignment cost & $\affect_p^i$ & $8392$ &--& $82196$ & $3516$ &--& $62234$ 
 \\
 \hline
 \end{tabular*}
@@ -285,7 +286,7 @@ Although it is not a proof, the values returned by $\prob\sqbracket{stock\ge0}$ 
 
 
 Finally, we see that aiming at $70\%$ or aiming at $95\%$ does not really change the maximal fill rate service level or the maximal cycle service level that can be reached.
-However, it really changes the cost of the affectation.
+However, it really changes the cost of the assignment.
 
 
 \esgil{Refaire des tests avec des valeur plus faibles de $\servicelvl$}

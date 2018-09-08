@@ -1,4 +1,3 @@
-%!TEX root=../../thesis_ESG.tex
 \chapter{Deterministic CLSP-BS}
 \label{chap:PDP:deterministic}
 
@@ -847,3 +846,28 @@ Because of $\norm{\ .\ }_0$ being a pseudo-norm, it is common to replace it with
 \begin{itemize}
   \item polynomial à $\REF$ fixé par programmation dynamique
 \end{itemize}
+
+
+\subsubsection{Infinite capacity}
+
+
+\begin{thm}
+CLSP-BS with infinite capacities parametrized by the number $\card{\REF}$ of items is polynomial.
+\end{thm}
+
+
+We first prove that there exists an optimal solution such that a production can occurs only if inventory is equal to zero.
+Then, using dynamic programming, we prove that CLSP-BS with infinite capacities parametrized by the number $\card{\REF}$ can be solved in $O\bracket{\horizon^{2\card{\REF}+1}}$.
+
+
+\begin{lem}
+For each instance of CLSP-BS with infinite capacities, there exists an optimal solution which is ZIO (Zero-Inventory-Ordering).
+\end{lem}
+
+
+\begin{proof}
+Consider an instance of CLSP-BS with infinite capacities and let $\bracket{q^*,s^*,x^*}$ be an optimal solution.
+Suppose that there are a period $t_0$ and an item $j$ such that $\inventory_{t_0-1}^j>0$ and $\quantity_{t_0}^j>0$.
+Without loss of generality, we can suppose that $j=1$ and we choose the greatest $t_0$ such that $\inventory_{t_0-1}^j>0$ and $\quantity_{t_0}^j>0$.
+\end{proof}
+

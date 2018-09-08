@@ -4,37 +4,49 @@
 
 \section{Introduction}
 
-% In \cref{part:production planning}, we studied production planning problem which are mid-term decisions.
-% A main constraint of this problem was the flexibility of the assembly line (which can be easily understand as the flexibility of any production resource).
-% Thus, it was an input of the previous problem.
-% This part aims at deciding the flexibility of plants (or any other production resources) and is a long-term decision.
 
-\vlil{Deciding which plants should have the ability to produce a (new) item is a long-term decision that companies have
-to answer when expanding their product portfolio. Note that several plants may be able to produce the same item that is why this problem is called \emph{multi-sourcing}.}
-Deciding production multi-sourcing is a basic decision when companies expand their product portfolio.
-Production multi-sourcing is a long-term decision consisting in deciding if a plant should have the ability to produce an item.
+\subsection{Motivations}
+\label{sec:multi-sourcing:deterministic:introduction:motivations}
+
+
+Deciding which plants should have the ability to produce a (new) item is a long-term decision that companies have to answer when expanding their product portfolio.
 Note that several plants may be able to produce the same item that is why this problem is called \emph{multi-sourcing}.
 Because of their costs and of the time needed to implement them, multi-sourcing decisions cannot be easily changed.
 Thus, they have a high impact on competitiveness when deciding production planning (mid-term decision) and scheduling (short-term decision).
-One could think that a complete flexibility of each plant is the safest solution to ensure future high service level.
-However, multi-sourcing the production of every item leads to unnecessary high affectation costs.
-The challenge is to find a trade-off between affectation cost and demand satisfaction.
+One could think that giving to each plant the ability to produce every items is the safest solution to ensure future high service level.
+However, multi-sourcing the production of every item leads to unnecessary high assignment costs.
+The challenge is to find a trade-off between assignment cost and demand satisfaction.
 
 
-Studying this problem, Argon Consulting aims at getting a versatile model which can be used in many situation.
-Thus, the model must not be too dependent of the industry.
-For this reason, another objective is to address a model which captures the essential parts and difficulties of the multi-sourcing problem
-and which can be easily adapted to particular clients cases.
-For example, inventory cost at the end end of a period will not be taken into account but a particular client may want to bound it.
-Thus the model have to be able to add this constraint.
-Resolution method must also be able to adapt to model modifications.
+In multi-sourcing problems, we consider a centralized inventory.
+In practice, this can take several forms.
+One consists in many plants located in different places but whose productions go to a unique warehouse before being send to the stores.
+This is the case for one client in the luxury industry.
+Another one consists in several assembly lines in one big plants.
+In this cases, it is the lines which are given the ability to produce an item.
 
 
-\medskip
+Moreover, logistic costs are not considered in the problem.
+In practice, in the previous organizations, logistic costs are not a big issue compared to multi-sourcing costs.
+In more complex organizations, deciding the best logistic network relies on many more constraints and due to size of the problem, it has to be optimize in its own process.
 
 
-We considers a set $\plants$ of plants producing a set $\REF$ of items over $\horizon$ periods.
-There is an upper bound $\capacity_{pt}$ on the total period production of plant $p$ (summed over all items).
+Argon Consulting meets multi-sourcing problem with clients from different industries.
+Thus, Argon Consulting aims at getting a versatile model which can be used in many situations and must not be too dependent on the industry.
+We propose a model which captures the essence of the multi-sourcing problem and which can be easily adapted to particular client cases.
+% For example, inventory cost at the end end of a period will not be taken into account but a particular client may want to bound it.
+% Thus the model have to be able to add this constraint.
+% Solving method must also be able to adapt to model modifications.
+
+
+\subsection{Problem statement}
+\label{sec:multi-sourcing:deterministic:introduction:problem_statement}
+
+
+We consider a set $\plants$ of plants producing a set $\REF$ of items over $\horizon$ periods.
+There is an upper bound $\capacity_{pt}$ on the total period production of plant $p$ at period $t$ (summed over all items).
+This upper bound is expressed in time unit since it correspond to available working hours.
+
 
 Giving a plant $p$ the ability to produce an item $i$ has a cost $\affect_p^i$.
 This cost is paid once and for all for the whole horizon.
@@ -42,7 +54,7 @@ When a plant $p$ is able to produce item $i$, there is an upper (resp. lower) bo
 The capacity needed (in time units) to produce one unit of item $i$ in plant $p$ in period $t$ is $\rate_{pt}^i>0$.
 
 
-The production of item $i$ (summed over all plants) must satisfy a demand $\demand_t^i$ at the end of period $t$.
+The production and the inventory of item $i$ (summed over all plants) must satisfy a demand $\demand_t^i$ at the end of period $t$.
 When production of an item $i$ is not used to satisfy the demand, it can be stored and incurs no cost.
 For each item $i$, there is an initial inventory $\inventory_0^i\in\RR_+$.
 
@@ -56,32 +68,40 @@ We call this problem the \emph{deterministic multi-sourcing problem}.
 \medskip
 
 
-Some parameters or their time dependence may seem unusual.
-First, the lower bound on the production.
-When a company give a plant $p$ the ability to produce an item $i$, some of them impose a minimal production $\lb_{pt}^i$ for period $t$.
-In this particular case, these minimal productions are usually constant and positive during the first periods after affectation and null during the last periods.
+% Some parameters or their time dependence may seem unusual.
+Let's give some explanations.
+% First, the lower bound on the production.
+First, when a company gives a plant $p$ the ability to produce an item $i$, some of them imposes that production of item $i$ must not be under some threshold $\lb_{pt}^i$ at period $t$.
+Is is often to train the workers and in this particular case, these thresholds are usually constant and positive during the first periods after assignment and equal to zero during the last periods.
 Second, the capacity needed to produce one item may depends on time.
-This is often the case when people are involved in production since they become more efficient as time goes by.
-Finally, as we are interested in multi-sourcing decisions, we do not consider production nor holding costs.
-
-Thus, comparing future holding costs to actual affectation cost is hard.
-However, extending the model by adding holding or production cost or bounding the inventory between each period is straightforward.
-
-
-\medskip
+It is often the case when people are involved in production since they become more skilled as time goes by.
+% Finally, as we are interested in multi-sourcing decisions, we do not consider production nor holding costs.
+Finally, since multi-sourcing is a long-term decision and since deciding inventory levels is a mid-term decision, comparing assignment costs to holding costs does not make sense.
+Thus, we do not consider holding costs although it is easy for an industrial to extend the model by adding a constraint keeping inventory below some threshold.
+% However, extending the model by adding holding or production cost or bounding the inventory between each period is straightforward.
 
 
-We also define the \emph{uniform deterministic multi-sourcing problem}. Contrary to \cref{chap:PDP:deterministic}, this model does not rely on applications on real dataset but on technical considerations for proofs. In this problem, we set
-$$
-\rate_{pt}^i = 1
-,\quad
-\lb_{pt}^i = 0
-,\quad
-\ub_{pt}^i = \capacity_{pt} = 1
-.
-$$
+% \medskip
 
-\vlil{Je pense qu'il faudrait annoncer les résultats principaux du chapitre}
+
+% We also define the \emph{uniform deterministic multi-sourcing problem}. Contrary to \cref{chap:PDP:deterministic}, this model does not rely on applications on real dataset but on technical considerations for proofs. In this problem, we set
+% $$
+% \rate_{pt}^i = 1
+% ,\quad
+% \lb_{pt}^i = 0
+% ,\quad
+% \ub_{pt}^i = \capacity_{pt} = 1
+% .
+% $$
+
+
+\subsection{Main results}
+\label{sec:multi-sourcing:deterministic:introduction:main_results}
+
+
+We model the deterministic multi-sourcing problem as a mixed integer program in \cref{sec:multi-sourcing:deterministic:model-formulation} prove that deterministic multi-sourcing problem is $\NP$-hard in the strong sense and give some polynomial cases in \cref{sec:multi-sourcing:deterministic:NP-completeness}.
+
+
 
 
 \section{Bibliography}
@@ -95,12 +115,13 @@ $f=\frac{\sum_{i\in\REF}\sum_{p\in\plants}\open_p^i}{\card{\REF\times\plants}}$ 
 
 
 \section{Model formulations}
+\label{sec:multi-sourcing:deterministic:model-formulation}
 
 
-In this section, we introduce a mix integer program which models the deterministic multi-sourcing problem.
-We introduce the following decisions variables.
+In this section, we introduce a mixed integer program which models the deterministic multi-sourcing problem.
+We introduce the following decision variables.
 The quantity of item $i$ produced at period $t$ by plant $p$ is denoted by $\quantity_{pt}^i$ and the inventory at the end of the period is denoted by $\inventory_t^i$ .
-We also introduce a binary variable $\open_p^t$ which takes the value 1 if plant $p$ is given the ability to produce item $i$.
+We also introduce a binary variable $\open_p^i$ which takes the value 1 if plant $p$ is given the ability to produce item $i$.
 
 
 The deterministic multi-sourcing problem can be written as
@@ -127,38 +148,38 @@ The deterministic multi-sourcing problem can be written as
 \end{subequations}
 
 
-Objective~\eqref{eq:det-multi-sourcing:objective} minimizes the affectation costs.
+Objective~\eqref{eq:det-multi-sourcing:objective} minimizes the assignment costs.
 Constraint~\eqref{eq:det-multi-sourcing:inventory-dynamic} is the inventory balance.
 Capacity of each plant is ensured by constraint~\eqref{eq:det-multi-sourcing:capacity}.
 Constraint~\eqref{eq:det-multi-sourcing:big-M} is both a ``big-M'' constraint and a bound on the production of each item in each plant.
 Note that without loss of generality, we can suppose that $\ub_{pt}^i \le \capacity_{pt}$ for each period $t$, each plant $p$ and each item $i$.
 
 
-\medskip
+% \medskip
 
 
-The simplifications made for the uniform deterministic multi-sourcing problem lead to the following linear program
-\begin{subequations}\label{eq:det-multi-sourcing}
-  \begin{align+}
-    \min\quad & \rlap{$\ds \sum_{i\in\REF}\sum_{p\in\plants}\affect_p^i \open_p^i$}
-    \label{eq:det-multi-sourcing:objective}
-    \\
-    \st\quad & \ds \inventory_t^i = \inventory_{t-1}^i + \sum_{p\in\plants}\quantity_{pt}^i - \demand_t^i && \forall t\in\range{\horizon},\ \forall i\in\REF,
-    \label{eq:det-multi-sourcing:inventory-dynamic}
-    \\
-    & \ds \sum_{i\in\REF}\quantity_{pt}^i \leq 1 && \forall t\in\range{\horizon},\ \forall p\in\plants,
-    \label{eq:det-multi-sourcing:capacity}
-    \\
-    & \ds \quantity_{pt}^i \le \open_p^i && \forall t\in\range{\horizon},\ \forall p\in\plants, \forall i\in\REF,
-    \label{eq:det-multi-sourcing:big-M}
-    \\
-    & \ds \open_p^i \in \crbracket{0,1} && \forall p\in\plants, \forall i\in\REF,
-    \label{eq:det-multi-sourcing:boolean}
-    \\
-    & \ds \quantity_{pt}^i,\ \inventory_t^i \ge 0 && \forall t\in\range{\horizon},\ \forall p\in\plants, \forall i\in\REF.
-    \label{eq:det-multi-sourcing:positivity}
-  \end{align+}
-\end{subequations}
+% The simplifications made for the uniform deterministic multi-sourcing problem lead to the following linear program
+% \begin{subequations}\label{eq:det-multi-sourcing}
+%   \begin{align+}
+%     \min\quad & \rlap{$\ds \sum_{i\in\REF}\sum_{p\in\plants}\affect_p^i \open_p^i$}
+%     \label{eq:det-multi-sourcing:objective}
+%     \\
+%     \st\quad & \ds \inventory_t^i = \inventory_{t-1}^i + \sum_{p\in\plants}\quantity_{pt}^i - \demand_t^i && \forall t\in\range{\horizon},\ \forall i\in\REF,
+%     \label{eq:det-multi-sourcing:inventory-dynamic}
+%     \\
+%     & \ds \sum_{i\in\REF}\quantity_{pt}^i \leq 1 && \forall t\in\range{\horizon},\ \forall p\in\plants,
+%     \label{eq:det-multi-sourcing:capacity}
+%     \\
+%     & \ds \quantity_{pt}^i \le \open_p^i && \forall t\in\range{\horizon},\ \forall p\in\plants, \forall i\in\REF,
+%     \label{eq:det-multi-sourcing:big-M}
+%     \\
+%     & \ds \open_p^i \in \crbracket{0,1} && \forall p\in\plants, \forall i\in\REF,
+%     \label{eq:det-multi-sourcing:boolean}
+%     \\
+%     & \ds \quantity_{pt}^i,\ \inventory_t^i \ge 0 && \forall t\in\range{\horizon},\ \forall p\in\plants, \forall i\in\REF.
+%     \label{eq:det-multi-sourcing:positivity}
+%   \end{align+}
+% \end{subequations}
 
 
 
@@ -166,15 +187,18 @@ The simplifications made for the uniform deterministic multi-sourcing problem le
 \label{sec:multi-sourcing:deterministic:NP-completeness}
 
 
-The deterministic multi-sourcing problem is $\NP$-hard in the strong sense.
+In this section, we prove that the deterministic multi-sourcing problem is $\NP$-hard in the strong sense and give some polynomial cases.
 
 
 \begin{thm}\label{thm:deterministic-multi-sourcing:strong-NP-hard}
-Deciding if there is a solution with cost $\card{\REF}$ of the uniform deterministic multi-sourcing problem is $\NP$-complete even with unit affectation costs and one period.
+The deterministic multi-sourcing problem is $\NP$-hard in the strong sense.
+% Deciding if there is a solution with cost $\card{\REF}$ of the uniform deterministic multi-sourcing problem is $\NP$-complete even with unit assignment costs and one period.
 \end{thm}
 
 
-Reducing 3-partition problem to uniform deterministic multi-sourcing problem, we show that deciding if there is a solution with cost $\card{\REF}$ of the deterministic multi-sourcing problem is $\NP$-complete. We remind that the 3-partition problem consists in deciding whether a given multiset $\crbracket{a_1,\ldots,a_{3m}}$ of integers can be partitioned into triples that all have the same sum. This problem is known to be $\NP$-complete in the strong sense (see~\cite{Garey1979}) even if $\frac{B}{4} < a_i < \frac{B}{2}$ for each $i$ with $B=\frac{1}{m}\sum_{i=1}^{3m}a_i$.
+Reducing the 3-partition problem to deterministic multi-sourcing problem, we show that the deterministic multi-sourcing problem is $\NP$-hard in the strong sense.
+We remind that the 3-partition problem consists in deciding whether a given multiset $\crbracket{a_1,\ldots,a_{3m}}$ of integers can be partitioned into triples that all have the same sum.
+This problem is known to be $\NP$-complete in the strong sense (see~\cite{Garey1979}) even if $\frac{B}{4} < a_i < \frac{B}{2}$ for each $i$ with $B=\frac{1}{m}\sum_{i=1}^{3m}a_i$.
 
 
 
@@ -202,25 +226,30 @@ $$
   \ub_{p,1}^i=\capacity_{p,1}=B.
 $$
 Thus, if we have a solution for the 3-partition problem, finding a solution with cost $\card{\REF}$ of the deterministic multi-sourcing problem is straightforward.
-Conversely, if we have a solution with cost $\card{\REF}$ of the deterministic multi-sourcing problem with these parameters, $\frac{\capacity_{p,1}}{4}=\frac{B}{4} < a_i$ ensures that there are at most three items per plant.
-Since each item is affected to at least one plant, we got a collection of $m$ triples.
+
+Conversely, if we have a solution with cost $\card{\REF}$ of the deterministic multi-sourcing problem, $\frac{\capacity_{p,1}}{4}=\frac{B}{4} < a_i$ ensures that there are at most three items per plant.
+Since each item is assigned to at least one plant, we get a collection of $m$ triples.
 Plants having the same capacity and sum of plant capacities being equal to sum of demands, each triple has the same sum.
 Thus, we get a solution of the 3-partition problem.
+
 The conclusion follows from the fact that the 3-partition problem is $\NP$-complete in the strong sense even if $\frac{B}{4} < a_i < \frac{B}{2}$ for each $i$.
 \end{proof}
 
 
 \cref{thm:deterministic-multi-sourcing:strong-NP-hard} prove the strong $\NP$-hardness but the proof require instances of the deterministic multi-sourcing problem with many plants.
 One can ask for simpler cases.
-\cref{thm:deterministic-multi-sourcing:NP-hard:2-plants} shows that deterministic multi-sourcing problem remains $\NP$-hard with one period and two plants and \cref{prop:deterministic-multi-sourcing:polynomial-cases} gives some polynomial cases.
+\cref{thm:deterministic-multi-sourcing:NP-hard:2-plants} shows that deterministic multi-sourcing problem remains $\NP$-hard with only one period and only two plants and \cref{prop:deterministic-multi-sourcing:polynomial-cases} gives some polynomial cases.
 
 
 \begin{thm}\label{thm:deterministic-multi-sourcing:NP-hard:2-plants}
-Deciding if there is a solution with cost $\card{\REF}$ of the uniform deterministic multi-sourcing problem is $\NP$-complete even with unit affectation costs, one period and two plants.
+The deterministic multi-sourcing problem is $\NP$-hard even if there is only one period and only two plants.
+% Deciding if there is a solution with cost $\card{\REF}$ of the uniform deterministic multi-sourcing problem is $\NP$-complete even with unit assignment costs, one period and two plants.
 \end{thm}
 
 
-Reducing partition problem to the uniform deterministic multi-sourcing problem, we show that deciding if there is a solution of the uniform deterministic multi-sourcing problem is $\NP$-complete. We remind that the partition problem is the task of deciding whether a given set of positive integers can be partitioned into two subsets that have the same sum. This problem is known to be $\NP$-complete (see~\cite{Garey1979}).
+Reducing the partition problem to the deterministic multi-sourcing problem, deterministic multi-sourcing problem is $\NP$-complete.
+We remind that the partition problem is the task of deciding whether a given set of positive integers can be partitioned into two subsets that have the same sum.
+This problem is known to be $\NP$-complete (see~\cite{Garey1979}).
 
 
 \begin{proof}
@@ -245,13 +274,17 @@ $$
   ,\quad
   \ub_{pt}^i=\capacity_{pt}=\frac{1}{2}\sum_{i=1}^{m}a_i.
 $$
-Thus, we have a solution with cost $\card{\REF}$ for the partition problem if and only if there is a solution to the deterministic multi-sourcing problem with these parameters.
-Indeed, each $a_i$ being positive, each item is affected to at least one plant
+% Thus, we have a solution of the partition problem if and only if there is a solution with cost $\card{\REF}$ to the deterministic multi-sourcing problem.
+
+% Each $a_i$ being positive, each item must be assigned to at least one plant.
+% So, a solution with cost $\card{\REF}$ to the deterministic multi-sourcing problem with these parameters is a solution where each item is assigned to exactly one plant.
 Thus, if we have a solution for the partition problem, finding a solution with cost $\card{\REF}$ of the deterministic multi-sourcing problem is straightforward.
-Conversely, if we have a solution with cost $\card{\REF}$ of the deterministic multi-sourcing problem with these parameters, positivity of the $a_i$ ensures that each item is affected to at least one plant.
-Cost of the solution being equal to $\card{\REF}$, each item is affected to exactly one plant.
-Plants having the same capacity and sum of plant capacities being equal to sum of demands, each subset define by the affectation has the same sum.
+
+Conversely, if we have a solution with cost $\card{\REF}$ of the deterministic multi-sourcing problem, positivity of the $a_i$ ensures that each item is assigned to at least one plant.
+Cost of the solution being equal to $\card{\REF}$, each item is assigned to exactly one plant.
+Plants having the same capacity and sum of plant capacities being equal to sum of demands, each subset define by the assignment has the same sum.
 Thus, we get a solution of the partition problem.
+
 The conclusion follows from the fact that the partition problem is $\NP$-complete.
 \end{proof}
 
@@ -260,7 +293,7 @@ The conclusion follows from the fact that the partition problem is $\NP$-complet
 The following special cases of the deterministic multi-sourcing problem are polynomial:
 \begin{enumerate}
   \item deterministic multi-sourcing problem with a single plant ($\plants=\crbracket{1}$),
-  \item deterministic multi-sourcing problem without affectation cost ($\affect_p^i=0$),
+  \item deterministic multi-sourcing problem without assignment cost ($\affect_p^i=0$),
   \item deterministic multi-sourcing problem with infinite capacities ($\ub_{pt}^i=\capacity_{pt}=+\infty$).
 \end{enumerate}
 \end{prop}
@@ -280,16 +313,16 @@ $$
 \right.
 $$
 Then, we solve the resulting linear program to get the optimal solution of the deterministic multi-sourcing problem.
-(It eventually\vl{may} returns that problem is infeasible.)
+(It may return that the problem is infeasible.)
 
 \medskip
 
-\emph{Case 2: deterministic multi-sourcing problem without affectation cost.}
+\emph{Case 2: deterministic multi-sourcing problem without assignment cost.}
 
 For each plant $p$ and each item $i$, we set $\open_p^i=1$.
 These decisions do not affect the cost in the objective function.
 Then, we solve the resulting linear program to get the optimal solution of the deterministic multi-sourcing problem.
-(It may returns that problem is infeasible.)
+(It may return that the problem is infeasible.)
 
 \medskip
 
@@ -307,7 +340,7 @@ $$
 \right.
 $$
 Then, we solve the resulting linear program to get the optimal solution of the deterministic multi-sourcing problem.
-(It may returns that problem is infeasible.)
+(It may return that problem is infeasible.)
 \end{proof}
 
 
