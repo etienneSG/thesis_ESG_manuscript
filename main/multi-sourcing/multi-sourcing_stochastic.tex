@@ -33,7 +33,7 @@ Thus, while remaining not too expansive, multi-sourcing decisions should be effi
 
 
 These two characteristics are not easy to take into account.
-Several approaches are possible and will be discussed in \cref{sec:multi-sourcing:stochastic:model:discussion}.
+Several approaches are possible and will be discussed in \cref{sec:multi-sourcing:stochastic:discussion}.
 
 
 
@@ -51,6 +51,7 @@ Giving a plant $p$ the ability to produce an item $i$ has a cost $\affect_p^i$.
 This cost is paid once and for all for the whole horizon.
 When a plant $p$ is able to produce item $i$, there is an upper (resp. lower) bound $\ub_{pt}^i\ge 0$ (resp. $\lb_{pt}^i\ge 0$) on the production of item $i$ in plant $p$ at period $t$.
 The capacity needed (in time units) to produce one unit of item $i$ in plant $p$ in period $t$ is $\rate_{pt}^i>0$.
+For each item $i$, the average value of $\rate_{pt}^i$ over plants and periods is denoted $\rate^i$.
 
 
 The production must satisfy a random demand as well as possible.
@@ -92,6 +93,9 @@ In \cref{sec:multi-sourcing:stochastic:discussion}, we discuss the choice made t
 \label{sec:multi-sourcing:stochastic:bibliography}
 
 
+\esgil{TO DO}
+
+
 \section{Model formulation}
 \label{sec:multi-sourcing:stochastic:model-formulation}
 
@@ -129,18 +133,15 @@ For the inventory, $\AVaR_{1-\servicelvl}\bracket{\va\inventory}$ seems like the
 More precisely, $\AVaR_{1-\servicelvl}\bracket{\va\inventory}\le 0$ means that the average of safety stocks needed to ensure cycle service level from $\servicelvl$ to 1 is negative (\ie it does not need safety stocks).
 
 
+\cref{fig:avar-examples} represents the Value at Risk and the Average Value at Risk in the case of a Gaussian distribution of the stock $\va\inventory_t^i$.
+
+
 \begin{figure}[h]
   \centering
   \includegraphics{main/multi-sourcing/images/avar-example.tikz}
   \caption{Example of risk measures for the inventory}
   \label{fig:avar-examples}
 \end{figure}
-
-
-\cref{fig:avar-examples} represents the Value at Risk and the Average Value at Risk in the case of a Gaussian distribution of the stock $\va\inventory_t^i$.
-
-
-\esgil{Add example of the $\AVaR$ with one item and four plants.}
 
 
 
@@ -206,7 +207,7 @@ Linearization of $\AVaR$ constraint can be efficiently made in case of a finite 
 
 
 \begin{lem}\label{lem:linearize-AVaR}
-For a random variable $\va X$ taking its values at random in a set $\{X_{\omega}\colon\omega\in\Omega\}$ with probability $\{p_{\omega}\colon\omega\in\Omega\}$ and for $\lambda\in\bracket{0,1}$, the inequality 
+For a random variable $\va X$ taking its values at random in a finite set $\{X_{\omega}\colon\omega\in\Omega\}$ with probability $\{p_{\omega}\colon\omega\in\Omega\}$ and for $\lambda\in\bracket{0,1}$, the inequality 
 $\AVaR_{\lambda}\bracket{\va X} \le 0$ holds if and only if the following polyhedron is nonempty:
 $$
 \left\{
@@ -225,7 +226,7 @@ $$
 \begin{proof}
 We have the following equivalences.
 \begin{subequations}
-  \begin{align}
+  \begin{align+}
     \ds\AVaR_{\lambda}\bracket{\va X} \le 0 &\ds\iff \frac{1}{\lambda} \inf_{m\in\RR}\bracket{\espe\sqbracket{\bracket{m-\va X}^+}-\lambda m} \le 0
     \label{eq:follmer-and-schied-proposition}
     \\
@@ -241,7 +242,7 @@ We have the following equivalences.
         \ds\alpha_{\omega}\ge m-X_{\omega},\ \forall\omega\in\Omega
       \end{array}
     \right.
-  \end{align}
+  \end{align+}
 \end{subequations}
 Equivalence~\eqref{eq:follmer-and-schied-proposition} is given by Proposition~4.37 in \cite{Follmer2004}.
 Equivalence~\eqref{eq:discrete-space probability} comes from the finite space probability.
@@ -315,39 +316,59 @@ When working on big dataset, LP solver are unable to find feasible solutions (se
 Thus, we propose a simple heuristic to find a solution in reasonable time.
 
 
-As explained in \cref{sec:multi-sourcing:stochastic:motivations}, randomness comes from the variations of product mix and not from the global volume which is assumed constant.
+As explained in \cref{chap:business-context}, randomness comes from the variations of product mix and not from the global volume which is assumed constant.
 Basic idea of the heuristic is to scale the demand of every item at every period with a factor $\alpha\ge1$ and to solve the deterministic version~\eqref{eq:det-multi-sourcing} got with this demand.
 Then, the obtained assignment should be feasible for $\alpha$ large enough.
 
 
-The heuristic has two parameters.
+The details of the heuristic are given by Algorithm~\ref{alg:multi-sourcing:MIP:heuristic}.
+It has two parameters.
 First, $N$ is the number of values tried for $\alpha$.
 Second, $\tau$ is the maximal time spent to solve the deterministic version~\eqref{eq:det-multi-sourcing} with demand scaled by $\alpha$.
+We denote by $W$ the cumulative sum of working hours which is assumed constant over every scenarios and is equal to $\sum_{i\in\REF}\sum_{t=1}^{\horizon}\rate^i\demand_t^i$ and by $\capacity$ the cumulative capacity of plants over periods which is equal to $\sum_{p\in\plants}\sum_{t=1}^{\horizon}\capacity_{pt}$.
+
 
 
 \esgil{Completer après le point avec Fabrice du 05/09. Ne pas oublier les preuves dans les mails IWLS.}
 
 
-% \begin{algorithm}[H]
-%   \SetLine
-%   \KwIn{MIP~\eqref{eq:stoch-multi-sourcing:linearized}}
-%   \KwOut{Feasible multi-sourcing}
-%   \KwParameters{$N$, $\tau$}
-%   \KwResult{}
+\begin{algorithm}[H]
+\Input{MIP~\eqref{eq:stoch-multi-sourcing:linearized}, cumulative working hours $W$, cumulative capacity $\capacity$}
+\Output{Multi-sourcing $\bracket{\open_p^i}_{p,i}$}
+\Parameters{$N$, $\tau$}
 
-%   initialization\;
-%   \While{not at end of this document}{
-%   read current\;
-%   \eIf{understand}{
-%     go to next section\;
-%     current section becomes this one\;
-%     }{
-%     go back to the beginning of current section\;
-%   }
-%   }
-%   \caption{Heuristic to solve MIP~\eqref{eq:stoch-multi-sourcing:linearized}}
-%   \label{alg:multi-sourcing:MIP:heuristic}
-% \end{algorithm}
+Set $\open_p^i=1$ for all plant $p$ and all item $i$ \tcp*[r]{initialize multi-sourcing decisions}
+Construct deterministic version~\eqref{eq:det-multi-sourcing} with average values of demand over scenarios\;
+
+\BinarySearch{on $\alpha$ between 1 and $\frac{\capacity}{W}$\hfill// $N$ iterations}
+{
+  Uniformly scale demand by $\alpha$\;
+  Solve deterministic version~\eqref{eq:det-multi-sourcing} with its demand scaled by $\alpha$ \tcp*[r]{time limit = $\tau$}
+  \eIf{deterministic version~\eqref{eq:det-multi-sourcing} with its demand scaled by $\alpha$ is infeasible,}
+  {
+    Decrease $\alpha$\;
+  }
+  {
+    Let $\bracket{\tilde{y}_p^i}_{p,i}$ be the solution of deterministic version~\eqref{eq:det-multi-sourcing} with its demand scaled by $\alpha$\;
+    Solve MIP~\eqref{eq:stoch-multi-sourcing:linearized} with its demand scaled by $\alpha$ and assignment $\bracket{\tilde{y}_p^i}$\;
+    \eIf{MIP~\eqref{eq:stoch-multi-sourcing:linearized} with its demand scaled by $\alpha$ and assignment $\bracket{\tilde{y}_p^i}$ is infeasible,}
+    {
+      Increase $\alpha$\;
+    }
+    {
+      \If{cost of new multi-sourcing $\bracket{\tilde{y}_p^i}_{p,i}$ is lower than cost of current one $\bracket{\open_p^i}_{p,i}$,}
+      {
+        Replace current multi-sourcing $\bracket{\open_p^i}_{p,i}$ by new one $\bracket{\tilde{y}_p^i}_{p,i}$\;
+      }
+      Decrease $\alpha$\;
+    }
+  }
+}
+
+\Return{current multi-sourcing $\bracket{\open_p^i}_{p,i}$}\;
+\caption{Heuristic to solve mixed integer program~\eqref{eq:stoch-multi-sourcing:linearized}}
+\label{alg:multi-sourcing:MIP:heuristic}
+\end{algorithm}
 
 
 \subsection{Bender decomposition}
@@ -391,20 +412,85 @@ where constraint \eqref{eq:stoch-multi-sourcing:bender:constraint} regroups cons
 
 
 
-\section{Focused discussion on expectation, robust, probabilistic and average value at risk constraints}
+\section{Discussion on expectation, robust, probabilistic and average value at risk constraints}
 \label{sec:multi-sourcing:stochastic:discussion}
 
 
-As explained in \cref{sec:multi-sourcing:stochastic:motivations}, multi-sourcing decision must lead to ``high long term service level'' and a good control on ``worst cases''.
+As explained in \cref{sec:multi-sourcing:stochastic:introduction:motivations}, multi-sourcing decision must lead to ``high long term service level'' and a good control on ``worst cases''.
 These constrains are ill-defined.
 Many way of modeling it are possible.
 We choose to use the Average Value at Risk and compare its pros and cons to the ones of expectation, robust and probabilistic constraints.
-\cref{tab:constraint-properties-comparison} summarizes this comparison.
 
 
-\esgil{Add the end of the example with 4 plants and 1 item. DO NOT forget to write each constraint.}
+In the case of multi-sourcing problem, these three constraints are defined as follow.
+For each item $i$ and each period $t$, the expectation constraint on the inventory $\va\inventory_t^i$ is written as ``$\espe\sqbracket{\va\inventory_t^i}\ge0$'', the probabilistic constraint as ``$\prob\sqbracket{\va\inventory_t^i\ge0}\ge\servicelvl$'' and the robust constraint as ``$\va\inventory_t^i\ge0$, almost surely''.
+Note that we consider a simple case of robust constraint which is an extreme case of probabilistic and $\AVaR$ constraint with $\servicelvl=1$.
 
 
+
+
+\subsection{Small example}
+\label{sec:multi-sourcing:stochastic:discussion:small-example}
+
+
+To illustrate discussions about the different constraints, we propose the following example.
+Consider a company producing a single item for one period.
+Consider that the company may open up to 4 identical plants to produce the item and when it opens one, it must use its full capacity which is equal to 100.
+The random demand for the item is uniformly drawn in $\crbracket{50,100,200,250,350}$ and the parameter $\servicelvl$ to control the service level is equal to $60\%$.
+Opening a plant (\ie assigning the item to a plant) has a unit cost.
+The parameters of the multi-sourcing problem are then set as follow
+$$
+  \horizon=1
+  ,\quad
+  \plants=\range[1]{4}
+  ,\quad
+  \REF=\crbracket{1}
+  ,\quad
+  \va\demand_1^i\sim\cU\crbracket{50,100,200,250,350}
+  ,\quad
+  \servicelvl=60\%,
+$$
+$$
+  \affect_p^i=1
+  ,\quad
+  \rate_{p,1}^i=1
+  ,\quad
+  \lb_{p,1}^i=\ub_{p,1}^i=\capacity_{p,1}=100.
+$$
+Since the plant are identical, we simply use the number of opened plants as a decision variable and denote by $\va\inventory$ the inventory at the end of the period.
+\cref{tab:indicator-values-depending-on-opened-plants} gives the values of the left part of each constraint depending on the number of opened plants.
+Orange values correspond to cases where constraint is satisfied.
+The two last lines correspond to the fill rate service level and to the average number of lost sales depending on the number of opened plants.
+\begin{table}[h]
+  \centering
+  \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}l|ccccc@{\extracolsep{\fill}}}
+  \hline
+  Number of opened plants                         & 0 & 1 & 2 & 3 & 4 \\
+  \hline
+  $\espe\sqbracket{\va\inventory_t^i}$            & -190 & -90 & \textcolor{argon orange}{10} & \textcolor{argon orange}{110} & \textcolor{argon orange}{210} \\
+  $\prob\sqbracket{\va\inventory_t^i\ge0}$        & 0\% & 40\% & \textcolor{argon orange}{60\%} & \textcolor{argon orange}{80\%} & \textcolor{argon orange}{100\%} \\
+  $\AVaR_{1-\servicelvl}\bracket{\va\inventory}$  & 300 & 200 & 100 & \textcolor{argon orange}{0} & \textcolor{argon orange}{-100} \\
+  $\va\inventory_t^i\ge0$, almost surely          & false & false & false & false & \textcolor{argon orange}{true} \\
+  \hline
+  Fill rate service level                         & 0\% & 64\% & 87\% & 97\% & 100\% \\
+  Average lost sales                              & 190 & 100 & 40 & 10 & 0 \\
+  \hline
+  \end{tabular*}
+  \caption{Indicator values depending the number of opened plants}
+  \label{tab:indicator-values-depending-on-opened-plants}
+\end{table}
+
+To satisfy expectation or the probabilistic constraints, the company must open at least 2 plants.
+To satisfy $\AVaR$ constraint, the company must open at least 3 plants.
+To satisfy robust constraint, the company must open at least 4 plants.
+As expected by the theory, robust constraint is more conservative than $\AVaR$ which is more conservative than probabilistic constraint.
+
+
+\subsection{Discussion}
+\label{sec:multi-sourcing:stochastic:discussion:discussion}
+
+
+\cref{tab:constraint-properties-comparison} summarizes the comparison between the expectation, robust, probabilistic and average value at risk constraints
 \begin{table}[h]
   \centering
   \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lcccc@{\extracolsep{\fill}}}
@@ -427,7 +513,6 @@ We choose to use the Average Value at Risk and compare its pros and cons to the 
   \label{tab:constraint-properties-comparison}
 \end{table}
 
-\vlil{il faut définir ce que l'on entends par ces différentes contraintes, et noter que l'on ne considère qu'un cas simple de "robust constraint", qui est d'ailleurs un cas extreme de AVAR et Proba constraint}
 
 We do not pretend to state general truth but rather general trend on common cases.
 We propose eight criterion to compare the constraints.
