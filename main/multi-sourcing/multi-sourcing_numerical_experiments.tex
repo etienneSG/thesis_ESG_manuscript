@@ -1,4 +1,5 @@
 \chapter{Numerical experiments}
+\label{chap:multi-sourcing:numerical-experiments}
 
 
 In order to test the efficiency of our approach, we test our method on datasets from Argon Consulting’s clients.
@@ -37,15 +38,15 @@ C++11 has been chosen for the implementations and Gurobi 6.5.1~\cite{gurobi} was
 \section{Instance}
 
 
-In practice, we have access to every technical characteristics of the plant (as capacity, internal production time) or assignment costs.
+In practice, we have access to every technical characteristics of the plant (like capacity, internal production time) or assignment costs.
 We also have the forecast demand and the quantities really produced.
-However, as usual, we do not have access to the real demand.
+However, as usual, real demand may be slightly different from historical one.
 Indeed, it is almost always impossible to trace if, after a stock-out, a client changes its mind for another item or do not buy anything.
 % About opening costs, they are not straightforward.
 % Discussions lead to consider the time loss to install assembly lines, to train employees and to ramp up production as the opening cost.
 
 \cref{tab:multi-sourcing:instances-characteristics} summarize the characteristics of the two instances used for tests.
-\begin{table}
+\begin{table}[h]
 \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}llr@{\extracolsep{\fill}}c@{\extracolsep{\fill}}rr@{\extracolsep{\fill}}c@{\extracolsep{\fill}}r@{\extracolsep{\fill}}}
 \hline
 \multicolumn{2}{c}{Instances characteristics} & \multicolumn{6}{c}{Instances}
@@ -115,9 +116,39 @@ Argon Consulting's client want to compare its actual multi-sourcing to the ideal
 \esgil{Completer après la réunion du 05/09 avec Fabrice, Frédéric et Vincent.}
 
 
+We generate randomness from historical data using Dirichlet distributions as in \cref{chap:PDP:numerical-experiments}.
+The random demand satisfies the following properties.
+\begin{enumerate}
+  \item\label{enum:multi-sourcing:random-demand-property:expectation} Demand's expectation is equal to its historical value:
+  \begin{equation}
+    \espe\sqbracket{\va\demand_t^i} = \tilde{\demand}_t^i\qquad\forall t\in\range{T},\ \forall i\in\REF.
+  \end{equation}
+  \item\label{enum:multi-sourcing:random-demand-property:constant-volume} Demand's total volume does not depend on the realization:
+  \begin{equation}
+    \sum_{t=1}^{\horizon}\sum_{i\in\REF}\rate^i\va\demand_t^i = \sum_{t=1}^{\horizon}\sum_{i\in\REF}\rate^i\tilde{\demand}_t^i\qquad\mbox{almost surely.}
+  \end{equation}
+  \item\label{enum:multi-sourcing:random-demand-property:variance} Demand's variance is equal to
+  \begin{equation}\label{eq:multi-sourcing:numerical-experiments:demand:variance}
+    (\sigma_t^i)^2=\vari\sqbracket{\va\demand_t^i}=\gamma\,\tilde{\demand}_t^i\sum_{\bracket{j,\tau}\ne\bracket{i,t}}\tilde{\demand}_{\tau}^j\qquad\forall t\in\range{T},\ \forall i\in\REF,
+  \end{equation}
+\end{enumerate}
+
+
+% Since we know the historical demand, the generate demand of an item at a period should have the same expectation which explains \cref{enum:multi-sourcing:random-demand-property:expectation}.
+\cref{enum:multi-sourcing:random-demand-property:constant-volume} is justified by our study of flexibility.
+Indeed, as explained in \cref{chap:business-context}, we study the ability to face variations of the product mix and assume that we already known the cumulative working hours of production $\sum_{t=1}^{\horizon}\sum_{i\in\REF}\rate^i\va\demand_t^i$.
+In \label{enum:multi-sourcing:random-demand-property:variance}, there remains a unique unfixed parameter $\gamma$ which enables to chose the level of randomness. As we can see in \cref{eq:multi-sourcing:numerical-experiments:demand:variance}, the greater $\gamma$ is, the greater the variances of demand are.
+
+
+
+
 
 \section{Numerical results}
 \label{sec:multi-sourcing:numerical-experiments:numerical-results}
+
+
+\esgil{Complete with KPI given by Fabrice and Pierre-Fabrice.}
+
 
 Simulation results for Mel dataset without using the heuristic are given in \cref{tab:multi-sourcing:results:mel:without-heuristic} and using heuristic in \cref{tab:multi-sourcing:results:mel:with-heuristic}.
 Simulation results for Lux dataset using heuristic are given in \cref{tab:multi-sourcing:results:lux:with-heuristic}.

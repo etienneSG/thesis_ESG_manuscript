@@ -309,7 +309,7 @@ Thanks to \cref{lem:linearize-AVaR}, we get the following mixed integer program 
 This mixed-integer program can be solved by any linear solver for small dataset but needs heuristics or decomposition methods for big dataset.
 
 
-\subsection{Heuristic to solve MIP~\eqref{eq:stoch-multi-sourcing:linearized}}
+\subsection{Heuristic to solve mixed integer program~\eqref{eq:stoch-multi-sourcing:linearized}}
 
 
 When working on big dataset, LP solver are unable to find feasible solutions (see \cref{sec:multi-sourcing:numerical-experiments:numerical-results}).
@@ -322,53 +322,179 @@ Then, the obtained assignment should be feasible for $\alpha$ large enough.
 
 
 The details of the heuristic are given by Algorithm~\ref{alg:multi-sourcing:MIP:heuristic}.
-It has two parameters.
-First, $N$ is the number of values tried for $\alpha$.
-Second, $\tau$ is the maximal time spent to solve the deterministic version~\eqref{eq:det-multi-sourcing} with demand scaled by $\alpha$.
-We denote by $W$ the cumulative sum of working hours which is assumed constant over every scenarios and is equal to $\sum_{i\in\REF}\sum_{t=1}^{\horizon}\rate^i\demand_t^i$ and by $\capacity$ the cumulative capacity of plants over periods which is equal to $\sum_{p\in\plants}\sum_{t=1}^{\horizon}\capacity_{pt}$.
-
-
-
-\esgil{Completer après le point avec Fabrice du 05/09. Ne pas oublier les preuves dans les mails IWLS.}
+It has two parameters:
+\begin{itemize}
+  \item $N$ which is the number of values tried for $\alpha$,
+  \item $\tau$ which is the time limit to solve the program (P) with its demand scaled by $\alpha$.
+\end{itemize}
+% We denote by $W$ the cumulative sum of working hours which is assumed constant over every scenarios and is equal to $\sum_{i\in\REF}\sum_{t=1}^{\horizon}\rate^i\demand_t^i$ and by $\capacity$ the cumulative capacity of plants over periods which is equal to $\sum_{p\in\plants}\sum_{t=1}^{\horizon}\capacity_{pt}$.
 
 
 \begin{algorithm}[H]
-\Input{MIP~\eqref{eq:stoch-multi-sourcing:linearized}, cumulative working hours $W$, cumulative capacity $\capacity$}
+\Input{Mixed integer program~\eqref{eq:stoch-multi-sourcing:linearized}, expected demand $\espe\sqbracket{\va\demand_t^i}$ for all period $t$ and all item $i$}
 \Output{Multi-sourcing $\bracket{\open_p^i}_{p,i}$}
 \Parameters{$N$, $\tau$}
 
-Set $\open_p^i=1$ for all plant $p$ and all item $i$ \tcp*[r]{initialize multi-sourcing decisions}
-Construct deterministic version~\eqref{eq:det-multi-sourcing} with average values of demand over scenarios\;
+\BlankLine
 
-\BinarySearch{on $\alpha$ between 1 and $\frac{\capacity}{W}$\hfill// $N$ iterations}
+Set cost of current multi-sourcing $\bracket{\open_p^i}_{p,i}$ equal to $+\infty$.
+
+\BlankLine
+
+Construct program (P) which is deterministic version~\eqref{eq:det-multi-sourcing} with:\;
+\begin{itemize}
+  \item demand $\demand_t^i=\espe\sqbracket{\va\demand_t^i}$ for all period $t$ and all item $i$,
+  \item every other parameters of (P) are equal to those of mixed integer program~\eqref{eq:stoch-multi-sourcing:linearized}.\;
+\end{itemize}
+Set $W=\sum_{i\in\REF}\sum_{t=1}^{\horizon}\rate^i\espe\sqbracket{\va\demand_t^i}$. \tcp*[r]{cumulative sum of working hours}
+Set $\capacity=\sum_{p\in\plants}\sum_{t=1}^{\horizon}\capacity_{pt}$. \tcp*[r]{cumulative capacity of plants}
+
+\BlankLine
+
+\BinarySearch{\em $\alpha$ \Between 1 \And $\frac{\capacity}{W}$\hfill\textnormal{\texttt{// $N$ iterations}}}
 {
-  Uniformly scale demand by $\alpha$\;
-  Solve deterministic version~\eqref{eq:det-multi-sourcing} with its demand scaled by $\alpha$ \tcp*[r]{time limit = $\tau$}
-  \eIf{deterministic version~\eqref{eq:det-multi-sourcing} with its demand scaled by $\alpha$ is infeasible,}
+  Construct program (P$_{\alpha}$) from program (P) by replacing demand $\demand_t^i$ by $\alpha\demand_t^i$.\;
+%   Uniformly scale demand by $\alpha$\;
+  Solve program (P$_{\alpha}$). \tcp*[r]{time limit = $\tau$}
+  \eIf{\em program (P$_{\alpha}$) is infeasible,}
   {
-    Decrease $\alpha$\;
+    Decrease $\alpha$.\;
   }
   {
-    Let $\bracket{\tilde{y}_p^i}_{p,i}$ be the solution of deterministic version~\eqref{eq:det-multi-sourcing} with its demand scaled by $\alpha$\;
-    Solve MIP~\eqref{eq:stoch-multi-sourcing:linearized} with its demand scaled by $\alpha$ and assignment $\bracket{\tilde{y}_p^i}$\;
-    \eIf{MIP~\eqref{eq:stoch-multi-sourcing:linearized} with its demand scaled by $\alpha$ and assignment $\bracket{\tilde{y}_p^i}$ is infeasible,}
+    Let $\bracket{\tilde{\open}_p^i}_{p,i}$ be the solution of program (P$_{\alpha}$).\;
+    Solve mixed integer program~\eqref{eq:stoch-multi-sourcing:linearized} with assignment $\bracket{\tilde{\open}_p^i}_{p,i}$.\;
+    \eIf{\em mixed integer program~\eqref{eq:stoch-multi-sourcing:linearized} with assignment $\bracket{\tilde{\open}_p^i}_{p,i}$ is infeasible,}
     {
-      Increase $\alpha$\;
+      Increase $\alpha$.\;
     }
     {
-      \If{cost of new multi-sourcing $\bracket{\tilde{y}_p^i}_{p,i}$ is lower than cost of current one $\bracket{\open_p^i}_{p,i}$,}
+      \If{\em cost of new multi-sourcing $\bracket{\tilde{\open}_p^i}_{p,i}$ is lower than cost of current one $\bracket{\open_p^i}_{p,i}$,}
       {
-        Replace current multi-sourcing $\bracket{\open_p^i}_{p,i}$ by new one $\bracket{\tilde{y}_p^i}_{p,i}$\;
+        Replace current multi-sourcing $\bracket{\open_p^i}_{p,i}$ by new one $\bracket{\tilde{\open}_p^i}_{p,i}$.\;
       }
-      Decrease $\alpha$\;
+      Decrease $\alpha$.\;
     }
   }
 }
 
-\Return{current multi-sourcing $\bracket{\open_p^i}_{p,i}$}\;
+\Return current multi-sourcing $\bracket{\open_p^i}_{p,i}$.\;
+
+\BlankLine
 \caption{Heuristic to solve mixed integer program~\eqref{eq:stoch-multi-sourcing:linearized}}
 \label{alg:multi-sourcing:MIP:heuristic}
 \end{algorithm}
+
+
+Solving program (P) with a higher demand enables to find a multi-sourcing which faces an augmentation of the demand of every items.
+In practice, it is too conservative since not every demand can increase in the same scenario (the cumulative sum of working hours is constant).
+For the binary search, the upper bound on $\alpha$ is chosen equal $\frac{W}{C}$ where $W$ is the cumulative sum of working hours which is assumed constant over every scenarios and $\capacity$ is the cumulative capacity of plants over periods.
+Scaling the demand by $\frac{W}{C}$ gives a model where capacity is almost equal to working hours needed to satisfy demand.
+Thus, every $\alpha$ greater than $\frac{W}{C}$ is unlikely to produce a feasible program.
+The lower bound on $\alpha$ is chosen equal to 1.
+If we cannot satisfy the demand in the case where it is equal to its expectation, then program~\eqref{eq:stoch-multi-sourcing:linearized} is likely to be infeasible.
+
+
+A binary search algorithm on $\alpha$ is justified by the monotony of optimal values of program (P$_{\alpha}$) (\ie program (P) with demand scaled by $\alpha$).
+% Indeed, for $\alpha_1$ and $\alpha_2$ in $\bracket{1,\frac{W}{C}}$, the cost of an optimal solution of program (P$_{\alpha_1}$) is lower or equal to the cost of an optimal solution of program (P) with demand scaled by $\alpha_2$.
+Proving it is straightforward.
+Let $\alpha_1$ and $\alpha_2$ be two positive real numbers such that $\alpha_1\le\alpha_2$. If program (P$_{\alpha_2}$) has an optimal solution, this solution is also a solution of program (P$_{\alpha_1}$) and has the same cost.
+In Algorithm~\ref{alg:multi-sourcing:MIP:heuristic}, the condition comparing the value of current multi-sourcing to the value of the new one is necessary in the case where the solver has not enough time to find the optimal solution of program (P).
+That is why, finding the smallest $\alpha$ such that (P$_{\alpha}$) is feasible and such that mixed integer program~\eqref{eq:stoch-multi-sourcing:linearized} with assignment equal to the optimal solution of (P$_{\alpha}$) is feasible gives the best assignment that the heuristic can return.
+
+
+However, the set of $\alpha$ such that (P$_{\alpha}$) is feasible and such that mixed integer program~\eqref{eq:stoch-multi-sourcing:linearized} with assignment equal to the optimal solution $\bracket{\open_p^i(\alpha)}_{p,i}$ of (P$_{\alpha}$) is not an interval.
+Consider the following example.
+We have two items, two plants with capacities $\capacity_1=100$ and $\capacity_2=55$, and one period and 2 scenarios with same probability.
+The parameter $\servicelvl$ is chosen equal to $100\%$ preventing from any stock-out.
+The other parameters of the multi-sourcing problem are given in \cref{tab:multi-sourcing:heuristic:counterexample:data}.
+\begin{table}[h]
+\subfloat[Assignment costs $\affect_p^i$]
+{\begin{tabular}{@{\extracolsep{\fill}}lcc@{\extracolsep{\fill}}}
+\cline{2-3}
+       & plant 1 & plant 2 \\
+\hline
+item 1 & 1       & 20 \\
+item 2 & 1       & 10 \\
+\hline
+\end{tabular}}
+\hfill
+\subfloat[Demand $\demand_{1,\omega}^i$]
+{\begin{tabular}{@{\extracolsep{\fill}}lcc@{\extracolsep{\fill}}}
+\cline{2-3}
+       & scenario 1 & scenario 2 \\
+\hline
+item 1 & 60         & 40 \\
+item 2 & 40         & 60 \\
+\hline
+\end{tabular}}
+\hfill
+\subfloat[Other parameters]
+{\begin{tabular}{p{2cm}lp{2cm}}
+& $\rate_{p,1}^i = 1$   & \\
+& $\lb_{p,1}^i   = 0$   & \\
+& $\ub_{p,1}^i   = 100$ & \\
+\end{tabular}}
+\caption{Parameters of the counterexample}
+\label{tab:multi-sourcing:heuristic:counterexample:data}
+\end{table}
+
+As shown in \cref{tab:multi-sourcing:heuristic:counterexample:results}, program (P$_{\alpha}$) is feasible for $\alpha\in\crbracket{1,1.1,1.2}$. However, if mixed integer program~\eqref{eq:stoch-multi-sourcing:linearized} with the optimal assignments of (P$_{1}$) and of (P$_{1.2}$) is feasible, it is infeasible with the optimal assignments of (P$_{1}$).
+
+\begin{table}[h]
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lccc@{\extracolsep{\fill}}}
+\cline{2-4}
+&
+Optimal assignment of (P$_{\alpha}$)
+&
+Cost
+&
+Feasible MIP~\eqref{eq:stoch-multi-sourcing:linearized}
+\\ \hline
+$\alpha=1$
+&
+\begin{tabular}{@{\extracolsep{\fill}}lcc@{\extracolsep{\fill}}}
+       & plant 1 & plant 2 \\
+\hline
+item 1 & 1       & 0 \\
+item 2 & 1       & 0
+\end{tabular}
+&
+2
+&
+true
+\\ \hline
+$\alpha=1.1$
+&
+\begin{tabular}{@{\extracolsep{\fill}}lcc@{\extracolsep{\fill}}}
+       & plant 1 & plant 2 \\
+\hline
+item 1 & 1       & 0 \\
+item 2 & 0       & 1
+\end{tabular}
+&
+11
+&
+false
+\\ \hline
+$\alpha=1.2$
+&
+\begin{tabular}{@{\extracolsep{\fill}}lcc@{\extracolsep{\fill}}}
+       & plant 1 & plant 2 \\
+\hline
+item 1 & 1       & 0 \\
+item 2 & 1       & 1
+\end{tabular}
+&
+12
+&
+true
+\\ \hline
+\end{tabular*}
+\caption{Solutions returned by an iteration of Algorithm~\ref{alg:multi-sourcing:MIP:heuristic} for $\alpha\in\crbracket{1,1.1,1.2}$}
+\label{tab:multi-sourcing:heuristic:counterexample:results}
+\end{table}
+\renewcommand{\arraystretch}{1}
+
 
 
 \subsection{Bender decomposition}
@@ -408,7 +534,7 @@ where constraint \eqref{eq:stoch-multi-sourcing:bender:constraint} regroups cons
 % \end{tikzpicture}
 
 
-\esgil{To do}
+\esgil{To do (not high-priority)}
 
 
 
@@ -416,9 +542,9 @@ where constraint \eqref{eq:stoch-multi-sourcing:bender:constraint} regroups cons
 \label{sec:multi-sourcing:stochastic:discussion}
 
 
-As explained in \cref{sec:multi-sourcing:stochastic:introduction:motivations}, multi-sourcing decision must lead to ``high long term service level'' and a good control on ``worst cases''.
+As explained in \cref{sec:multi-sourcing:stochastic:introduction:motivations}, multi-sourcing decision must lead to ``high long term service level'' and to good control on ``worst cases''.
 These constrains are ill-defined.
-Many way of modeling it are possible.
+Many way of modeling them are possible.
 We choose to use the Average Value at Risk and compare its pros and cons to the ones of expectation, robust and probabilistic constraints.
 
 
@@ -457,15 +583,15 @@ $$
   ,\quad
   \lb_{p,1}^i=\ub_{p,1}^i=\capacity_{p,1}=100.
 $$
-Since the plant are identical, we simply use the number of opened plants as a decision variable and denote by $\va\inventory$ the inventory at the end of the period.
-\cref{tab:indicator-values-depending-on-opened-plants} gives the values of the left part of each constraint depending on the number of opened plants.
+Since the plant are identical, we simply use the number of open plants as a decision variable and denote by $\va\inventory$ the inventory at the end of the period.
+\cref{tab:indicator-values-depending-on-open-plants} gives the values of the left part of each constraint depending on the number of open plants.
 Orange values correspond to cases where constraint is satisfied.
-The two last lines correspond to the fill rate service level and to the average number of lost sales depending on the number of opened plants.
+The two last lines correspond to the fill rate service level and to the expected number of lost sales depending on the number of open plants.
 \begin{table}[h]
   \centering
   \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}l|ccccc@{\extracolsep{\fill}}}
   \hline
-  Number of opened plants                         & 0 & 1 & 2 & 3 & 4 \\
+  Number of open plants                         & 0 & 1 & 2 & 3 & 4 \\
   \hline
   $\espe\sqbracket{\va\inventory_t^i}$            & -190 & -90 & \textcolor{argon orange}{10} & \textcolor{argon orange}{110} & \textcolor{argon orange}{210} \\
   $\prob\sqbracket{\va\inventory_t^i\ge0}$        & 0\% & 40\% & \textcolor{argon orange}{60\%} & \textcolor{argon orange}{80\%} & \textcolor{argon orange}{100\%} \\
@@ -476,11 +602,11 @@ The two last lines correspond to the fill rate service level and to the average 
   Average lost sales                              & 190 & 100 & 40 & 10 & 0 \\
   \hline
   \end{tabular*}
-  \caption{Indicator values depending the number of opened plants}
-  \label{tab:indicator-values-depending-on-opened-plants}
+  \caption{Indicator values depending the number of open plants}
+  \label{tab:indicator-values-depending-on-open-plants}
 \end{table}
 
-To satisfy expectation or the probabilistic constraints, the company must open at least 2 plants.
+To satisfy expectation or probabilistic constraints, the company must open at least 2 plants.
 To satisfy $\AVaR$ constraint, the company must open at least 3 plants.
 To satisfy robust constraint, the company must open at least 4 plants.
 As expected by the theory, robust constraint is more conservative than $\AVaR$ which is more conservative than probabilistic constraint.
@@ -499,7 +625,7 @@ As expected by the theory, robust constraint is more conservative than $\AVaR$ w
   \cline{2-5}
                                          & $\AVaR$      & Expectation  & Robust       & Probabilistic \\
   \hline
-  Easy writing                           & \bulletminus & \bulletplus  & \bulletminus & \bulletminus \\ 
+%  Easy writing                           & \bulletminus & \bulletplus  & \bulletminus & \bulletminus \\ 
   Easy linearization                     & \bulletplus  & \bulletplus  & \bulletplus  & \bulletminus \\
   Easy interpretation                    & $\sim$       & \bulletminus & \bulletplus  & \bulletplus  \\
   Control proportion of worst cases      & \bulletplus  & \bulletminus & \bulletminus & \bulletplus  \\
@@ -514,24 +640,46 @@ As expected by the theory, robust constraint is more conservative than $\AVaR$ w
 \end{table}
 
 
-We do not pretend to state general truth but rather general trend on common cases.
-We propose eight criterion to compare the constraints.
-First, the ease to write\vl{representability of} the constraint and to linearize it if needed.
-In many cases, expectation constraint is very easy to write since it is often a sum, an integral or a combination of the two.
-Moreover, it is already linear making it easy to use.
-On the other hand, probabilistic constraint is hard to write and to linearize since it is hardly ever\vl{not really true} convex.
-Robust and $\AVaR$ constraint are both not easy to write.
-\vlil{the discussion over "easiness of writing" is not very convincing}
-Every possible outcome must be considered in robust case and definition of $\AVaR$ makes it hard to use.
-However, robust and $\AVaR$ constraints are convex.
-Using scenarios often enables to get linear formulation of robust constraint of reasonable size and as shown in \cref{sec:multi-sourcing:stochastic:avar-linearization}, $\AVaR$ can also be linearized.
+% We do not pretend to state general truth but rather general trend on common cases.
+% We propose eight criterion to compare the constraints.
+% First, the ease to write representability of the constraint and to linearize it if needed.
+% In many cases, expectation constraint is very easy to write since it is often a sum, an integral or a combination of the two.
+% Moreover, it is already linear making it easy to use.
+% On the other hand, probabilistic constraint is hard to write and to linearize since it may not be convex.
+% Representability of robust and $\AVaR$ constraint are both not easy to write.
+% \vlil{the discussion over "easiness of writing" is not very convincing}
+% \esgil{Supprimer la discussion sur la facilité de représenter la contrainte et ne garder que celle sur la linéarisation ?}
+% Every possible outcome must be considered in robust case and definition of $\AVaR$ makes it hard to use.
+% However, robust and $\AVaR$ constraints are convex.
+% Using scenarios often enables to get linear formulation of robust constraint of reasonable size and as shown in \cref{sec:multi-sourcing:stochastic:avar-linearization}, $\AVaR$ can also be linearized.
+% We do not pretend to state general truth but rather general trend on common cases.
 
 
-Interpretation of robust and probabilistic constraints are quite easy. \vlil{alors il faut les donner}
-Even though expectation constraint seems easy to interpret, in practice, knowing the behavior of the mean does not give any information on the behavior of the other\vlil{la moyenne n'est pas nécessairement un outcome} outcome.
-Thus, it is very hard to say something\vl{reformulate} from only this information.
+\esgil{Essai en supprimant la discussion sur la facilité pour représenter la contrainte. Cette discussion n'apportait pas vraiment.}
+
+We propose seven criterion to compare the constraints.
+First, the ease to linearize the constraint if needed since it can makes us able to use linear programming.
+Expectation constraint is already linear making it easy to use.
+On the other hand, probabilistic constraint may be hard to linearize since it may not be convex.
+% For robust constraint, every possible outcome must be considered and definition of $\AVaR$ may make it hard to use.
+Robust and $\AVaR$ constraints are convex.
+Then, using scenarios often enables to get linear formulation of robust constraint of reasonable size and as shown in \cref{sec:multi-sourcing:stochastic:avar-linearization}, $\AVaR$ can also be linearized.
+
+
+Interpretation of robust and probabilistic constraints are quite easy.
+Robust constraint consists in satisfying the constraint in every possible outcome.
+In multi-sourcing, demand distribution is bounded.
+Thus satisfying the robust constraint consists in having enough stock to satisfy the higher possible demand.
+Probabilistic constraint consists in satisfying the constraint in $100\servicelvl\%$ of the cases.
+In multi-sourcing, this means that in $100\servicelvl\%$ of the cases, stock is high enough to satisfy the demand but in the remaining cases demand can as well be fully, partially or not satisfied at all.
+It perfectly matches with the cycle service level.
+Even though expectation constraint seems easy to interpret, in practice, knowing the behavior of the mean does not give any information on the behavior of the outcomes.
+For example, if the demand has a all-or-nothing distribution, expectation is far from any outcome.
+More generally, as soon as variance of distribution is high, it is hard to interpret from expectation behavior.
 Understanding $\AVaR$ constraint at level $\lambda\%$ is not straightforward.
-However, it means that $\bracket{1-\lambda}$ per cent\vl{techniquement x100} of cases satisfies the constraint and that the mean over the $\lambda$ remaining per cent also satisfy the constraint.
+However, it means that $100\bracket{1-\lambda}\%$ of cases satisfies the constraint and that the mean over the remaining cases also satisfy the constraint.
+Thus, it includes the interpretations of a probabilistic constraint at $100\bracket{1-\lambda}\%$ and of an expectation constraint on the bad cases.
+If there is not too many bad cases (\ie if $\lambda$ is small), we might expect a small variance in their distribution (while nothing ensure it).
 
 
 Thus, we easily see that $\AVaR$ constraint enables to control the proportion of bad cases and their value.
@@ -541,8 +689,8 @@ On the other hand, probabilistic constraint enable to choose the proportion of w
 
 
 Another advantage of $\AVaR$ and probabilistic constraints is the possibility to choose the level of conservativeness.
-Indeed, the decision-maker can easily see the price implied by the service level constraint and eventually relax partially this constraint with a single parameter.
-On the other hand, there is not any way of changing the robust and probabilistic constraint behavior.
+Indeed, the company can easily see the price implied by the service level constraint and eventually relax partially this constraint with a single parameter.
+On the other hand, there is not any way of changing the robust and expectation constraints behavior.
 
 
 Feasibility issues of each of this constraint is directly linked to it level of conservativeness.
@@ -558,7 +706,7 @@ On the other hand, expectation and robust constraint are often easier to deal wi
 \medskip
 
 
-To summarize, we choose $\AVaR$ constraint because of its linearization properties and the possible interpretation for industrial application.
-Moreover, as wanted by Argon Consulting, $\AVaR$ enables to control proportion of worst cases and their values.
-The price for this is the computational complexity.
+We choose $\AVaR$ constraint because of its linearization properties
+Moreover, as wanted by Argon Consulting, $\AVaR$ enables to control the acceptable proportion of bad cases and their values.
+For Argon Consulting, the real issue is the computational complexity.
 
