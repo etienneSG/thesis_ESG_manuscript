@@ -63,7 +63,7 @@ Number of items & $\card{\REF}$ &&& $11$ &&& $100$
 \\
 Number of time steps & $\horizon$ &&& $3$ &&& $6$
 \\
-Historical demand & $\tilde{\demand}_t^i$ & $4884$ &--& $19959$ & $0$ &--& $16996$
+Historical demand & $\bar{\demand}_t^i$ & $4884$ &--& $19959$ & $0$ &--& $16996$
 \\
 Capacity of plants & $\capacity_p$ & $6156$ &--& $28969$ & $2213$ &--& $43416$ 
 \\
@@ -115,31 +115,34 @@ Argon Consulting's client want to compare its actual multi-sourcing to the ideal
 \subsection{Demand distribution}
 \label{sec:multi-sourcing:numerical-experiments:demand-distribution}
 
-\esgil{Completer après la réunion du 05/09 avec Fabrice, Frédéric et Vincent.}
+%\esgil{Completer après la réunion du 05/09 avec Fabrice, Frédéric et Vincent.}
 
 
-We generate randomness from historical data using Dirichlet distributions as in \cref{chap:PDP:numerical-experiments}.
-The random demand satisfies the following properties.
-\begin{enumerate}
-  \item\label{enum:multi-sourcing:random-demand-property:expectation} Demand's expectation is equal to its historical value:
-  \begin{equation}
-    \espe\sqbracket{\va\demand_t^i} = \tilde{\demand}_t^i\qquad\forall t\in\range{T},\ \forall i\in\REF.
-  \end{equation}
-  \item\label{enum:multi-sourcing:random-demand-property:constant-volume} Demand's total volume does not depend on the realization:
-  \begin{equation}
-    \sum_{t=1}^{\horizon}\sum_{i\in\REF}\rate^i\va\demand_t^i = \sum_{t=1}^{\horizon}\sum_{i\in\REF}\rate^i\tilde{\demand}_t^i\qquad\mbox{almost surely.}
-  \end{equation}
-  \item\label{enum:multi-sourcing:random-demand-property:variance} Demand's variance is equal to
-  \begin{equation}\label{eq:multi-sourcing:numerical-experiments:demand:variance}
-    (\sigma_t^i)^2=\vari\sqbracket{\va\demand_t^i}=\gamma\,\tilde{\demand}_t^i\sum_{\bracket{j,\tau}\ne\bracket{i,t}}\tilde{\demand}_{\tau}^j\qquad\forall t\in\range{T},\ \forall i\in\REF,
-  \end{equation}
-\end{enumerate}
+As explained in \cref{chap:business-context}, we study the ability to face variations of the product mix and assume that we already known the cumulative working hours of production $\sum_{t=1}^{\horizon}\sum_{i\in\REF}\rate^i\va\demand_t^i$.
+Since production rate are not the same between item, we deal with the production hours $\bracket{\va p_t^i}_{t,i}=\bracket{\rate^i\va\demand_t^i}_{t,i}$ as random variables instead of the demand $\bracket{\va\demand_t^i}_{t,i}$.
+
+
+We generate randomness from historical data using \distrib distributions as in \cref{chap:PDP:numerical-experiments} and we refer to \cref{sec:PDP:numerical-experiments:drawing-realization-of-demand} for the properties of the distribution of the $\bracket{\va p_t^i}_{t,i}$ (\cref{prop:demand-distribution:properties}) and for the definitions of a generator of vectors with this distribution (\cref{proc:demand:initial-sampling}).
+
+
+The parameters of the \distrib distribution used to generate the working hours of production are computing from the historical forecast demand and are equal to $\rate^i\bar{\demand}_t^i=\bar{p}_t^i$ for the $\tilde{p}_t^i$ and $\gamma$ is set equal to
+\begin{equation}
+  \gamma
+  =
+  v\frac
+  {\sum_{t=1}^{\horizon}\sum_{i\in\REF} \sqrt{\frac{\bar{p}_0}{\bar{p}_t^i}-1}}
+  {\sum_{t=1}^{\horizon}\sum_{i\in\REF} \bracket{\frac{\bar{p}_0}{\bar{p}_t^i}-1}}
+\end{equation}
+with $\bar{p}_0 = \sum_{t=1}^{\horizon}\sum_{i\in\REF}\rate^i\bar{\demand}_t^i$.
+The parameter $\gamma$ is defined from another parameter $v$ which we call \emph{volatility} and which represents the ratio between standard deviation and expectation of a random variable.
+It can be easily interpret by companies.
+Justification of such a choice for $\gamma$ can be found in \cref{sec:PDP:numerical-experiments:instances:fitting-parameters}.
 
 
 % Since we know the historical demand, the generate demand of an item at a period should have the same expectation which explains \cref{enum:multi-sourcing:random-demand-property:expectation}.
-\cref{enum:multi-sourcing:random-demand-property:constant-volume} is justified by our study of flexibility.
-Indeed, as explained in \cref{chap:business-context}, we study the ability to face variations of the product mix and assume that we already known the cumulative working hours of production $\sum_{t=1}^{\horizon}\sum_{i\in\REF}\rate^i\va\demand_t^i$.
-In \label{enum:multi-sourcing:random-demand-property:variance}, there remains a unique unfixed parameter $\gamma$ which enables to chose the level of randomness. As we can see in \cref{eq:multi-sourcing:numerical-experiments:demand:variance}, the greater $\gamma$ is, the greater the variances of demand are.
+% \cref{enum:multi-sourcing:random-demand-property:constant-volume} is justified by our study of flexibility.
+% Indeed, as explained in \cref{chap:business-context}, we study the ability to face variations of the product mix and assume that we already known the cumulative working hours of production $\sum_{t=1}^{\horizon}\sum_{i\in\REF}\rate^i\va\demand_t^i$.
+% In \label{enum:multi-sourcing:random-demand-property:variance}, there remains a unique unfixed parameter $\gamma$ which enables to chose the level of randomness. As we can see in \cref{eq:multi-sourcing:numerical-experiments:demand:variance}, the greater $\gamma$ is, the greater the variances of demand are.
 
 
 
