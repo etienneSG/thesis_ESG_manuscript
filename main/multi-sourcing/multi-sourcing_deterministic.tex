@@ -32,7 +32,7 @@ In more complex organizations, deciding the best logistic network relies on many
 
 
 Argon Consulting meets multi-sourcing problem with clients from different industries.
-Thus, Argon Consulting aims at getting a versatile model which can be used in many situations and must not be too dependent on the industry.
+Thus, Argon Consulting aims at getting a versatile model which can be used in many situations and must\vl{should be not to} not be too dependent on the industry.
 We propose a model which captures the essence of the multi-sourcing problem and which can be easily adapted to particular client cases.
 % For example, inventory cost at the end end of a period will not be taken into account but a particular client may want to bound it.
 % Thus the model have to be able to add this constraint.
@@ -99,7 +99,7 @@ Thus, we do not consider holding costs although it is easy for an industrial to 
 \label{sec:multi-sourcing:deterministic:introduction:main_results}
 
 
-We model the deterministic multi-sourcing problem as a mixed integer program in \cref{sec:multi-sourcing:deterministic:model-formulation} prove that deterministic multi-sourcing problem is $\NP$-hard in the strong sense and give some polynomial cases in \cref{sec:multi-sourcing:deterministic:NP-completeness}.
+We model the deterministic multi-sourcing problem as a mixed integer program in \cref{sec:multi-sourcing:deterministic:model-formulation} and prove that deterministic multi-sourcing problem is $\NP$-hard in the strong sense and give some polynomial cases in \cref{sec:multi-sourcing:deterministic:NP-completeness}.
 
 
 
@@ -125,6 +125,7 @@ We also introduce a binary variable $\open_p^i$ which takes the value 1 if plant
 
 
 The deterministic multi-sourcing problem can be written as
+\vlil{p dans 8.1.e ?}
 \begin{subequations}\label{eq:det-multi-sourcing}
   \begin{align+}
     \min\quad & \rlap{$\ds \sum_{i\in\REF}\sum_{p\in\plants}\affect_p^i \open_p^i$}
@@ -312,7 +313,7 @@ $$
 \end{array}
 \right.
 $$
-Then, we solve the resulting linear program to get the optimal solution of the deterministic multi-sourcing problem.
+Then, we solve the resulting linear program to get the\vl{an} optimal solution of the deterministic multi-sourcing problem.
 (It may return that the problem is infeasible.)
 
 \medskip
@@ -321,7 +322,7 @@ Then, we solve the resulting linear program to get the optimal solution of the d
 
 For each plant $p$ and each item $i$, we set $\open_p^i=1$.
 These decisions do not affect the cost in the objective function.
-Then, we solve the resulting linear program to get the optimal solution of the deterministic multi-sourcing problem.
+Then, we solve the resulting linear program to get the\vl{an} optimal solution of the deterministic multi-sourcing problem.
 (It may return that the problem is infeasible.)
 
 \medskip
@@ -339,8 +340,8 @@ $$
 \end{array}
 \right.
 $$
-Then, we solve the resulting linear program to get the optimal solution of the deterministic multi-sourcing problem.
-(It may return that problem is infeasible.)
+Then, we solve the resulting linear program to get the\vl{an} optimal solution of the deterministic multi-sourcing problem.
+(It may return that the problem is infeasible.)
 \end{proof}
 
 
