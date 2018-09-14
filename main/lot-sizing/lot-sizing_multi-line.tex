@@ -14,26 +14,26 @@ In this chapter, we decide the optimal cycle stocks when several lines are invol
 
 Context is almost the same than in \cref{chap:lot-size:single-line}.
 A company aims at reducing it cycle stocks (which globally helps to decrease the inventory) subject to flexibility constraint of the assemblies lines.
+In many applications, a company has many assembly lines and production of a single item may be done on several lines.
+This kind of configuration is very common and are the consequences of multi-sourcing decisions previously made (see \cref{sec:business-context:argon:multi-sourcing} for a description of multi-sourcing issues).
+These lines might be is the same plants as well in different ones.
+But, in both cases, it enables to increase flexibility of production and the workload between lines.
 
 
+As in single line case, assembly lines are managed using $(r,\lot)$ policies or similar ones (like policies using cover).
+The challenge of the multi-line case is that companies must decide the part of demand assigned to each line and the lot (or cover) used for the production of each item on each line.
 
 
+\section{Deterministic settings}
 
 
-
-% Cycle stocks form the portion of inventory that varies over time due to production and demand satisfaction.
-% Low cycle stocks contribute to globally decrease inventory but it requires a high flexibility of means of production.
-% For mid-term decisions, flexibility is already fixed and industrial aims at deciding the values of cycle stocks of each item which minimize the global inventory.
+\subsection{Problem}
 
 
-% Many production systems are managed using $(r,\lot)$ policies or similar ones.
-% This kind of policies defines for each item a level $r$ and a quantity $\lot$ such that: when inventory level of item reaches level $r$, a quantity $\lot$ is produced.
-% A common variation uses cover-sizes.
-% Quantity $\lot$ is replaced by a time $\cover$ called \emph{cover-size}.
-% When inventory level of item $i$ reaches level $r$, quantity produced is the cumulative demand of the $\cover$ next units of time.
-% Both are used by industrials (and are equivalent when demand does not depend on time).
-
-
+The problem described by Argon Consulting considers a set $\lines$ of assembly lines producing a set $\REF$ of items over an infinite horizon.
+The internal production time of item $i$ (\ie the quantity of item $i$ produced in one time unit) is $\rate_i$.
+Inventory $\inventory_i$ of item $i$ must satisfy demand, known in advance.
+Thus, it continuously decreases by $\demand_i<\rate_i$ units per time unit when there is no production and continuously increases by $\rate_i-\demand_i$ units per time unit when item $i$ is produced.
 
 
 

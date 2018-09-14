@@ -1,12 +1,19 @@
 \chapter{Multi-sourcing maximizing the service level}
 
 
+
+\section{Introduction}
+
+
+\subsection{Motivations}
+
+
 \section{Problem and bibliography}
 
 
-We propose here an alternative version of the multi-sourcing problem. We are still interested in affecting to factories the ability to produce a set of products (first step decisions). Every other decisions are second step decisions. Contrary to part~\ref{part:multi-sourcing}, we have a limited capital to use for affectation. Thus, affectation cost is a constraint and not an objective. If demand were deterministic, the objective would be to minimize the undelivered demand but in an uncertain environment, the objective is to minimize the risk of shortage.
+We propose here an alternative version of the multi-sourcing problem. We are still interested in assigning to factories the ability to produce a set of items (first step decisions). Every other decisions are second step decisions. Contrary to part~\ref{part:multi-sourcing}, we have a limited capital to use for assignment. Thus, assignment cost is a constraint and not an objective. If demand were deterministic, the objective would be to minimize the undelivered demand but in an uncertain environment, the objective is to minimize the risk of shortage.
 
-Many technical constraints limits our decisions such as inventory dynamic over period, production capacities (for a factory or for a given product). We can also imagine flexibility constraint as in tactical planning where the number of products produced each period is limited. There may be some plants which are not qualified to produce some kind of products. In this case, an infinite cost can be used or setting to zero the affectation of these kind of products to these plants can be done before the resolution. In order to simplify the writing, we do not add it explicitly to the model.
+Many technical constraints limits our decisions such as inventory dynamic over period, production capacities (for a factory or for a given item). We can also imagine flexibility constraint as in tactical planning where the number of items produced each period is limited. There may be some plants which are not qualified to produce some kind of items. In this case, an infinite cost can be used or setting to zero the assignment of these kind of items to these plants can be done before the resolution. In order to simplify the writing, we do not add it explicitly to the model.
 
 
 \esgil{Complete bibliography or fuse bibliography with bibliography of part~\ref{part:multi-sourcing}}
@@ -17,47 +24,47 @@ Many technical constraints limits our decisions such as inventory dynamic over p
 
 \subsection{Model formulation}
 
-We present the deterministic version of the multi-sourcing problem and use the following notations. Let $\REF$ be the set of the products, $\plants$ be the set of plants and $\horizon$ be the number of periods of production. For each plant $p\in\plants$, let $\capacity_p$ be the capacity of the plant and for each product $r\in\REF$ let $\capacity_p^r$ be the maximal capacity of the plant $p$ dedicated to the product $r$. For each product $r\in\REF$ and each period $t\in\range{\horizon}$, let $\demand_t^r$ be the demand in product $r$ and $\backorder^r$ be the unitary cost for undelivered amount of product $r$. Finally, let $\affect_p^r$ be the affectation cost for the ability to produce the product $r\in\REF$ in plant $p\in\plants$ and $\capital$ the available capital to pay for this affectations.
+We present the deterministic version of the multi-sourcing problem and use the following notations. Let $\REF$ be the set of the items, $\plants$ be the set of plants and $\horizon$ be the number of periods of production. For each plant $p\in\plants$, let $\capacity_p$ be the capacity of the plant and for each item $i\in\REF$ let $\capacity_p^i$ be the maximal capacity of the plant $p$ dedicated to the item $i$. For each item $i\in\REF$ and each period $t\in\range{\horizon}$, let $\demand_t^i$ be the demand in item $i$ and $\backorder^i$ be the unitary cost for undelivered amount of item $i$. Finally, let $\affect_p^i$ be the assignment cost for the ability to produce the item $i\in\REF$ in plant $p\in\plants$ and $\capital$ the available capital to pay for this assignments.
 
-For each product $r\in\REF$, let $\level_t^r$ be the relative value of the inventory of product $r$ at period $t$ (\ie it may be negative if there are undelivered units), let $\inventory_t^r$ be the real value of the inventory of product $r$ (\ie the positive part of $\level_t^r$) and let $\backlog_t^r$ be the undelivered amount of product $r$ (\ie the negative part of $\level_t^r$). For a plant $p\in\plants$ and a product $r\in\REF$, let $\open_p^r$ be the binary variable equal to one if we give to the plant $p$ the ability to produce the product $r$ and zero otherwise and let $\quantity_{pt}^r$ be the quantity of product $r$ produced in plant $p$ at period $t$.
+For each item $i\in\REF$, let $\level_t^i$ be the relative value of the inventory of item $i$ at period $t$ (\ie it may be negative if there are undelivered units), let $\inventory_t^i$ be the real value of the inventory of item $i$ (\ie the positive part of $\level_t^i$) and let $\backlog_t^i$ be the undelivered amount of item $i$ (\ie the negative part of $\level_t^i$). For a plant $p\in\plants$ and a item $i\in\REF$, let $\open_p^i$ be the binary variable equal to one if we give to the plant $p$ the ability to produce the item $i$ and zero otherwise and let $\quantity_{pt}^i$ be the quantity of item $i$ produced in plant $p$ at period $t$.
 
 The deterministic version of the multi-sourcing problem subject to limited capital can be written as follow:
-\begin{subequations}\label{eq:multi-sourcing - limited capital}
+\begin{subequations}\label{eq:multi-sourcing:limited capital}
   \begin{align}
-    \min\quad & \rlap{$\ds \sum_{t=1}^{\horizon} \sum_{r\in\REF} \backorder^r \backlog_t^r$}
-    \label{eq:multi-sourcing - limited capital - objective}
+    \min\quad & \rlap{$\ds \sum_{t=1}^{\horizon} \sum_{i\in\REF} \backorder^i \backlog_t^i$}
+    \label{eq:multi-sourcing:limited capital:objective}
     \\
-    \st\quad & \ds \level_t^r = \inventory_t^r - \backlog_t^r && \forall t\in\range{\horizon},\ \forall r\in\REF,
-    \label{eq:multi-sourcing - limited capital - inventory}
+    \st\quad & \ds \level_t^i = \inventory_t^i - \backlog_t^i && \forall t\in\range{\horizon},\ \forall i\in\REF,
+    \label{eq:multi-sourcing:limited capital:inventory}
     \\
-    & \ds \level_t^r = \level_{t-1}^r + \sum_{p\in\plants}\quantity_{pt}^r - \demand_t^r && \forall t\in\range{\horizon},\ \forall r\in\REF,
-    \label{eq:multi-sourcing - limited capital - dynamic}
+    & \ds \level_t^i = \level_{t-1}^i + \sum_{p\in\plants}\quantity_{pt}^i - \demand_t^i && \forall t\in\range{\horizon},\ \forall i\in\REF,
+    \label{eq:multi-sourcing:limited capital:dynamic}
     \\
-    & \ds \quantity_{pt}^r \le \capacity_p^r \open_p^r && \forall t\in\range{\horizon},\ \forall p\in\plants,\ \forall r\in\REF
-    \label{eq:multi-sourcing - limited capital - big M}
+    & \ds \quantity_{pt}^i \le \capacity_p^i \open_p^i && \forall t\in\range{\horizon},\ \forall p\in\plants,\ \forall i\in\REF
+    \label{eq:multi-sourcing:limited capital:big M}
     \\
-    & \ds \sum_{r\in\REF}\quantity_{pt}^r \le \capacity_p && \forall t\in\range{\horizon},\ \forall p\in\plants,
-    \label{eq:multi-sourcing - limited capital - capacity}
+    & \ds \sum_{i\in\REF}\quantity_{pt}^i \le \capacity_p && \forall t\in\range{\horizon},\ \forall p\in\plants,
+    \label{eq:multi-sourcing:limited capital:capacity}
     \\
-    & \ds \sum_{r\in\REF} \sum_{p\in\plants}\affect_{pt}^r\open_p^r \le \capital && \forall t\in\range{\horizon},
-    \label{eq:multi-sourcing - limited capital - capital}
+    & \ds \sum_{i\in\REF} \sum_{p\in\plants}\affect_{pt}^i\open_p^i \le \capital && \forall t\in\range{\horizon},
+    \label{eq:multi-sourcing:limited capital:capital}
     \\
-    & \ds \inventory_t^r,\ \backlog_t^r,\ \quantity_{pt}^r \ge 0 && \forall t\in\range{\horizon},\ \forall p\in\plants,\ \forall r\in\REF,
-    \label{eq:multi-sourcing - limited capital - nonnegativity}
+    & \ds \inventory_t^i,\ \backlog_t^i,\ \quantity_{pt}^i \ge 0 && \forall t\in\range{\horizon},\ \forall p\in\plants,\ \forall i\in\REF,
+    \label{eq:multi-sourcing:limited capital:nonnegativity}
     \\
-    & \ds \open_p^r \in \crbracket{0,1} && \forall p\in\plants,\ \forall r\in\REF,
-    \label{eq:multi-sourcing - limited capital - binary}
+    & \ds \open_p^i \in \crbracket{0,1} && \forall p\in\plants,\ \forall i\in\REF,
+    \label{eq:multi-sourcing:limited capital:binary}
   \end{align}
 \end{subequations}
 
 
-Objective~\eqref{eq:multi-sourcing - limited capital - objective} minimize the undelivered amount of references over the whole horizon.
-Constraint~\eqref{eq:multi-sourcing - limited capital - inventory} is the decomposition of the inventory in its positive and negative parts.
-Constraint~\eqref{eq:multi-sourcing - limited capital - dynamic} is the inventory dynamic.
-Constraint~\eqref{eq:multi-sourcing - limited capital - big M} is the maximal capacity of the plant $p$ dedicated to the product $r$. Moreover, it prevent to produce product $r$ in plant $p$ if the plant has not the ability to do so.
-Constraint~\eqref{eq:multi-sourcing - limited capital - capacity} limits the production of each factory.
-Constraint~\eqref{eq:multi-sourcing - limited capital - capital} limits the available capital for the affectation.
-Constraints~\eqref{eq:multi-sourcing - limited capital - nonnegativity} and~\eqref{eq:multi-sourcing - limited capital - binary} define the variables domains.
+Objective~\eqref{eq:multi-sourcing:limited capital:objective} minimize the undelivered amount of references over the whole horizon.
+Constraint~\eqref{eq:multi-sourcing:limited capital:inventory} is the decomposition of the inventory in its positive and negative parts.
+Constraint~\eqref{eq:multi-sourcing:limited capital:dynamic} is the inventory dynamic.
+Constraint~\eqref{eq:multi-sourcing:limited capital:big M} is the maximal capacity of the plant $p$ dedicated to the item $i$. Moreover, it prevent to produce item $i$ in plant $p$ if the plant has not the ability to do so.
+Constraint~\eqref{eq:multi-sourcing:limited capital:capacity} limits the production of each factory.
+Constraint~\eqref{eq:multi-sourcing:limited capital:capital} limits the available capital for the assignment.
+Constraints~\eqref{eq:multi-sourcing:limited capital:nonnegativity} and~\eqref{eq:multi-sourcing:limited capital:binary} define the variables domains.
 
 
 
@@ -67,7 +74,7 @@ Constraints~\eqref{eq:multi-sourcing - limited capital - nonnegativity} and~\eqr
 
 
 \begin{prop}
-The deterministic version of the multi-sourcing problem subject to limited capital~\eqref{eq:multi-sourcing - limited capital} is $\NP$-hard, even if $\horizon=1$, $\capacity_p^r=\capacity_p=1$ and $\affect_p^r=1$, for all $p\in\plants$ and all $r\in\REF$.
+The deterministic version of the multi-sourcing problem subject to limited capital~\eqref{eq:multi-sourcing:limited capital} is $\NP$-hard, even if $\horizon=1$, $\capacity_p^i=\capacity_p=1$ and $\affect_p^i=1$, for all $p\in\plants$ and all $i\in\REF$.
 \end{prop}
 
 \begin{proof}
@@ -76,7 +83,7 @@ The deterministic version of the multi-sourcing problem subject to limited capit
 
 
 \begin{prop}
-The deterministic version of the multi-sourcing problem subject to limited capital~\eqref{eq:multi-sourcing - limited capital} is $\NP$-hard, even if $\horizon=1$ and $\capacity_p^r=\capacity_p=\infty$ for all $p\in\plants$ and all $r\in\REF$.
+The deterministic version of the multi-sourcing problem subject to limited capital~\eqref{eq:multi-sourcing:limited capital} is $\NP$-hard, even if $\horizon=1$ and $\capacity_p^i=\capacity_p=\infty$ for all $p\in\plants$ and all $i\in\REF$.
 \end{prop}
 
 \begin{proof}
@@ -85,7 +92,7 @@ The deterministic version of the multi-sourcing problem subject to limited capit
 
 
 \begin{prop}
-The deterministic version of the multi-sourcing problem subject to limited capital~\eqref{eq:multi-sourcing - limited capital} is polynomial if $\capacity_p^r=\capacity_p=\infty$ and $\affect_p^r=1$, for all $p\in\plants$ and all $r\in\REF$.
+The deterministic version of the multi-sourcing problem subject to limited capital~\eqref{eq:multi-sourcing:limited capital} is polynomial if $\capacity_p^i=\capacity_p=\infty$ and $\affect_p^i=1$, for all $p\in\plants$ and all $i\in\REF$.
 \end{prop}
 
 \begin{proof}
@@ -102,38 +109,38 @@ The deterministic version of the multi-sourcing problem subject to limited capit
 
 Like in previous parts, we choose to only consider randomness on demand although it could be consider on internal production time, available capacity, etc. We use a measure of risk $\rho$ to quantify the objective function. The easiest measure of risk is the expectation, but we could choose an other one like $\AVaR$.
 
-\begin{subequations}\label{eq:stochastic multi-sourcing - limited capital}
+\begin{subequations}\label{eq:stochastic multi-sourcing:limited capital}
   \begin{align}
-    \min\quad & \rlap{$\ds \rho\bracket{\sum_{t=1}^{\horizon} \sum_{r\in\REF} \backorder^r \va\backlog_t^r}$}
-    \label{eq:stochastic multi-sourcing - limited capital - objective}
+    \min\quad & \rlap{$\ds \rho\bracket{\sum_{t=1}^{\horizon} \sum_{i\in\REF} \backorder^i \va\backlog_t^i}$}
+    \label{eq:stochastic multi-sourcing:limited capital:objective}
     \\
-    \st\quad & \ds \va\level_t^r = \va\inventory_t^r - \va\backlog_t^r && \forall t\in\range{\horizon},\ \forall r\in\REF,
-    \label{eq:stochastic multi-sourcing - limited capital - inventory}
+    \st\quad & \ds \va\level_t^i = \va\inventory_t^i - \va\backlog_t^i && \forall t\in\range{\horizon},\ \forall i\in\REF,
+    \label{eq:stochastic multi-sourcing:limited capital:inventory}
     \\
-    & \ds \va\level_t^r = \va\inventory_{t-1}^r + \sum_{p\in\plants}\va\quantity_{pt}^r - \va\demand_t^r && \forall t\in\range{\horizon},\ \forall r\in\REF,
-    \label{eq:stochastic multi-sourcing - limited capital - dynamic}
+    & \ds \va\level_t^i = \va\inventory_{t-1}^i + \sum_{p\in\plants}\va\quantity_{pt}^i - \va\demand_t^i && \forall t\in\range{\horizon},\ \forall i\in\REF,
+    \label{eq:stochastic multi-sourcing:limited capital:dynamic}
     \\
-    & \ds \va\quantity_{pt}^r \le \capacity_p^r \open_p^r && \forall t\in\range{\horizon},\ \forall p\in\plants,\ \forall r\in\REF
-    \label{eq:stochastic multi-sourcing - limited capital - big M}
+    & \ds \va\quantity_{pt}^i \le \capacity_p^i \open_p^i && \forall t\in\range{\horizon},\ \forall p\in\plants,\ \forall i\in\REF
+    \label{eq:stochastic multi-sourcing:limited capital:big M}
     \\
-    & \ds \sum_{r\in\REF}\va\quantity_{pt}^r \le \capacity_p && \forall t\in\range{\horizon},\ \forall p\in\plants,
-    \label{eq:stochastic multi-sourcing - limited capital - capacity}
+    & \ds \sum_{i\in\REF}\va\quantity_{pt}^i \le \capacity_p && \forall t\in\range{\horizon},\ \forall p\in\plants,
+    \label{eq:stochastic multi-sourcing:limited capital:capacity}
     \\
-    & \ds \sum_{r\in\REF} \sum_{p\in\plants}\affect_{pt}^r\open_p^r \le \capital && \forall t\in\range{\horizon},
-    \label{eq:stochastic multi-sourcing - limited capital - capital}
+    & \ds \sum_{i\in\REF} \sum_{p\in\plants}\affect_{pt}^i\open_p^i \le \capital && \forall t\in\range{\horizon},
+    \label{eq:stochastic multi-sourcing:limited capital:capital}
     \\
-    & \ds \va\inventory_t^r,\ \va\backlog_t^r,\ \va\quantity_{pt}^r \ge 0 && \forall t\in\range{\horizon},\ \forall p\in\plants,\ \forall r\in\REF,
-    \label{eq:stochastic multi-sourcing - limited capital - nonnegativity}
+    & \ds \va\inventory_t^i,\ \va\backlog_t^i,\ \va\quantity_{pt}^i \ge 0 && \forall t\in\range{\horizon},\ \forall p\in\plants,\ \forall i\in\REF,
+    \label{eq:stochastic multi-sourcing:limited capital:nonnegativity}
     \\
-    & \ds \open_p^r \in \crbracket{0,1} && \forall p\in\plants,\ \forall r\in\REF,
-    \label{eq:stochastic multi-sourcing - limited capital - binary}
+    & \ds \open_p^i \in \crbracket{0,1} && \forall p\in\plants,\ \forall i\in\REF,
+    \label{eq:stochastic multi-sourcing:limited capital:binary}
     \\
-    & \ds \va\level_t^r,\ \va\backlog_t^r,\ \va\quantity_{pt}^r,\ \va\inventory_t^r \preceq \Sfield{\bracket{\va\demand^r}_{r\in\REF}} && \forall t\in\range{\horizon},\ \forall p\in\plants,\ \forall r\in\REF,
-    \label{eq:stochastic multi-sourcing - limited capital - non-anticipation}
+    & \ds \va\level_t^i,\ \va\backlog_t^i,\ \va\quantity_{pt}^i,\ \va\inventory_t^i \preceq \Sfield{\bracket{\va\demand^i}_{i\in\REF}} && \forall t\in\range{\horizon},\ \forall p\in\plants,\ \forall i\in\REF,
+    \label{eq:stochastic multi-sourcing:limited capital:non-anticipation}
   \end{align}
 \end{subequations}
 
-In this model, bold variables are stochastic whereas normal variable are deterministic. Every constraint has the same meaning than their deterministic counterpart. We also add the constraints \eqref{eq:stochastic multi-sourcing - limited capital - non-anticipation} which are non anticipative constraints and prevent from taking decision knowing the future realizations of randomness.
+In this model, bold variables are stochastic whereas normal variable are deterministic. Every constraint has the same meaning than their deterministic counterpart. We also add the constraints \eqref{eq:stochastic multi-sourcing:limited capital:non-anticipation} which are non anticipative constraints and prevent from taking decision knowing the future realizations of randomness.
 
 
 \subsection{$\NP$-completeness}
@@ -144,7 +151,7 @@ In order to deal with the complexity of stochastic cases, we assume that the enc
 For the polynomial deterministic case, we have the following result for its stochastic counterpart.
 
 \begin{prop}
-The stochastic version of the multi-sourcing problem subject to limited capital~\eqref{eq:stochastic multi-sourcing - limited capital} is polynomial if $\capacity_p^r=\capacity_p=\infty$ and $\affect_p^r=1$, for all $p\in\plants$ and all $r\in\REF$.
+The stochastic version of the multi-sourcing problem subject to limited capital~\eqref{eq:stochastic multi-sourcing:limited capital} is polynomial if $\capacity_p^i=\capacity_p=\infty$ and $\affect_p^i=1$, for all $p\in\plants$ and all $i\in\REF$.
 \end{prop}
 
 \begin{proof}

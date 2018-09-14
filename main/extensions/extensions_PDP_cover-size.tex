@@ -1,61 +1,164 @@
 \chapter{Production planning using cover-size}
 
 
-\esgil{Choose if we use backorder in deterministic version. If we use it, proofs must be verify!}
+\section{Introduction}
 
-\medskip
 
-When defining cover in chapter~\ref{chap:lot-size on single line} and using it for numerical experiment in chapter \ref{chap:PDP - Numerical experiments}, we compute it using an heuristic which smooths the demand over periods. However, the goal of cover is to take into account variability of the demand. Thus it is unfortunate to compute it without it. The goal of this part is to compute optimal cover-sizes keeping both constraints of production planning and constraints linked to cover-size definition.
+\subsection{Motivations}
 
-\medskip
 
-As in part~\ref{part:production planning}, we consider an assembly line producing a set $\REF$ over products over $\horizon$ weeks. The number of distinct products produced over a week cannot exceed $\nbsetups$. Note that in general, there is an upper bound $\capacity$ for the total week production, internal production times $\internal^r$ and initial inventory $\inventory_0^r$ but as explain in chapter~\ref{chap:PDP - deterministic}, we can assume without loss of generality than $\capacity=1$ and $\internal^r=1$ and $\inventory_0^r=0$ for all product $r$.
+As see in \cref{part:continuous-review-inventory-model} and \cref{part:production planning}, assembly lines may be managed using $\bracket{r,\ell}$ policies (\ie production when the safety stock is reached) or directly making the production planning for the next week.
+Choice depends partially on the complexity of the production, on the variation of demand over time.
+Sometimes, companies compute the cycle stocks of items and use them as an input of their production planning tools.
 
-The production must satisfy a demand $\demand_t^r$ for each product $r$ at each period $t$.
-When production of a product $r$ is not used to served demand, it can be stored be incurs a unit holding cost $\holding^r>0$ per period.
-%When demand is not satisfied by the production of the current week or by the inventory, it can be satisfied later but incurs a unit backorder cost $\delay^r$ per delayed period.
-Since we use covers, we also impose that for a product $r$ the time interval between two periods of production of $r$ was identical over the horizon of planning and belong to a set $\coverset_r\subseteq\range{\horizon}$ of possible covers.
 
-The objective remains the minimization of the sum of the holding and backorder costs over the horizon.
+$\bracket{r,\ell}$ policies are easy to compute and to use but they do not take into account part of the available information when making their optimization process.
+On the other hand, production planning algorithms are more sophisticated and sometimes less convenient to use but they take take into account much more information to find the optimal production (variation of demand over time, uncertainty).
+Thus, their output is likely to be more accurate.
 
-\medskip
 
-The production planning using cover-size can be modeled as follow:
-\begin{subequations}\label{eq:cover-MIP}
-  \begin{align}
-    \min\quad & \rlap{$\ds \sum_{t=1}^{\horizon} \sum_{r\in\REF} \holding^r \inventory_t^r$}
-    \label{eq:cover-MIP - objective}
+In this chapter, we aim at considering the variations of demand over time to find the optimal covers.
+Context and modeling choices are quite the same as in \cref{chap:PDP:deterministic}.
+A company aims at minimizing its inventory subject to flexibility constraint.
+As explained in \cref{chap:business-problem}, when deciding cover sizes, flexibility is already fixed and many companies express it with an upper bound on the number of items produced during a period.
+At mid-term, it matches with the number of setups since scheduling is not taken into account.
+However, contrary to \cref{chap:PDP:deterministic}, we do not look for production levels but to find the optimal covers.
+
+
+
+\subsection{Problem statement}
+
+
+For the sake of completeness, we recall every parameters including those which are identical to those of the Uniform CLSP-BS (see \cref{sec:PDP:deterministic:introduction:problem}).
+The problem considers an assembly line producing a set $\REF$ of items over $\horizon$ periods.
+The number of distinct items produced over a period $t$ cannot exceed $\nbsetups>0$.
+There is also an upper bound $\capacity$ on the total period production (summed over all items).
+The capacity needed (in time units) to produce one unit of $i$ is $\rate^i>0$.
+
+
+The production of item $i$ must satisfy a demand $\demand_t^i$ at the end of period $t$.
+When production of a item $i$ is not used to satisfy the demand, it can be stored but incurs a unit holding cost $\holding^i>0$ per period.
+For each item $i$, there is an initial inventory $s_0^i\in\RR_+$.
+Since we use covers, we also impose that for a item $i$ the time interval between two periods of production of $i$ was identical over the horizon of planning and belong to a set $\coverset_r\subseteq\range{\horizon}$ of possible covers.
+
+
+The goal is to satisfy the whole demand at minimum cost.
+
+
+Since this problem is a variation of the Uniform CLSP-BS with the use of cover instead of production levels, we call it the \emph{Uniform Capacitated Cover-Sizing Problem with Bounded number of Setups (Uniform CCSP-BS)}.
+
+
+
+\subsection{Main results}
+
+
+
+\section{Bibliography}
+
+
+\section{Model formulation}
+
+
+In this section, we introduce a mixed integer program which model the problem.
+We introduce the following decision variables.
+The quantity of item $i$ produced at period $t$ is denoted by $\quantity_t^i$ and the inventory at the end of the period is denoted by $\inventory_t^i$. We also introduce a binary variable $\setup_{t,\cover_r}^i$ which takes the value $1$ if the item $i$ is produced over week $t$ and its cover-size is $\cover_r$ and $0$ otherwise.
+
+
+We normalize production variables setting $\widehat{\quantity}_t^i=\frac{\rate^i\quantity_t^i}{\capacity}$ and replace accordingly the other variables and parameters setting $\widehat{\inventory}_t^i=\frac{\rate^i\inventory_t^i}{\capacity}$, $\widehat{\demand}_t^i=\frac{\rate^i\demand_t^i}{\capacity}$ and $\widehat{\holding}^i=\frac{\capacity\holding^i}{\rate^i}$.
+For the purpose of notation, the hat are omitted and the Uniform CCSP-BS can be written as
+\begin{subequations}\label{eq:pdp:cover-MIP}
+  \begin{align+}
+    \min\quad & \rlap{$\ds \sum_{t=1}^{\horizon} \sum_{i\in\REF} \holding^i \inventory_t^i$}
+    \label{eq:pdp:cover-MIP:objective}
     \\
-    \st\quad & \ds \inventory_t^r = \inventory_{t-1}^r + \quantity_t^r - \demand_t^r && \forall r\in\REF,\ \forall t\in\range{\horizon},
-    \label{eq:cover-MIP - stock dynamics}
+    \st\quad & \ds \inventory_t^i = \inventory_{t-1}^i + \quantity_t^i - \demand_t^i && \forall i\in\REF,\ \forall t\in\range{\horizon},
+    \label{eq:pdp:cover-MIP:inventory-balance}
     \\
-    & \ds \sum_{r\in\REF} \quantity_t^r \le 1 && \forall t\in\range{\horizon},
-    \label{eq:cover-MIP - total capacity}
+    & \ds \sum_{i\in\REF} \quantity_t^i \le 1 && \forall t\in\range{\horizon},
+    \label{eq:pdp:cover-MIP:total-capacity}
     \\
-    & \ds \sum_{\cover_r\in\coverset_r} \sum_{t=1}^{\cover_r} \setup_{t,\cover_r}^r = 1 && \forall r\in\REF,
-    \label{eq:cover-MIP - one cover}
+    & \ds \sum_{\cover_r\in\coverset_r} \sum_{t=1}^{\cover_r} \setup_{t,\cover_r}^i = 1 && \forall i\in\REF,
+    \label{eq:pdp:cover-MIP:one-cover}
     \\
-    & \ds \setup_{t+\cover_r,\cover_r}^r = \setup_{t,\cover_r}^r && \forall r\in\REF,\ \forall \cover_r\in\coverset_r,\ \forall t\in\range{\horizon-\cover_r},
-    \label{eq:cover-MIP - periodic cover}
+    & \ds \setup_{t+\cover_r,\cover_r}^i = \setup_{t,\cover_r}^i && \forall i\in\REF,\ \forall \cover_r\in\coverset_r,\ \forall t\in\range{\horizon-\cover_r},
+    \label{eq:pdp:cover-MIP:periodic-cover}
     \\
-    & \ds \quantity_t^r = \sum_{\cover_r\in\coverset_r} \bracket{\sum_{t'=t}^{t+\cover_r-1}\demand_{t'}^r} \setup_{t,\cover_r}^r  && \forall r\in\REF,\ \forall t\in\range{\horizon},
-    \label{eq:cover-MIP - quantity}
+    & \ds \quantity_t^i = \sum_{\cover_r\in\coverset_r} \bracket{\sum_{t'=t}^{\min\crbracket{t+\cover_r-1,\horizon}}\demand_{t'}^i} \setup_{t,\cover_r}^i  && \forall i\in\REF,\ \forall t\in\range{\horizon},
+    \label{eq:pdp:cover-MIP:quantity}
     \\
-    & \ds \sum_{r\in\REF} \sum_{\cover_r\in\coverset_r} \setup_{t,\cover_r}^r \le \nbsetups && \forall t\in\range{\horizon},
-    \label{eq:cover-MIP - setups per period}
+    & \ds \sum_{i\in\REF} \sum_{\cover_r\in\coverset_r} \setup_{t,\cover_r}^i \le \nbsetups && \forall t\in\range{\horizon},
+    \label{eq:pdp:cover-MIP:setups-per-period}
     \\
-    & \ds \setup_{t,\cover_r}^r \in \crbracket{0,1} && \forall r\in\REF,\ \forall \cover_r\in\coverset_r,\ \forall t\in\range{\horizon},
-    \label{eq:cover-MIP - boolean constraint}
+    & \ds \setup_{t,\cover_r}^i \in \crbracket{0,1} && \forall i\in\REF,\ \forall \cover_r\in\coverset_r,\ \forall t\in\range{\horizon},
+    \label{eq:pdp:cover-MIP:boolean-constraint}
     \\
-    & \ds \quantity_t^r,\ \inventory_t^r \ge 0 && \forall r\in\REF,\ \forall t\in\range{\horizon},
-    \label{eq:cover-MIP - positive}
-  \end{align}
+    & \ds \quantity_t^i,\ \inventory_t^i \ge 0 && \forall i\in\REF,\ \forall t\in\range{\horizon},
+    \label{eq:pdp:cover-MIP:positive}
+  \end{align+}
 \end{subequations}
-where the variable $\inventory_t^r$ models the inventory of reference $r$ at the end of week $t$, the variable $\quantity_t^r$ models the quantity of reference $r$ produced over week $t$, and the variable $\setup_{t,\cover_r}^r$ takes the value $1$ if the reference $r$ is produced over week $t$ and its cover-size is $\cover_r$ and $0$ otherwise.
 
-There are three additional constraints.
-Constraints~\eqref{eq:cover-MIP - one cover} enable to choose exactly one cover-size for each reference.
-Constraints~\eqref{eq:cover-MIP - periodic cover} ensure the periodicity of the cover.
-Constraints~\eqref{eq:cover-MIP - quantity} define the quantity that must be produced according to the chosen cover-size and first period of production.
+Inventory balance~\eqref{eq:pdp:cover-MIP:inventory-balance}, capacity constraint~\eqref{eq:pdp:cover-MIP:total-capacity} and upper bound on the number of setups~\eqref{eq:pdp:cover-MIP:setups-per-period} are similar to their counterparts in program~\eqref{eq:Uniform-CLSP-BS}.
+We add three other constraints to model the use of cover.
+The choice of exactly one cover-size for each item is ensured by constraint~\eqref{eq:pdp:cover-MIP:one-cover} and the periodicity of production setups by constraint~\eqref{eq:pdp:cover-MIP:periodic-cover}.
+Constraint~\eqref{eq:pdp:cover-MIP:quantity} defines the quantity that must be produced according to the chosen cover-size and first period of production.
 
+
+\medskip
+
+
+Like the Uniform CLSP-BS, the Uniform CCSP-BS is $\NP$-hard for any fixed values of the $\holding_t^i$'s.
+
+\begin{thm}
+  Deciding if there is a solution of the Uniform CCSP-BS is $\NP$-complete in the strong sense.
+\end{thm}
+
+
+Proof is very close to proof of $\NP$-hardness of CLSP-BS since it uses reduction of 3-partition problem to the Uniform CCSP-BS.
+
+
+\begin{proof}
+Let $\crbracket{a_1,\ldots,a_{3m}}$ be an instance of the 3-partition problem.
+We reduce polynomially this problem to an instance of the Uniform CCSP-BS.
+Without loss of generality, we can assume that sum of the $a_i$'s is positive.
+We set
+\begin{equation}
+  \REF=\range[1]{3m}
+  ,\quad
+  \horizon=m
+  ,\quad
+  \coverset_r=\crbracket{m}
+  ,\quad
+  \nbsetups=3
+  ,\quad
+  \demand_t^i
+  =\left\{
+  \begin{array}{ll}
+  \frac{m\,a_i}{\sum_{j=1}^{3m}a_j} & \mbox{if}\ t=\horizon,
+  \\
+  0 & \mbox{otherwise,}\end{array}
+  \right.
+  \quad
+  \inventory_0^i=0.
+\end{equation}
+Thus, we have a solution for the 3-partition problem if and only if there is a solution to the Uniform CCSP-BS with these parameters. The conclusion follows from the fact that the 3-partition problem is $\NP$-complete in the strong sense.
+\end{proof}
+
+
+\section{Numerical experiments}
+
+
+The efficiency of this approach is also tested using simulations. (See \cref{chap:PDP:numerical-experiments}.)
+
+
+This new heuristic, called \emph{MIP-cover-size heuristic}, is very close to the cover-size heuristic.
+It also consists in determining before the first week once and for all a value $\cover_i^*$ for each item $i\in\REF$.
+Covers are computed from Problem~\eqref{eq:pdp:cover-MIP} where the deterministic demand is taken equal to the demand expectation.
+Then, like in cover-size heuristic, at time $t$, if the inventory of item $i$ is below a precomputed safety stock (see \cref{eq:PDP:numerical-experiments:safety-stock}), the quantity $\quantity_t^i$ is computed so that the inventory of item $i$ exceeds the safety stock of the expected demand for the next $\tau_i^*$ weeks.
+In addition, if some capacity issues are easily anticipated, the production of an item $i$ can be activated even if the inventory is not below the safety stock.
+
+
+Tests with MIP-cover-size heuristic show that this approach is bad.
+First, inventory holding costs and service level are worst than with the classic cover-size heuristic.
+Moreover, computing cover-size from Problem~\eqref{eq:pdp:cover-MIP} is hard and takes times (contrary to the close formula in the classic cover-size heuristic).
+Thus, we quickly give up this approach and do not make further investigations.
 

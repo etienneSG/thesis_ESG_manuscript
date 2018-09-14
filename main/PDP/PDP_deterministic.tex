@@ -3,7 +3,10 @@
 
 
 \section{Introduction}
-\label{sec:PDP:deterministic:Motivations}
+
+
+\subsection{Motivations}
+\label{sec:PDP:deterministic:introduction:motivations}
 
 Fixing the production level for the forthcoming period is a basic decision to be taken when managing an assembly line. Usually, a demand has to be satisfied at due dates but the limited capacity of the line prevents last minute production. On the other hand, too early productions may lead to unnecessary high inventory costs. The challenge of this kind of problems, known as {\em lot-sizing problems} in the operational research community, consists in finding a trade-off between demand satisfaction and holding costs.
 When several items can be produced on a same line -- the so-called {\em multi-item} lot-sizing problem --, the capacity of the assembly line is often all the more reduced as the number of distinct items produced over the current period is high. Indeed, changing an item in production stops the line for a moment. This additional capacity reduction is usually modeled by setup costs contributing to the total cost.
@@ -20,7 +23,9 @@ Since we are interest in mid-term decisions, we consider lot-sizing problem and 
 To the best of our knowledge, the problem addressed in this chapter is original and such a bound on the number of distinct items produced over a period has not been considered by academics yet, with the notable exception of \cite{Rubaszewski2011} but, contrary to our problem, their bound is an overall bound for the whole horizon and they still consider setup costs.
 
 
-\medskip
+
+\subsection{Problem}
+\label{sec:PDP:deterministic:introduction:problem}
 
 The problem considers an assembly line producing a set $\REF$ of items over $\horizon$ periods. The number of distinct items produced over a period $t$ cannot exceed $\nbsetups_t>0$. There is also an upper bound $\capacity_t$ on the total period production (summed over all items) and an upper bound $\capacity_t^i$ on the production of item $i$ at period $t$. The capacity needed (in time units) to produce one unit of $i$ in period $t$ is $\rate_t^i>0$.
 
@@ -40,7 +45,9 @@ In many of our applications, holding costs $\holding_t^i$ and internal productio
 This special case captures the essential part and the difficulty of the problem namely the limited flexibility of the assembly line. Most results are true for the CLPS-BS, but we will give counterexample when results only stand for the Uniform CLSP-BS.
 
 
-\medskip
+\subsection{Main results}
+\label{sec:PDP:deterministic:introduction:main-results}
+
 
 This chapter presents in \cref{sec:PDP:deterministic:bibliography} a short review of the seminal lot-sizing models, in \cref{sec:PDP:deterministic:model} a formulation of the CLSP-BS as a mixed integer program and in \cref{sec:PDP:deterministic:theoretical-results} results showing the theoretical difficulty of the CLSP-BS.
 
