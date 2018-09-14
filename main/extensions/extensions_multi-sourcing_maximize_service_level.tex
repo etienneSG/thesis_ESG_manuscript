@@ -8,97 +8,314 @@
 \subsection{Motivations}
 
 
-\section{Problem and bibliography}
+As explained in \cref{part:multi-sourcing}, multi-sourcing decisions consist in deciding which plants should have the ability to produce an item.
+They are long-term decisions and are piloted by company's strategy.
+At this level, companies have already defined the desired service level and want to reached it at minimal cost.
+However, because they deal with long-term decisions, we used a risk constraint to control stock-out and ensure service level.
+Finally, company's strategy is a trade-off between service level and costs to ensure it.
 
 
-We propose here an alternative version of the multi-sourcing problem. We are still interested in assigning to factories the ability to produce a set of items (first step decisions). Every other decisions are second step decisions. Contrary to part~\ref{part:multi-sourcing}, we have a limited capital to use for assignment. Thus, assignment cost is a constraint and not an objective. If demand were deterministic, the objective would be to minimize the undelivered demand but in an uncertain environment, the objective is to minimize the risk of shortage.
+In this chapter, we propose an alternative version of the multi-sourcing problem reversing the roles of service level and cost of multi-sourcing.
+Like in \cite{}, we suppose that we have a limited budget for the flexibility (\ie to multi-source production of item).
+Thus, companies are likely to not satisfied the whole demand and aim at minimizing their backorder.
 
-Many technical constraints limits our decisions such as inventory dynamic over period, production capacities (for a factory or for a given item). We can also imagine flexibility constraint as in tactical planning where the number of items produced each period is limited. There may be some plants which are not qualified to produce some kind of items. In this case, an infinite cost can be used or setting to zero the assignment of these kind of items to these plants can be done before the resolution. In order to simplify the writing, we do not add it explicitly to the model.
 
+
+
+\subsection{Problem statement}
+
+For the sake of completeness, we recall every parameters including those which are identical to those of the multi-sourcing problem.
+We consider a set $\plants$ of plants producing a set $\REF$ of items over $\horizon$ periods.
+There is an upper bound $\capacity_{pt}$ on the total period production of plant $p$ at period $t$ (summed over all items).
+This upper bound is expressed in time unit since it correspond to available working hours.
+
+
+Giving a plant $p$ the ability to produce an item $i$ has a cost $\affect_p^i$.
+This cost is paid once and for all for the whole horizon and cumulative assignment cost must not exceed a quantity $\capital$.
+When a plant $p$ is able to produce item $i$, there is an upper (resp. lower) bound $\ub_{pt}^i\ge 0$ (resp. $\lb_{pt}^i\ge 0$) on the production of item $i$ in plant $p$ at period $t$.
+The capacity needed (in time units) to produce one unit of item $i$ in plant $p$ in period $t$ is $\rate_{pt}^i>0$.
+
+
+The production and the inventory of item $i$ (summed over all plants) should satisfy a demand $\demand_t^i$ at the end of period $t$.
+When production of an item $i$ is not used to satisfy the demand, it can be stored and incurs no cost.
+When a demand for item $i$ is not satisfied by the production of the current period or by inventory, it can be satisfied later but incurs a unit backorder cost $\backorder^i>0$ per period.
+For each item $i$, there is an initial inventory $\inventory_0^i\in\RR_+$.
+
+
+The goal is to minimize the backorder cost.
+
+
+We call this problem the \emph{\tbc}.
+
+
+\section{Bibliography}
 
 \esgil{Complete bibliography or fuse bibliography with bibliography of part~\ref{part:multi-sourcing}}
 
 
 
-\section{Deterministic model}
+\section{Model formulation}
 
-\subsection{Model formulation}
 
-We present the deterministic version of the multi-sourcing problem and use the following notations. Let $\REF$ be the set of the items, $\plants$ be the set of plants and $\horizon$ be the number of periods of production. For each plant $p\in\plants$, let $\capacity_p$ be the capacity of the plant and for each item $i\in\REF$ let $\capacity_p^i$ be the maximal capacity of the plant $p$ dedicated to the item $i$. For each item $i\in\REF$ and each period $t\in\range{\horizon}$, let $\demand_t^i$ be the demand in item $i$ and $\backorder^i$ be the unitary cost for undelivered amount of item $i$. Finally, let $\affect_p^i$ be the assignment cost for the ability to produce the item $i\in\REF$ in plant $p\in\plants$ and $\capital$ the available capital to pay for this assignments.
+In this section, we introduce a mixed integer program which models the \tbc.
+We introduce the following decision variables.
+The quantity of item $i$ produced at period $t$ by plant $p$ is denoted by $\quantity_{pt}^i$ and the inventory at the end of the period is denoted by $\inventory_t^i$.
+The backorder of item $i$ at the end of the period $t$ is denoted by $\backlog_t^i$.
+We also used the inventory level $\level_t^i$ which is the relative value of the inventory of item $i$ at the end of period $t$ (\ie the inventory minus the backorder).
+We also introduce a binary variable $\open_p^i$ which takes the value 1 if plant $p$ is given the ability to produce item $i$.
 
-For each item $i\in\REF$, let $\level_t^i$ be the relative value of the inventory of item $i$ at period $t$ (\ie it may be negative if there are undelivered units), let $\inventory_t^i$ be the real value of the inventory of item $i$ (\ie the positive part of $\level_t^i$) and let $\backlog_t^i$ be the undelivered amount of item $i$ (\ie the negative part of $\level_t^i$). For a plant $p\in\plants$ and a item $i\in\REF$, let $\open_p^i$ be the binary variable equal to one if we give to the plant $p$ the ability to produce the item $i$ and zero otherwise and let $\quantity_{pt}^i$ be the quantity of item $i$ produced in plant $p$ at period $t$.
 
-The deterministic version of the multi-sourcing problem subject to limited capital can be written as follow:
-\begin{subequations}\label{eq:multi-sourcing:limited capital}
-  \begin{align}
+The \tbc\ can be written as
+% \begin{subequations}\label{eq:multi-sourcing:limited capital}
+%   \begin{align}
+    % \min\quad & \rlap{$\ds \sum_{t=1}^{\horizon} \sum_{i\in\REF} \backorder^i \backlog_t^i$}
+    % \label{eq:det-multi-sourcing:limited-capital:objective}
+    % \\
+    % \st\quad & \ds \level_t^i = \inventory_t^i - \backlog_t^i && \forall t\in\range{\horizon},\ \forall i\in\REF,
+    % \label{eq:det-multi-sourcing:limited-capital:inventory}
+    % \\
+    % & \ds \level_t^i = \level_{t-1}^i + \sum_{p\in\plants}\quantity_{pt}^i - \demand_t^i && \forall t\in\range{\horizon},\ \forall i\in\REF,
+    % \label{eq:det-multi-sourcing:limited-capital:dynamic}
+    % \\
+    % & \ds \quantity_{pt}^i \le \capacity_p^i \open_p^i && \forall t\in\range{\horizon},\ \forall p\in\plants,\ \forall i\in\REF
+    % \label{eq:det-multi-sourcing:limited-capital:big M}
+    % \\
+    % & \ds \sum_{i\in\REF}\quantity_{pt}^i \le \capacity_p && \forall t\in\range{\horizon},\ \forall p\in\plants,
+    % \label{eq:det-multi-sourcing:limited-capital:capacity}
+    % % \\
+    % & \ds \sum_{i\in\REF} \sum_{p\in\plants}\affect_{pt}^i\open_p^i \le \capital && \forall t\in\range{\horizon},
+    % \label{eq:det-multi-sourcing:limited-capital:capital}
+    % \\
+%     & \ds \inventory_t^i,\ \backlog_t^i,\ \quantity_{pt}^i \ge 0 && \forall t\in\range{\horizon},\ \forall p\in\plants,\ \forall i\in\REF,
+%     \label{eq:det-multi-sourcing:limited-capital:nonnegativity}
+%     \\
+%     & \ds \open_p^i \in \crbracket{0,1} && \forall p\in\plants,\ \forall i\in\REF,
+%     \label{eq:det-multi-sourcing:limited-capital:binary}
+%   \end{align}
+% \end{subequations}
+\begin{subequations}\label{eq:det-multi-sourcing:limited-capital}
+  \begin{align+}
     \min\quad & \rlap{$\ds \sum_{t=1}^{\horizon} \sum_{i\in\REF} \backorder^i \backlog_t^i$}
-    \label{eq:multi-sourcing:limited capital:objective}
+    \label{eq:det-multi-sourcing:limited-capital:objective}
     \\
-    \st\quad & \ds \level_t^i = \inventory_t^i - \backlog_t^i && \forall t\in\range{\horizon},\ \forall i\in\REF,
-    \label{eq:multi-sourcing:limited capital:inventory}
+    \st\quad & \ds \level_t^i = \level_{t-1}^i + \sum_{p\in\plants}\quantity_{pt}^i - \demand_t^i && \forall t\in\range{\horizon},\ \forall i\in\REF,
+    \label{eq:det-multi-sourcing:limited-capital:inventory-dynamic}
     \\
-    & \ds \level_t^i = \level_{t-1}^i + \sum_{p\in\plants}\quantity_{pt}^i - \demand_t^i && \forall t\in\range{\horizon},\ \forall i\in\REF,
-    \label{eq:multi-sourcing:limited capital:dynamic}
+    & \ds \sum_{i\in\REF}\rate_{pt}^i\quantity_{pt}^i \leq \capacity_{pt} && \forall t\in\range{\horizon},\ \forall p\in\plants,
+    \label{eq:det-multi-sourcing:limited-capital:capacity}
     \\
-    & \ds \quantity_{pt}^i \le \capacity_p^i \open_p^i && \forall t\in\range{\horizon},\ \forall p\in\plants,\ \forall i\in\REF
-    \label{eq:multi-sourcing:limited capital:big M}
+    & \ds \lb_{pt}^i \open_p^i \le \rate_{pt}^i\quantity_{pt}^i \le \ub_{pt}^i \open_p^i && \forall t\in\range{\horizon},\ \forall p\in\plants,\ \forall i\in\REF,
+    \label{eq:det-multi-sourcing:limited-capital:big-M}
     \\
-    & \ds \sum_{i\in\REF}\quantity_{pt}^i \le \capacity_p && \forall t\in\range{\horizon},\ \forall p\in\plants,
-    \label{eq:multi-sourcing:limited capital:capacity}
+    & \ds \sum_{i\in\REF} \sum_{p\in\plants}\affect_p^i\open_p^i \le \capital
+    \label{eq:det-multi-sourcing:limited-capital:capital}
     \\
-    & \ds \sum_{i\in\REF} \sum_{p\in\plants}\affect_{pt}^i\open_p^i \le \capital && \forall t\in\range{\horizon},
-    \label{eq:multi-sourcing:limited capital:capital}
+    & \ds \level_t^i = \inventory_t^i - \backlog_t^i && \forall t\in\range{\horizon},\ \forall i\in\REF,
+    \label{eq:det-multi-sourcing:limited-capital:inventory}
     \\
     & \ds \inventory_t^i,\ \backlog_t^i,\ \quantity_{pt}^i \ge 0 && \forall t\in\range{\horizon},\ \forall p\in\plants,\ \forall i\in\REF,
-    \label{eq:multi-sourcing:limited capital:nonnegativity}
+    \label{eq:det-multi-sourcing:limited-capital:nonnegativity}
     \\
-    & \ds \open_p^i \in \crbracket{0,1} && \forall p\in\plants,\ \forall i\in\REF,
-    \label{eq:multi-sourcing:limited capital:binary}
-  \end{align}
+    & \ds \open_p^i \in \crbracket{0,1} && \forall p\in\plants,\ \forall i\in\REF.
+    \label{eq:det-multi-sourcing:limited-capital:boolean}
+  \end{align+}
 \end{subequations}
 
 
-Objective~\eqref{eq:multi-sourcing:limited capital:objective} minimize the undelivered amount of references over the whole horizon.
-Constraint~\eqref{eq:multi-sourcing:limited capital:inventory} is the decomposition of the inventory in its positive and negative parts.
-Constraint~\eqref{eq:multi-sourcing:limited capital:dynamic} is the inventory dynamic.
-Constraint~\eqref{eq:multi-sourcing:limited capital:big M} is the maximal capacity of the plant $p$ dedicated to the item $i$. Moreover, it prevent to produce item $i$ in plant $p$ if the plant has not the ability to do so.
-Constraint~\eqref{eq:multi-sourcing:limited capital:capacity} limits the production of each factory.
-Constraint~\eqref{eq:multi-sourcing:limited capital:capital} limits the available capital for the assignment.
-Constraints~\eqref{eq:multi-sourcing:limited capital:nonnegativity} and~\eqref{eq:multi-sourcing:limited capital:binary} define the variables domains.
+Objective~\eqref{eq:det-multi-sourcing:limited-capital:objective} minimizes the cumulative backorder over periods.
+Constraint~\eqref{eq:det-multi-sourcing:limited-capital:inventory-dynamic} is the inventory balance.
+Capacity of each plant is ensured by constraint~\eqref{eq:det-multi-sourcing:limited-capital:capacity}.
+Constraint~\eqref{eq:det-multi-sourcing:limited-capital:big-M} is both a ``big-M'' constraint and a bound on the production of each item in each plant.
+Capital invested in assignment is limited by constraint~\eqref{eq:det-multi-sourcing:limited-capital:capital}.
+Constraint~\eqref{eq:det-multi-sourcing:limited-capital:inventory} is the decomposition of the inventory in its positive and negative parts.
 
 
 
 
-\subsection{$\NP$-completeness}
+\section{$\NP$-completeness}
 
 
+The \tbc\ is $\NP$-hard in the strong sense but contrary to the classical deterministic problem, it always has a feasible solution.
+(It is sufficient to not give to any plants the ability to produce any items.)
 
-\begin{prop}
-The deterministic version of the multi-sourcing problem subject to limited capital~\eqref{eq:multi-sourcing:limited capital} is $\NP$-hard, even if $\horizon=1$, $\capacity_p^i=\capacity_p=1$ and $\affect_p^i=1$, for all $p\in\plants$ and all $i\in\REF$.
-\end{prop}
+
+\begin{thm}\label{thm:det-multi-sourcing:limited-capital:strong-NP-hard}
+  The \tbc\ is $\NP$-hard in the strong sense.
+\end{thm}
+
+
+Proof is very close to proof of $\NP$-hardness of classical multi-sourcing problem since it uses reduction of 3-partition problem to the \tbc.
+
 
 \begin{proof}
-\tbc
+Let $\crbracket{a_1,\ldots,a_{3m}}$ be an instance of the 3-partition problem such that $\frac{B}{4} < a_i < \frac{B}{2}$ for each $i$ with $B=\frac{1}{m}\sum_{i=1}^{3m}a_i$ (it is known to be $\NP$-complete according to \cite{Garey1979}).
+We reduce polynomially this problem to an instance of the \tbc.
+We set
+$$
+  \horizon=1
+  ,\quad
+  \plants=\range[1]{m}
+  ,\quad
+  \REF=\range[1]{3m}
+  ,\quad
+  \capital = 3m,
+$$
+$$
+  \backorder^i=1
+  ,\quad
+  \affect_p^i=1
+  ,\quad
+  \rate_{p,1}^i=1
+  ,\quad
+  \demand_1^i=\frac{a_i}{B}
+  ,\quad
+  \lb_{p,1}^i=0
+  ,\quad
+  \ub_{p,1}^i=\capacity_{p,1}=1.
+$$
+Thus, if we have a solution for the 3-partition problem, finding a solution of the \tbc\ which satisfied the whole demand is straightforward.
+
+Conversely, if we have a solution of the \tbc\ which satisfied the whole demand, since $\demand_1^i=a_i>0$ for each item $i$, each item is assigned to at least one plant (otherwise, there would be backorder).
+Assignment cost being equal to 1 and cumulative assignment cost being upper bounded by the number of item, each item is assigned to exactly one plant.
+Moreover, $\frac{\capacity_{p,1}}{4}=\frac{B}{4} < a_i$ ensures that there are at most three items per plant.
+Then, we get a collection of $m$ triples.
+Plants having the same capacity and sum of plant capacities being equal to sum of demands, each triple has the same sum.
+Thus, we get a solution of the 3-partition problem.
+
+The conclusion follows from the fact that the 3-partition problem is $\NP$-complete in the strong sense even if $\frac{B}{4} < a_i < \frac{B}{2}$ for each $i$.
 \end{proof}
 
 
-\begin{prop}
-The deterministic version of the multi-sourcing problem subject to limited capital~\eqref{eq:multi-sourcing:limited capital} is $\NP$-hard, even if $\horizon=1$ and $\capacity_p^i=\capacity_p=\infty$ for all $p\in\plants$ and all $i\in\REF$.
+Like the classical deterministic multi-sourcing problem, \cref{thm:det-multi-sourcing:limited-capital:strong-NP-hard} proves the strong $\NP$-hardness with many plants.
+\cref{prop:det-multi-sourcing:limited-capital:NP-hard:special-cases} and its proofs gives some special cases which are still $\NP$-hard.
+Looking at this proposition and its proof, we see that the difficulty of the \tbc\ is captured either by the lower bounds $\lb_{pt}^i$ on production or by the upper bound $\capital$ on the cumulative assignment cost.
+
+
+% \begin{prop}\label{prop:det-multi-sourcing:limited-capital:NP-hard:special-cases}
+%   The \tbc\ is $\NP$-hard even if there is only one period and only two plants.
+% \end{prop}
+
+
+\begin{prop}\label{prop:det-multi-sourcing:limited-capital:NP-hard:special-cases}
+  The following special cases of the \tbc\ are $\NP$-hard:
+  \begin{enumerate}
+    \item\label{item:det-multi-sourcing:limited-capital:NP-hard:2-plants}
+    the \tbc\ with only one period and only two plants,
+    \item\label{item:det-multi-sourcing:limited-capital:NP-hard:unbounded-assignment-cost}
+    the \tbc\ with unbounded cumulative assignment cost,
+    \item\label{item:det-multi-sourcing:limited-capital:NP-hard:infinite-capacities}
+    the \tbc\ with one plant and infinite capacities.
+  \end{enumerate}
 \end{prop}
 
-\begin{proof}
-\tbc
+
+\begin{proof}[Proof of \cref{prop:det-multi-sourcing:limited-capital:NP-hard:special-cases} (\cref{item:det-multi-sourcing:limited-capital:NP-hard:2-plants})]
+Let $\crbracket{a_1,\ldots,a_m}$ be an instance of the partition problem (it is known to be $\NP$-complete according to \cite{Garey1979}).
+We reduce polynomially this problem to an instance of the \tbc.
+We set
+$$
+  \horizon=1
+  ,\quad
+  \plants=\crbracket{1,2}
+  ,\quad
+  \REF=\range[1]{m}
+  ,\quad
+  \capital = m,
+$$
+$$
+  \backorder^i=1
+  ,\quad
+  \affect_p^i=1
+  ,\quad
+  \rate_{pt}^i=1
+  ,\quad
+  \demand_1^i=\frac{2a_i}{\sum_{i=1}^{m}a_i}
+  ,\quad
+  \lb_{pt}^i=0
+  ,\quad
+  \ub_{pt}^i=\capacity_{pt}=1.
+$$
+Thus, if we have a solution for the partition problem, finding a solution of the \tbc\ which satisfied the whole demand is straightforward.
+
+Conversely, if we have a solution of the \tbc\ which satisfied the whole demand, positivity of the $a_i$ ensures that each item is assigned to at least one plant.
+(Otherwise, there would be positive backorder.)
+Assignment cost being equal to 1 and cumulative assignment cost being upper bounded by the number of item, each item is assigned to exactly one plant.
+Plants having the same capacity and sum of plant capacities being equal to sum of demands, each subset define by the assignment has the same sum.
+Thus, we get a solution of the partition problem.
+
+The conclusion follows from the fact that the partition problem is $\NP$-complete.
 \end{proof}
 
 
-\begin{prop}
-The deterministic version of the multi-sourcing problem subject to limited capital~\eqref{eq:multi-sourcing:limited capital} is polynomial if $\capacity_p^i=\capacity_p=\infty$ and $\affect_p^i=1$, for all $p\in\plants$ and all $i\in\REF$.
-\end{prop}
 
-\begin{proof}
-\tbc
+Looking at the proofs of \cref{thm:det-multi-sourcing:limited-capital:strong-NP-hard} and of \cref{prop:det-multi-sourcing:limited-capital:NP-hard:special-cases} (\cref{item:det-multi-sourcing:limited-capital:NP-hard:2-plants}), we see that they can be easily adapt to the case of infinite upper bound on cumulative assignment cost.
+
+
+
+\begin{proof}[Proof of \cref{prop:det-multi-sourcing:limited-capital:NP-hard:special-cases} (\cref{item:det-multi-sourcing:limited-capital:NP-hard:unbounded-assignment-cost})]
+In the proofs of \cref{thm:det-multi-sourcing:limited-capital:strong-NP-hard} and of \cref{prop:det-multi-sourcing:limited-capital:NP-hard:special-cases} (\cref{item:det-multi-sourcing:limited-capital:NP-hard:2-plants}), lower bounds $\lb_{pt}^i$ on production must be taken equal to $\demand_1^i$ and capacities of plants and demand satisfaction imply that each item is produced in exactly one plant.
+Hence, we have the following result.
 \end{proof}
 
+
+% \begin{prop}
+% The \tbc\ is $\NP$-hard even if there is no bound on cumulative assignment cost.
+% \end{prop}
+
+
+
+% \begin{prop}
+%   The \tbc\ with one plant and infinite capacities is $\NP$-hard.
+% \end{prop}
+
+
+Reducing the knapsack problem to the \tbc\ with infinite capacities, we show that the \tbc\ with infinite capacities is $\NP$-hard.
+We remind that the knapsack problem consists in choosing a subset of a set of $n$ items, each with a positive value $v_i$ and a positive weight $w_i>$, which maximize the sum of their cumulative value and whose cumulative weight is lower than $W>0$.
+This problem is known to be $\NP$-complete (see~\cite{Garey1979}).
+
+
+\begin{proof}[Proof of \cref{prop:det-multi-sourcing:limited-capital:NP-hard:special-cases} (\cref{item:det-multi-sourcing:limited-capital:NP-hard:infinite-capacities})]
+Let $\bracket{\bracket{v_i,w_i}_{i\in\range{n}},W}$ be an instance of the knapsack problem.
+We reduce polynomially this problem to an instance of the \tbc.
+We set
+$$
+  \horizon=1
+  ,\quad
+  \plants=\crbracket{1}
+  ,\quad
+  \REF=\range[1]{n}
+  ,\quad
+  \capital = W,
+$$
+$$
+  \backorder^i=1
+  ,\quad
+  \affect_p^i=w_i
+  ,\quad
+  \demand_1^i=\max_j\crbracket{v_j} - v_i
+  ,\quad
+  \rate_{pt}^i=1
+  ,\quad
+  \lb_{pt}^i=0
+  ,\quad
+  \ub_{pt}^i=\capacity_{pt}=+\infty.
+$$
+Thus, the \tbc\ can be written as
+\begin{subequations}\label{eq:det-multi-sourcing:limited-capital:knapsack}
+  \begin{align+}
+    \max\quad & \rlap{$\ds \sum_{i=1}^n v_i\open^i$}
+    \label{eq:det-multi-sourcing:limited-capital:knapsack:objective}
+    \\
+    \st\quad & \ds \sum_{i=1}^n w_i\open^i \le W
+    \label{eq:det-multi-sourcing:limited-capital:knapsack:capital}
+    \\
+    & \ds \open^i \in \crbracket{0,1} && \forall i\in\REF,
+    \label{eq:det-multi-sourcing:limited-capital:knapsack:boolean}
+  \end{align+}
+\end{subequations}
+and $\bracket{{\open^*}^i}_i$ is an optimal solution solution of the \tbc\ if and only if $\bracket{{\open^*}^i}_i$ is an optimal solution of the knapsack problem.
+The conclusion follows from the fact that the knapsack problem is $\NP$-hard.
+\end{proof}
 
 
 
@@ -107,7 +324,9 @@ The deterministic version of the multi-sourcing problem subject to limited capit
 
 \subsection{Model formulation}
 
-Like in previous parts, we choose to only consider randomness on demand although it could be consider on internal production time, available capacity, etc. We use a measure of risk $\rho$ to quantify the objective function. The easiest measure of risk is the expectation, but we could choose an other one like $\AVaR$.
+Like in previous parts, we choose to only consider randomness on demand although it could be consider on internal production time, available capacity, etc.
+We use a measure of risk $\rho$ to quantify the objective function.
+The easiest measure of risk is the expectation, but we could choose an other one like $\AVaR$.
 
 \begin{subequations}\label{eq:stochastic multi-sourcing:limited capital}
   \begin{align}
@@ -140,13 +359,16 @@ Like in previous parts, we choose to only consider randomness on demand although
   \end{align}
 \end{subequations}
 
-In this model, bold variables are stochastic whereas normal variable are deterministic. Every constraint has the same meaning than their deterministic counterpart. We also add the constraints \eqref{eq:stochastic multi-sourcing:limited capital:non-anticipation} which are non anticipative constraints and prevent from taking decision knowing the future realizations of randomness.
+In this model, bold variables are stochastic whereas normal variable are deterministic.
+Every constraint has the same meaning than their deterministic counterpart.
+We also add the constraints \eqref{eq:stochastic multi-sourcing:limited capital:non-anticipation} which are non anticipative constraints and prevent from taking decision knowing the future realizations of randomness.
 
 
 \subsection{$\NP$-completeness}
 
 
-In order to deal with the complexity of stochastic cases, we assume that the encoding of the stochastic version of the problem is polynomial in the size of deterministic data. Since deterministic cases are special cases of stochastic cases, every $\NP$-hard deterministic case is still $\NP$-hard when demand is stochastic.
+In order to deal with the complexity of stochastic cases, we assume that the encoding of the stochastic version of the problem is polynomial in the size of deterministic data.
+Since deterministic cases are special cases of stochastic cases, every $\NP$-hard deterministic case is still $\NP$-hard when demand is stochastic.
 
 For the polynomial deterministic case, we have the following result for its stochastic counterpart.
 

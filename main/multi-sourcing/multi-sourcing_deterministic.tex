@@ -218,13 +218,13 @@ $$
 $$
   \affect_p^i=1
   ,\quad
-  \demand_1^i=a_i
+  \demand_1^i=\frac{a_i}{B}
   ,\quad
   \rate_{p,1}^i=1
   ,\quad
   \lb_{p,1}^i=0
   ,\quad
-  \ub_{p,1}^i=\capacity_{p,1}=B.
+  \ub_{p,1}^i=\capacity_{p,1}=1.
 $$
 Thus, if we have a solution for the 3-partition problem, finding a solution with cost $\card{\REF}$ of the deterministic multi-sourcing problem is straightforward.
 
@@ -242,10 +242,10 @@ One can ask for simpler cases.
 \cref{thm:deterministic-multi-sourcing:NP-hard:2-plants} shows that deterministic multi-sourcing problem remains $\NP$-hard with only one period and only two plants and \cref{prop:deterministic-multi-sourcing:polynomial-cases} gives some polynomial cases.
 
 
-\begin{thm}\label{thm:deterministic-multi-sourcing:NP-hard:2-plants}
+\begin{prop}\label{thm:deterministic-multi-sourcing:NP-hard:2-plants}
 The deterministic multi-sourcing problem is $\NP$-hard even if there is only one period and only two plants.
 % Deciding if there is a solution with cost $\card{\REF}$ of the uniform deterministic multi-sourcing problem is $\NP$-complete even with unit assignment costs, one period and two plants.
-\end{thm}
+\end{prop}
 
 
 Reducing the partition problem to the deterministic multi-sourcing problem, deterministic multi-sourcing problem is $\NP$-complete.
@@ -267,18 +267,14 @@ $$
 $$
   \affect_p^i=1
   ,\quad
-  \demand_1^i=a_i
+  \demand_1^i=\frac{2a_i}{\sum_{i=1}^{m}a_i}
   ,\quad
   \rate_{pt}^i=1
   ,\quad
   \lb_{pt}^i=0
   ,\quad
-  \ub_{pt}^i=\capacity_{pt}=\frac{1}{2}\sum_{i=1}^{m}a_i.
+  \ub_{pt}^i=\capacity_{pt}=1.
 $$
-% Thus, we have a solution of the partition problem if and only if there is a solution with cost $\card{\REF}$ to the deterministic multi-sourcing problem.
-
-% Each $a_i$ being positive, each item must be assigned to at least one plant.
-% So, a solution with cost $\card{\REF}$ to the deterministic multi-sourcing problem with these parameters is a solution where each item is assigned to exactly one plant.
 Thus, if we have a solution for the partition problem, finding a solution with cost $\card{\REF}$ of the deterministic multi-sourcing problem is straightforward.
 
 Conversely, if we have a solution with cost $\card{\REF}$ of the deterministic multi-sourcing problem, positivity of the $a_i$ ensures that each item is assigned to at least one plant.
@@ -343,6 +339,11 @@ $$
 Then, we solve the resulting linear program to get the\vl{an} optimal solution of the deterministic multi-sourcing problem.
 (It may return that the problem is infeasible.)
 \end{proof}
+
+
+
+
+\esgil{WARNING: Case 2 is false! This is an open question! Open everything may lead to infeasibility!}
 
 
 
