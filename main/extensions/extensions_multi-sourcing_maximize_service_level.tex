@@ -137,6 +137,7 @@ Constraint~\eqref{eq:det-multi-sourcing:limited-capital:inventory} is the decomp
 
 The \tbc\ is $\NP$-hard in the strong sense but contrary to the classical deterministic problem, it always has a feasible solution.
 (It is sufficient to not give to any plants the ability to produce any items.)
+Moreover, like the classical deterministic multi-sourcing problem, the difficulty of the \tbc\ is captured either by the lower bounds $\lb_{pt}^i$ on production or by the upper bound $\capital$ on the cumulative assignment cost.
 
 
 \begin{thm}\label{thm:det-multi-sourcing:limited-capital:strong-NP-hard}
@@ -175,9 +176,10 @@ $$
 $$
 Thus, if we have a solution for the 3-partition problem, finding a solution of the \tbc\ which satisfied the whole demand is straightforward.
 
-Conversely, if we have a solution of the \tbc\ which satisfied the whole demand, since $\demand_1^i=a_i>0$ for each item $i$, each item is assigned to at least one plant (otherwise, there would be backorder).
-Assignment cost being equal to 1 and cumulative assignment cost being upper bounded by the number of item, each item is assigned to exactly one plant.
-Moreover, $\frac{\capacity_{p,1}}{4}=\frac{B}{4} < a_i$ ensures that there are at most three items per plant.
+Conversely, suppose that we have a solution of the \tbc\ which satisfied the whole demand.
+Since $\demand_1^i=\frac{a_i}{B}>0$ for each item $i$, each item is assigned to at least one plant (otherwise, there would be backorder).
+Assignment costs being equal to 1 and cumulative assignment cost being upper bounded by the number of item, each item is assigned to exactly one plant.
+Moreover, $\frac{1}{4}\capacity_{p,1}=\frac{1}{4} < \frac{a_i}{B}=\demand_1^i$ ensures that there are at most three items per plant.
 Then, we get a collection of $m$ triples.
 Plants having the same capacity and sum of plant capacities being equal to sum of demands, each triple has the same sum.
 Thus, we get a solution of the 3-partition problem.
@@ -186,14 +188,8 @@ The conclusion follows from the fact that the 3-partition problem is $\NP$-compl
 \end{proof}
 
 
-Like the classical deterministic multi-sourcing problem, \cref{thm:det-multi-sourcing:limited-capital:strong-NP-hard} proves the strong $\NP$-hardness with many plants.
-\cref{prop:det-multi-sourcing:limited-capital:NP-hard:special-cases} and its proofs gives some special cases which are still $\NP$-hard.
-Looking at this proposition and its proof, we see that the difficulty of the \tbc\ is captured either by the lower bounds $\lb_{pt}^i$ on production or by the upper bound $\capital$ on the cumulative assignment cost.
+\cref{prop:det-multi-sourcing:limited-capital:NP-hard:special-cases} gives some special cases which are still $\NP$-hard.
 
-
-% \begin{prop}\label{prop:det-multi-sourcing:limited-capital:NP-hard:special-cases}
-%   The \tbc\ is $\NP$-hard even if there is only one period and only two plants.
-% \end{prop}
 
 
 \begin{prop}\label{prop:det-multi-sourcing:limited-capital:NP-hard:special-cases}
@@ -237,7 +233,8 @@ $$
 $$
 Thus, if we have a solution for the partition problem, finding a solution of the \tbc\ which satisfied the whole demand is straightforward.
 
-Conversely, if we have a solution of the \tbc\ which satisfied the whole demand, positivity of the $a_i$ ensures that each item is assigned to at least one plant.
+Conversely, suppose that we have a solution of the \tbc\ which satisfied the whole demand.
+Positivity of the $a_i$ ensures that each item is assigned to at least one plant.
 (Otherwise, there would be positive backorder.)
 Assignment cost being equal to 1 and cumulative assignment cost being upper bounded by the number of item, each item is assigned to exactly one plant.
 Plants having the same capacity and sum of plant capacities being equal to sum of demands, each subset define by the assignment has the same sum.
@@ -320,69 +317,69 @@ The conclusion follows from the fact that the knapsack problem is $\NP$-hard.
 
 
 
-\section{Stochastic model}
+% \section{Stochastic model}
 
-\subsection{Model formulation}
+% \subsection{Model formulation}
 
-Like in previous parts, we choose to only consider randomness on demand although it could be consider on internal production time, available capacity, etc.
-We use a measure of risk $\rho$ to quantify the objective function.
-The easiest measure of risk is the expectation, but we could choose an other one like $\AVaR$.
+% Like in previous parts, we choose to only consider randomness on demand although it could be consider on internal production time, available capacity, etc.
+% We use a measure of risk $\rho$ to quantify the objective function.
+% The easiest measure of risk is the expectation, but we could choose an other one like $\AVaR$.
 
-\begin{subequations}\label{eq:stochastic multi-sourcing:limited capital}
-  \begin{align}
-    \min\quad & \rlap{$\ds \rho\bracket{\sum_{t=1}^{\horizon} \sum_{i\in\REF} \backorder^i \va\backlog_t^i}$}
-    \label{eq:stochastic multi-sourcing:limited capital:objective}
-    \\
-    \st\quad & \ds \va\level_t^i = \va\inventory_t^i - \va\backlog_t^i && \forall t\in\range{\horizon},\ \forall i\in\REF,
-    \label{eq:stochastic multi-sourcing:limited capital:inventory}
-    \\
-    & \ds \va\level_t^i = \va\inventory_{t-1}^i + \sum_{p\in\plants}\va\quantity_{pt}^i - \va\demand_t^i && \forall t\in\range{\horizon},\ \forall i\in\REF,
-    \label{eq:stochastic multi-sourcing:limited capital:dynamic}
-    \\
-    & \ds \va\quantity_{pt}^i \le \capacity_p^i \open_p^i && \forall t\in\range{\horizon},\ \forall p\in\plants,\ \forall i\in\REF
-    \label{eq:stochastic multi-sourcing:limited capital:big M}
-    \\
-    & \ds \sum_{i\in\REF}\va\quantity_{pt}^i \le \capacity_p && \forall t\in\range{\horizon},\ \forall p\in\plants,
-    \label{eq:stochastic multi-sourcing:limited capital:capacity}
-    \\
-    & \ds \sum_{i\in\REF} \sum_{p\in\plants}\affect_{pt}^i\open_p^i \le \capital && \forall t\in\range{\horizon},
-    \label{eq:stochastic multi-sourcing:limited capital:capital}
-    \\
-    & \ds \va\inventory_t^i,\ \va\backlog_t^i,\ \va\quantity_{pt}^i \ge 0 && \forall t\in\range{\horizon},\ \forall p\in\plants,\ \forall i\in\REF,
-    \label{eq:stochastic multi-sourcing:limited capital:nonnegativity}
-    \\
-    & \ds \open_p^i \in \crbracket{0,1} && \forall p\in\plants,\ \forall i\in\REF,
-    \label{eq:stochastic multi-sourcing:limited capital:binary}
-    \\
-    & \ds \va\level_t^i,\ \va\backlog_t^i,\ \va\quantity_{pt}^i,\ \va\inventory_t^i \preceq \Sfield{\bracket{\va\demand^i}_{i\in\REF}} && \forall t\in\range{\horizon},\ \forall p\in\plants,\ \forall i\in\REF,
-    \label{eq:stochastic multi-sourcing:limited capital:non-anticipation}
-  \end{align}
-\end{subequations}
+% \begin{subequations}\label{eq:stochastic multi-sourcing:limited capital}
+%   \begin{align}
+%     \min\quad & \rlap{$\ds \rho\bracket{\sum_{t=1}^{\horizon} \sum_{i\in\REF} \backorder^i \va\backlog_t^i}$}
+%     \label{eq:stochastic multi-sourcing:limited capital:objective}
+%     \\
+%     \st\quad & \ds \va\level_t^i = \va\inventory_t^i - \va\backlog_t^i && \forall t\in\range{\horizon},\ \forall i\in\REF,
+%     \label{eq:stochastic multi-sourcing:limited capital:inventory}
+%     \\
+%     & \ds \va\level_t^i = \va\inventory_{t-1}^i + \sum_{p\in\plants}\va\quantity_{pt}^i - \va\demand_t^i && \forall t\in\range{\horizon},\ \forall i\in\REF,
+%     \label{eq:stochastic multi-sourcing:limited capital:dynamic}
+%     \\
+%     & \ds \va\quantity_{pt}^i \le \capacity_p^i \open_p^i && \forall t\in\range{\horizon},\ \forall p\in\plants,\ \forall i\in\REF
+%     \label{eq:stochastic multi-sourcing:limited capital:big M}
+%     \\
+%     & \ds \sum_{i\in\REF}\va\quantity_{pt}^i \le \capacity_p && \forall t\in\range{\horizon},\ \forall p\in\plants,
+%     \label{eq:stochastic multi-sourcing:limited capital:capacity}
+%     \\
+%     & \ds \sum_{i\in\REF} \sum_{p\in\plants}\affect_{pt}^i\open_p^i \le \capital && \forall t\in\range{\horizon},
+%     \label{eq:stochastic multi-sourcing:limited capital:capital}
+%     \\
+%     & \ds \va\inventory_t^i,\ \va\backlog_t^i,\ \va\quantity_{pt}^i \ge 0 && \forall t\in\range{\horizon},\ \forall p\in\plants,\ \forall i\in\REF,
+%     \label{eq:stochastic multi-sourcing:limited capital:nonnegativity}
+%     \\
+%     & \ds \open_p^i \in \crbracket{0,1} && \forall p\in\plants,\ \forall i\in\REF,
+%     \label{eq:stochastic multi-sourcing:limited capital:binary}
+%     \\
+%     & \ds \va\level_t^i,\ \va\backlog_t^i,\ \va\quantity_{pt}^i,\ \va\inventory_t^i \preceq \Sfield{\bracket{\va\demand^i}_{i\in\REF}} && \forall t\in\range{\horizon},\ \forall p\in\plants,\ \forall i\in\REF,
+%     \label{eq:stochastic multi-sourcing:limited capital:non-anticipation}
+%   \end{align}
+% \end{subequations}
 
-In this model, bold variables are stochastic whereas normal variable are deterministic.
-Every constraint has the same meaning than their deterministic counterpart.
-We also add the constraints \eqref{eq:stochastic multi-sourcing:limited capital:non-anticipation} which are non anticipative constraints and prevent from taking decision knowing the future realizations of randomness.
-
-
-\subsection{$\NP$-completeness}
+% In this model, bold variables are stochastic whereas normal variable are deterministic.
+% Every constraint has the same meaning than their deterministic counterpart.
+% We also add the constraints \eqref{eq:stochastic multi-sourcing:limited capital:non-anticipation} which are non anticipative constraints and prevent from taking decision knowing the future realizations of randomness.
 
 
-In order to deal with the complexity of stochastic cases, we assume that the encoding of the stochastic version of the problem is polynomial in the size of deterministic data.
-Since deterministic cases are special cases of stochastic cases, every $\NP$-hard deterministic case is still $\NP$-hard when demand is stochastic.
+% \subsection{$\NP$-completeness}
 
-For the polynomial deterministic case, we have the following result for its stochastic counterpart.
 
-\begin{prop}
-The stochastic version of the multi-sourcing problem subject to limited capital~\eqref{eq:stochastic multi-sourcing:limited capital} is polynomial if $\capacity_p^i=\capacity_p=\infty$ and $\affect_p^i=1$, for all $p\in\plants$ and all $i\in\REF$.
-\end{prop}
+% In order to deal with the complexity of stochastic cases, we assume that the encoding of the stochastic version of the problem is polynomial in the size of deterministic data.
+% Since deterministic cases are special cases of stochastic cases, every $\NP$-hard deterministic case is still $\NP$-hard when demand is stochastic.
 
-\begin{proof}
-Obvious when $\rho=\espe$.
+% For the polynomial deterministic case, we have the following result for its stochastic counterpart.
 
-\esgil{Check with general $\rho$ but seems ok using monotony of $\rho$}
+% \begin{prop}
+% The stochastic version of the multi-sourcing problem subject to limited capital~\eqref{eq:stochastic multi-sourcing:limited capital} is polynomial if $\capacity_p^i=\capacity_p=\infty$ and $\affect_p^i=1$, for all $p\in\plants$ and all $i\in\REF$.
+% \end{prop}
 
-\tbc
-\end{proof}
+% \begin{proof}
+% Obvious when $\rho=\espe$.
+
+% \esgil{Check with general $\rho$ but seems ok using monotony of $\rho$}
+
+% \tbc
+% \end{proof}
 
 
 

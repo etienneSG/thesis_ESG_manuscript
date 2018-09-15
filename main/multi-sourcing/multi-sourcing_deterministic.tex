@@ -32,7 +32,7 @@ In more complex organizations, deciding the best logistic network relies on many
 
 
 Argon Consulting meets multi-sourcing problem with clients from different industries.
-Thus, Argon Consulting aims at getting a versatile model which can be used in many situations and must\vl{should be not to} not be too dependent on the industry.
+Thus, Argon Consulting aims at getting a versatile model which can be used in many situations and should be not to too dependent on the industry.
 We propose a model which captures the essence of the multi-sourcing problem and which can be easily adapted to particular client cases.
 % For example, inventory cost at the end end of a period will not be taken into account but a particular client may want to bound it.
 % Thus the model have to be able to add this constraint.
@@ -125,7 +125,6 @@ We also introduce a binary variable $\open_p^i$ which takes the value 1 if plant
 
 
 The deterministic multi-sourcing problem can be written as
-\vlil{p dans 8.1.e ?}
 \begin{subequations}\label{eq:det-multi-sourcing}
   \begin{align+}
     \min\quad & \rlap{$\ds \sum_{i\in\REF}\sum_{p\in\plants}\affect_p^i \open_p^i$}
@@ -140,7 +139,7 @@ The deterministic multi-sourcing problem can be written as
     & \ds \lb_{pt}^i \open_p^i \le \rate_{pt}^i\quantity_{pt}^i \le \ub_{pt}^i \open_p^i && \forall t\in\range{\horizon},\ \forall p\in\plants, \forall i\in\REF,
     \label{eq:det-multi-sourcing:big-M}
     \\
-    & \ds \inventory_t^i \ge 0 && \forall t\in\range{\horizon},\ \forall p\in\plants, \forall i\in\REF.
+    & \ds \inventory_{pt}^i \ge 0 && \forall t\in\range{\horizon},\ \forall p\in\plants, \forall i\in\REF.
     \label{eq:det-multi-sourcing:positivity}
     \\
     & \ds \open_p^i \in \crbracket{0,1} && \forall p\in\plants, \forall i\in\REF,
@@ -188,25 +187,82 @@ Note that without loss of generality, we can suppose that $\ub_{pt}^i \le \capac
 \label{sec:multi-sourcing:deterministic:NP-completeness}
 
 
-In this section, we prove that the deterministic multi-sourcing problem is $\NP$-hard in the strong sense and give some polynomial cases.
+% In this section, we prove that the deterministic multi-sourcing problem is $\NP$-hard in the strong sense and give some polynomial cases.
+For any fixed values of the $\affect_p^i$'s, the deterministic multi-sourcing problem is $\NP$-hard.
+Moreover, looking at the special cases which remains $\NP$-hard and at the polynomial cases, we see that the difficulty of the multi-sourcing problem is captured either by the lower bounds $\lb_{pt}^i$ on production or by the assignment cost $\affect_p^i$.
+
 
 
 \begin{thm}\label{thm:deterministic-multi-sourcing:strong-NP-hard}
-The deterministic multi-sourcing problem is $\NP$-hard in the strong sense.
-% Deciding if there is a solution with cost $\card{\REF}$ of the uniform deterministic multi-sourcing problem is $\NP$-complete even with unit assignment costs and one period.
+  Deciding if there is a solution of the deterministic multi-sourcing problem is $\NP$-complete in the strong sense.
 \end{thm}
 
 
-Reducing the 3-partition problem to deterministic multi-sourcing problem, we show that the deterministic multi-sourcing problem is $\NP$-hard in the strong sense.
+Reducing the 3-partition problem to deterministic multi-sourcing problem, we show that deciding if the deterministic multi-sourcing problem has a solution is $\NP$-hard in the strong sense.
 We remind that the 3-partition problem consists in deciding whether a given multiset $\crbracket{a_1,\ldots,a_{3m}}$ of integers can be partitioned into triples that all have the same sum.
 This problem is known to be $\NP$-complete in the strong sense (see~\cite{Garey1979}) even if $\frac{B}{4} < a_i < \frac{B}{2}$ for each $i$ with $B=\frac{1}{m}\sum_{i=1}^{3m}a_i$.
-
 
 
 \begin{proof}
 Let $\crbracket{a_1,\ldots,a_{3m}}$ be an instance of the 3-partition problem such that $\frac{B}{4} < a_i < \frac{B}{2}$ for each $i$ with $B=\frac{1}{m}\sum_{i=1}^{3m}a_i$.
 We reduce polynomially this problem to an instance of the deterministic multi-sourcing problem.
-%Without loss of generality, we can assume that sum of the $a_i$'s is positive.
+We set
+$$
+  \horizon=1
+  ,\quad
+  \plants=\range[1]{m}
+  ,\quad
+  \REF=\range[1]{3m}
+$$
+$$
+  \rate_{p,1}^i=1
+  ,\quad
+  \demand_1^i=\frac{a_i}{B}
+  ,\quad
+  \lb_{p,1}^i=\frac{a_i}{B}
+  ,\quad
+  \ub_{p,1}^i=\capacity_{p,1}=1.
+$$
+Thus, if we have a solution for the 3-partition problem, finding a solution of the deterministic multi-sourcing problem is straightforward assigning each triple to a plant.
+
+Conversely, if we have a solution of the deterministic multi-sourcing problem, since $\demand_1^i=\frac{a_i}{B}>0$ for each item $i$, each item is assigned to at least one plant (otherwise, solution is infeasible).
+Since $\frac{1}{4}\capacity_{p,1}=\frac{1}{4} < \frac{a_i}{B} = \lb_{p,1}^i$ ensures that there are at most three items per plant, then each plant produces exactly 3 items.
+% Suppose that a plant $p$ is given the ability to produce at least four items $i_1,\ldots,i_4$.
+% Then, production of the plant $p$ is greater or equal to $\lb_{p,1}^{i_1}+\ldots+\lb_{p,1}^{i_1}=\frac{a_{i_1}}{B}+\ldots+\frac{a_{i_4}}{B}>1=\capacity_{p,1}$.
+% Thus, each plant produces at most 3 items.
+% Hence, each plant produces exactly 3 items.
+Plants having the same capacity and sum of plant capacities being equal to sum of demands, each triple has the same sum.
+Thus, we get a solution of the 3-partition problem.
+
+The conclusion follows from the fact that the 3-partition problem is $\NP$-complete in the strong sense even if $\frac{B}{4} < a_i < \frac{B}{2}$ for each $i$.
+\end{proof}
+
+
+% \begin{thm}\label{thm:deterministic-multi-sourcing:strong-NP-hard}
+% The deterministic multi-sourcing problem is $\NP$-hard in the strong sense.
+% \end{thm}
+
+
+
+\cref{thm:deterministic-multi-sourcing:strong-NP-hard} prove the strong $\NP$-hardness but the proof require instances of the deterministic multi-sourcing problem with many plants and uses the lower bound on production which may be equal to zero in some real instances.
+One can ask for simpler cases.
+\cref{prop:deterministic-multi-sourcing:NP-hard:special-cases} gives some special cases which remain $\NP$-hard and \cref{prop:deterministic-multi-sourcing:polynomial-cases} gives some polynomial cases.
+
+
+\begin{prop}\label{prop:deterministic-multi-sourcing:NP-hard:special-cases}
+  The following special cases of the deterministic multi-sourcing problem are $\NP$-hard:
+  \begin{enumerate}
+    \item\label{item:deterministic-multi-sourcing:NP-hard:without-production-lower-bound}
+    the deterministic multi-sourcing problem without lower bounds on production,
+    \item\label{item:deterministic-multi-sourcing:NP-hard:2-plants}
+    the deterministic multi-sourcing problem with only one period and only two plants.
+  \end{enumerate}
+\end{prop}
+
+
+\begin{proof}[Proof of \cref{prop:deterministic-multi-sourcing:NP-hard:special-cases} (\cref{item:deterministic-multi-sourcing:NP-hard:without-production-lower-bound})]
+Let $\crbracket{a_1,\ldots,a_{3m}}$ be an instance of the 3-partition problem such that $\frac{B}{4} < a_i < \frac{B}{2}$ for each $i$ with $B=\frac{1}{m}\sum_{i=1}^{3m}a_i$.
+We reduce polynomially this problem to an instance of the deterministic multi-sourcing problem without lower bounds on production.
 We set
 $$
   \horizon=1
@@ -226,10 +282,12 @@ $$
   ,\quad
   \ub_{p,1}^i=\capacity_{p,1}=1.
 $$
-Thus, if we have a solution for the 3-partition problem, finding a solution with cost $\card{\REF}$ of the deterministic multi-sourcing problem is straightforward.
+Thus, if we have a solution for the 3-partition problem, finding a solution with cost $\card{\REF}$ of the deterministic multi-sourcing problem is straightforward assigning each triple to a plant.
 
-Conversely, if we have a solution with cost $\card{\REF}$ of the deterministic multi-sourcing problem, $\frac{\capacity_{p,1}}{4}=\frac{B}{4} < a_i$ ensures that there are at most three items per plant.
-Since each item is assigned to at least one plant, we get a collection of $m$ triples.
+Conversely, suppose that we have a solution with cost $\card{\REF}$ of the deterministic multi-sourcing problem.
+Since $\demand_1^i=\frac{a_i}{B}>0$ for each item $i$, each item is assigned to at least one plant (otherwise, solution is infeasible).
+Assignment costs being equal to 1 and solution cost being equal to the number of item, each item is assigned to at most one plant, hence to exactly one plant.
+Since $\frac{1}{4}\capacity_{p,1}=\frac{1}{4} < \frac{a_i}{B} = \demand_1^i$ ensures that there are at most three items per plant, then each plant produces exactly 3 items and we get a collection of $m$ triples.
 Plants having the same capacity and sum of plant capacities being equal to sum of demands, each triple has the same sum.
 Thus, we get a solution of the 3-partition problem.
 
@@ -237,23 +295,17 @@ The conclusion follows from the fact that the 3-partition problem is $\NP$-compl
 \end{proof}
 
 
-\cref{thm:deterministic-multi-sourcing:strong-NP-hard} prove the strong $\NP$-hardness but the proof require instances of the deterministic multi-sourcing problem with many plants.
-One can ask for simpler cases.
-\cref{thm:deterministic-multi-sourcing:NP-hard:2-plants} shows that deterministic multi-sourcing problem remains $\NP$-hard with only one period and only two plants and \cref{prop:deterministic-multi-sourcing:polynomial-cases} gives some polynomial cases.
+% \begin{prop}\label{thm:deterministic-multi-sourcing:NP-hard:2-plants}
+% The deterministic multi-sourcing problem is $\NP$-hard even if there is only one period and only two plants.
+% \end{prop}
 
 
-\begin{prop}\label{thm:deterministic-multi-sourcing:NP-hard:2-plants}
-The deterministic multi-sourcing problem is $\NP$-hard even if there is only one period and only two plants.
-% Deciding if there is a solution with cost $\card{\REF}$ of the uniform deterministic multi-sourcing problem is $\NP$-complete even with unit assignment costs, one period and two plants.
-\end{prop}
-
-
-Reducing the partition problem to the deterministic multi-sourcing problem, deterministic multi-sourcing problem is $\NP$-complete.
+Reducing the partition problem to the deterministic multi-sourcing problem, we show that the deterministic multi-sourcing problem with only one period and only two plants remains $\NP$-hard;
 We remind that the partition problem is the task of deciding whether a given set of positive integers can be partitioned into two subsets that have the same sum.
 This problem is known to be $\NP$-complete (see~\cite{Garey1979}).
 
 
-\begin{proof}
+\begin{proof}[Proof of \cref{prop:deterministic-multi-sourcing:NP-hard:special-cases} (\cref{item:deterministic-multi-sourcing:NP-hard:2-plants})]
 Let $\crbracket{a_1,\ldots,a_m}$ be an instance of the partition problem.
 We reduce polynomially this problem to an instance of the deterministic multi-sourcing problem.
 We set
@@ -286,11 +338,13 @@ The conclusion follows from the fact that the partition problem is $\NP$-complet
 \end{proof}
 
 
+We now gives the polynomial cases.
+
 \begin{prop}\label{prop:deterministic-multi-sourcing:polynomial-cases}
 The following special cases of the deterministic multi-sourcing problem are polynomial:
 \begin{enumerate}
   \item deterministic multi-sourcing problem with a single plant ($\plants=\crbracket{1}$),
-  \item deterministic multi-sourcing problem without assignment cost ($\affect_p^i=0$),
+  \item deterministic multi-sourcing problem without lower bound on production and without assignment cost ($\lb_{pt}^i=0$ and $\affect_p^i=0$),
   \item deterministic multi-sourcing problem with infinite capacities ($\ub_{pt}^i=\capacity_{pt}=+\infty$).
 \end{enumerate}
 \end{prop}
@@ -309,16 +363,16 @@ $$
 \end{array}
 \right.
 $$
-Then, we solve the resulting linear program to get the\vl{an} optimal solution of the deterministic multi-sourcing problem.
+Then, we solve the resulting linear program to get an optimal solution of the deterministic multi-sourcing problem.
 (It may return that the problem is infeasible.)
 
 \medskip
 
-\emph{Case 2: deterministic multi-sourcing problem without assignment cost.}
+\emph{Case 2: deterministic multi-sourcing problem without lower bound on production and without assignment cost.}
 
 For each plant $p$ and each item $i$, we set $\open_p^i=1$.
-These decisions do not affect the cost in the objective function.
-Then, we solve the resulting linear program to get the\vl{an} optimal solution of the deterministic multi-sourcing problem.
+These decisions do not affect the cost in the objective function and do not lead to infeasibility since they relax the constraints on inventory and production variables.
+Then, we solve the resulting linear program to get an optimal solution of the deterministic multi-sourcing problem.
 (It may return that the problem is infeasible.)
 
 \medskip
@@ -336,14 +390,8 @@ $$
 \end{array}
 \right.
 $$
-Then, we solve the resulting linear program to get the\vl{an} optimal solution of the deterministic multi-sourcing problem.
+Then, we solve the resulting linear program to get an optimal solution of the deterministic multi-sourcing problem.
 (It may return that the problem is infeasible.)
 \end{proof}
-
-
-
-
-\esgil{WARNING: Case 2 is false! This is an open question! Open everything may lead to infeasibility!}
-
 
 
