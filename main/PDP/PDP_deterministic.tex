@@ -901,8 +901,8 @@ If the initial inventory of item $i$ exceeds its cumulative demand, the item is 
 \subsubsection{Infinite capacity}
 
 
-\begin{thm}
-CLSP-BS with infinite capacities parametrized by the number $\card{\REF}$ of items is polynomial.
+\begin{thm}\label{thm:complexity:fixed-number-items:infinite-capacity}
+For a fixed set $\REF$ of items, CLSP-BS with infinite capacities is polynomial.
 \end{thm}
 
 
@@ -927,7 +927,7 @@ Using this transformation for each period $t$ and item $j$ such that $\inventory
 \end{proof}
 
 
-\begin{proof}
+\begin{proof}[Proof of \cref{thm:complexity:fixed-number-items:infinite-capacity}]
 Thanks to \cref{lem:complexity:fixed-number-items:infinite-capacity:ZIO}, there exists an optimal solution which is ZIO and we we can use the dynamic programming.
 Thus, we define the following set
 \begin{equation}
@@ -947,16 +947,29 @@ c_t\bracket{\inventory_t,\inventory_{t+1}} =
 \begin{array}{ll}
 \holding_t\ ^T\inventory_t & \mbox{if the transition is admissible},
 \\
-+\infty & \mbox{otherwise.}
++\infty & \mbox{otherwise}.
 \end{array}
 \right.
 \end{equation}
 Let $V_t\bracket{\inventory_t}$ be the minimal holding cost with inventory $\inventory_t$ at period $t$.
 We have
 \begin{equation}
-V_t\bracket{\inventory_t} = \min_{\inventory_{t+1}\in\cS_{t+1}} \crbracket{c_t\bracket{\inventory_t,\inventory_{t+1}} + V_{t+1}\bracket{\inventory_{t+1}}}
+V_t\bracket{\inventory_t} =
+\left\{
+\begin{array}{ll}
+\ds \min_{\inventory_{t+1}\in\cS_{t+1}} \crbracket{c_t\bracket{\inventory_t,\inventory_{t+1}} + V_{t+1}\bracket{\inventory_{t+1}}}
+&
+\mbox{if}\ t\in\range{\horizon-1},
+\\
+\ds 
+\holding_{\horizon}\ ^T\inventory_{\horizon}
+&
+\mbox{otherwise}.
+\end{array}
+\right.
 \end{equation}
-Finally, 
+There exists an optimal solution such that inventory is equal to zero at the end of the horizon $\horizon$.
+Thus, we can compute the cost $V\bracket{\inventory_0}$ of an optimal solution in $O\bracket{\horizon^{2\card{\REF}+1}}$
 \end{proof}
 
 
