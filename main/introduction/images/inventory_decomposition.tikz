@@ -1,0 +1,77 @@
+\begin{tikzpicture}[font=\normalsize]
+
+\pgfmathsetmacro\Xstart{0}
+\pgfmathsetmacro\Xend{14}
+
+\pgfmathsetmacro\Ylegend{-.5}
+\pgfmathsetmacro\Ystart{0}
+\pgfmathsetmacro\Ysafety{1}
+\pgfmathsetmacro\Ycycle{3}
+\pgfmathsetmacro\Yanticipation{5}
+\pgfmathsetmacro\Yend{5}
+
+\pgfmathsetmacro\cycle{4}
+\pgfmathsetmacro\epsilon{.25}
+
+\pgfmathsetmacro\demandA{(\Ycycle-\Ysafety)/\cycle}
+\pgfmathsetmacro\demandB{(\Yanticipation-\Ysafety)/\cycle}
+\pgfmathsetmacro\demandC{(\Ycycle-.3*\Ysafety)/\cycle}
+\pgfmathsetmacro\demandD{(\Ycycle-\Ysafety)/\cycle}
+
+
+
+%declare function={func(\x)=(\x>0.8)*(0.6*\x)+and(\x>0.6,\x<=0.8)*(2/3*\x)+(\x<=0.6)*(\x*0.75);}]
+
+\begin{scope}[local bounding box=InventoryGraph, scale=1.]
+
+% Inventory
+\draw[fill=argon orange!50,argon orange!50] (\Xstart,\Ystart) rectangle (\Xend,\Ysafety);
+\draw[argon gray] (\Xstart,{.5*(\Ystart+\Ysafety)}) node[anchor=east]{Safety stock};
+\draw[fill=argon orange!25,argon orange!25] (\Xstart,\Ysafety) rectangle (\Xend,\Ycycle);
+\draw[argon gray] (\Xstart,{.5*(\Ysafety+\Ycycle)}) node[anchor=east]{Cycle stock};
+\draw[fill=argon orange!10,argon orange!10] (\Xstart,\Ycycle) rectangle (\Xend,\Yanticipation);
+\draw[argon gray] (\Xstart,{.5*(\Ycycle+\Yanticipation)}) node[anchor=south east]{Anticipation} node[anchor=north east]{inventory};
+
+% Axes
+\draw[->,>=latex,black] (\Xstart,0) -- ({\Xend+\epsilon},0) node[anchor=north]{\textsc{Time}};
+\draw[->,>=latex,black] (0,\Ystart) -- (0,{\Yend+\epsilon}) node[anchor=south]{\textsc{Stock}};
+
+% Plot
+\draw[samples=200,domain=0:{3.5*\cycle}] plot (\x,
+{
+(
+  and(0<=\x,\x<\cycle)*
+  (\Ycycle-\demandA*\x)
+  +
+  and(\cycle<=\x,\x<2*\cycle)*
+  (\Yanticipation-\demandB*(\x-\cycle))
+  +
+  and(2*\cycle<=\x,\x<3*\cycle)*
+  (\Ycycle-\demandC*(\x-2*\cycle))
+  +
+  and(3*\cycle<=\x,\x<4*\cycle)*
+  (\Ycycle-\demandD*(\x-3*\cycle))
+)
+}
+);
+
+% Cycle
+\draw[<->,>=latex,argon gray] ({\Xstart+.25*\epsilon},\Ylegend) -- node[anchor=north]{1st cycle} ({\cycle-.25*\epsilon},\Ylegend);
+\draw[<->,>=latex,argon gray] ({\cycle+.25*\epsilon},\Ylegend) -- node[anchor=north]{2nd cycle} ({2*\cycle-.25*\epsilon},\Ylegend);
+\draw[<->,>=latex,argon gray] ({2*\cycle+.25*\epsilon},\Ylegend) -- node[anchor=north]{3rd cycle} ({3*\cycle-.25*\epsilon},\Ylegend);
+
+\draw ({.5*(\Xstart+\Xend)},-1.5) node[anchor=north]
+{
+  \begin{minipage}{.95\linewidth}
+  \small
+  In first cycle, cycle stock enables to perfectly satisfy the demand.
+  In second cycle, an increase of demand is announced.
+  Then, an anticipation inventory is produced in addition to cycle stock.
+  In third cycle, the demand is bigger than expected.
+  Thus part of the demand is satisfied using safety stock.
+  \end{minipage}
+};
+
+\end{scope}
+
+\end{tikzpicture}

@@ -95,36 +95,10 @@ At the operational level, last-minute trade-offs are made like scheduling.
 
 
 
-% \begin{itemize}
-%   \item \emph{Costs.} Standard examples are investment costs (purchase of plants, warehouse or machines), production costs (salaries) or shipping costs (regardless of transportation mode, of rental or purchase).
-
-%   \item \emph{Stocks.} Even if it looks like a cost, stocks have their own characteristics.
-%   They correspond to working capital and they cannot be compared to industrial costs.
-%   - argent immobilise
-%   - vol
-%   - faire inventaire
-%   - dépréciation
-
-%   \item \emph{Service.} It measures the ability of Supply Chain to deliver the right product with respect to deadlines.
-% \end{itemize}
-% \esgil{Faire un paragraphe ? \emph{Flexibility}, which is the ability to face variations of the products mix, or \emph{capacitative reactivity}, which is the ability to face variations on the global volume, are also costs since it implies investments.}
-
-% \esgil{Faire trois paragraphe plus fourni sur chacune des parties.}
-
-% In an ideal case, cost and stock must be very low whereas service must be very high.
-% However, it is easy to see the contradictions.
-% In automotive industry, high stock is impossible because of depreciation an diversity of products.
-% However, service level must be high which requires a huge flexibility.
-% In luxury industry, availability of the right product in the right store is more critical than manufacturing cost.
-% Among other examples, over-capacity increases flexibility but is expensive or specialization of assembly lines or plants increases productivity but often reduces flexibility.
-% Depending on the industry, a trade-off between these three incomparable objectives must be found.
-% The decision-maker must define which one is the objective and which ones are constraints or simply ignored.
-
-
 \section{Supply Chain organizations}
 
 
-Supply Chain organizations can be classified into four main models \cite{arnold2007} which are represented in \cref{fig:supply-chain-models}.
+Supply Chain organizations can be classified into four main models \cite{Arnold2007} which are represented in \cref{fig:supply-chain-models}.
 \begin{itemize}
   \item \emph{Engineer-To-Order (ETO).}
   The customer is involved in the design and gives engineering requirements and specifications which enables much customization and a specific design.
@@ -152,9 +126,8 @@ For other industries, identifying the best organization also depend on the comme
 
 \begin{figure}[h]
   \centering
-%  \includegraphics[width=\textwidth]{main/introduction/images/.tikz}
-  \esgil{Include figure of the 5 supply chain models ou celle de la formation APICS (slide 4)}
-  \caption{Scheme of Supply Chain organizations}
+  \includegraphics[width=\textwidth]{main/introduction/images/supply_chain_models.tikz}
+  \caption{Supply Chain organizations and lead times (from \cite{Arnold2007})}
   \label{fig:supply-chain-models}
 \end{figure}
 
@@ -223,7 +196,13 @@ To prevent it, \emph{safety stocks} are kept as a reserve.
 Finally, since \emph{flexibility} of means of production is limited, \emph{lot-size inventories} also called \emph{cycle stocks} are needed.
 %They form the portion of inventory that decreases gradually as customers demand is satisfied and that are replenished cyclically when suppliers’ orders are received.
 They form the portion of stocks that varies over time due to production and demand satisfaction.
-\esgil{Ajouter la figure en dent de scie avec les différents stock}
+The different parts of the inventory are represented in \cref{fig:inventory-decomposition}.
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{main/introduction/images/inventory_decomposition.tikz}
+  \caption{Inventory decomposition}
+  \label{fig:inventory-decomposition}
+\end{figure}
 
 
 \medskip
@@ -336,91 +315,3 @@ For example, the consumption of dessert is the same during the year but ice crea
 
 
 
-
-
-% \section{Objectifs de la supply chain}
-
-% cf. Formation Modèle Supply Chain
-
-% Modèles Supply Chain (5 modèles : ETO, MTO, MTS/ATO, MRO, Retail).
-% On se place dans le cas MTS/ATO (40\% de l'industrie française): pilotage et plannification de la demande du client final
-
-% \section{Caractéristiques du modèle MTS}
-
-% Les caractéristiques principales de ce fonctionnement sont :
-% \begin{itemize}
-%   \item La Supply Chain se focalise plutôt sur l‘Aval même si l’amont peut être dans  le périmètre
-%   \item Les processus tactiques sont critiques pour maintenir et gérer l’équilibre entre charge et capacité
-%   \item Le besoin en réapprovisionnement du réseau de distribution des produits est le point d’entrée de la planification de la production
-%   \item Le pilotage de la gestion des stocks est un facteur critique de la performance de la SC
-%   \item La direction SC est souvent rattachée à la direction générale
-% \end{itemize}
-
-
-% Les cycles de productions étant supérieurs aux délais de satisfaction des demandes Clients les processus tactiques sont indispensables notamment pour:
-% \begin{itemize}
-%   \item piloter un stock permettant d'absorber cet écart
-%   \item engager les productions 
-%   \item définir les priorités commerciales en cas de pénurie
-% \end{itemize}
-
-% Les processus de planification tactique sont destinés à ne pas laisser de vide décisionnel aux opérationnels face à des situations porteuses d'image ou de résultats 
-
-% Ces processus sont typiquement à fréquences mensuelle et comprennent en particulier :
-% \begin{itemize}
-%   \item Le processus de Prévision
-%   \item Le processus S\&OP
-%   \item Le cadrage mensuel des Plans de distribution
-%   \item Le pilotage des stocks
-%   \item Le Plan Directeur de Production
-% \end{itemize}
-
-% La complexité du pilotage de l’offre dépend d’un seul ``PILIER'' : les caractéristiques industrielles. Ce sont les 3 occurrences suivantes qui permettent d’évaluer le niveau de cette complexité :
-% \begin{itemize}
-%   \item L’existence d’un multi-sourcing et le cas échéant son niveau (fonctionnement parallèle ou simultané) et sa nature (intra-BU, inter-BU, STT externe...)
-%   \item Le niveau de la réactivité sur le mix produit (= flexibilité)
-%   \item La faisabilité d’une modélisation fiable et simple des contraintes de capacités
-% \end{itemize}
-
-
-% \begin{figure}[h]
-%   \centering
-%   \includegraphics[width=\textwidth]{main/introduction/images/exemple_SC_luxe.png}
-%   \caption{Exemple d'organisation de la Supply Chain d'un acteur du luxe}
-%   \label{fig:exemple-SC-luxe}
-% \end{figure}
-
-
-% \section{Conséquences et problèmes étudiés}
-
-
-% Optimsation multi-objectif : triangle coût / stock / service. (coût = coût hors stock).
-
-
-% 2 sujets traités:
-% \begin{itemize}
-%   \item le niveau de multi-sourcing (moyen terme).
-%   \begin{itemize}
-%     \item Objectif : minimiser les coût de la création du multi-sourcing
-%     \item Contrainte : taux de service client
-%     \item Décisions : assignment produits / site
-%   \end{itemize}
-%   \item la plannification sous contrainte de flexibilité (court terme) décliné en deux axes :
-%   \begin{itemize}
-%     \item Optimization des paramètres des outils de PDP
-%     \begin{itemize}
-%       \item Objectif : minimiser le coût du stock
-%       \item Contrainte : flexibilité industrielle (nombre de changements)
-%       \item Décisions : Couverture de la production de chaque produits
-%     \end{itemize}
-%     \item Création du PDP en intégrant directement la contrainte de flexibilité
-%     \begin{itemize}
-%       \item Objectif : minimiser le coût du stock
-%       \item Contrainte : flexibilité industrielle (nombre de changements)
-%       \item Décisions : période de production et quantité produite pour chaque produit
-%     \end{itemize}
-%   \end{itemize}
-% \end{itemize}
-
-
-% Parler de la flexibilité du mix produit ! C'est ce qu'on optimise (ie : volume constant.)

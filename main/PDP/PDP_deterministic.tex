@@ -279,9 +279,8 @@ The immediate corollary of this proposition is that the continuous relaxation of
 
 
 The following example shows that the conclusion of the proposition does not hold when we relax the condition $\capacity_t^i\ge\capacity_t$ for all $i,t$.
-Consider the following instance of CLSP-BS:
-\begin{equation}
-\begin{split}
+Consider the instance of CLSP-BS with
+$$
   \REF=\crbracket{1,2}
   ,\quad
   \horizon=2
@@ -292,8 +291,8 @@ Consider the following instance of CLSP-BS:
   ,\quad
   \capacity_t^i=1
   ,
-\\
-  \rate_t^i=1
+$$
+$$  \rate_t^i=1
   ,\quad
   \demand_t^i
   =\left\{
@@ -306,12 +305,11 @@ Consider the following instance of CLSP-BS:
   \holding_t^i=\holding
   ,\quad
   \inventory_0^i=0.
-\end{split}
-\end{equation}
+$$
+This instance enables only one item to be produce at each period ($\nbsetups_t=1$) whereas the assembly line capacity at one period is equal to the sum of capacities for each item ($\capacity_t=\capacity_t^1+\capacity_t^2$).
 %two periods and two items where the holding costs at the end of the first period are $h$ for the two items and 0 at the end of the second period. The assembly line's capacity is $\capacity_t=2$ at each period and the capacity per item at each period is $\capacity_t^i=1$. The number of setups per period is $\nbsetups_t=1$ and the demand is null for the first period and 1 for each reference at the second period. All others parameters are unitary.
 Then, the optimal solution of the continuous relaxation of formulation~\eqref{eq:CLSP-BS} with these parameters is $h$ whereas the optimal solution of the continuous relaxation of the formulation~\eqref{eq:CLSP-BS} without the flexibility constraint~\eqref{eq:CLSP-BS:setups} is 0.
 
-\esgil{Add figure representing the example}
 
 We now prove \cref{prop:relaxation-independant-N}.
 
@@ -468,8 +466,6 @@ So $v \le \widehat{v}$.
 
 % Because of $\norm{\ .\ }_0$ being a pseudo-norm, it is common to replace it with $\norm{\ .\ }_1$ and in this case, the equation~\eqref{eq:Lagrangian:setups} can easily be turned into a linear program with continuous variables.
 
-
-% \esgil{Intérêt de cette partie ?}
 
 
 \subsection{Valid inequalities}

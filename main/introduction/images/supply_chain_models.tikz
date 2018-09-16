@@ -1,0 +1,75 @@
+\begin{tikzpicture}[font=\normalsize]
+
+\pgfmathsetmacro\xA{0}
+\pgfmathsetmacro\xB{2}
+\pgfmathsetmacro\xC{6}
+\pgfmathsetmacro\xD{10}
+\pgfmathsetmacro\xE{13}
+\pgfmathsetmacro\xF{15}
+
+\pgfmathsetmacro\yA{0}
+\pgfmathsetmacro\yB{3}
+\pgfmathsetmacro\yC{6}
+\pgfmathsetmacro\yD{9}
+
+\pgfmathsetmacro\h{1}
+\pgfmathsetmacro\leadtime{1.75}
+\pgfmathsetmacro\epsilon{.1}
+
+\begin{scope}[local bounding box=Supplychain, scale=1.]
+
+% ETO
+\draw[black] (\xA,\yD) rectangle node[anchor=center]{\textsc{Design}} (\xB,{\yD+\h});
+\draw[black] (\xB,\yD) rectangle node[anchor=center]{\textsc{Purchase}} (\xC,{\yD+\h});
+\draw[black] (\xC,\yD) rectangle node[anchor=center]{\textsc{Manufacture}} (\xD,{\yD+\h});
+\draw[black] (\xD,\yD) rectangle node[anchor=center]{\textsc{Assemble}} (\xE,{\yD+\h});
+\draw[black] (\xE,\yD) rectangle node[anchor=center]{\textsc{Ship}} (\xF,{\yD+\h});
+
+\draw[black] (\xF,{\yD+.5*\h}) node[anchor=west] {\textsc{Engineer-To-Order}};
+
+\draw[argon gray,<->,>=latex] (\xA,{\yD+\leadtime}) -- node[anchor=center, fill=white] {Delivery lead time} (\xF,{\yD+\leadtime});
+\draw[argon gray] (\xA,{\yD+\h+\epsilon}) -- (\xA,{\yD+\leadtime-\epsilon});
+\draw[argon gray] (\xF,{\yD+\h+\epsilon}) -- (\xF,{\yD+\leadtime-\epsilon});
+
+% MTO
+\draw[black] (\xB,\yC) rectangle node[anchor=center]{\textsc{Inventory}} (\xC,{\yC+\h});
+\draw[black] (\xC,\yC) rectangle node[anchor=center]{\textsc{Manufacture}} (\xD,{\yC+\h});
+\draw[black] (\xD,\yC) rectangle node[anchor=center]{\textsc{Assemble}} (\xE,{\yC+\h});
+\draw[black] (\xE,\yC) rectangle node[anchor=center]{\textsc{Ship}} (\xF,{\yC+\h});
+
+\draw[black] (\xF,{\yC+.5*\h}) node[anchor=west] {\textsc{Assemble-To-Order}};
+
+\draw[argon gray,<->,>=latex] (\xC,{\yC+\leadtime}) -- node[anchor=center, fill=white] {Delivery lead time} (\xF,{\yC+\leadtime});
+\draw[argon gray] (\xC,{\yC+\h+\epsilon}) -- (\xC,{\yC+\leadtime-\epsilon});
+\draw[argon gray] (\xF,{\yC+\h+\epsilon}) -- (\xF,{\yC+\leadtime-\epsilon});
+
+
+% ATO
+\draw[black] (\xB,\yB) rectangle node[anchor=center]{\textsc{Manufacture}} (\xC,{\yB+\h});
+\draw[black] (\xC,\yB) rectangle node[anchor=center]{\textsc{Inventory}} (\xD,{\yB+\h});
+\draw[black] (\xD,\yB) rectangle node[anchor=center]{\textsc{Assemble}} (\xE,{\yB+\h});
+\draw[black] (\xE,\yB) rectangle node[anchor=center]{\textsc{Ship}} (\xF,{\yB+\h});
+
+\draw[black] (\xF,{\yB+.5*\h}) node[anchor=west] {\textsc{Assemble-To-Stock}};
+
+\draw[argon gray,<->,>=latex] (\xD,{\yB+\leadtime}) -- node[anchor=center, fill=white] {Delivery lead time} (\xF,{\yB+\leadtime});
+\draw[argon gray] (\xD,{\yB+\h+\epsilon}) -- (\xD,{\yB+\leadtime-\epsilon});
+\draw[argon gray] (\xF,{\yB+\h+\epsilon}) -- (\xF,{\yB+\leadtime-\epsilon});
+
+
+% MTS
+\draw[black] (\xB,\yA) rectangle node[anchor=center]{\textsc{Manufacture}} (\xC,{\yA+\h});
+\draw[black] (\xC,\yA) rectangle node[anchor=center]{\textsc{Assemble}} (\xD,{\yA+\h});
+\draw[black] (\xD,\yA) rectangle node[anchor=center]{\textsc{inventory}} (\xE,{\yA+\h});
+\draw[black] (\xE,\yA) rectangle node[anchor=center]{\textsc{Ship}} (\xF,{\yA+\h});
+
+\draw[black] (\xF,{\yA+.5*\h}) node[anchor=west] {\textsc{Make-To-Stock}};
+
+\draw[argon gray,->,>=latex] ({\xE-1},{\yA+\leadtime}) node[anchor=east, fill=white] {Delivery lead time} -- (\xE,{\yA+\leadtime});
+\draw[argon gray,<-,>=latex] (\xF,{\yA+\leadtime}) -- ({\xF+1},{\yA+\leadtime});
+\draw[argon gray] (\xE,{\yA+\h+\epsilon}) -- (\xE,{\yA+\leadtime-\epsilon});
+\draw[argon gray] (\xF,{\yA+\h+\epsilon}) -- (\xF,{\yA+\leadtime-\epsilon});
+
+\end{scope}
+
+\end{tikzpicture}
