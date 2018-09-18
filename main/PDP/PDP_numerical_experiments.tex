@@ -2,11 +2,6 @@
 \chapter{Numerical experiments}
 \label{chap:PDP:numerical-experiments}
 
-% This thesis was motivated by an industrial problem.
-% The objective being both theoretical and applied, after retrieving data from Argon Consulting's clients, we test our method on real world instances and empirically show that the method we propose lead to great improvement in inventory management.
-
-% \esgil{Rendre le paragraphe plus spécifique au model tactique.}
-
 
 To test the efficiency of our approach, we retrieve datasets from Argon Consulting's clients.
 Then, we simulate the sequence of production periods and emulate the behavior of people making production planning decisions to compare their consequences to the ones of decisions taken by our approach.
@@ -71,32 +66,32 @@ When backorder cost are not given by the client, we used the method described in
 
 The second one, the {\em lot-size heuristic}, consists in determining before the first week once and for all a value $\ell_i^*$ for each item $i\in\REF$.
 At time $t$, if the inventory of item $i$ is below a precomputed safety stock (see \cref{eq:PDP:numerical-experiments:safety-stock}), the quantity $\quantity_t^i$ is chosen so that the inventory of item $i$ exceeds the safety stock of exactly $\ell_i^*$.
-Indeed, as shown in \cref{fig:lot-size-production}, the inventory level at the end of a period may be lower than the safety stock.
+Indeed, as shown in \cref{fig:lot-size-heuristic}, the inventory level at the end of a period may be lower than the safety stock.
 In case of capacity issues, the production is postponed and thus backorder costs appear.
 In addition, if some capacity issues are easily anticipated, the production of an item $i$ can be activated even if the inventory is not below the safety stock.
 
 \begin{figure}[h]
   \centering
-  \esgil{Add figure to represent the production for the lot-size heuristic.}
-%  \includegraphics{main/PDP/images/simulator.tikz}
-  \caption{Computation of quantity to produce using lot-size heuristic}
-  \label{fig:lot-size-production}
+  \subfloat[lot-size]
+  {
+    \includegraphics[width=\textwidth]{main/PDP/images/lot-size_heuristic.tikz}
+    \label{fig:lot-size-heuristic}
+  }
+  \\
+  \subfloat[Cover-size]
+  {
+    \includegraphics[width=\textwidth]{main/PDP/images/cover-size_heuristic.tikz}
+    \label{fig:cover-size-heuristic}
+  }
+  \caption{Computation of produced quantities using lot-size and cover-size heuristics}
+  \label{fig:lot-and-cover-size-heuristics}
 \end{figure}
 
-\esgil{Préciser que ça vient d'une modélisation gaussienne de la demande et que c'est classiquement admis dans la littérature.}
 
 The third one, the {\em cover-size heuristic}, is almost the same, but instead of precomputing a fixed quantity for each item, a duration $\tau_i^*$ is fixed before the first week.
 When the inventory of item $i$ is below the safety stock, the quantity $\quantity_t^i$ is computed so that the inventory of item $i$ exceeds the safety stock of the expected demand for the next $\tau_i^*$ weeks.
-An example is given on \cref{fig:cover-size-production}.
+An example is given on \cref{fig:cover-size-heuristic}.
 
-\begin{figure}[h]
-  \centering
-  \esgil{Add figure to represent the production for the cover-size heuristic.}
-  \esgil{Fuse with \cref{fig:lot-size-production} or two sub-figures.}
-%  \includegraphics{main/PDP/images/simulator.tikz}
-  \caption{Computation of quantity to produce using cover-size heuristic}
-  \label{fig:cover-size-production}
-\end{figure}
 
 
 The values $\ell_i^*$ and $\tau_i^*$ are determined using results of \cref{chap:lot-size:single-line}.

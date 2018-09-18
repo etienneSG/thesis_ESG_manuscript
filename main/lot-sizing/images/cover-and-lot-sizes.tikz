@@ -1,0 +1,117 @@
+\begin{tikzpicture}[font=\normalsize]
+
+\pgfmathsetmacro\Xstart{0}
+\pgfmathsetmacro\Xlegend{-.75}
+\pgfmathsetmacro\Xprod{2.5}
+
+\pgfmathsetmacro\Ylegend{\Xlegend}
+\pgfmathsetmacro\Ystart{0}
+\pgfmathsetmacro\Ysafety{1}
+\pgfmathsetmacro\Ycycle{4}
+\pgfmathsetmacro\Yend{3.5}
+
+\pgfmathsetmacro\cycle{4}
+\pgfmathsetmacro\epsilon{.25}
+
+\pgfmathsetmacro\d{(\Ycycle-\Ysafety)/\cycle}
+\pgfmathsetmacro\v{5*\d}
+\pgfmathsetmacro\prod{\v-\d}
+
+\pgfmathsetmacro\cycleprod{\cycle*\d/\v}
+\pgfmathsetmacro\average{.5*\prod*\cycleprod+\Ysafety}
+
+\pgfmathsetmacro\Xend{3*\cycle}
+
+
+%declare function={func(\x)=(\x>0.8)*(0.6*\x)+and(\x>0.6,\x<=0.8)*(2/3*\x)+(\x<=0.6)*(\x*0.75);}]
+
+\begin{scope}[local bounding box=InventoryGraph, scale=1.]
+
+
+% Fill color
+\fill[color=argon orange!15]
+(\Xstart,\Ystart) -- 
+plot[samples=200,domain=0:\Xend,argon orange,variable=\x,] ({\x},
+{
+  and(0<=\x,\x<\Xprod)*
+  ( \Ysafety-\d*(\x-\Xprod) )
+  +
+  and(\Xprod<=\x,\x<\Xprod+\cycleprod)*
+  ( \Ysafety+(\v-\d)*(\x-\Xprod) )
+  +
+  and(\Xprod+\cycleprod<=\x,\x<\Xprod+\cycle)*
+  ( \Ysafety-\d*(\x-\Xprod-\cycle) )
+  +
+  and(\Xprod+\cycle<=\x,\x<\Xprod+\cycle+\cycleprod)*
+  ( \Ysafety+(\v-\d)*(\x-\Xprod-\cycle) )
+  +
+  and(\Xprod+\cycle+\cycleprod<=\x,\x<\Xprod+2*\cycle)*
+  ( \Ysafety-\d*(\x-\Xprod-2*\cycle) )
+  +
+  and(\Xprod+2*\cycle<=\x,\x<\Xprod+2*\cycle+\cycleprod)*
+  ( \Ysafety+(\v-\d)*(\x-\Xprod-2*\cycle) )
+  +
+  and(\Xprod+2*\cycle+\cycleprod<=\x,\x<\Xprod+3*\cycle)*
+  ( \Ysafety-\d*(\x-\Xprod-3*\cycle) )
+}
+)
+-- (\Xend,\Ystart);
+
+
+% Axes
+\draw[->,>=latex,black] (\Xstart,0) -- ({\Xend+\epsilon},0) node[anchor=west]{\textsc{Time}};
+\draw[->,>=latex,black] (0,\Ystart) -- (0,{\Yend+\epsilon}) node[anchor=south]{\textsc{Stock}};
+
+
+% Plot
+\draw[samples=200,domain=0:\Xend,argon orange] plot (\x,
+{
+  and(0<=\x,\x<\Xprod)*
+  ( \Ysafety-\d*(\x-\Xprod) )
+  +
+  and(\Xprod<=\x,\x<\Xprod+\cycleprod)*
+  ( \Ysafety+(\v-\d)*(\x-\Xprod) )
+  +
+  and(\Xprod+\cycleprod<=\x,\x<\Xprod+\cycle)*
+  ( \Ysafety-\d*(\x-\Xprod-\cycle) )
+  +
+  and(\Xprod+\cycle<=\x,\x<\Xprod+\cycle+\cycleprod)*
+  ( \Ysafety+(\v-\d)*(\x-\Xprod-\cycle) )
+  +
+  and(\Xprod+\cycle+\cycleprod<=\x,\x<\Xprod+2*\cycle)*
+  ( \Ysafety-\d*(\x-\Xprod-2*\cycle) )
+  +
+  and(\Xprod+2*\cycle<=\x,\x<\Xprod+2*\cycle+\cycleprod)*
+  ( \Ysafety+(\v-\d)*(\x-\Xprod-2*\cycle) )
+  +
+  and(\Xprod+2*\cycle+\cycleprod<=\x,\x<\Xprod+3*\cycle)*
+  ( \Ysafety-\d*(\x-\Xprod-3*\cycle) )
+}
+);
+
+
+% Average
+\draw[red] (\Xstart,\average) node[anchor=east]{Average inventory} -- (\Xend,\average);
+
+
+% Slop
+\draw[argon orange] (\Xprod,\Ysafety) -- node[fill=white,sloped,anchor=south] {$\rate_i-\demand_i$} ({\Xprod+\cycleprod},{\Ysafety+(\v-\d)*\cycleprod});
+\draw[argon orange] ({\Xprod+\cycleprod},{\Ysafety+(\v-\d)*\cycleprod}) -- node[fill=white,sloped,anchor=south] {$-\demand_i$} (\Xprod+\cycle,\Ysafety);
+
+
+% Abscissa
+\draw[argon gray,dashed] (\Xprod,\Ystart) node[anchor=north]{$t_i$} -- (\Xprod,\Ysafety);
+\draw[argon gray,dashed] ({\Xprod+\cycle},\Ystart) node[anchor=north]{$t_i+\cover_i$} -- ({\Xprod+\cycle},\Ysafety);
+\draw[argon gray,dashed] ({\Xprod+2*\cycle},\Ystart) node[anchor=north]{$t_i+2\cover_i$} -- ({\Xprod+2*\cycle},\Ysafety);
+
+% Ordinate
+\draw[argon gray] (\Xstart,{\Ysafety+\d*\Xprod}) node[anchor=east] {$\inventory_i\bracket{0}$};
+
+% Cycle
+\draw[<->,>=latex,argon gray] ({\Xprod+.25*\epsilon},\Ylegend) -- node[anchor=north]{cover-size $\cover_i$} ({\Xprod+\cycle-.25*\epsilon},\Ylegend);
+\draw[<->,>=latex,argon gray] ({\Xprod+\cycle+.25*\epsilon},\Ylegend) -- node[anchor=north]{cover-size $\cover_i$} ({\Xprod+2*\cycle-.25*\epsilon},\Ylegend);
+\draw[<-,>=latex,argon gray] ({\Xprod+2*\cycle+.25*\epsilon},\Ylegend) node[anchor=north west]{cover-size $\cover_i$} -- (\Xend,\Ylegend);
+
+\end{scope}
+
+\end{tikzpicture}

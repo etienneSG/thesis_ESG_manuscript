@@ -13,15 +13,19 @@ This chapter presents a model whose aims at deciding the optimal cycle stocks.
 
 Cycle stocks form the portion of inventory that varies over time due to production and demand satisfaction.
 Low cycle stocks contribute to globally decrease inventory but it requires a high flexibility of means of production.
-For mid-term decisions, flexibility is already fixed and industrial aims at deciding the values of cycle stocks of each item which minimize the global inventory.
+For mid-term decisions, flexibility is already fixed and companies aim at deciding the values of cycle stocks of each item which minimize the global inventory.
 
 
 Many production systems are managed using $(r,\lot)$ policies or similar ones.
-This kind of policies defines for each item a level $r$ and a quantity $\lot$ such that: when inventory level of item reaches level $r$, a quantity $\lot$ is produced.
+This kind of policies defines for each item a level $r$ and a quantity $\lot$ called \emph{lot-size} such that: when inventory level of item reaches level $r$, a quantity $\lot$ is produced.
 A common variation uses cover-sizes.
 Quantity $\lot$ is replaced by a time $\cover$ called \emph{cover-size}.
 When inventory level of item $i$ reaches level $r$, quantity produced is the cumulative demand of the $\cover$ next units of time.
-Both are used by industrials (and are equivalent when demand does not depend on time).
+Both are used by companies (and are equivalent when demand does not depend on time).
+
+
+In this chapter, we show how to compute lot-size and cover-size minimizing inventory subject to flexibility constraint.
+We propose a method in both deterministic and stochastic settings.
 
 
 \section{Deterministic settings}
@@ -37,19 +41,27 @@ The problem described by Argon Consulting considers an assembly line producing a
 %The capacity needed (in time units) to produce one unit of item $i$ is $\rate_i$.
 The internal production time of item $i$ (\ie the quantity of item $i$ produced in one time unit) is $\rate_i$.
 Inventory $\inventory_i$ of item $i$ must satisfy demand, known in advance.
-Thus, it continuously decreases by $\demand_i<\rate_i$ units per time unit when there is no production and continuously increases by $\rate_i-\demand_i$ units per time unit when item $i$ is produced.
+This is modeled by a continuous decrease $\demand_i<\rate_i$ units per time unit when there is no production and a continuous increase $\rate_i-\demand_i$ units per time unit when item $i$ is produced.
 Demand $\demand_i$ is assumed positive for each item $i$.
 
 
 %We call \emph{order of production} of an item $i$ an interval of time $[t_1,t_2]$ dedicated to the production of $i$ such that $t_1<t_2$ production starts at $t_1$ and stops at $t_2$.
-We call \emph{order of production} of an item $i$ a pair $\bracket{t_i,\theta_i}$ such that production of item $i$ starts at $t$ and lasts $\theta_i$ units of time.
-We call \emph{production setup} or simply \emph{setup} the beginning of an order of production.
-Orders of production of item $i$ can be placed at any time, even simultaneously (like in~\cite{Ohno2001} where authors assume the immediate replenishment of the order with lead time).
-However, the cover $\cover_i$ of a given item $i$ has to be the same over the infinite horizon.
-By definition of the cover, a solution is entirely defined by a sequence $\bracket{t_i,\cover_i}_{i\in\REF}$ where $t_i$ is the first setup of item $i$ and $\cover_i>0$ is the cover of item $i$.
-Indeed, we directly obtain the duration $\theta_i=\frac{\demand_i}{\rate_i}\cover_i$ and the start $t_i+k\cover_i$ ($k\in\ZZ_+$) of each order of production of item $i$.
+For each item $i$, the first time item $i$ is produced is $t_i$.
+Then, the production is launched for every $t_i+k\cover_i$ where $k\in\ZZ_+$.
+Each $t_i+k\cover_i$ is called a \emph{setup}.
+This $\cover_i$ is called the \emph{cover-size} of item $i$.
+Each production lasts $\frac{\demand_i}{\rate_i}\cover_i$ in order to produce exactly the demand for the next $\cover_i$ unit of time.
+The productions of several items can be placed simultaneously (like in~\cite{Ohno2001} where authors assume the immediate replenishment of the order with lead time).
 
-Thus, for each item $i$, inventory $\inventory_i\bracket{t}$ is nonnegative and follows the dynamic
+
+% We call \emph{order of production} of an item $i$ a pair $\bracket{t_i,\theta_i}$ such that production of item $i$ starts at $t$ and lasts $\theta_i$ units of time.
+% We call \emph{production setup} or simply \emph{setup} the beginning of an order of production.
+% Orders of production of item $i$ can be placed at any time, even simultaneously (like in~\cite{Ohno2001} where authors assume the immediate replenishment of the order with lead time).
+% However, the cover $\cover_i$ of a given item $i$ has to be the same over the infinite horizon.
+% By definition of the cover, a solution is entirely defined by a sequence $\bracket{t_i,\cover_i}_{i\in\REF}$ where $t_i$ is the first setup of item $i$ and $\cover_i>0$ is the cover of item $i$.
+% Indeed, we directly obtain the duration $\theta_i=\frac{\demand_i}{\rate_i}\cover_i$ and the start $t_i+k\cover_i$ ($k\in\ZZ_+$) of each order of production of item $i$.
+
+Thus, for each item $i$, inventory $\inventory_i\bracket{t}$ is continuous, right and left differentiable, nonnegative and follows the dynamic
 \begin{equation}\label{eq:lot-size:single-line:deterministic:motivations:dynamic}
   \dot{\inventory}_i\bracket{t} =
   \left\{
@@ -62,25 +74,39 @@ Thus, for each item $i$, inventory $\inventory_i\bracket{t}$ is nonnegative and 
   \end{array}
   \right.
 \end{equation}
-\esgil{Ajouter figure en dans de scie avec un décalage vers le haut et un stock initial.}
+
 
 %(It imposes that the solution is periodic for each item.)
-The flexibility being modeled by a constraint and not by setup costs (see \cref{sec:business-context:argon:pdp}), in average over the infinite horizon, the number of setups per unit time for all items must be lower than $\nbsetups$ which can be written as
+As explained in \cref{sec:business-context:argon:pdp}, in this thesis, the flexibility is modeled by a constraint and not by setup costs.
+In average over the infinite horizon, the number of setups per unit time for all items must be lower than $\nbsetups$ which can be written as
 \begin{equation}\label{eq:lot-size:single-line:deterministic:motivations:flexibility}
   \limsup_{\horizon\rightarrow+\infty}\ \frac{1}{\horizon} \sum_{i\in\REF} \left\lfloor\frac{\horizon-t_i}{\cover_i}\right\rfloor \le \nbsetups.
 \end{equation}
+Indeed, during the interval $\left[0,\horizon\right)$, setups occurs with period $\cover_i$ from $t_i$.
+Then, the number of setups during $\left[0,\horizon\right)$ is $\left\lfloor\frac{\horizon-t_i}{\cover_i}\right\rfloor$.
 
 
-For each item $i$, there is an initial inventory $\inventory_i\bracket{0}\in\RR_+$ given in input.
+For each item $i$, there is an initial inventory $\inventory_i\bracket{0}\in\RR_+$ given in input. The notations
 
 
 Since inventory varies over times, the cycle stock is measured using its average value over an infinite horizon.
 Storing one unit of item $i$ incurs a unit holding cost $\holding_i>0$ per unit time.
-Objective is to find the covers which minimize the average cycle stock over infinite horizon
+The objective is to find the cover-sizes which minimize the average cycle stock over infinite horizon
 \begin{equation}
   \limsup_{\horizon\rightarrow+\infty}\ \frac{1}{\horizon} \sum_{i\in\REF} \holding_i \int_0^{\horizon}\inventory_i\bracket{t}dt
 \end{equation}
-while satisfying positive inventory, constraint~\eqref{eq:lot-size:single-line:deterministic:motivations:dynamic} and constraint~\eqref{eq:lot-size:single-line:deterministic:motivations:flexibility}.
+while satisfying nonnegative inventory, constraint~\eqref{eq:lot-size:single-line:deterministic:motivations:dynamic} and constraint~\eqref{eq:lot-size:single-line:deterministic:motivations:flexibility}.
+
+The notations and a corresponding inventory profile is representing in \cref{fig:cover-size-item-i}.
+
+\begin{figure}[h]
+  \centering
+  \esgil{Uncomment line in $\TeX$ file to include figure. (Long compilation time.)}
+  %\includegraphics[width=\textwidth]{main/lot-sizing/images/cover-and-lot-sizes.tikz}
+  \caption{Inventory of item $i$ depending on time for a given cover-size $\cover_i$}
+  \label{fig:cover-size-item-i}
+\end{figure}
+
 
 % The problem can be written as
 % \begin{subequations}\label{eq:lot-size:single-line:deterministic}
@@ -117,16 +143,23 @@ while satisfying positive inventory, constraint~\eqref{eq:lot-size:single-line:d
 Since this model is a variation of the \emph{Economic Production Quantity model (EPQ)}, we call it \emph{Economic Production Quantity model with Bounded number of Setups (EPQ-BS)}.
 We will consider two versions of this problem:
 \begin{itemize}
-  \item the covers can be any nonnegative real numbers,
-  \item the covers have to be inverses of integers.
+  \item the cover-sizes can be any nonnegative real numbers,
+  \item the cover-sizes have to be inverses of integers.
 \end{itemize}
-In other words, since a cover is a time period, the production frequencies are unconstrained in the first version, while there are constrained to be integers in the second one.
+In other words, since a cover-size is a time period, the production frequencies are unconstrained in the first version, while there are constrained to be integers in the second one.
 We qualify the first version of being {\em unconstrained} and the second of being {\em integer}.
 
 
 Integer version relies on practical reasons.
 For decision makers, it is sometimes easier to use frequencies and thus to know that an item is produced once a month, twice a month, etc.
 
+
+\medskip
+
+
+When using lot-sizes instead of cover-sizes, EPQ-BS can be simply adapt.
+Indeed, the lot-size $\lot_i$ is the quantity produced to satisfy the demand for the next $\cover_i$ units of time.
+Thus, we have $\lot_i=\demand_i\cover_i$.
 
 
 \subsection{Bibliography}
@@ -207,12 +240,12 @@ We address the following alternative mathematical problem.
   \label{eq:lot-size:single-line:deterministic:unconstrained:positivity}
   \end{align+}
 \end{subequations}
-where $\REF=\crbracket{i\in\REF\ \left|\ \demand_i>0\right.}$ and $\tilde{\demand}_i=\bracket{1-\frac{\demand_i}{\rate_i}}\demand_i$.
+where $\tilde{\demand}_i=\bracket{1-\frac{\demand_i}{\rate_i}}\demand_i$ for each item $i$.
 % is the reduced value of the demand.
 
 \begin{thm}\label{thm:lot-size:single-line:deterministic:unconstrained:optimality}
 Problem~\eqref{eq:lot-size:single-line:deterministic:unconstrained} has a unique optimal solution $(\cover_i^*)_{i\in\REF}$ with
-\begin{equation}
+\begin{equation}\label{eq:lot-size:single-line:deterministic:unconstrained:optimal-cover}
   \cover_i^*= \frac{\sum_{j\in\REF}\sqrt{\holding_j\tilde{\demand}_j}}{\nbsetups\sqrt{\holding_i\tilde{\demand}_i}}\qquad\forall i\in\tilde{\REF},
 \end{equation}
 and optimal cost equal to $\frac{1}{2\nbsetups}\bracket{\sum_{i\in\REF}\sqrt{\holding_i\tilde{\demand_i}}}^2$.
@@ -223,100 +256,113 @@ Moreover, the optimal solution of Problem~\eqref{eq:lot-size:single-line:determi
 
 Formulation \eqref{eq:lot-size:single-line:deterministic:unconstrained} has many advantages.
 First, it is much simpler than the original formulation of \cref{sec:lot-size:single-line:deterministic:problems}.
-Second, it removes from the formulation the first setups of production $\bracket{t_i}_i$ which are not a desired output.
+Second, it removes from the formulation the first production setups $\bracket{t_i}_i$ which confirms that the $t_i$ are not relevant to find the optimal cover-sizes.
 
 
 The link between both problem is however not necessarily immediate.
-As we will see, formulation \eqref{eq:lot-size:single-line:deterministic:unconstrained} assumes that optimal policy is \emph{Zero-Inventory-Ordering (ZIO)}.
+As we will see, the proof will show that the optimal policy is \emph{Zero-Inventory-Ordering (ZIO)}.
 We recall that a policy is said to be ZIO if an order can only occurs when the inventory is zero.
 Due to flexibility constraint \eqref{eq:lot-size:single-line:deterministic:motivations:flexibility}, production should have to be anticipated before inventory reach zero.
 
 
 
 \begin{lem}\label{lem:lot-size:single-line:deterministic:unconstrained:optimality}
-Problem~\eqref{eq:lot-size:single-line:deterministic:unconstrained} has a unique optimal solution $(\cover_i^*)_{i\in\REF}$.
+Problem~\eqref{eq:lot-size:single-line:deterministic:unconstrained} has a unique optimal solution $(\cover_i^*)_{i\in\REF}$ given by \cref{eq:lot-size:single-line:deterministic:unconstrained:optimal-cover}.
 \end{lem}
 
 
 \begin{proof}
-Since Problem~\eqref{eq:lot-size:single-line:deterministic:unconstrained} is a convex problem, solving it is straightforward using the Karush-Kuhn-Tucker conditions which gives the unique solution
-\begin{equation}
-  \cover_i^*= \frac{\sum_{j\in\REF}\sqrt{\holding_j\tilde{\demand}_j}}{\nbsetups\sqrt{\holding_i\tilde{\demand}_i}}\qquad\forall i\in\REF,
-\end{equation}
-and optimal cost of Problem~\eqref{eq:lot-size:single-line:deterministic:unconstrained} is $\frac{1}{2\nbsetups}\bracket{\sum_{i\in\REF}\sqrt{\holding_i\tilde{\demand_i}}}^2$.
+Since Problem~\eqref{eq:lot-size:single-line:deterministic:unconstrained} is a convex problem, solving it is straightforward using the Karush-Kuhn-Tucker conditions which gives the unique solution given by \cref{eq:lot-size:single-line:deterministic:unconstrained:optimal-cover} and optimal cost of Problem~\eqref{eq:lot-size:single-line:deterministic:unconstrained} is $\frac{1}{2\nbsetups}\bracket{\sum_{i\in\REF}\sqrt{\holding_i\tilde{\demand_i}}}^2$.
 \end{proof}
 
 
 
-\begin{lem}\label{lem:lot-size:single-line:models:average-setup}
-Flexibility constraint \eqref{eq:lot-size:single-line:deterministic:motivations:flexibility} is equivalent to
-$\ds\sum_{i\in\REF} \frac{1}{\cover_i} \le \nbsetups$.
+\begin{lem}\label{lem:lot-size:deterministic:single-line:models:average-setup}
+For any nonnegative fixed values of the $t_i$'s, we have
+\begin{equation}
+\limsup_{\horizon\rightarrow+\infty}\ \frac{1}{\horizon} \sum_{i\in\REF} \left\lfloor\frac{\horizon-t_i}{\cover_i}\right\rfloor
+=
+\sum_{i\in\REF} \frac{1}{\cover_i}.
+\end{equation}
+% Flexibility constraint \eqref{eq:lot-size:single-line:deterministic:motivations:flexibility} is equivalent to
+% $\ds\sum_{i\in\REF} \frac{1}{\cover_i} \le \nbsetups$.
 \end{lem}
 
 
 \begin{proof}
-For a time $\horizon>t_i$, the average number of setups per time unit during the interval $[0,\horizon)$ is
-$\frac{1}{\horizon}\left\lfloor\frac{\horizon-t_i}{\cover_i}\right\rfloor$
-which converges to $\frac{1}{\cover_i}$ when $\horizon$ goes to infinity.
-Equivalence immediately follows.
+Let $t_1,\ldots,t_{\REF}$ be $\card{\REF}$ nonnegative real numbers.
+Let $\horizon$ be a real number greater than every $t_i$.
+For each $i$, we have
+\begin{equation}
+\frac{1}{\horizon}\bracket{\frac{\horizon-t_i}{\cover_i}-1}
+\le
+\frac{1}{\horizon}\left\lfloor\frac{\horizon-t_i}{\cover_i}\right\rfloor
+\le
+\frac{1}{\horizon}\bracket{\frac{\horizon-t_i}{\cover_i}}
+\end{equation}
+and then, $\frac{1}{\horizon}\left\lfloor\frac{\horizon-t_i}{\cover_i}\right\rfloor$ converges to $\frac{1}{\cover_i}$ when $\horizon$ goes to infinity.
 \end{proof}
 
 
 Note that this formulation is independent of the first production setup $t_i$.
-Then, choice of $t_i$ is only constrained by positive inventory.
+Then, the choice of $t_i$ is only constrained by nonnegative inventory.
 
 
-\begin{lem}\label{lem:lot-size:single-line:models:ZIO}
-Let $\bracket{t_i^*,\cover_i^*}_{i\in\REF}$ be an optimal solution of unconstrained EPQ-BS.
-Then, this solution is Zero-Inventory-Ordering, and its cost is given by
+\begin{lem}\label{lem:lot-size:deterministic:single-line:models:ZIO}
+% Let $\bracket{t_i^*,\cover_i^*}_{i\in\REF}$ be an optimal solution of unconstrained EPQ-BS.
+% Then, this solution is Zero-Inventory-Ordering, and its cost is given by
+% \begin{equation}
+%   \sum_{i\in\REF}\frac{1}{2}\holding_i\bracket{1-\frac{\demand_i}{\rate_i}}\demand_i\cover_i^*
+% \end{equation}
+% and we have $t_i^*=\frac{\inventory_i(0)}{\demand_i}$ for each item $i$.
+Let $\bracket{t_i,\cover_i}_{i\in\REF}$ be an feasible solution of unconstrained EPQ-BS.
+Then, its cost is at least
 \begin{equation}
-  \sum_{i\in\REF}\frac{1}{2}\holding_i\bracket{1-\frac{\demand_i}{\rate_i}}\demand_i\cover_i^*
+  \sum_{i\in\REF}\frac{1}{2}\holding_i\bracket{1-\frac{\demand_i}{\rate_i}}\demand_i\cover_i.
 \end{equation}
-and we have $t_i^*=\frac{\inventory_i(0)}{\demand_i}$ for each item $i$.
 \end{lem}
 
 
 \begin{proof}
-Let $\bracket{t_i^*,\cover_i^*}_{i\in\REF}$ be an optimal solution of unconstrained EPQ-BS.
+Let $\bracket{t_i,\cover_i}_{i\in\REF}$ be a feasible solution of unconstrained EPQ-BS.
 Using the dynamic \eqref{eq:lot-size:single-line:deterministic:motivations:dynamic}, we have for each item $i$
 \begin{equation}
   S_{i,0}
   =
-  \int_0^{t_i^*}\inventory_i\bracket{t}dt
-  = \frac{1}{2}\bracket{2\inventory_i\bracket{0}-t_i^*\demand_i}t_i^*,
+  \int_0^{t_i}\inventory_i\bracket{t}dt
+  = \frac{1}{2}\bracket{2\inventory_i\bracket{0}-t_i\demand_i}t_i,
 \end{equation}
 and for each $k\in\ZZ_+$
 \begin{equation}
   S_{i,k}
   =
-  \int_{t_i^*+k\cover_i^*}^{t_i^*+\bracket{k+1}\cover_i^*}\inventory_i(t)dt
+  \int_{t_i+k\cover_i}^{t_i+\bracket{k+1}\cover_i}\inventory_i(t)dt
   =
-  \bracket{\inventory_i(0)-\demand_i t_i^*}\cover_i^*
+  \bracket{\inventory_i(0)-\demand_i t_i}\cover_i
   + \frac{1}{2}\bracket{1-\frac{\demand_i}{\rate_i}}\demand_i\cover_i^{*2}.
 \end{equation}
-Let $\horizon$ be a real number greater than $t_i^*$.
+Let $\horizon$ be a real number greater than $t_i$.
 Splitting the integral, we get
 \begin{equation}
   \frac{1}{\horizon} S_{i,0}
-  + \frac{1}{\horizon} \sum_{k=1}^{\left\lfloor\frac{\horizon-t_i^*}{\cover_i^*}\right\rfloor-1} S_{i,k}
+  + \frac{1}{\horizon} \sum_{k=1}^{\left\lfloor\frac{\horizon-t_i}{\cover_i}\right\rfloor-1} S_{i,k}
   \le
   \frac{1}{\horizon} \int_0^{\horizon}\inventory_i\bracket{t}dt
   \le
   \frac{1}{\horizon} S_{i,0}
-  + \frac{1}{\horizon} \sum_{k=1}^{\left\lfloor\frac{\horizon-t_i^*}{\cover_i^*}\right\rfloor} S_{i,k}
+  + \frac{1}{\horizon} \sum_{k=1}^{\left\lfloor\frac{\horizon-t_i}{\cover_i}\right\rfloor} S_{i,k}
 \end{equation}
 and the average cycle stock on infinite horizon for item $i$ follows:
 \begin{equation}
   \lim_{\horizon\rightarrow\infty} \frac{1}{\horizon} \int_0^{\horizon}\inventory_i\bracket{t}dt
   =
-  \inventory_i(0)-\demand_i t_i^*
-  + \frac{1}{2}\bracket{1-\frac{\demand_i}{\rate_i}}\demand_i\cover_i^*.
+  \inventory_i(0)-\demand_i t_i
+  + \frac{1}{2}\bracket{1-\frac{\demand_i}{\rate_i}}\demand_i\cover_i.
 \end{equation}
-Thanks to \cref{lem:lot-size:single-line:models:average-setup}, $\bracket{t_i^*,\cover_i^*}_{i\in\REF}$ is feasible if $t_i^*\le\frac{\inventory_i(0)}{\demand_i}$. But optimality implies that $t_i^*=\frac{\inventory_i(0)}{\demand_i}$.
-Then, an optimal solution of unconstrained EPQ-BS is Zero-Inventory-Ordering and its cost is
-\begin{equation}
-  \sum_{i\in\REF}\frac{1}{2}\holding_i\bracket{1-\frac{\demand_i}{\rate_i}}\demand_i\cover_i^*.
-\end{equation}
+\cref{eq:lot-size:single-line:deterministic:motivations:dynamic} implies that $\inventory_i\bracket{t_i}=\inventory_i(0)-\demand_i t_i$.
+Since inventory is nonnegative in a feasible solution, we have $\inventory_i(0)-\demand_i t_i\ge0$.
+Finally, the average holding cost of all item over infinite horizon is greater or equal to
+$\sum_{i\in\REF}\frac{1}{2}\holding_i\bracket{1-\frac{\demand_i}{\rate_i}}\demand_i\cover_i$.
 \end{proof}
 
 
@@ -325,8 +371,8 @@ Then, an optimal solution of unconstrained EPQ-BS is Zero-Inventory-Ordering and
 
 
 \begin{proof}[Proof of \cref{thm:lot-size:single-line:deterministic:unconstrained:optimality}]
-\cref{lem:lot-size:single-line:models:average-setup} and \cref{lem:lot-size:single-line:models:ZIO} prove that every optimal solutions of unconstrained EPQ-BS is a solution of Problem \ref{eq:lot-size:single-line:deterministic:unconstrained} with the same cost.
-Conversely, an optimal solution of Problem \ref{eq:lot-size:single-line:deterministic:unconstrained} can be completed in a solution of unconstrained EPQ-BS with the same cost setting the first production setup $t_i$ of item $i$ equal to $\frac{\inventory_i(0)}{\demand_i}$.
+\cref{lem:lot-size:deterministic:single-line:models:average-setup} and \cref{lem:lot-size:deterministic:single-line:models:ZIO} prove that every feasible solution of unconstrained EPQ-BS is a feasible solution of Problem \ref{eq:lot-size:single-line:deterministic:unconstrained} with the same cost.
+Conversely, a feasible solution of Problem \ref{eq:lot-size:single-line:deterministic:unconstrained} can be completed in a solution of unconstrained EPQ-BS with the same cost setting the first production setup $t_i$ of item $i$ equal to $\frac{\inventory_i(0)}{\demand_i}$.
 Then, the unique optimal solutions of Problem \ref{eq:lot-size:single-line:deterministic:unconstrained} (\cref{lem:lot-size:single-line:deterministic:unconstrained:optimality}) is the optimal solution of unconstrained EPQ-BS.
 \end{proof}
 
@@ -335,38 +381,34 @@ Then, the unique optimal solutions of Problem \ref{eq:lot-size:single-line:deter
 
 
 Note that model simply adapts to case where production is considered instantaneous (\ie $\rate_i\rightarrow\infty$).
-In this case, just use real demand $\demand_i$ instead of modified demand $\bar{\demand}_i=\bracket{1-\frac{\demand_i}{\rate_i}}\demand_i$.
+In this case, just use real demand $\demand_i$ instead of modified demand $\tilde{\demand}_i=\bracket{1-\frac{\demand_i}{\rate_i}}\demand_i$.
 
 
-\medskip
+% \medskip
 
 
-\cref{thm:lot-size:single-line:deterministic:unconstrained:optimality} takes an input only composed with positive demand.
-If some demands are equal to zero, results can be easily extended.
+% \cref{thm:lot-size:single-line:deterministic:unconstrained:optimality} takes an input only composed with positive demand.
+% If some demands are equal to zero, results can be easily extended.
 
 
-\begin{cor}\label{cor:lot-size:single-line:stochastic:unconstrained:optimality}
-Assumed that demands are nonnegative.
-The solution $(\cover_i^*)_{i\in\REF}$ with
-\begin{equation}
-\cover_i^*=
-\left\{
-\begin{array}{ll}
-\frac{\sum_{j\in\REF}\sqrt{\holding_j\tilde{\demand}_j}}{\nbsetups\sqrt{\holding_i\tilde{\demand}_i}}
-&
-\mbox{if}\ \demand_i>0,
-\\
-0 & \mbox{otherwise}
-\end{array}
-\right.
-\end{equation}
-and cost equal to $\frac{1}{2\nbsetups}\bracket{\sum_{i\in\REF}\sqrt{\holding_i\tilde{\demand}_i}}^2$ is an optimal solution of EPQ-BS.
-\end{cor}
+% \begin{cor}\label{cor:lot-size:single-line:stochastic:unconstrained:optimality}
+% Assumed that demands are nonnegative.
+% The solution $(\cover_i^*)_{i\in\REF}$ with
+% \begin{equation}
+% \cover_i^*=
+% \left\{
+% \begin{array}{ll}
+% \frac{\sum_{j\in\REF}\sqrt{\holding_j\tilde{\demand}_j}}{\nbsetups\sqrt{\holding_i\tilde{\demand}_i}}
+% &
+% \mbox{if}\ \demand_i>0,
+% \\
+% 0 & \mbox{otherwise}
+% \end{array}
+% \right.
+% \end{equation}
+% and cost equal to $\frac{1}{2\nbsetups}\bracket{\sum_{i\in\REF}\sqrt{\holding_i\tilde{\demand}_i}}^2$ is an optimal solution of EPQ-BS.
+% \end{cor}
 
-
-\begin{proof}
-
-\end{proof}
 
 
 
@@ -404,7 +446,7 @@ and cost equal to $\frac{1}{2\nbsetups}\bracket{\sum_{i\in\REF}\sqrt{\holding_i\
 \subsection{Integer EPQ-BS}
 
 
-%In some cases, it is easier for industrial to use integer frequencies.
+%In some cases, it is easier for company to use integer frequencies.
 % As explained in \cref{sec:lot-size:single-line:models:unconstrained}, dealing with finite or infinite internal production time $\rate_i$ is very similar since, it is sufficient to use the demand $\demand_i$ or the modified demand $\tilde{\demand}_i$ in problem \eqref{eq:lot-size:single-line:deterministic:unconstrained}.
 % Thus, we only write the case with infinite internal production time $\rate_i$.
 In some cases, it is easier for companies to use integer frequencies.
@@ -421,10 +463,10 @@ We address the following alternative mathematical problem.
   \label{eq:lot-size:single-line:deterministic:integer:positivity}
   \end{align+}
 \end{subequations}
-where $\freq_i=\frac{1}{\cover_i}$ is the average number of setups per time unit over the infinite horizon and $\bar{\demand}_i=\bracket{1-\frac{\demand_i}{\rate_i}}\demand_i$.
+where $\freq_i=\frac{1}{\cover_i}$ is the average number of setups per time unit over the infinite horizon and $\tilde{\demand}_i=\bracket{1-\frac{\demand_i}{\rate_i}}\demand_i$.
 
 
-Proving that optimal solutions of Problem \eqref{eq:lot-size:single-line:deterministic:integer} are the optimal solution of integer EOQ-BS is very similar to the unconstrained case since proofs of \cref{lem:lot-size:single-line:models:average-setup} and of \cref{lem:lot-size:single-line:models:ZIO} does not relies on the continuities of the covers $\bracket{\cover_i}_i$.
+Proving that optimal solutions of Problem \eqref{eq:lot-size:single-line:deterministic:integer} are the optimal solution of integer EOQ-BS is very similar to the unconstrained case since proofs of \cref{lem:lot-size:deterministic:single-line:models:average-setup} and of \cref{lem:lot-size:deterministic:single-line:models:ZIO} does not relies on the nature of the cover-sizes $\bracket{\cover_i}_i$.
 Moreover, as explained in \cref{sec:lot-size:single-line:models:unconstrained}, dealing with finite or infinite internal production time $\rate_i$ is very similar since, it is sufficient to use the demand $\demand_i$ in infinite case instead of the modified demand $\tilde{\demand}_i$ in problem \eqref{eq:lot-size:single-line:deterministic:integer}.
 
 
@@ -451,7 +493,7 @@ Dynamic programming might be used instead, but its complexity is only $O\bracket
 \label{sec:lot-size:single-line:stochastic:problem}
 
 
-As in \cref{sec:lot-size:single-line:deterministic:problems}, cycle stocks are managed using $(r,\cover)$ policies (\ie cover policies).
+As in \cref{sec:lot-size:single-line:deterministic:problems}, cycle stocks are managed using $(r,\cover)$ policies (\ie cover-size policies).
 However, in real life, many parameters are not known in advance.
 An obvious example is demand which can changes due to forecast errors, marketing promotions, passing fads.
 Randomness can also comes from production means.
@@ -462,18 +504,25 @@ Production means are assumed to be reliable and we only consider randomness on d
 The problem becomes an assembly line still producing a set $\REF$ of items over an infinite horizon.
 The internal production time of item $i$ is $\rate_i$.
 Inventory $\va\inventory_i$ of item $i$ must satisfy a random demand.
-Then it continuously decreases by $\va\demand_i<\rate_i$ units per time unit when there is no production and continuously increases by $\rate_i-\va\demand_i$ units per time unit when item $i$ is produced.
+This is modeled by a continuous decrease $\va\demand_i<\rate_i$ units per time unit when there is no production and a continuous increase $\rate_i-\va\demand_i$ units per time unit when item $i$ is produced.
 %Note that inventory $\va\inventory_i$ and demand $\va\demand_i$ are in bold to indicate that they are random.
 Moreover, $\va\demand_i$ is assumed to be almost surely positive and lower than $\rate_i$.
 
 
-Orders of production of item $i$ can be placed at any time, even simultaneously but the cover $\cover_i$ of a given item $i$ has to be the same over the infinite horizon.
-Covers are decided before the demand is revealed.
-When demand is revealed once and for all, the duration $\theta_i$ of the order of production is fixed at value $\frac{\va\demand_i}{\rate_i}\cover_i$.
-Covers $\bracket{\cover_i}_i$ are called \emph{first-stage decision} since they are decided before hazard realization whereas first setups $\bracket{\va t_i}_i$ and durations $\bracket{\va\theta_i}_i$ are called second-stage decisions (or recourse).
+For each item $i$, the first time item $i$ is produced is $\va t_i$.
+Then, the production is launched for every $\va t_i+k\cover_i$ where $k\in\ZZ_+$.
+Each production lasts $\frac{\va\demand_i}{\rate_i}\cover_i$ in order to produce exactly the demand for the next $\cover_i$ unit of time.
+In stochastic case, cover-sizes $\bracket{\cover_i}_i$ are decided before the demand is revealed and thus are called \emph{first-stage decision} since they are decided before demand realization.
+On the other hand, first production setups $\bracket{\va t_i}_i$ and produced quantities are called second-stage decisions (or recourse) since they can be decided knowing demand realization.
 
 
-Thus, for each item $i$, inventory $\va\inventory_i\bracket{t}$ is nonnegative and follows almost surely the dynamic
+% Orders of production of item $i$ can be placed at any time, even simultaneously but the cover-size $\cover_i$ of a given item $i$ has to be the same over the infinite horizon.
+% cover-sizes are decided before the demand is revealed.
+% When demand is revealed once and for all, the duration $\theta_i$ of the order of production is fixed at value $\frac{\va\demand_i}{\rate_i}\cover_i$.
+% cover-sizes $\bracket{\cover_i}_i$ are called \emph{first-stage decision} since they are decided before hazard realization whereas first setups $\bracket{\va t_i}_i$ and durations $\bracket{\va\theta_i}_i$ are called second-stage decisions (or recourse).
+
+
+Thus, for each item $i$, inventory $\va\inventory_i\bracket{t}$ is continuous, right and left differentiable, nonnegative and follows the dynamic
 \begin{equation}\label{eq:lot-size:single-line:stochastic:motivations:dynamic}
   \dot{\va\inventory}_i\bracket{t} =
   \left\{
@@ -488,7 +537,7 @@ Thus, for each item $i$, inventory $\va\inventory_i\bracket{t}$ is nonnegative a
 \end{equation}
 
 
-Flexibility is still modeled by a constraint.
+As in deterministic settings, flexibility is modeled by a constraint.
 In average over the infinite horizon, the number of setups per unit time for all items must be lower than $\nbsetups$ which can be written as
 \begin{equation}\label{eq:lot-size:single-line:stochastic:motivations:flexibility}
   \limsup_{\horizon\rightarrow+\infty}\ \frac{1}{\horizon} \sum_{i\in\REF} \left\lfloor\frac{\horizon-\va t_i}{\cover_i}\right\rfloor \le \nbsetups \quad \mbox{almost surely}.
@@ -498,22 +547,30 @@ For each item $i$, there is an initial inventory $s_i\bracket{0}\in\RR_+$.
 
 
 Storing one unit of item $i$ incurs a unit holding cost $\holding_i>0$ per unit time.
-Objective is to find the covers which minimize the average cycle stock over infinite horizon
+The objective is to find the cover-sizes which minimize the average cycle stock over infinite horizon
 \begin{equation}
-  \limsup_{\horizon\rightarrow+\infty}
-  \ 
   \espe\sqbracket{
+  \limsup_{\horizon\rightarrow+\infty}
   \frac{1}{\horizon} \sum_{i\in\REF} \holding_i \int_0^{\horizon}\va\inventory_i\bracket{t}dt
   }
 \end{equation}
-while satisfying almost surely positive inventory, constraint~\eqref{eq:lot-size:single-line:stochastic:motivations:dynamic} and constraint~\eqref{eq:lot-size:single-line:stochastic:motivations:flexibility}.
+while satisfying almost surely nonnegative inventory, constraint~\eqref{eq:lot-size:single-line:stochastic:motivations:dynamic} and constraint~\eqref{eq:lot-size:single-line:stochastic:motivations:flexibility}.
 
 
 We call this problem \emph{stochastic Economic Production Quantity model with Bounded number of Setups (stochastic EPQ-BS)} and will consider the same two versions as in deterministic case:
 \begin{itemize}
-  \item the covers can be any nonnegative real numbers (called \emph{unconstrained}),
-  \item the covers have to be inverses of integers (called \emph{integer}).
+  \item the cover-sizes can be any nonnegative real numbers (called \emph{unconstrained}),
+  \item the cover-sizes have to be inverses of integers (called \emph{integer}).
 \end{itemize}
+
+
+\medskip
+
+
+When using lot-sizes instead of cover-sizes, one needs to paid more attention to the measurability of variables.
+Indeed, the lot-size $\va\lot_i$ is the quantity produced to satisfy the demand for the next $\cover_i$ units of time.
+Thus, in stochastic settings, if cover-sizes are first-step variables, then lot-sizes are second step-variables and are given by $\va\lot_i=\va\demand_i\cover_i$.
+Conversely, using lot-size variables as first-step variables would lead to use cover-sizes as second-step variable.
 
 
 
@@ -562,7 +619,7 @@ Continuous-review:
 %We claim that the following optimization problem is a correct model of the problem described in \cref{sec:lot-size:single-line:stochastic:motivations}.
 We address the following alternative mathematical problem.
 \begin{subequations}\label{eq:lot-size:single-line:stochastic:unconstrained}
-  \begin{align}
+  \begin{align+}
   \min\quad & \ds\sum_{i\in\REF} \frac{1}{2}\holding_i\tilde{\tilde{\demand}}_i\cover_i
   \label{eq:lot-size:single-line:stochastic:unconstrained:objective}
   \\
@@ -571,14 +628,15 @@ We address the following alternative mathematical problem.
   \\
             & \cover_i > 0 && \forall i\in\REF,
   \label{eq:lot-size:single-line:stochastic:unconstrained:positivity}
-  \end{align}
+  \end{align+}
 \end{subequations}
 where $\tilde{\tilde{\demand}}_i=\bracket{1-\frac{\espe\sqbracket{\va\demand_i}}{\rate_i}}\espe\sqbracket{\va\demand_i} - \frac{\vari\sqbracket{\va\demand_i}}{\rate_i}$.
 %is the reduced value of the demand in stochastic case.
 
+
 \begin{thm}\label{thm:lot-size:single-line:stochastic:unconstrained:optimality}
 Problem~\eqref{eq:lot-size:single-line:stochastic:unconstrained} has a unique optimal solution $(\cover_i^*)_{i\in\REF}$ with
-\begin{equation}
+\begin{equation}\label{eq:lot-size:single-line:stochastic:unconstrained:optimal-cover}
   \cover_i^*= \frac{\sum_{j\in\REF}\sqrt{\holding_j\tilde{\tilde{\demand}}_j}}{\nbsetups\sqrt{\holding_i\tilde{\tilde{\demand}}_i}}\qquad\forall i\in\REF
 \end{equation}
 and optimal cost equal to $\frac{1}{2\nbsetups}\bracket{\sum_{i\in\REF}\sqrt{\holding_i\tilde{\tilde{\demand}}_i}}^2$.
@@ -588,10 +646,18 @@ Moreover, the optimal solution of Problem~\eqref{eq:lot-size:single-line:stochas
 
 
 Suppose that program~\eqref{eq:lot-size:single-line:stochastic:unconstrained} is a correct formulation of the unconstrained stochastic EPQ-BS. Then, adaptation of results from deterministic cases to stochastic cases is straightforward.
-Moreover, when the only randomness comes from the demand, we also show that the optimal solution is completely determined by the expectation and the variance of each of the demand $\va\demand_i$.
+Moreover, when the only randomness comes from the demand, we also show that the optimal solution is completely determined by the expectation and the variance of the demands $\va\demand_i$.
 Note that the optimal solution is not obtained by replacing the demand by its expectation.
 
 
+\begin{lem}\label{lem:lot-size:single-line:stochastic:unconstrained:optimality}
+Problem~\eqref{eq:lot-size:single-line:stochastic:unconstrained} has a unique optimal solution $(\cover_i^*)_{i\in\REF}$ given by \cref{eq:lot-size:single-line:stochastic:unconstrained:optimal-cover}.
+\end{lem}
+
+
+\begin{proof}
+Since Problem~\eqref{eq:lot-size:single-line:stochastic:unconstrained} is a convex problem, solving it is straightforward using the Karush-Kuhn-Tucker conditions which gives the unique solution given by \cref{eq:lot-size:single-line:stochastic:unconstrained:optimal-cover} and optimal cost of Problem~\eqref{eq:lot-size:single-line:stochastic:unconstrained} is $\frac{1}{2\nbsetups}\bracket{\sum_{i\in\REF}\sqrt{\holding_i\tilde{\tilde{\demand_i}}}}^2$.
+\end{proof}
 
 % \begin{prop}
 % First setups $\bracket{\va t_i}_i$ are finite almost surely.
@@ -605,81 +671,111 @@ Note that the optimal solution is not obtained by replacing the demand by its ex
 
 
 \begin{lem}\label{lem:lot-size:stochastic:single-line:models:average-setup}
-Flexibility constraint \eqref{eq:lot-size:single-line:stochastic:motivations:flexibility} is equivalent to
-$\ds\sum_{i\in\REF} \frac{1}{\cover_i} \le \nbsetups$.
+For any random variables $\va t_i$ almost surely finite, we have
+\begin{equation}
+\limsup_{\horizon\rightarrow+\infty}\ \frac{1}{\horizon} \sum_{i\in\REF} \left\lfloor\frac{\horizon-\va t_i}{\cover_i}\right\rfloor
+=
+\sum_{i\in\REF} \frac{1}{\cover_i}\qquad \mbox{almost surely}.
+\end{equation}
+% Flexibility constraint \eqref{eq:lot-size:single-line:stochastic:motivations:flexibility} is equivalent to
+% $\ds\sum_{i\in\REF} \frac{1}{\cover_i} \le \nbsetups$.
 \end{lem}
 
 
 \begin{proof}
-Since $\va\demand_i$ is assumed to be almost surely positive and lower than $\rate_i$, we can apply \cref{lem:lot-size:single-line:models:average-setup} to each of these realizations and equivalence immediately follows.
+We can apply \cref{lem:lot-size:deterministic:single-line:models:average-setup} to each finite realization of the $\va t_i$'s.
+Since $\va t_i$ is assumed to be almost surely finite, the result follow.
+% Since $\va\demand_i$ is assumed to be almost surely positive and lower than $\rate_i$, we can apply \cref{lem:lot-size:deterministic:single-line:models:average-setup} to each of these realizations and equivalence immediately follows.
 \end{proof}
 
 
 
 \begin{lem}\label{lem:lot-size:stochastic:single-line:models:ZIO}
-Let $\bracket{\va t_i^*,\cover_i^*}_{i\in\REF}$ be an optimal solution of unconstrained stochastic EPQ-BS.
-Then, this solution is Zero-Inventory-Ordering, and its cost is given by
+% Let $\bracket{\va t_i^*,\cover_i^*}_{i\in\REF}$ be an optimal solution of unconstrained stochastic EPQ-BS.
+% Then, this solution is Zero-Inventory-Ordering, and its cost is given by
+% \begin{equation}
+%   \sum_{i\in\REF}\frac{1}{2}\holding_i\sqbracket{\bracket{1-\frac{\espe\sqbracket{\va\demand_i}}{\rate_i}}\espe\sqbracket{\va\demand_i} - \frac{\vari\sqbracket{\va\demand_i}}{\rate_i}}\cover_i^*
+% \end{equation}
+% and we have almost surely $\va t_i^*=\frac{\inventory_i(0)}{\va\demand_i}$ for each item $i$.
+Let $\bracket{\va t_i,\cover_i}_{i\in\REF}$ be an feasible solution of unconstrained stochastic EPQ-BS.
+Then, its cost is at least
 \begin{equation}
-  \sum_{i\in\REF}\frac{1}{2}\holding_i\sqbracket{\bracket{1-\frac{\espe\sqbracket{\va\demand_i}}{\rate_i}}\espe\sqbracket{\va\demand_i} - \frac{\vari\sqbracket{\va\demand_i}}{\rate_i}}\cover_i^*
+  \sum_{i\in\REF}\frac{1}{2}\holding_i\sqbracket{\bracket{1-\frac{\espe\sqbracket{\va\demand_i}}{\rate_i}}\espe\sqbracket{\va\demand_i} - \frac{\vari\sqbracket{\va\demand_i}}{\rate_i}}\cover_i
 \end{equation}
-and we have almost surely $\va t_i^*=\frac{\inventory_i(0)}{\va\demand_i}$ for each item $i$.
 \end{lem}
 
 
 \begin{proof}
-Let $\bracket{\va t_i^*,\cover_i^*}_{i\in\REF}$ be an optimal solution of unconstrained EPQ-BS.
-Using the dynamic \eqref{eq:lot-size:single-line:stochastic:motivations:dynamic}, we have for each item $i$
+Let $\bracket{\va t_i,\cover_i}_{i\in\REF}$ be an feasible solution of unconstrained EPQ-BS.
+Let $\bracket{\demand_i}_i$ be a realization positive and finite of $\bracket{\va\demand_i}_i$.
+For each realization of $\bracket{\va t_i}_i$, according to \cref{lem:lot-size:deterministic:single-line:models:ZIO}, average holding cost over infinite horizon is greater or equal to 
+$\sum_{i\in\REF}\frac{1}{2}\holding_i\bracket{1-\frac{\demand_i}{\rate_i}}\demand_i\cover_i$.
+Since demand $\va\demand_i$ is assumed to be almost surely finite, the expectation of average holding cost over infinite horizon is greater or equal to 
 \begin{equation}
-  \espe\sqbracket{\va S_{i,0}}
-  = \espe\sqbracket{\int_0^{\va t_i^*}\va\inventory_i\bracket{t}dt}
-  = \espe\sqbracket{\frac{1}{2}\bracket{2\inventory_i\bracket{0}-\va t_i^*\va\demand_i}\va t_i^*}
-  = \frac{1}{2}\bracket{2\inventory_i\bracket{0}\espe\sqbracket{\va t_i^*}-\espe\sqbracket{\va t_i^*^2\va\demand_i}}
-\end{equation}
-and for each $k\in\ZZ_+$
-\begin{subequations}
-\begin{align}
-  \espe\sqbracket{\va S_{i,k}}
-  &= \espe\sqbracket{\int_{\va t_i^*+k\cover_i^*}^{\va t_i^*+\bracket{k+1}\cover_i^*}\va\inventory_i(t)dt}
-  = \espe\sqbracket{\bracket{\inventory_i(0)-\va\demand_i \va t_i^*}\cover_i^*
-  + \frac{1}{2}\bracket{1-\frac{\va\demand_i}{\rate_i}}\va\demand_i\cover_i^{*2}}
-  \\
-  &= \bracket{\inventory_i(0)-\espe\sqbracket{\va\demand_i \va t_i^*}}\cover_i^*
-  + \frac{1}{2}\bracket{\espe\sqbracket{\va\demand_i}-\frac{\espe\sqbracket{\va\demand_i^2}}{\rate_i}}\cover_i^{*2}.
-  \end{align}
-\end{subequations}
-Let $\horizon$ be a real number almost surely greater than $\va t_i^*$.
-It exists since for any item $i$, demand $\demand_i$ is positive and finite almost surely (even if $\rate_i$ is infinite).And then, inventory being positive, for a finite realization $(\demand_i)_i$ of demand where each $\demand_i$ is positive, we have $t_i\le\frac{\inventory_i(0)}{\demand_i}$.
-Splitting the integral, we get
-\begin{equation}
-  \frac{1}{\horizon} \espe\sqbracket{\va S_{i,0}}
-  + \frac{1}{\horizon} \sum_{k=1}^{\left\lfloor\frac{\horizon-\va t_i^*}{\cover_i^*}\right\rfloor-1} \espe\sqbracket{\va S_{i,k}}
-  \le
-  \espe\sqbracket{\frac{1}{\horizon} \int_0^{\horizon}\va\inventory_i\bracket{t}dt}
-  \le
-  \frac{1}{\horizon} \va \espe\sqbracket{\va S_{i,0}}
-  + \frac{1}{\horizon} \sum_{k=1}^{\left\lfloor\frac{\horizon-\va t_i^*}{\cover_i^*}\right\rfloor} \espe\sqbracket{\va S_{i,k}}
-\end{equation}
-and the expectation of average cycle stock on infinite horizon for item $i$ follows:
-\begin{equation}
-  \espe\sqbracket{\lim_{\horizon\rightarrow\infty} \frac{1}{\horizon} \int_0^{\horizon}\va\inventory_i\bracket{t}dt}
+  \espe\sqbracket{\sum_{i\in\REF}\frac{1}{2}\holding_i\bracket{1-\frac{\va\demand_i}{\rate_i}}\va\demand_i\cover_i}
   =
-  \bracket{\inventory_i(0)-\espe\sqbracket{\va\demand_i \va t_i^*}}
-  + \frac{1}{2}\bracket{\espe\sqbracket{\va\demand_i}-\frac{\espe\sqbracket{\va\demand_i^2}}{\rate_i}}\cover_i.
+  \sum_{i\in\REF}\frac{1}{2}\holding_i\sqbracket{\bracket{1-\frac{\espe\sqbracket{\va\demand_i}}{\rate_i}}\espe\sqbracket{\va\demand_i} - \frac{\vari\sqbracket{\va\demand_i}}{\rate_i}}\cover_i
 \end{equation}
-Thanks to \cref{lem:lot-size:stochastic:single-line:models:average-setup}, $\bracket{\va t_i^*,\cover_i^*}_{i\in\REF}$ is feasible if $\va t_i^*\le\frac{\inventory_i(0)}{\va\demand_i}$ almost surely. But optimality implies that $\va t_i^*=\frac{\inventory_i(0)}{\va\demand_i}$ almost surely.
-Then, an optimal solution of unconstrained EPQ-BS is Zero-Inventory-Ordering and its cost is
-\begin{equation}
-  \sum_{i\in\REF}\frac{1}{2}\bracket{\espe\sqbracket{\va\demand_i}-\frac{\espe\sqbracket{\va\demand_i^2}}{\rate_i}}\cover_i
-  =
-  \sum_{i\in\REF}\frac{1}{2}\holding_i\sqbracket{\bracket{1-\frac{\espe\sqbracket{\va\demand_i}}{\rate_i}}\espe\sqbracket{\va\demand_i} - \frac{\vari\sqbracket{\va\demand_i}}{\rate_i}}\cover_i^*.
-\end{equation}
+% Using the dynamic \eqref{eq:lot-size:single-line:stochastic:motivations:dynamic}, we have for each item $i$
+% \begin{equation}
+%   \espe\sqbracket{\va S_{i,0}}
+%   = \espe\sqbracket{\int_0^{\va t_i^*}\va\inventory_i\bracket{t}dt}
+%   = \espe\sqbracket{\frac{1}{2}\bracket{2\inventory_i\bracket{0}-\va t_i^*\va\demand_i}\va t_i^*}
+%   = \frac{1}{2}\bracket{2\inventory_i\bracket{0}\espe\sqbracket{\va t_i^*}-\espe\sqbracket{\va t_i^*^2\va\demand_i}}
+% \end{equation}
+% and for each $k\in\ZZ_+$
+% \begin{subequations}
+% \begin{align}
+%   \espe\sqbracket{\va S_{i,k}}
+%   &= \espe\sqbracket{\int_{\va t_i^*+k\cover_i^*}^{\va t_i^*+\bracket{k+1}\cover_i^*}\va\inventory_i(t)dt}
+%   = \espe\sqbracket{\bracket{\inventory_i(0)-\va\demand_i \va t_i^*}\cover_i^*
+%   + \frac{1}{2}\bracket{1-\frac{\va\demand_i}{\rate_i}}\va\demand_i\cover_i^{*2}}
+%   \\
+%   &= \bracket{\inventory_i(0)-\espe\sqbracket{\va\demand_i \va t_i^*}}\cover_i^*
+%   + \frac{1}{2}\bracket{\espe\sqbracket{\va\demand_i}-\frac{\espe\sqbracket{\va\demand_i^2}}{\rate_i}}\cover_i^{*2}.
+%   \end{align}
+% \end{subequations}
+% Let $\horizon$ be a real number almost surely greater than $\va t_i^*$.
+% It exists since for any item $i$, demand $\demand_i$ is positive and finite almost surely (even if $\rate_i$ is infinite).And then, inventory being positive, for a finite realization $(\demand_i)_i$ of demand where each $\demand_i$ is positive, we have $t_i\le\frac{\inventory_i(0)}{\demand_i}$.
+% Splitting the integral, we get
+% \begin{equation}
+%   \frac{1}{\horizon} \espe\sqbracket{\va S_{i,0}}
+%   + \frac{1}{\horizon} \sum_{k=1}^{\left\lfloor\frac{\horizon-\va t_i^*}{\cover_i^*}\right\rfloor-1} \espe\sqbracket{\va S_{i,k}}
+%   \le
+%   \espe\sqbracket{\frac{1}{\horizon} \int_0^{\horizon}\va\inventory_i\bracket{t}dt}
+%   \le
+%   \frac{1}{\horizon} \va \espe\sqbracket{\va S_{i,0}}
+%   + \frac{1}{\horizon} \sum_{k=1}^{\left\lfloor\frac{\horizon-\va t_i^*}{\cover_i^*}\right\rfloor} \espe\sqbracket{\va S_{i,k}}
+% \end{equation}
+% and the expectation of average cycle stock on infinite horizon for item $i$ follows:
+% \begin{equation}
+%   \espe\sqbracket{\lim_{\horizon\rightarrow\infty} \frac{1}{\horizon} \int_0^{\horizon}\va\inventory_i\bracket{t}dt}
+%   =
+%   \bracket{\inventory_i(0)-\espe\sqbracket{\va\demand_i \va t_i^*}}
+%   + \frac{1}{2}\bracket{\espe\sqbracket{\va\demand_i}-\frac{\espe\sqbracket{\va\demand_i^2}}{\rate_i}}\cover_i.
+% \end{equation}
+% Thanks to \cref{lem:lot-size:stochastic:single-line:models:average-setup}, $\bracket{\va t_i^*,\cover_i^*}_{i\in\REF}$ is feasible if $\va t_i^*\le\frac{\inventory_i(0)}{\va\demand_i}$ almost surely. But optimality implies that $\va t_i^*=\frac{\inventory_i(0)}{\va\demand_i}$ almost surely.
+% Then, an optimal solution of unconstrained EPQ-BS is Zero-Inventory-Ordering and its cost is
+% \begin{equation}
+%   \sum_{i\in\REF}\frac{1}{2}\bracket{\espe\sqbracket{\va\demand_i}-\frac{\espe\sqbracket{\va\demand_i^2}}{\rate_i}}\cover_i
+%   =
+%   \sum_{i\in\REF}\frac{1}{2}\holding_i\sqbracket{\bracket{1-\frac{\espe\sqbracket{\va\demand_i}}{\rate_i}}\espe\sqbracket{\va\demand_i} - \frac{\vari\sqbracket{\va\demand_i}}{\rate_i}}\cover_i^*.
+% \end{equation}
 \end{proof}
 
 
 
+% \begin{proof}[Proof of \cref{thm:lot-size:single-line:stochastic:unconstrained:optimality}]
+% \cref{lem:lot-size:stochastic:single-line:models:average-setup} and \cref{lem:lot-size:stochastic:single-line:models:ZIO} show that program~\eqref{eq:lot-size:single-line:stochastic:unconstrained} is a correct formulation of the stochastic EPQ-BS.
+% The other results are straightforward with Karush-Kuhn-Tucker conditions.
+% \end{proof}
+
+
 \begin{proof}[Proof of \cref{thm:lot-size:single-line:stochastic:unconstrained:optimality}]
-\cref{lem:lot-size:stochastic:single-line:models:average-setup} and \cref{lem:lot-size:stochastic:single-line:models:ZIO} show that program~\eqref{eq:lot-size:single-line:stochastic:unconstrained} is a correct formulation of the stochastic EPQ-BS.
-The other results are straightforward with Karush-Kuhn-Tucker conditions.
+\cref{lem:lot-size:stochastic:single-line:models:average-setup} and \cref{lem:lot-size:stochastic:single-line:models:ZIO} prove that every feasible solution of unconstrained EPQ-BS is a feasible solution of Problem \ref{eq:lot-size:single-line:stochastic:unconstrained} with the same cost.
+Conversely, a feasible solution of Problem \ref{eq:lot-size:single-line:stochastic:unconstrained} can be completed in a solution of unconstrained EPQ-BS with the same cost setting the first production setup $\va t_i$ of item $i$ equal to $\frac{\inventory_i(0)}{\va\demand_i}$.
+(We recall that demand is almost surely finite.)
+Then, the unique optimal solutions of Problem \ref{eq:lot-size:single-line:stochastic:unconstrained} (\cref{lem:lot-size:single-line:stochastic:unconstrained:optimality}) is the optimal solution of unconstrained EPQ-BS.
 \end{proof}
 
 
@@ -704,7 +800,7 @@ When dealing with integer frequencies, we use the following formulation.
 where $\freq_i=\frac{1}{\cover_i}$ is the average number of setups per time unit over the infinite horizon and $\tilde{\tilde{\demand}}_i=\bracket{1-\frac{\espe\sqbracket{\va\demand_i}}{\rate_i}}\espe\sqbracket{\va\demand_i} - \frac{\vari\sqbracket{\va\demand_i}}{\rate_i}$.
 
 
-Proving that optimal solutions of Problem \eqref{eq:lot-size:single-line:stochastic:integer} are the optimal solution of stochastic integer EOQ-BS is very similar to the unconstrained case since proofs of \cref{lem:lot-size:stochastic:single-line:models:average-setup} and of \cref{lem:lot-size:stochastic:single-line:models:ZIO} does not relies on the continuities of the covers $\bracket{\cover_i}_i$.
+Proving that optimal solutions of Problem \eqref{eq:lot-size:single-line:stochastic:integer} are the optimal solution of stochastic integer EOQ-BS is very similar to the unconstrained case since proofs of \cref{lem:lot-size:stochastic:single-line:models:average-setup} and of \cref{lem:lot-size:stochastic:single-line:models:ZIO} does not relies on the continuities of the cover-sizes $\bracket{\cover_i}_i$.
 Moreover, like in deterministic case, dealing with finite or infinite internal production time $\rate_i$ is very similar since, it is sufficient to use demand's expectation $\espe\sqbracket{\va\demand_i}$ instead of the modified demand $\tilde{\tilde{\demand}}_i$ in problem \eqref{eq:lot-size:single-line:stochastic:integer}.
 
 

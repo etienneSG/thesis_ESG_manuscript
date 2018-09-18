@@ -1,0 +1,73 @@
+\begin{tikzpicture}[font=\normalsize]
+
+\pgfmathsetmacro\Xstart{0}
+\pgfmathsetmacro\Xlegend{-.5}
+\pgfmathsetmacro\Xend{14}
+
+\pgfmathsetmacro\Ylegend{\Xlegend}
+\pgfmathsetmacro\Ystart{0}
+\pgfmathsetmacro\Ysafety{1}
+\pgfmathsetmacro\Ycycle{3}
+\pgfmathsetmacro\Yanticipation{5}
+\pgfmathsetmacro\Yend{3.5}
+
+\pgfmathsetmacro\cycle{4}
+\pgfmathsetmacro\epsilon{.25}
+
+\pgfmathsetmacro\demandA{(\Ycycle-\Ysafety)/\cycle}
+\pgfmathsetmacro\demandB{(\Yanticipation-\Ysafety)/\cycle}
+\pgfmathsetmacro\demandC{\Ycycle/\cycle}
+\pgfmathsetmacro\demandD{(\Ycycle-1.5*\Ysafety)/\cycle}
+
+
+
+%declare function={func(\x)=(\x>0.8)*(0.6*\x)+and(\x>0.6,\x<=0.8)*(2/3*\x)+(\x<=0.6)*(\x*0.75);}]
+
+\begin{scope}[local bounding box=InventoryGraph, scale=1.]
+
+% Inventory
+\draw[fill=argon orange!50,argon orange!50] (\Xstart,\Ystart) rectangle (\Xend,\Ysafety);
+\draw[argon gray] (\Xstart,{.5*(\Ystart+\Ysafety)}) node[anchor=east]{Safety stock};
+\draw[<->,>=latex,argon gray] (\Xlegend,\Ysafety) -- node[anchor=east]{Lot-size $\lot_i$} (\Xlegend,{\Ycycle});
+\draw[fill=argon orange!25,argon orange!25] (\Xstart,\Ysafety) rectangle (\Xend,\Ycycle);
+
+% Axes
+\draw[->,>=latex,black] (\Xstart,0) -- ({\Xend+\epsilon},0) node[anchor=west]{\textsc{Time}};
+\draw[->,>=latex,black] (0,\Ystart) -- (0,{\Yend+\epsilon}) node[anchor=south]{\textsc{Stock}};
+
+% Plot
+\draw[samples=200,domain=0:{3.5*\cycle}] plot (\x,
+{
+(
+  and(0<=\x,\x<\cycle)*
+  (\Ycycle-\demandA*\x)
+  +
+  and(\cycle<=\x,\x<1.5*\cycle)*
+  (\Ycycle-\demandB*(\x-\cycle))
+  +
+  and(1.5*\cycle<=\x,\x<2*\cycle)*
+  (\Ycycle-\demandB*(\x-1.5*\cycle))
+  +
+  and(2*\cycle<=\x,\x<8/3*\cycle)*
+  (\Ycycle-\demandC*(\x-2*\cycle))
+  +
+  and(8/3*\cycle<=\x,\x<3*\cycle)*
+  (\Ycycle-\demandC*(\x-8/3*\cycle))
+  +
+  and(3*\cycle<=\x,\x<4*\cycle)*
+  (\Ycycle-1/3*\cycle*\demandC-\demandD*(\x-3*\cycle))
+)
+}
+);
+
+% Cycle
+\draw[<->,>=latex,argon gray] ({\Xstart+.25*\epsilon},\Ylegend) -- node[anchor=north]{1st cover} ({\cycle-.25*\epsilon},\Ylegend);
+\draw[<->,>=latex,argon gray] ({\cycle+.25*\epsilon},\Ylegend) -- node[anchor=north]{2nd cover} ({1.5*\cycle-.25*\epsilon},\Ylegend);
+\draw[<->,>=latex,argon gray] ({1.5*\cycle+.25*\epsilon},\Ylegend) -- node[anchor=north]{3rd cover} ({2*\cycle-.25*\epsilon},\Ylegend);
+\draw[<->,>=latex,argon gray] ({2*\cycle+.25*\epsilon},\Ylegend) -- node[anchor=north]{4th cover} ({8/3*\cycle},\Ylegend);
+\draw[<-,>=latex,argon gray] ({8/3*\cycle+.25*\epsilon},\Ylegend) -- node[anchor=north]{5th cover} (\Xend,\Ylegend);
+
+
+\end{scope}
+
+\end{tikzpicture}
