@@ -86,12 +86,12 @@ Indeed, during the interval $\left[0,\horizon\right)$, setups occurs with period
 Then, the number of setups during $\left[0,\horizon\right)$ is $\left\lfloor\frac{\horizon-t_i}{\cover_i}\right\rfloor$.
 
 
-For each item $i$, there is an initial inventory $\inventory_i\bracket{0}\in\RR_+$ given in input. The notations
+For each item $i$, there is an initial inventory $\inventory_i\bracket{0}\in\RR_+$ given in input.
 
 
 Since inventory varies over times, the cycle stock is measured using its average value over an infinite horizon.
 Storing one unit of item $i$ incurs a unit holding cost $\holding_i>0$ per unit time.
-The objective is to find the cover-sizes which minimize the average cycle stock over infinite horizon
+The objective is to find the cover-sizes $\cover_i$ which minimize the average cycle stock over infinite horizon
 \begin{equation}
   \limsup_{\horizon\rightarrow+\infty}\ \frac{1}{\horizon} \sum_{i\in\REF} \holding_i \int_0^{\horizon}\inventory_i\bracket{t}dt
 \end{equation}
@@ -101,8 +101,8 @@ The notations and a corresponding inventory profile is representing in \cref{fig
 
 \begin{figure}[h]
   \centering
-  \esgil{Uncomment line in $\TeX$ file to include figure. (Long compilation time.)}
-  %\includegraphics[width=\textwidth]{main/lot-sizing/images/cover-and-lot-sizes.tikz}
+  %\esgil{Uncomment line in $\TeX$ file to include figure. (Long compilation time.)}
+  \includegraphics[width=\textwidth]{main/lot-sizing/images/cover-and-lot-sizes.tikz}
   \caption{Inventory of item $i$ depending on time for a given cover-size $\cover_i$}
   \label{fig:cover-size-item-i}
 \end{figure}
@@ -570,7 +570,7 @@ We call this problem \emph{stochastic Economic Production Quantity model with Bo
 When using lot-sizes instead of cover-sizes, one needs to paid more attention to the measurability of variables.
 Indeed, the lot-size $\va\lot_i$ is the quantity produced to satisfy the demand for the next $\cover_i$ units of time.
 Thus, in stochastic settings, if cover-sizes are first-step variables, then lot-sizes are second step-variables and are given by $\va\lot_i=\va\demand_i\cover_i$.
-Conversely, using lot-size variables as first-step variables would lead to use cover-sizes as second-step variable.
+Conversely, using lot-size variables as first-step variables would lead to use cover-sizes as second-step variables.
 
 
 

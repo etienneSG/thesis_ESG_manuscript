@@ -3,8 +3,8 @@
 
 
 
-\cref{chap:lot-size:single-line} was dedicated to decide the optimal cycle stocks when only a single is involved.
-In this chapter, we decide the optimal cycle stocks when several lines are involved in production.
+\cref{chap:lot-size:single-line} was about to decide the optimal cycle stocks when only a single line is involved.
+In this chapter, several are involved in production and we aim at deciding the part of demand assigned to each line and the cycle stocks for each each item on each line.
 
 
 
@@ -16,7 +16,7 @@ Context is almost the same than in \cref{chap:lot-size:single-line}.
 A company aims at reducing it cycle stocks (which globally helps to decrease the inventory) subject to flexibility constraint of the assemblies lines.
 In many applications, a company has many assembly lines and production of a single item may be done on several lines.
 This kind of configuration is very common and are the consequences of multi-sourcing decisions previously made (see \cref{sec:business-context:argon:multi-sourcing} for a description of multi-sourcing issues).
-These lines might be is the same plants as well in different ones.
+These lines might be the same plants as well in different ones.
 But, in both cases, it enables to increase flexibility of production and the workload between lines.
 
 
@@ -24,17 +24,78 @@ As in single line case, assembly lines are managed using $(r,\lot)$ policies or 
 The challenge of the multi-line case is that companies must decide the part of demand assigned to each line and the lot (or cover) used for the production of each item on each line.
 
 
-\section{Deterministic settings}
+In this chapter, we show how to compute the assignment of demand to lines and the lot-sizes and cover-sizes minimizing inventory subject to flexibility constraint.
 
 
-\subsection{Problem}
+\section{Problem}
 
 
 The problem described by Argon Consulting considers a set $\lines$ of assembly lines producing a set $\REF$ of items over an infinite horizon.
-The internal production time of item $i$ (\ie the quantity of item $i$ produced in one time unit) is $\rate_i$.
-Inventory $\inventory_i$ of item $i$ must satisfy demand, known in advance.
-Thus, it continuously decreases by $\demand_i<\rate_i$ units per time unit when there is no production and continuously increases by $\rate_i-\demand_i$ units per time unit when item $i$ is produced.
+Each line is managed using the same policy than in \cref{chap:lot-size:single-line}.
+Parameters for each line $\ell$ are then the same (with an index depending on the line) and we recall them for the sake of completeness.
+The internal production time of item $i$ on line $\ell$ (\ie the quantity of item $i$ produced in one time unit) is $\rate_i^{\ell}$.
+Inventory $\inventory_i^\ell$ of item $i$ must satisfy demand, known in advance.
+The part of demand for item $i$ assigned to line $\ell$ is modeled by a continuous decrease $\demand_i^{\ell}<\rate_i^{\ell}$ units per time unit when line $\ell$ does not produce item $i$ and a continuous increase $\rate_i^{\ell}-\demand_i^{\ell}$ units per time unit when item $i$ is produced.
+The whole demand or item $i$ is modeled by a continuous decrease $\demand_i$ which is assumed positive.
+Since the whole demand must satisfied, we have
+\begin{equation}\label{eq:lot-size:multi-line:motivations:whole-demand}
+  \sum_{\ell\in\lines}\demand_i^{\ell}=\demand_i\qquad\forall i\in\REF.
+\end{equation}
 
+
+If item $i$ is assigned to line $\ell$, the first time it is produced on line $\ell$ is $t_i^{\ell}$.
+and the production is launched for every $t_i^{\ell}+k\cover_i^{\ell}$ where $k\in\ZZ_+$ and $\cover_i^{\ell}$ is the cover-size of item $i$ for the line $\ell$.
+Each production on line $\ell$ lasts $\frac{\demand_i^{\ell}}{\rate_i^{\ell}}\cover_i^{\ell}$ in order to produce exactly the demand assign to line $\ell$ for the next $\cover_i^{\ell}$ unit of time.
+(Each of these quantities is not defined if item $i$ is not assigned to line $\ell$.)
+Like single-line case, the productions of several items can be placed simultaneously.
+
+
+Thus, if item $i$ is assigned to line $\ell$, inventory $\inventory_i^{\ell}\bracket{t}$ generated par line $\ell$ is continuous, right and left differentiable, nonnegative and follows the dynamic
+\begin{equation}\label{eq:lot-size:multi-line:motivations:dynamic}
+  \dot{\inventory}_i^{\ell}\bracket{t} =
+  \left\{
+  \begin{array}{ll}
+  \rate_i^{\ell}-\demand_i^{\ell}
+  & \ds\mbox{if}\ t\in\bigcup_{k\in\ZZ_+} \left[t_i^{\ell}+k\cover_i^{\ell},t_i^{\ell}+\bracket{k+\frac{\demand_i^{\ell}}{\rate_i^{\ell}}}\cover_i^{\ell}\right),
+  \\
+  -\demand_i^{\ell}
+  & \mbox{otherwise}.
+  \end{array}
+  \right.
+\end{equation}
+
+
+Contrary to single-line case, each line has a limited capacity.
+In average over the infinite horizon, the percentage of time spend for production of all items assigned to line $\ell$ must be lower than $\capacity^{\ell}<1$ which can be written as
+\begin{equation}\label{eq:lot-size:multi-line:motivations:capacity}
+  \sum_{i\in\REF}\frac{\demand_i^{\ell}}{\rate_i^{\ell}}\le\capacity^{\ell}\qquad\forall \ell\in\lines.
+\end{equation}
+Indeed, each production of item $i$ on line $\ell$ lasts $\frac{\demand_i^{\ell}}{\rate_i^{\ell}}\cover_i^{\ell}$ (in order to produce exactly the demand for the next $\cover_i$ unit of time) and then uses $\frac{\demand_i^{\ell}}{\rate_i^{\ell}}$ percents of the production time.
+
+
+Like single-line case, in average over the infinite horizon, the number of setups per unit time for all items must be lower than $\nbsetups^{\ell}$ which can be written as
+\begin{equation}\label{eq:lot-size:multi-line:motivations:flexibility}
+  \limsup_{\horizon\rightarrow+\infty}\ \frac{1}{\horizon} \sum_{i\in\REF^{\ell}} \left\lfloor\frac{\horizon-t_i^{\ell}}{\cover_i^{\ell}}\right\rfloor \le \nbsetups
+\end{equation}
+where $\REF^{\ell}$ is the set of items produced by line $\ell$.
+
+
+For each item $i$, there is an initial inventory $\inventory_i\bracket{0}\in\RR_+$ given in input.
+
+
+Storing one unit of item $i$ produced by line $\ell$ incurs a unit holding cost $\holding_i^{\ell}>0$ per unit time.
+The objective is to find the part of demand $\demand_i^{\ell}$ for item $i$ assigned to line $\ell$ and the cover-sizes $\cover_i^{\ell}$ which minimize the average cycle stock of every lines over infinite horizon
+\begin{equation}
+  \limsup_{\horizon\rightarrow+\infty}\ \frac{1}{\horizon} \sum_{\ell\in\REF} \sum_{i\in\REF} \holding_i \int_0^{\horizon}\inventory_i^{\ell}\bracket{t}dt
+\end{equation}
+while satisfying nonnegative inventory, constraints~\eqref{eq:lot-size:multi-line:motivations:whole-demand} to \eqref{eq:lot-size:multi-line:motivations:flexibility}.
+
+\medskip
+
+
+We call this model the \emph{multi-line Economic Production Quantity model with Bounded number of Setups (multi-line EPQ-BS)}.
+
+Like for single line case, when using lot-sizes $\lot_i^{\ell}$ instead of cover-sizes, the multi-line EPQ-BS can be simply adapt using $\lot_i^{\ell}=\demand_i^{\ell}\cover_i^{\ell}$.
 
 
 
@@ -47,9 +108,17 @@ Thus, it continuously decreases by $\demand_i<\rate_i$ units per time unit when 
 \end{itemize}
 
 
+Single item multi-line one retailer\\
+Production allocation and shipment policies in a multiple-manufacturer–single-retailer supply chain
+S. S. Park , T. Kim \& Y. Hong 
 
 
-\section{Deterministic model (\tbc)}
+Single item multi-line one retailer With procurement (+ NP-complete)\\
+T. Kim, Y. Hong * and J. Lee, Joint economic production allocation and ordering policies in a supply chain consisting of multiple plants and a single retailer, International Journal of Production Research, 43, 17, (3619), (2005).
+
+
+
+\section{Solving the multi-line EPQ-BS}
 
 \begin{itemize}
   \item Cas des fréquences continues avec des $\demand_r=0$ sur une seule ligne
@@ -57,6 +126,53 @@ Thus, it continuously decreases by $\demand_i<\rate_i$ units per time unit when 
   \item Pas d'expériences numériques: Argon pas intéressé et a fait une heuristique
 \end{itemize}
 \esgil{Complexité du modèle}
+
+
+
+%Using the average value of the inventory of each product over time, the optimization problem can be written as follow:
+We address the following alternative mathematical problem.
+%We claim that the following optimization problem is a correct model of the unconstrained EPQ-BS in its unconstrained version:
+\begin{subequations}\label{eq:lot-size:multi-line:unconstrained}
+  \begin{align+}
+  \min\quad & \ds\sum_{i\in\REF} \frac{1}{2\nbsetups^{\ell}}\bracket{\sum_{i\in\REF}\sqrt{\holding_i^{\ell}\bracket{1-\frac{\demand_i^{\ell}}{\rate_i}}\demand_i^{\ell}}}^2
+  \label{eq:lot-size:multi-line:unconstrained:objective}
+  \\
+  \st\quad  & \sum_{\ell\in\lines}\demand_i^{\ell}=\demand_i && \forall i\in\REF,
+  \label{eq:lot-size:multi-line:unconstrained:flexibility}
+  \\
+            & \sum_{i\in\REF}\frac{\demand_i^{\ell}}{\rate_i^{\ell}}\le\capacity^{\ell} && \forall \ell\in\lines,
+  \label{eq:lot-size:multi-line:unconstrained:capacity}
+  \\
+            & \demand_i^{\ell} \ge 0 && \forall i\in\REF.
+  \label{eq:lot-size:multi-line:unconstrained:positivity}
+  \end{align+}
+\end{subequations}
+
+
+\begin{thm}\label{thm:lot-size:multi-line:unconstrained:optimality}
+Optimal solutions of Problem~\eqref{eq:lot-size:multi-line:unconstrained} can be found on the vertices of the constraint polyhedron using an algorithm minimizing concave function on a polyhedron.
+
+Moreover, an optimal solution $\bracket{\demand_i^{\ell*}}_{i\in\REF,\ell\in\lines}$ of Problem~\eqref{eq:lot-size:multi-line:unconstrained} can be completed in an optimal solutions of multi-line EPQ-BS setting for each item $i$ assigned to line $\ell$
+\begin{equation}\label{eq:lot-size:multi-line:unconstrained:optimal-cover}
+  \cover_i^{\ell*}= \frac{\sum_{j\in\REF}\sqrt{\holding_j\bracket{1-\frac{\demand_i^{\ell*}}{\rate_i}}\demand_i^{\ell*}}}{\nbsetups\sqrt{\holding_i\bracket{1-\frac{\demand_i^{\ell*}}{\rate_i}}\demand_i^{\ell*}}}.
+\end{equation}
+\end{thm}
+
+
+Fist note that \cref{eq:lot-size:multi-line:unconstrained:optimal-cover} is well-defined.
+Indeed, $\capacity^{\ell}$ is lower than 1.
+Thus, constraint~\eqref{eq:lot-size:multi-line:unconstrained:capacity} and definition of the cover-sizes only for the items assigned to a line ensure that $\bracket{1-\frac{\demand_i^{\ell*}}{\rate_i}}\demand_i^{\ell*}>0$.
+
+
+Tuy, H . , “Concave Programming Under Linear Constraints,” Soviet Mathematics, 5,
+1437-1440 (1964).
+
+
+Benson (1985)
+
+
+Deterministic algorithms for constrained concave minimization: A unified critical survey
+Harold P. Benson (1998)
 
 
 
