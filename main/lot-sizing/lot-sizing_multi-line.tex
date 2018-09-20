@@ -120,12 +120,8 @@ T. Kim, Y. Hong * and J. Lee, Joint economic production allocation and ordering 
 
 \section{Solving the multi-line EPQ-BS}
 
-\begin{itemize}
-  \item Cas des fréquences continues avec des $\demand_r=0$ sur une seule ligne
-  \item Minimisation dd'une fonction concave sur un polyhèdre
-  \item Pas d'expériences numériques: Argon pas intéressé et a fait une heuristique
-\end{itemize}
-\esgil{Complexité du modèle}
+
+\esgil{Missing: $\NP$-hardness of the model?}
 
 
 
@@ -134,7 +130,7 @@ We address the following alternative mathematical problem.
 %We claim that the following optimization problem is a correct model of the unconstrained EPQ-BS in its unconstrained version:
 \begin{subequations}\label{eq:lot-size:multi-line:unconstrained}
   \begin{align+}
-  \min\quad & \ds\sum_{i\in\REF} \frac{1}{2\nbsetups^{\ell}}\bracket{\sum_{i\in\REF}\sqrt{\holding_i^{\ell}\bracket{1-\frac{\demand_i^{\ell}}{\rate_i}}\demand_i^{\ell}}}^2
+  \min\quad & \ds\sum_{i\in\REF} \frac{1}{2\nbsetups^{\ell}}\bracket{\sum_{i\in\REF}\sqrt{\holding_i^{\ell}\bracket{1-\frac{\demand_i^{\ell}}{\rate_i^{\ell}}}\demand_i^{\ell}}}^2
   \label{eq:lot-size:multi-line:unconstrained:objective}
   \\
   \st\quad  & \sum_{\ell\in\lines}\demand_i^{\ell}=\demand_i && \forall i\in\REF,
@@ -150,37 +146,121 @@ We address the following alternative mathematical problem.
 
 
 \begin{thm}\label{thm:lot-size:multi-line:unconstrained:optimality}
-Optimal solutions of Problem~\eqref{eq:lot-size:multi-line:unconstrained} can be found on the vertices of the constraint polyhedron using an algorithm minimizing concave function on a polyhedron.
+Optimal solutions of Problem~\eqref{eq:lot-size:multi-line:unconstrained} can be found on the extreme point of the constraints polyhedron using an algorithm minimizing concave function on a polyhedron.
 
-Moreover, an optimal solution $\bracket{\demand_i^{\ell*}}_{i\in\REF,\ell\in\lines}$ of Problem~\eqref{eq:lot-size:multi-line:unconstrained} can be completed in an optimal solutions of multi-line EPQ-BS setting for each item $i$ assigned to line $\ell$
+Moreover, an optimal solution $\bracket{\demand_i^{\ell*}}_{i\in\REF,\ell\in\lines}$ of Problem~\eqref{eq:lot-size:multi-line:unconstrained} can be completed in an optimal solution of multi-line EPQ-BS setting for each item $i$ assigned to line $\ell$
 \begin{equation}\label{eq:lot-size:multi-line:unconstrained:optimal-cover}
   \cover_i^{\ell*}= \frac{\sum_{j\in\REF}\sqrt{\holding_j\bracket{1-\frac{\demand_i^{\ell*}}{\rate_i}}\demand_i^{\ell*}}}{\nbsetups\sqrt{\holding_i\bracket{1-\frac{\demand_i^{\ell*}}{\rate_i}}\demand_i^{\ell*}}}.
 \end{equation}
 \end{thm}
 
 
-Fist note that \cref{eq:lot-size:multi-line:unconstrained:optimal-cover} is well-defined.
+Minimization of concave function over a polyhedron is $\NP$-hard since it contains Zero-One Integer Programming (see \cite{Raghavachari1969}) which is known to be $\NP$-hard (see \cite{Garey1979}).
+However, there are many algorithms to solve this kind of problem (see \cite{Tuy1964} for the first proposed algorithm and \cite{Benson1998} for a review) and it is well know that an optimal solution can be found in an extreme point of the constraints polyhedron (see \cite{Benson1985}).
+
+
+Note that \cref{eq:lot-size:multi-line:unconstrained:optimal-cover} is well-defined.
 Indeed, $\capacity^{\ell}$ is lower than 1.
 Thus, constraint~\eqref{eq:lot-size:multi-line:unconstrained:capacity} and definition of the cover-sizes only for the items assigned to a line ensure that $\bracket{1-\frac{\demand_i^{\ell*}}{\rate_i}}\demand_i^{\ell*}>0$.
 
 
-Tuy, H . , “Concave Programming Under Linear Constraints,” Soviet Mathematics, 5,
-1437-1440 (1964).
+We recall the concave monotone superposition of a convex vector-function by a monotone convex function.
 
 
-Benson (1985)
+\begin{lem}[``Concave monotone superposition'']\label{lem:concave-monotone-superposition}
+Let $C$ be a convex subset of $\RR^n$.
+Let $f:x\in C \mapsto f(x) = \bracket{f_1(x),\ldots,f_k(x)}$ be vector-function on $C\subseteq\RR^n$ with concave components $f_i$, and assume that $F$ is a concave function on $\RR^k$ which is monotone, \ie such that $z\le z'$ implies that $F(z)\le F(z')$.
+Then the superposition $\phi(x) = F\bracket{f(x)}=F\bracket{f_1(x),\ldots,f_k(x)}$ is concave on $C$.
+\end{lem}
 
 
-Deterministic algorithms for constrained concave minimization: A unified critical survey
-Harold P. Benson (1998)
+\begin{proof}
+Let $x$ and $x'$ be two vectors of $C$ and let $\lambda$ be a real number in $(0,1)$.
+Since each $f_i$ is concave, we have
+$f\bracket{\lambda x +(1-\lambda) x'} \ge \lambda f(x) + (1-\lambda) f(x')$.
+And then,
+\begin{subequations}
+\begin{align}
+  F\bracket{f\bracket{\lambda x +(1-\lambda) x'}}
+  &\ge F\bracket{\lambda f(x) + (1-\lambda) f(x')}
+  && \mbox{(monotonicity of $F$)}
+  \\
+  &\ge \lambda F\bracket{f(x)} + (1-\lambda) F\bracket{f(x')}.
+  && \mbox{(concavity of $F$)}
+\end{align}
+\end{subequations}
+Finally $\phi\bracket{\lambda x +(1-\lambda) x'} \ge \lambda \phi(x) + (1-\lambda) \phi(x')$ and $\phi$ is concave on $C$.
+\end{proof}
 
 
 
-\section{Stochastic model}
+\begin{lem}\label{lem:concave-objective-function}
+The objective function
+\begin{equation}
+\begin{array}{rccl}
+  g: & \ds\bigcup_{\ell\in\lines}\bigcup_{i\in\REF} \sqbracket{0,\rate_i^{\ell}} & \to & \RR_+ \\
+     & \bracket{\demand_i^{\ell}}_{i,\ell} & \mapsto & \ds\sum_{i\in\REF} \frac{1}{2\nbsetups^{\ell}}\bracket{\sum_{i\in\REF}\sqrt{\holding_i^{\ell}\bracket{1-\frac{\demand_i^{\ell}}{\rate_i^{\ell}}}\demand_i^{\ell}}}^2
+\end{array}
+\end{equation}
+of Problem~\eqref{eq:lot-size:multi-line:unconstrained} is concave.
+\end{lem}
 
-\esgil{to do: Stochastic model}
 
-\begin{itemize}
-  \item A-t-on une réduction similaire au cas déterministe? \tbc
-\end{itemize}
+\begin{proof}%[Proof of \cref{thm:lot-size:multi-line:unconstrained:optimality}]
+%Set of constraints defines a compact polyhedron.
+%We now prove the concavity of the objective function.
+Let $F: x\in\RR_+^{\REF} \mapsto \bracket{\sum_{i\in\REF} \sqrt{x_i}}^2 \in \RR_+$ be a function on $\RR_+^{\REF}$.
+$F$ is continuous on $\RR_+^{\REF}$ and differentiable on $(\RR_+^*)^{\REF}$ and we have for all $x$ and $y$ in $(\RR_+^*)^{\REF}$
+\begin{equation}
+  \nabla F(x) = \sqrt{F(x)}\bracket{\sqrt{x_1},\ldots,\sqrt{x_{\REF}}}
+\end{equation}
+and
+\begin{multline}
+\left<\nabla F(y)-\nabla F(x),y-x\right>
+\\
+=
+-\frac{1}{2}\sum_{i\in\REF}\sum_{j\in\REF}
+\sqbracket
+{
+  \bracket{ \sqrt[4]{\frac{y_i}{y_j}}\sqrt{x_j} - \sqrt[4]{\frac{y_j}{y_i}}\sqrt{x_i} }^2
+  +
+  \bracket{ \sqrt[4]{\frac{x_i}{x_j}}\sqrt{y_j} - \sqrt[4]{\frac{x_j}{x_i}}\sqrt{y_i} }^2
+}
+\le 0
+\end{multline}
+Thus, $F$ is concave on $(\RR_+^*)^{\REF}$.
+Since $F$ is continuous on $\RR_+^{\REF}$, $F$ is concave on $\RR_+^{\REF}$.
+For each $x$ and $x'$ in $\RR_+^{\REF}$, $x\le x'$ implies that $F(x)\le F(x')$.
+Using \cref{lem:concave-monotone-superposition} with $f_i^{\ell}:\demand_i^{\ell}\in\sqbracket{0,\rate_i^{\ell}}\to\holding_i^{\ell}\bracket{1-\frac{\demand_i^{\ell}}{\rate_i^{\ell}}}\demand_i^{\ell}$, we have than 
+\begin{equation}
+\begin{array}{rccl}
+  g^{\ell}: & \sqbracket{0,\rate_1^{\ell}}\times\ldots\times\sqbracket{0,\rate_1^{\ell}} & \to     & \RR_+ \\
+            & \bracket{\demand_1^{\ell},\ldots,\demand_{\REF}^{\ell}} & \mapsto & \bracket{\sum_{i\in\REF}\sqrt{\holding_i^{\ell}\bracket{1-\frac{\demand_i^{\ell}}{\rate_i}}\demand_i^{\ell}}}^2
+\end{array}
+\end{equation}
+is concave for each line $\ell\in\lines$.
+Thus the objective function $g$ of Problem~\eqref{eq:lot-size:multi-line:unconstrained} is concave as linear combination with nonnegative coefficients of concave functions.
+\end{proof}
+
+
+\begin{proof}[Proof of \cref{thm:lot-size:multi-line:unconstrained:optimality}]
+Let $\bracket{\demand_i^{\ell}}_{i,\ell}$ be a feasible solution of Problem~\eqref{eq:lot-size:multi-line:unconstrained}.
+Consider a line $\ell\in\lines$ and the set $\REF^{\ell}$ of the items assigned to $\ell$.
+According to \cref{thm:lot-size:single-line:deterministic:unconstrained:optimality}, the covers which minimize the average holding cost over infinite horizon and satisfy nonnegative inventory constraint~\eqref{eq:lot-size:multi-line:motivations:dynamic} and constraint~\eqref{eq:lot-size:multi-line:motivations:flexibility} are given by \cref{eq:lot-size:multi-line:unconstrained:optimal-cover} and the corresponding cost is equal to
+\begin{equation}\label{eq:lot-size:multi-line:unconstrained:optimality:cost}
+  \frac{1}{2\nbsetups}\bracket{\sum_{i\in\REF^{\ell}}\sqrt{\holding_i^{\ell}\bracket{1-\frac{\demand_i^{\ell}}{\rate_i^{\ell}}}\demand_i^{\ell}}}^2.
+\end{equation}
+Indexes in sum expressing holding costs~\eqref{eq:lot-size:multi-line:unconstrained:optimality:cost} can be extend to $\REF$ (since assigned demand is equal to zero).
+Thus, a feasible solution of Problem~\eqref{eq:lot-size:multi-line:unconstrained} can be completed in a feasible solution of multi-line EPQ-BS with same cost.
+
+
+Conversely, let $\bracket{\demand_i^{\ell},\cover_i^{\ell}}_{i,\ell}$ be a feasible solution of multi-line EPQ-BS.
+It is clearly feasible for Problem~\eqref{eq:lot-size:multi-line:unconstrained}.
+According to \cref{thm:lot-size:single-line:deterministic:unconstrained:optimality}, for each line $\ell$, average holding cost over infinite horizon is greater or equal to \eqref{eq:lot-size:multi-line:unconstrained:optimality:cost}.
+Thus, a feasible solution of multi-line EPQ-BS can be completed in a feasible solution of Problem~\eqref{eq:lot-size:multi-line:unconstrained} whose cost is greater or equal to \eqref{eq:lot-size:multi-line:unconstrained:optimality:cost}.
+
+
+Finally, thanks to \cref{lem:concave-objective-function}, an optimal solution $\bracket{\demand_i^{\ell*}}_{i,\ell}$ of Problem~\eqref{eq:lot-size:multi-line:unconstrained} can be found minimizing a concave function over a polyhedron.
+Then, an optimal solution of multi-line EPQ-BS can be found from $\bracket{\demand_i^{\ell*}}_{i,\ell}$ setting $\bracket{\cover_i^{\ell*}}_{i,\ell}$ as in \cref{eq:lot-size:multi-line:unconstrained:optimal-cover}.
+\end{proof}
 
