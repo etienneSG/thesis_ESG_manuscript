@@ -101,27 +101,76 @@ Like for single line case, when using lot-sizes $\lot_i^{\ell}$ instead of cover
 
 \section{Bibliography}
 
-\begin{itemize}
-  \item bibliographie (groupée avec celle du chapitre single line?)
-  \item Flexibilité
-  \item Production on a several lines
-\end{itemize}
 
 
-Single item multi-line one retailer\\
-Production allocation and shipment policies in a multiple-manufacturer–single-retailer supply chain
-S. S. Park , T. Kim \& Y. Hong 
+In literature, our problem is often formulate as the decision of the assignment of production between many suppliers, the quantities ordered and the time they are ordered.
+For example in model of \cite{Hong1992}, a unique item is produced by many suppliers which have not the same production costs neither the same production qualities.
+They aim at minimizing the holding cost subject to upper bound on production cost and lower bound on production quality.
+Their approach consists in formulating a multiple-sourcing model and solved a mathematical programming problem to obtain the optimal selection of suppliers and the size of the split orders.
 
 
-Single item multi-line one retailer With procurement (+ NP-complete)\\
-T. Kim, Y. Hong * and J. Lee, Joint economic production allocation and ordering policies in a supply chain consisting of multiple plants and a single retailer, International Journal of Production Research, 43, 17, (3619), (2005).
+More recently, \cite{Rosenblatt1998} propose a model considering one item and multiple suppliers.
+Each order to a supplier follow the classic assumptions of the EOQ model but they have a constraint capacity.
+They prove that the problem is $\NP$-hard but that it can be efficiently solved with dynamic programming.
+\cite{Chang2006} propose an extension to adapt the model to real world constraints.
+Other models, which also used ordering costs, can be found in \cite{Kim2005,Park2006}.
 
 
-A multi-machine multi-product EPQ problem for an imperfect manufacturing system considering utilization and allocation decisions
-Author links open overlay panelAmir HosseinNobilaAmir Hosein AfsharSedighaLeopoldo EduardoCárdenas-Barrón
-2016
-=> One item by machine (1st level). Then decide cycle length.
-minimizes total cost of the inventory system, including utilization, setup, production, holding and disposal cost
+Another important single item model comes from \cite{Chauhan2003}.
+It considers multiple suppliers delivering to one or multiple manufactures.
+The main difference is that each ordering cost is a concave function of the ordered quantity which models the advantage of mono-sourcing the production.
+They solved their problem with a heuristic.
+
+
+The most recent model which is the closest to our can be found in \cite{Nobil2016}.
+They considered a set of lines producing a set of items.
+Each line is managed using classic EPQ model.
+However, contrary to our case, the production of one item cannot be split between two lines.
+By deciding the assignment and the cover-sizes, they aims at minimizing total cost of the inventory system, including utilization, setup, production, holding and disposal cost.
+
+
+
+
+% \cite{Hong1992}
+% => split production of one item between many manufacturer. The good trade-off?
+% formulated a multiple-sourcing model and solved a mathematical
+% programming problem to obtain the optimal selection of suppliers and the size of
+% the split orders
+
+
+% \cite{Rosenblatt1998}
+% => one item, multiple suppliers. Each with EOQ. Constraint capacity.
+% => NP-hard but efficient dynamic programming approach
+% => extension to adapt to real world constraints \cite{Chang2006}
+
+
+% \cite{Chauhan2003}
+% => multiple supplier to deliver to one or multiple manufactures
+% => each deliver is a concave function of the quantity
+% => heuristic to solve
+% => single item
+
+
+
+
+% \cite{Park2006}
+% Single item multi-line one retailer\\
+% Production allocation and shipment policies in a multiple-manufacturer–single-retailer supply chain
+% S. S. Park , T. Kim \& Y. Hong 
+
+% \cite{Kim2005}
+% Single item multi-line one retailer With procurement (+ NP-complete)\\
+% T. Kim, Y. Hong * and J. Lee, Joint economic production allocation and ordering policies in a supply chain consisting of multiple plants and a single retailer, International Journal of Production Research, 43, 17, (3619), (2005).
+
+% \cite{Nobil2016}
+% A multi-machine multi-product EPQ problem for an imperfect manufacturing system considering utilization and allocation decisions
+% Author links open overlay panelAmir HosseinNobilaAmir Hosein AfsharSedighaLeopoldo EduardoCárdenas-Barrón
+% 2016
+% => One item by machine (1st level). Then decide cycle length.
+% minimizes total cost of the inventory system, including utilization, setup, production, holding and disposal cost
+
+
+
 
 
 \section{Solving the multi-line EPQ-BS}
