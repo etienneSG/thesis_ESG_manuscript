@@ -1,7 +1,7 @@
 \chapter{Stochastic CLSP-BS}
 \label{chap:PDP:stochastic}
 
-\section{Motivations}
+\section{Motivations and problem}
 
 
 In \cref{chap:PDP:deterministic}, data are deterministic.
@@ -54,7 +54,87 @@ They will be discussed in \cref{sec:stoch-CLSP-BS-discussion}.
 \label{sec:PDP:stochastic:bibliography}
 
 
-\esgil{Add bibliography}
+% \esgil{Add bibliography}
+
+
+% \cite{Tas2018}
+% Capacitated Lot Sizing Problem with Stochastic Setup Times and Overtime
+% Stochasticity on setup time
+% Solve with two-stage approx and two heuristics
+
+
+% ----------- modéliser des problèmes réels
+
+
+% \cite{Mukhopadhyay2009}
+% \cite{Macedo2016}
+% The importance of remanufacturing to achieve both environmental and economical goals has been increasingly recognized
+% Close-loop inside model
+% Uncertainty on return
+% hybrid manufacturing and remanufacturing
+
+
+% ------------ Se passer du backorder dans l'objectif
+
+
+% \cite{Tarim2004}
+% Single item, stochastic demand,
+% Service level constraint (like chance constraint) => cycle service level
+% => no backorder in objective!
+
+
+% \cite{vanHoutum2000}
+% Single item
+% link between service level model and penalty cost model
+% (How to wisely choose the backlog cost to meet service level?)
+
+
+
+% ----------- Review
+
+
+% \cite{Candace1995}
+% Review
+% Random yields (bot continuous-time models and discrete time model): \ie quantity order may differ from quantity received
+% Cost may depend of yields
+
+
+% \cite{Mula2006,Diaz-Madronero2014}
+% Review
+
+% \cite{Aloulou2014}
+% Review on stochastic restricted to publication from 2000
+% Representation of uncertainty (mostly probabilistic and stochastic programming formulation but also fuzzy logic, or scenario formulations)
+% Where uncertainty is placed (mostly on demand, then cost and finally other like yield or lead-time)
+
+
+Most of deterministic models -- like those presented in \cref{sec:PDP:deterministic:bibliography} -- have been extended to deal with uncertainty.
+A review of old models can be found in the second part of \cite{Candace1995} which look at the models where uncertainty is placed on the yields (\eg ordered quantity may differ from received quantity) and where the others parameters may depend on these randomness.
+More recently, we can cite the reviews in \cite{Mula2006} and \cite{Diaz-Madronero2014}.
+One of the most complete review for the post 2000 publications dealing with stochastic lot-sizing can be found in \cite{Aloulou2014}.
+This review shows that uncertainty is mostly represented in a first approach with probabilistic and stochastic programming formulations and to a lesser extend, with fuzzy logic or scenario formulations.
+Likewise, we see that uncertainty is mostly placed on demand, then on cost and finally on other parameters like yield or lead-time.
+Latest works presented other sources of uncertainty like uncertainty on setup-times (\cite{Tas2018}).
+
+
+Integrating uncertainty in models lead to apply lot-sizing models to new fields.
+% Dealing with uncertainty enables to consider new real-life problems.
+For example, \cite{Mukhopadhyay2009} and \cite{Macedo2016} deal with remanufacturing where the main uncertainty comes from the quantity and the quality of returned pieces which impact the quantity of required raw materials.
+We also find it in automotive industry where composition of product mix is highly uncertain (see \cite{Gyulai2015}).
+Stochastic production planning also deals with huge size problems like electricity production (see \cite{Rozenknop2013}) but it leads to develop special heuristics to solve them.
+
+
+
+Since we consider uncertainty, demand may be unsatisfied.
+In order to control backorder, many methods exists.
+An old and classic one consists in using backorder costs (see \cite{Zangwill1969,Absi2009}) that is paid for undelivered quantities.
+However, as explained in \cite{Tempelmeier2013}, backorder costs may be hard to quantify due to indirect consequences of undelivered quantities that is why he recall several service level measures that can be used as a substitute.
+Chance constraints, which are quite close to $\gamma$-service level, are also used (see \cite{Tarim2004,Gicquel2018}).
+Unsatisfied demand is also controlled using robust optimization like in \cite{Gyulai2017} or in \cite{Minoux2018} who obtains better results than classic stochastic optimization when targeting very low risk levels.
+Since backorder costs remains in many cases the easiest way of dealing with undelivered quantity, \cite{vanHoutum2000} propose for the stochastic single-item lot sizing problem a method to link backorder costs to several service level measures.
+
+
+Finally, to the best of our knowledge, we observe than, like in deterministic cases, problems use setup costs and not a bound on the number of setups.
 
 
 \section{Model}
