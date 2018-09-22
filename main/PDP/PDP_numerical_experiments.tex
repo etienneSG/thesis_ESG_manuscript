@@ -50,7 +50,7 @@ C++11 has been chosen for the implementations and Gurobi 6.5.1~\cite{gurobi} was
 \label{sec:PDP:numerical-experiments:heuristics}
 
 
-Our heuristic consists in solving (2SA-$m$) as defined in \vl{Problem~\eqref{eq:Uniform-CLSP-BS-2SA-m:backorder}} at the beginning of each period $t$.
+Our heuristic consists in solving (2SA-$m$) as defined in Problem~\eqref{eq:Uniform-CLSP-BS-2SA-m:backorder} at the beginning of each period $t$.
 We compare it with three other heuristics:
 \begin{itemize}
   \item deterministic approximation,
@@ -103,8 +103,7 @@ For each item $i$, the parameter $\ell_i^*$ of the lot-size heuristic is then se
 
 
 There is no universal formula for safety stocks $\bracket{\safety^i}_i$.
-Thus we turn to the formula used in practice by most of Argon Consulting's clients (see \cite[Chapter 11]{Arnold2007})\vlil{where the underlying}
-model assumes that demand has a Gaussian distribution.
+Thus we turn to the formula used in practice by most of Argon Consulting's clients (see \cite[Chapter 11]{Arnold2007}) where the underlying model assumes that demand has a Gaussian distribution.
 Production being decided at the beginning of the period and the demand being revealed at the end of the period, the lead time is one period (and is certain).
 Thus, for each item $i$, the safety stock used to reach cycle service level $\alpha$ is
 \begin{equation}\label{eq:PDP:numerical-experiments:safety-stock}
@@ -261,7 +260,7 @@ Then, the following properties holds.
 
 
 The parameters of the \distrib distribution used to generate demand are the historical forecast demand $\bar{\demand}_t^i$ for the $\tilde{\demand}_k$ and $\gamma$ is set equal to
-\begin{equation}
+\begin{equation}\label{eq:PDP:gamma-from-volatility}
   \gamma
   =
   v\frac
@@ -270,10 +269,14 @@ The parameters of the \distrib distribution used to generate demand are the hist
 \end{equation}
 The parameter $\gamma$ is defined from another parameter $v$ which we call \emph{volatility} and whose interpretation is easier.
 Volatility gives the ratio between standard deviation and expectation of a random variable.
-Such a choice\vl{which choice ?} enables the volatility of each demand to be close to $v$ as well as possible and will be justified in \cref{sec:PDP:numerical-experiments:instances:fitting-parameters}.
+Defining $\gamma$ as in \cref{eq:PDP:gamma-from-volatility} enables the volatility of each demand to be close to $v$ as well as possible and will be justified in \cref{sec:PDP:numerical-experiments:instances:fitting-parameters}.
+
 \vlil{une demi phrase disant de quoi on parle}
-\cref{enum:PDP:random-demand-property:expectation} ensures that demand expectation is equal to the historical forecast demand and \cref{enum:PDP:random-demand-property:constant-volume} ensures that, as explained in \cref{chap:business-context}, total volume $\sum_{t,i}\va\demand_t^i$ of the forecast demand is constant over every possible outcomes.
-\cref{enum:PDP:random-demand-property:past-conditional} ensures that demand distribution keeps its properties when part of demand is revealed.
+\esgil{Mieux ainsi ?}
+
+Using \distrib distribution has many advantages.
+First, \cref{enum:PDP:random-demand-property:expectation} ensures that demand expectation is equal to the historical forecast demand and \cref{enum:PDP:random-demand-property:constant-volume} ensures that, as explained in \cref{chap:business-context}, total volume $\sum_{t,i}\va\demand_t^i$ of the forecast demand is constant over every possible outcomes.
+Second, \cref{enum:PDP:random-demand-property:past-conditional} ensures that demand distribution keeps its properties when part of demand is revealed.
 
 
 Moreover, random variables with a \distrib\ distribution can be easily generated using \cref{proc:demand:initial-sampling} since most of modern programming languages has a generator of gamma distributed variables.
@@ -304,9 +307,8 @@ Finally, \cref{proc:demand:initial-sampling} and \cref{enum:PDP:random-demand-pr
 
 
 
-\subsection{Proofs of demand distribution results}
+\subsection{Proof of properties of \distrib\ distribution}
 \label{sec:PDP:numerical-experiments:instances:proofs}
-\vlil{titre à repenser : proof of properties of \distrib\ distibution}
 \vlil{A mettre en annexe à terme ?}
 
 
@@ -950,6 +952,42 @@ Since $g\bracket{\frac{1}{K},\ldots,\frac{1}{K}}=\frac{1}{\sqrt{K-1}}$, the resu
 %   Thus, we can easily extend the definition of $\gamma$ for values of volatility $v\in\bracket{0,\sqrt{K-1}}$.
 % \end{rmq}
 
+
+
+\section{Use of $K$-means algorithm}
+
+
+\esgil{Eventually use $k$-medoids algorithm which enables to choose the distance used.}
+
+
+As said in \cref{sec:PDP:numerical-experiments:historical-data}, we use a small number of scenarios to represent every possible outcomes.
+Thus, using only \cref{proc:demand:initial-sampling} gives results which may be very dependent of the generating scenarios.
+In this section, we propose to use a $K$-means algorithm on a bigger set of scenarios to get a small set of representative scenarios.
+
+
+\esgil{Find a reference which present the $K$-means algorithm.}
+
+
+We refer to \cite{} for a detailed presentation of the method.
+Roughly, $K$-means clustering aims at partitioning $n$ observations into $K$ clusters in which each observation belongs to the cluster with the nearest mean.
+The mean of each cluster can be used as a prototype (\ie a representative element) of the cluster.
+
+
+$K$-means algorithm is easy to implement but have some drawbacks.
+First, it uses Euclidean distance as a metric and variance is used to measure cluster scatter.
+In some cases, other distances might be more relevant.
+Second, the number of clusters $K$ is an input parameter.
+Thus, an inappropriate choice of $K$ may yield poor results.
+Last, results depend of the initialization of the first $K$ prototypes and may lead algorithm to converge to local optimum.
+Some variations of $K$-means algorithms exist to deal with these points (see \cite{Jain2010} for a review of $K$-means algorithm and its extensions).
+
+
+\medskip
+
+In our case, we made a basic utilization of $K$-mean algorithm.
+We first use \cref{proc:demand:initial-sampling} to generate a sample of \tbc\ scenarios which can be seen as real vectors of $\RR^{\horizon\times\REF}$.
+Then, since the number of scenarios that can be used in (2SA-$m$) is bounded due to the computer performance, we initialize $K$ with $m=20$.
+Thus, our set of representative scenarios is composed of the $K$ prototype of each cluster and the probability of each one is equal to the number of scenarios in its cluster divided by \tbc.
 
 
 

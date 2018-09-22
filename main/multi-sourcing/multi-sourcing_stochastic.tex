@@ -500,42 +500,41 @@ true
 
 \subsection{Bender decomposition}
 
-\esgil{Reprendre cette partie. Ajouter le lien vers un papier expliquant Bender. Expliquer en quoi cela correspond à notre cas.}
 
-Formulation \eqref{eq:stoch-multi-sourcing:linearized} has a structure which may fit with decomposition methods as Bender decomposition. \vlil{L-shaped method citer le livre Stochastic Programming de Birge}
+Formulation \eqref{eq:stoch-multi-sourcing:linearized} has a structure which fit with L-shaped method (Bender decomposition of the primal).
+We refer to \cite[Chapter 5]{Birge2011} for a presentation of the method.
 Indeed, introducing the vector $z$ of first-step variables (assignment variables $\bracket{\open_p^i}_{p,i}$ and auxiliary variables $\bracket{m_t^i}_{t,i}$) and for each scenario $\omega$, the vector $w_{\omega}$ of second-step variables (inventory variables $\bracket{\inventory_{t,\omega}^i}_{t,i,\omega}$, production variables $\bracket{\quantity_{pt,\omega}^i}_{p,t,i}$ and auxiliary variables $\bracket{\alpha_{t,\omega}^i}_{t,i,\omega}$, we get the following program
 \begin{subequations}\label{eq:stoch-multi-sourcing:bender}
   \begin{align+}
     \min\quad & \rlap{$\ds f\bracket{z}$}
     \label{eq:stoch-multi-sourcing:bender:objective}
     \\
-    \st\quad & B z + A w_{\omega} = D_{\omega} && \forall\omega\in\scenarios,
+    \st\quad & T z + W u_{\omega} = h_{\omega} && \forall\omega\in\scenarios,
     \label{eq:stoch-multi-sourcing:bender:constraint}
-    \\
-    & \ds w_{\omega}\in \cW && \forall\omega\in\scenarios,
-    \label{eq:stoch-multi-sourcing:bender:second-step}
+    % \\
+    % & \ds u_{\omega}\in \cW && \forall\omega\in\scenarios,
+    % \label{eq:stoch-multi-sourcing:bender:second-step}
     \\
     & \ds z\in \cZ.
     \label{eq:stoch-multi-sourcing:bender:first-step}
   \end{align+}
 \end{subequations}
-where constraint \eqref{eq:stoch-multi-sourcing:bender:constraint} regroups constraints~\eqref{eq:stoch-multi-sourcing:linearized:inventory-dynamic} to \eqref{eq:stoch-multi-sourcing:linearized:AVaR:2} and $\cW$ and $\cZ$ are positivity or binary constraints.
+where constraint \eqref{eq:stoch-multi-sourcing:bender:constraint} regroups constraints~\eqref{eq:stoch-multi-sourcing:linearized:inventory-dynamic} to \eqref{eq:stoch-multi-sourcing:linearized:positivity} and $\cZ$ is binary constraint on part of first-step variables.
+Thus, the constraints have the following block structure.
+         
+\begin{equation}
+\left(
+\begin{array}{ccccc}
+T           & W           &   & \multicolumn{2}{c}{\multirow{2}{*}{$\bracket{0}$}} \\               
+T           &             & W &        & \\
+\vdots      & \multicolumn{2}{c}{\multirow{2}{*}{$\bracket{0}$}} & \ddots & \\
+T           & & & & W
+\end{array}
+\right)
+\end{equation}
 
 
-
-
-% \begin{tikzpicture}
-%   \matrix [matrix of math nodes,left delimiter=(,right delimiter=)] (m)
-%   {              
-%       B           & A &   &        &             \\               
-%       B           &   & A &        &             \\
-%       \vdots      &   &   & \ddots &             \\
-%       B           &   &   &        & A           \\
-%   };
-% \end{tikzpicture}
-
-
-\esgil{To do (not high-priority)}
+For lack of time, we have not implemented this method but it is promising to accelerate resolution of formulation~\eqref{eq:stoch-multi-sourcing:linearized}.
 
 
 
@@ -648,7 +647,6 @@ As expected by the theory, robust constraint is more conservative than $\AVaR$ w
 % Moreover, it is already linear making it easy to use.
 % On the other hand, probabilistic constraint is hard to write and to linearize since it may not be convex.
 % Representability of robust and $\AVaR$ constraint are both not easy to write.
-% \vlil{the discussion over "easiness of writing" is not very convincing}
 % \esgil{Supprimer la discussion sur la facilité de représenter la contrainte et ne garder que celle sur la linéarisation ?}
 % Every possible outcome must be considered in robust case and definition of $\AVaR$ makes it hard to use.
 % However, robust and $\AVaR$ constraints are convex.
