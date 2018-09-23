@@ -107,16 +107,63 @@ We model the deterministic multi-sourcing problem as a mixed integer program in 
 \section{Bibliography}
 
 
-\esgil{TODO}
 
-Johnzen et al (2010): mesure de flexibilité
- 
-$f=\frac{\sum_{i\in\REF}\sum_{p\in\plants}\open_p^i}{\card{\REF\times\plants}}$ (Et défini en pondérant par la production de chaque item)
+Production multi-sourcing can be viewed as a lot-sizing on several parallel machines.
+Although it is typically a long term decision and for this reason, uncertainty is often considerate, a vast literature exists for the deterministic case.
+Reviews can be found in \cite{Sethi1990,Koste1999,Stevenson2007} even if they are larger than the only multi-sourcing problem.
+They are interest in every types of flexibility whereas we concentrate our research on mix flexibility (ability to produce different combinations of products given certain capacity).
 
 
-\cite{Rezaei2008,Chirawat2017}
-=> discrete time
-=> multi-item and multi-supplier
+As explained in \cite{Fiorotto2018}, deterministic settings may appear in real life.
+For example, in semi-conductor manufacturing, pharmaceutical production, packing for yogurt or textile industry, demand is know but machines must be qualified to produce items.
+They develop a deterministic lot-sizing problem on multiple parallel machines aiming at minimizing the sum of setup, production, holding and backlog costs.
+One main constraint is the maximal flexibility of the configuration.
+Their work is based on ``chains'' and they shows than ``long chains'' configurations give results almost as good as complete flexibility.
+A previous work by \cite{Ignizio2009} aiming at minimizing the balance between the utilization of the machines shows similar results.
+An extensive study of this chains based on simulation can be found in \cite{Muriel2006}.
+
+
+In previous papers, flexibility is upper bounded and this bound is an input of the model.
+The following models address a complete flexibility but the trade-off is made thanks to the different costs in the objective function.
+In \cite{Rezaei2008}, each supplier have a part of imperfect items and a trade-off must be found between the revenue of selling good and imperfect items and the other costs (like purchase cost or holding cost).
+In \cite{Woarawichai2017}, model also includes logistic costs in the objective.
+
+
+Finally, \cite{Snyder2006b} do not directly address a multi-sourcing problem.
+However, their work aims at anticipating a disruption in the Supply Chain and controlling bad cases values.
+They consider multiple facilities and multiple clients.
+Each facility have a known probability of disruption.
+They aims at minimizing the weighted sum of assignment and reassignment if one or many disruption occurs.
+
+
+% \cite{Rezaei2008}
+% => multi-item and multi-supplier
+% => choose supplier and quantity
+% => imperfection in received quantity
+
+
+% \cite{Woarawichai2017}
+% => multi-item and multi-supplier
+% => choose supplier and quantity
+% => model with logistic cost, etc.
+
+% \cite{Muriel2006}
+% We develop analytical models and an optimization-based simulation tool to study
+% the impact of increasing flexibility on shortages, production variability, component inventories, and order vari-
+% ability 
+% => simultion tool at the end
+
+
+% \cite{Ignizio2009}
+% => multi-item, multi-machine
+% => minimize the gap between machine utilization
+
+
+% \cite{Snyder2006b}
+% => kind of multi-sourcing
+% => minimize the assignment at level $r$ \ie at the $r$th closest facility
+% => but if possible, demand will be served by the closest one (in he objective also)
+
 
 \section{Model formulations}
 \label{sec:multi-sourcing:deterministic:model-formulation}

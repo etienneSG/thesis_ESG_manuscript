@@ -955,6 +955,7 @@ Since $g\bracket{\frac{1}{K},\ldots,\frac{1}{K}}=\frac{1}{\sqrt{K-1}}$, the resu
 
 
 \section{Use of $K$-means algorithm}
+\label{sec:PDP:numerical-experiments:k-means}
 
 
 \esgil{Eventually use $k$-medoids algorithm which enables to choose the distance used.}
@@ -987,12 +988,12 @@ Some variations of $K$-means algorithms exist to deal with these points (see \ci
 In our case, we made a basic utilization of $K$-mean algorithm.
 We first use \cref{proc:demand:initial-sampling} to generate a sample of \tbc\ scenarios which can be seen as real vectors of $\RR^{\horizon\times\REF}$.
 Then, since the number of scenarios that can be used in (2SA-$m$) is bounded due to the computer performance, we initialize $K$ with $m=20$.
-Thus, our set of representative scenarios is composed of the $K$ prototype of each cluster and the probability of each one is equal to the number of scenarios in its cluster divided by \tbc.
+Thus, our set of representative scenarios is composed of the $K$ prototypes of each cluster and the probability of each one is equal to the number of scenarios in its cluster divided by \tbc.
 
 
 
 \section{Numerical results}
-
+\label{sec:PDP:numerical-experiments:numerical-results}
 
 \esgil{To do when result will be complete}
 
