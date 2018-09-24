@@ -1,3 +1,4 @@
+%!TEX root=../../thesis_ESG.tex
 \chapter{Multi-sourcing maximizing the service level}
 
 
@@ -10,7 +11,7 @@
 
 As explained in \cref{part:multi-sourcing}, multi-sourcing decisions consist in deciding which plants should have the ability to produce an item.
 They are long-term decisions and are piloted by company's strategy.
-At this level, companies have already defined the desired service level and want to reached it at minimal cost.
+At this level\vl{wrong word}, companies have already defined the desired service level and want to reached it at minimal cost.
 However, because they deal with long-term decisions, we used a risk constraint to control stock-out and ensure service level.
 Finally, company's strategy is a trade-off between service level and costs to ensure it.
 
@@ -19,10 +20,11 @@ In this chapter, we propose an alternative version of the multi-sourcing problem
 Like in \cite{}, we suppose that we have a limited budget for the flexibility (\ie to multi-source production of item).
 Thus, companies are likely to not satisfied the whole demand and aim at minimizing their backorder.
 
-
+\vlil{Je pense qu'il faut préciser qu'on ne parle que d'une approche déterministe, et donc que la définition de service level n'est pas la même que dans d'autres chapitre ?}
 
 
 \subsection{Problem statement}
+
 
 For the sake of completeness, we recall every parameters including those which are identical to those of the multi-sourcing problem.
 We consider a set $\plants$ of plants producing a set $\REF$ of items over $\horizon$ periods.
@@ -147,7 +149,7 @@ Constraint~\eqref{eq:det-multi-sourcing:limited-capital:inventory} is the decomp
 
 The \tbc\ is $\NP$-hard in the strong sense but contrary to the classical deterministic problem, it always has a feasible solution.
 (It is sufficient to not give to any plants the ability to produce any items.)
-Moreover, like the classical deterministic multi-sourcing problem, the difficulty of the \tbc\ is captured either by the lower bounds $\lb_{pt}^i$ on production or by the upper bound $\capital$ on the cumulative assignment cost.
+Moreover, as in the classical deterministic multi-sourcing problem, the difficulty\vl{? en quel sens ?} of the \tbc\ is captured either by the lower bounds $\lb_{pt}^i$ on production or by the upper bound $\capital$ on the cumulative assignment cost.
 
 
 \begin{thm}\label{thm:det-multi-sourcing:limited-capital:strong-NP-hard}
