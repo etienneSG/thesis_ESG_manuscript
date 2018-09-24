@@ -149,7 +149,7 @@ Constraint~\eqref{eq:det-multi-sourcing:limited-capital:inventory} is the decomp
 
 The \tbc\ is $\NP$-hard in the strong sense but contrary to the classical deterministic problem, it always has a feasible solution.
 (It is sufficient to not give to any plants the ability to produce any items.)
-Moreover, as in the classical deterministic multi-sourcing problem, the difficulty\vl{? en quel sens ?} of the \tbc\ is captured either by the lower bounds $\lb_{pt}^i$ on production or by the upper bound $\capital$ on the cumulative assignment cost.
+Moreover, as in the classical deterministic multi-sourcing problem, the difficulty\vl{en quel sens ?} of the \tbc\ is captured either by the lower bounds $\lb_{pt}^i$ on production or by the upper bound $\capital$ on the cumulative assignment cost.
 
 
 \begin{thm}\label{thm:det-multi-sourcing:limited-capital:strong-NP-hard}
@@ -188,7 +188,7 @@ $$
 $$
 Thus, if we have a solution for the 3-partition problem, finding a solution of the \tbc\ which satisfied the whole demand is straightforward.
 
-Conversely, suppose that we have a solution of the \tbc\ which satisfied the whole demand.
+Conversely, suppose that we have a solution of the \tbc\ which satisfies the whole demand.
 Since $\demand_1^i=\frac{a_i}{B}>0$ for each item $i$, each item is assigned to at least one plant (otherwise, there would be backorder).
 Assignment costs being equal to 1 and cumulative assignment cost being upper bounded by the number of item, each item is assigned to exactly one plant.
 Moreover, $\frac{1}{4}\capacity_{p,1}=\frac{1}{4} < \frac{a_i}{B}=\demand_1^i$ ensures that there are at most three items per plant.
@@ -257,7 +257,7 @@ The conclusion follows from the fact that the partition problem is $\NP$-complet
 
 
 
-Looking at the proofs of \cref{thm:det-multi-sourcing:limited-capital:strong-NP-hard} and of \cref{prop:det-multi-sourcing:limited-capital:NP-hard:special-cases} (\cref{item:det-multi-sourcing:limited-capital:NP-hard:2-plants}), we see that they can be easily adapt to the case of infinite upper bound on cumulative assignment cost.
+Looking at the proofs of \cref{thm:det-multi-sourcing:limited-capital:strong-NP-hard} and of \cref{prop:det-multi-sourcing:limited-capital:NP-hard:special-cases} (\cref{item:det-multi-sourcing:limited-capital:NP-hard:2-plants}), we see that they can be easily adapted to the case of infinite upper bound on cumulative assignment cost.
 
 
 
