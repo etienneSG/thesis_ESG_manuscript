@@ -1,3 +1,4 @@
+%!TEX root=../../thesis_ESG.tex
 \chapter{Production planning using cover-size}
 
 
@@ -7,8 +8,8 @@
 \subsection{Motivations}
 
 
-As see in \cref{part:continuous-review-inventory-model} and \cref{part:production planning}, assembly lines may be managed using $\bracket{r,\ell}$ policies (\ie production when the safety stock is reached) or directly making the production planning for the next week.
-Choice depends partially on the complexity of the production, on the variation of demand over time.
+As seen in \cref{part:continuous-review-inventory-model} and \cref{part:production planning}, assembly lines may be managed using $\bracket{r,\ell}$ policies (\ie production when the safety stock is reached) or directly making the production planning for the next week.
+The choice depends partially on the complexity of the production, on the variation of demand over time.
 Sometimes, companies compute the cycle stocks of items and use them as an input of their production planning tools.
 
 
@@ -40,6 +41,8 @@ The production of item $i$ must satisfy a demand $\demand_t^i$ at the end of per
 When production of a item $i$ is not used to satisfy the demand, it can be stored but incurs a unit holding cost $\holding^i>0$ per period.
 For each item $i$, there is an initial inventory $s_0^i\in\RR_+$.
 Since we use covers, we also impose that for a item $i$ the time interval between two periods of production of $i$ was identical over the horizon of planning and belong to a set $\coverset_r\subseteq\range{\horizon}$ of possible covers.
+\vlil{Il me semble que c'était aussi une des motivations de la formulation : parler en unité plus simple à comprendre pour les opérateur. Si c'est bien le cas une phrase en ce sens montrerait que
+ce choix est un avantage.}
 
 
 The goal is to satisfy the whole demand at minimum cost.
@@ -72,7 +75,7 @@ The quantity of item $i$ produced at period $t$ is denoted by $\quantity_t^i$ an
 
 
 We normalize production variables setting $\widehat{\quantity}_t^i=\frac{\rate^i\quantity_t^i}{\capacity}$ and replace accordingly the other variables and parameters setting $\widehat{\inventory}_t^i=\frac{\rate^i\inventory_t^i}{\capacity}$, $\widehat{\demand}_t^i=\frac{\rate^i\demand_t^i}{\capacity}$ and $\widehat{\holding}^i=\frac{\capacity\holding^i}{\rate^i}$.
-For the purpose of notation, the hat are omitted and the Uniform CCSP-BS can be written as
+For the sake of notational clarity, hats are omitted and the Uniform CCSP-BS can be written as
 \begin{subequations}\label{eq:pdp:cover-MIP}
   \begin{align+}
     \min\quad & \rlap{$\ds \sum_{t=1}^{\horizon} \sum_{i\in\REF} \holding^i \inventory_t^i$}
@@ -168,5 +171,5 @@ In addition, if some capacity issues are easily anticipated, the production of a
 Tests with MIP-cover-size heuristic show that this approach is bad.
 First, inventory holding costs and service level are worst than with the classic cover-size heuristic.
 Moreover, computing cover-size from Problem~\eqref{eq:pdp:cover-MIP} is hard and takes times (contrary to the close formula in the classic cover-size heuristic).
-Thus, we quickly give up this approach and do not make further investigations.
+Thus, we quickly give up this approach and\vl{nécessaire ?} do not make further investigations.
 
