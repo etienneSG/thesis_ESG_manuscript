@@ -94,7 +94,59 @@ In \cref{sec:multi-sourcing:stochastic:discussion}, we discuss the choices made 
 \label{sec:multi-sourcing:stochastic:bibliography}
 
 
-\esgil{TO DO}
+Deciding multi-sourcing in a long term decision and often comes with stochastic considerations.
+A extensive review can be found in \cite{Yao2017}.
+
+
+A seminal model about stochastic multi-sourcing can be found in \cite{Jordan1995}.
+In automotive industry, they aim at deciding which plant (or which line) should have the ability to produce each item.
+This is a single-period model which aims at minimizing the shortfall subject to limited flexibility.
+As in deterministic case, they conclude that a long chain configuration enables to have results almost as good as a complete flexibility.
+A similar model can be found in \cite{Brian2005} which consider risk-neutral and risk averse objective.
+In order to deal with more complicated cases (multi-item and multi-market), \cite{Garavelli2003} uses simulations to quantify impact of flexibility configurations.
+Again, a limited flexibility seems sufficient to achieve very good results.
+
+
+One goal of stochastic multi-sourcing is to deal with the risk.
+A remark is that risk is often concentrate to single-item problem.
+The news-vendor problem was extensively extended to propose risk aversion extension (see \cite{Vipul2000,Choi2008}).
+More recently, \cite{Arikan2017} propose a classification of existing extension (included those with Average-Value-at-Risk).
+\cite{Ahmed2007} is one of the rare paper using coherent measure of risk for a multi-period inventory problem.
+Its objective minimizes a risk averse function (like $\AVaR$) instead of a risk neutral function (like expectation)
+However, these are production decisions and not multi-sourcing.
+
+
+A single-item single-period multi-sourcing problem is also addressed in \cite{Meena2011}.
+In this paper, each supplier has a different rate of failure (\ie to not produce anything) but demand is equally divided between suppliers.
+They studied different cases and in particular, the minimization of the expected total cost for a pre-determined service level.
+
+
+% \cite{Brian2005}
+% => two stage: assignment then production (single period)
+% => risk neutral and risk averse
+
+% \cite{Garavelli2003}
+% => use simulation to quantify impact of flexibility configuration (multiple product, multiple plants, multiple market)
+
+
+% \cite{Meena2011}
+% => each supplier has different rate of failure, capacity but demand is equaly reparted
+% => risk on disruption (one supplier which do not deliver)
+% => one item, one period
+
+
+
+
+% \cite{Arikan2017}
+% => news-vendor with $\AVaR$
+% Many references on news-vendors and risk aversion \cite{Vipul2000,Choi2008}
+
+% \cite{Ahmed2007}
+% => coherent measure of risk for inventory problem (single item) for both single and multi-period
+% => objective minimize a risk averse function (like $\AVaR$) instead of a risk neutral function (like expectation)
+% => production decisions no multi-sourcing
+
+
 
 
 \section{Model formulation}
@@ -500,42 +552,41 @@ true
 
 \subsection{Bender decomposition}
 
-\esgil{Reprendre cette partie. Ajouter le lien vers un papier expliquant Bender. Expliquer en quoi cela correspond à notre cas.}
 
-Formulation \eqref{eq:stoch-multi-sourcing:linearized} has a structure which may fit with decomposition methods as Bender decomposition. \vlil{L-shaped method citer le livre Stochastic Programming de Birge}
+Formulation \eqref{eq:stoch-multi-sourcing:linearized} has a structure which fit with L-shaped method (Bender decomposition of the primal).
+We refer to \cite[Chapter 5]{Birge2011} for a presentation of the method.
 Indeed, introducing the vector $z$ of first-step variables (assignment variables $\bracket{\open_p^i}_{p,i}$ and auxiliary variables $\bracket{m_t^i}_{t,i}$) and for each scenario $\omega$, the vector $w_{\omega}$ of second-step variables (inventory variables $\bracket{\inventory_{t,\omega}^i}_{t,i,\omega}$, production variables $\bracket{\quantity_{pt,\omega}^i}_{p,t,i}$ and auxiliary variables $\bracket{\alpha_{t,\omega}^i}_{t,i,\omega}$, we get the following program
 \begin{subequations}\label{eq:stoch-multi-sourcing:bender}
   \begin{align+}
     \min\quad & \rlap{$\ds f\bracket{z}$}
     \label{eq:stoch-multi-sourcing:bender:objective}
     \\
-    \st\quad & B z + A w_{\omega} = D_{\omega} && \forall\omega\in\scenarios,
+    \st\quad & T z + W u_{\omega} = h_{\omega} && \forall\omega\in\scenarios,
     \label{eq:stoch-multi-sourcing:bender:constraint}
-    \\
-    & \ds w_{\omega}\in \cW && \forall\omega\in\scenarios,
-    \label{eq:stoch-multi-sourcing:bender:second-step}
+    % \\
+    % & \ds u_{\omega}\in \cW && \forall\omega\in\scenarios,
+    % \label{eq:stoch-multi-sourcing:bender:second-step}
     \\
     & \ds z\in \cZ.
     \label{eq:stoch-multi-sourcing:bender:first-step}
   \end{align+}
 \end{subequations}
-where constraint \eqref{eq:stoch-multi-sourcing:bender:constraint} regroups constraints~\eqref{eq:stoch-multi-sourcing:linearized:inventory-dynamic} to \eqref{eq:stoch-multi-sourcing:linearized:AVaR:2} and $\cW$ and $\cZ$ are positivity or binary constraints.
+where constraint \eqref{eq:stoch-multi-sourcing:bender:constraint} regroups constraints~\eqref{eq:stoch-multi-sourcing:linearized:inventory-dynamic} to \eqref{eq:stoch-multi-sourcing:linearized:positivity} and $\cZ$ is binary constraint on part of first-step variables.
+Thus, the constraints have the following block structure.
+         
+\begin{equation}
+\left(
+\begin{array}{ccccc}
+T           & W           &   & \multicolumn{2}{c}{\multirow{2}{*}{$\bracket{0}$}} \\               
+T           &             & W &        & \\
+\vdots      & \multicolumn{2}{c}{\multirow{2}{*}{$\bracket{0}$}} & \ddots & \\
+T           & & & & W
+\end{array}
+\right)
+\end{equation}
 
 
-
-
-% \begin{tikzpicture}
-%   \matrix [matrix of math nodes,left delimiter=(,right delimiter=)] (m)
-%   {              
-%       B           & A &   &        &             \\               
-%       B           &   & A &        &             \\
-%       \vdots      &   &   & \ddots &             \\
-%       B           &   &   &        & A           \\
-%   };
-% \end{tikzpicture}
-
-
-\esgil{To do (not high-priority)}
+For lack of time, we have not implemented this method but it is promising to accelerate resolution of formulation~\eqref{eq:stoch-multi-sourcing:linearized}.
 
 
 
@@ -648,7 +699,6 @@ As expected by the theory, robust constraint is more conservative than $\AVaR$ w
 % Moreover, it is already linear making it easy to use.
 % On the other hand, probabilistic constraint is hard to write and to linearize since it may not be convex.
 % Representability of robust and $\AVaR$ constraint are both not easy to write.
-% \vlil{the discussion over "easiness of writing" is not very convincing}
 % \esgil{Supprimer la discussion sur la facilité de représenter la contrainte et ne garder que celle sur la linéarisation ?}
 % Every possible outcome must be considered in robust case and definition of $\AVaR$ makes it hard to use.
 % However, robust and $\AVaR$ constraints are convex.

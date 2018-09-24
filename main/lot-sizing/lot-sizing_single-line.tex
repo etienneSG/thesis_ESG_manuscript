@@ -140,7 +140,7 @@ The notations and a corresponding inventory profile is representing in \cref{fig
 \medskip
 
 
-Since this model is a variation of the \emph{Economic Production Quantity model (EPQ)}, we call it \emph{Economic Production Quantity model with Bounded number of Setups (EPQ-BS)}.
+Since this model is a variation of the \emph{Economic Production Quantity (EPQ)} model, we call it \emph{Economic Production Quantity model with Bounded number of Setups (EPQ-BS)}.
 We will consider two versions of this problem:
 \begin{itemize}
   \item the cover-sizes can be any nonnegative real numbers,
@@ -164,60 +164,181 @@ Thus, we have $\lot_i=\demand_i\cover_i$.
 
 \subsection{Bibliography}
 
-\textbf{literature review}
 
-\begin{itemize}
-   \item \cite{Gayon2016} Continuous-review inventory models for single item
-\end{itemize} 
-
-Multi-item
-
-\begin{itemize}
-  \item \cite{Hadley1963} first to note that perhaps the most important real world constraints are budget restrictions on the amount that can be invested in inventory.
-  \item \cite{Schrady1971} Minimization of total time-weighted shortage subject to inventory investment (holding cost) and to reorder workload.
-  They use our formula to find a solution but does not prove it optimality.
-  \item \cite{Daeschner1975} Model with limited number of reorder transactions to be considered in the present allocation.
-  \item \cite{Ohno2001} Minimization of the holding cost, backorder cost and ordering cost subject to capacity constraints on the inventory.
-\end{itemize}
+Continuous review inventory models are studied for more than a century.
+They aim at deciding when ordering (or producing) and which quantity must be ordered (or produced) making a trade-off between inventory holding costs and ordering costs.
 
 
-\medskip
+First model was developed by \cite{Harris1913} and gives the famous \emph{Economic Order Quantity (EOQ)} (also known as \emph{Wilson Formula}) which consists in finding a trade-off between average holding cost (proportional to the inventory) and fixed reordering cost.
+It is a model for a single item and demand is assumed stationary.
+One first simple variation consists in using time varying demand.
+For example, polynomial-time algorithms exist for a demand with the form $\demand(t)=\alpha t+\gamma$ \cite{Resh1976,Donaldson1977} or with the form $\demand(t)=\alpha t^{\beta}$ \cite{Barbosa1978}.
+However, in general, finding the optimal solution is difficult like in \cite{Padmanabhan1990} where demand is a function of the inventory and where a numerical method must be used to find the optimal solution.
+Another variation relies on a time varying holding cost due to inflation (see \cite{Vrat1990}) which also need numerical method to find the optimal solution.
 
-\textbf{Ordering}
 
-\begin{itemize}
-  \item \cite{Harris1913} Economic Order Quantity (in French: ``Formule de Wilson'' because it was extensively used by R. H. Wilson from 1934)
-  \begin{itemize}
-    \item single item
-    \item cost structure: proportional holding cost, variable and fixed order cost
-    \item stationary demand $\demand$
-    \item average cost over infinite horizon
-  \end{itemize}
-  \item Time varying demand $\demand(t)$
-  \begin{itemize}
-    \item \cite{Resh1976,Donaldson1977} $\demand(t)=\alpha t+\gamma$ polynomial
-    \item \cite{Barbosa1978} $\demand(t)=\alpha t^{\beta}$
-    \item difficult in general
-  \end{itemize}
-\end{itemize}
-
-Classical policy: Zero Inventory Ordering policy $(r,q)$ (Order quantity $q$ when current inventory is $r$)
-
-\medskip
-
-\textbf{Production}
-
-\begin{itemize}
-  \item Economic Production Quantity (extension of EOQ with limited production capacity) \cite{Taft1918}
-  \begin{itemize}
-    \item Limited production capacity
-  \end{itemize}
-\end{itemize}
+Although they are deterministic, many models take into account the opportunity of lost sales like \cite{Salameh2003} which introduce a cost for the shortage or \cite{Park1982} where part of unsatisfied demand is lost whereas the other is backordered.
 
 
 \medskip
 
-\esgil{complete bibliography}
+
+Previous models deal with a single item.
+In many real case, an assembly line can produce more than one item.
+One first multi-item model was proposed by \cite{Hadley1963} which also note that perhaps the most important real world constraints are budget restrictions on the amount that can be invested in inventory.
+Since inventory is often controlled by a trade-off with the other costs, a constraint is add in \cite{Ohno2001} where they aim at minimizing the holding costs, backorder costs and ordering costs subject to capacity constraints on the inventory.
+
+
+As explained in \cite{Eynan2007}, when many items are produced on a single line, using periodic review (\ie cover-sizes) instead of continuous review (\ie lot-sizes) may make coordination between item productions easier.
+Thus, \cite{Madigan1968} and \cite{Chiu2014} propose models with kind of scheduling constraints between periodic productions of items.
+Finally, in order to take into account the opportunity of one ordering cost for many items, \cite{Bomberger1966} and \cite{Goyal1974} impose that every replenishment cycles (cover-sizes) be a multiple of a unit cover-size (which can be a variable in the optimization process like in \cite{Silver1976}).
+
+
+\medskip
+
+
+These model are massively developed for ordering.
+Extensions for production is often simple like the \emph{Economic Production Quantity (EPQ)} (see \cite{Taft1918}).
+However it may lead to new issue like the holding cost of raw materials as in \cite{Lin2013}
+
+
+% \begin{itemize}
+%   \item \cite{Hadley1963} first to note that perhaps the most important real world constraints are budget restrictions on the amount that can be invested in inventory.
+%   \item \cite{Ohno2001} Minimization of the holding cost, backorder cost and ordering cost subject to capacity constraints on the inventory.
+% \end{itemize}
+
+% \cite{Chiu2014}
+% Multi-Item  EPQ  Model  with  Scrap,  Rework  and  Multi-Delivery using Common Cycle Policy 
+% S.W. Chiu, C-T. Tseng, M-F. Wu and P-C. Sung
+% => kind of scheduling constraints
+
+
+% \cite{Madigan1968}
+% Scheduling a Multi-Product Single Machine System for an
+% Infinite Planning Period
+% J. G. Madigan,
+% => multi-item with capacity
+
+% \cite{Bomberger1966}
+% A Dynamic Programming Approach to a Lot Size Scheduling Problem
+% Earl E. Bomberger
+% Management Science
+% Vol. 12, No. 11, Series A, Sciences (Jul., 1966), pp. 778-784 
+% => multi-item with capacity and cycle being a multiple of a unit cycle
+
+% \cite{Goyal1974}
+% S.K. Goyal, Determination of optimum packaging frequency of items jointly replenished, Management Science 21
+% \cite{Silver1976}
+% E.A. Silver, A simple method of determining order quantities in joint replenishments under deterministic demand
+% => ``Integer case'' cycles of items must be a multiple of a reference cycle (which is part of the optimization)
+
+
+% \begin{itemize}
+%   \item \cite{Harris1913} Economic Order Quantity (in French: ``Formule de Wilson'' because it was extensively used by R. H. Wilson from 1934)
+%   \begin{itemize}
+%     \item single item
+%     \item cost structure: proportional holding cost, variable and fixed order cost
+%     \item stationary demand $\demand$
+%     \item average cost over infinite horizon
+%   \end{itemize}
+%   \item Time varying demand $\demand(t)$
+%   \begin{itemize}
+%     \item \cite{Resh1976,Donaldson1977} $\demand(t)=\alpha t+\gamma$ polynomial
+%     \item \cite{Barbosa1978} $\demand(t)=\alpha t^{\beta}$
+%     \item G. PADMANABHAN \& PREM VRAT  1990 $\demand(t) = a + \delta l(t)$
+%     \item difficult in general
+%   \end{itemize}
+% \end{itemize}
+
+
+% A. Eynan and D. H. Kropp, “Effective and simple EOQ-like solutions for stochastic demand periodic review systems,” European Journal of Operational Research, vol. 180
+% periodic review = cover-size model
+% Better to coordinate item ()
+
+
+% \textbf{literature review}
+
+% \begin{itemize}
+%    \item \cite{Gayon2016} Continuous-review inventory models for single item
+% \end{itemize} 
+
+
+% Single item
+
+% Inventory model with partial backorders
+% KYUNG S. PARK 
+% 1982
+
+% Inventory model with a mixture of back orders and lost sales
+% G. PADMANABHAN \& PREM VRAT 
+% 1989
+
+% => Backorder fraction is lost and other is backorder
+
+
+% Continuous review inventory model with delay in payments
+% M.K. Salameha N.E. Abbouda A.N. El-Kassarb R.E. Ghattas
+
+% => holding, procurement and shortage costs
+
+
+% Multi-item
+
+% \begin{itemize}
+%   \item \cite{Hadley1963} first to note that perhaps the most important real world constraints are budget restrictions on the amount that can be invested in inventory.
+%   \item \cite{Ohno2001} Minimization of the holding cost, backorder cost and ordering cost subject to capacity constraints on the inventory.
+% \end{itemize}
+
+% Multi-Item  EPQ  Model  with  Scrap,  Rework  and  Multi-Delivery using Common Cycle Policy 
+% S.W. Chiu, C-T. Tseng, M-F. Wu and P-C. Sung
+% => kind of scheduling constraints
+
+
+
+% Scheduling a Multi-Product Single Machine System for an
+% Infinite Planning Period
+% J. G. Madigan,
+% => multi-item with capacity
+
+% A Dynamic Programming Approach to a Lot Size Scheduling Problem
+% Earl E. Bomberger
+% Management Science
+% Vol. 12, No. 11, Series A, Sciences (Jul., 1966), pp. 778-784 
+% => multi-item with capacity and cycle being a multiple of a unit cycle
+
+
+% \medskip
+
+% \textbf{Ordering}
+
+
+
+
+% S.K. Goyal, Determination of optimum packaging frequency of items jointly replenished, Management Science 21
+% E.A. Silver, A simple method of determining order quantities in joint replenishments under deterministic demand
+% => ``Integer case'' cycles of items must be a multiple of a reference cycle (which is part of the optimization)
+
+
+% Classical policy: Zero Inventory Ordering policy $(r,q)$ (Order quantity $q$ when current inventory is $r$)
+
+% \medskip
+
+% \textbf{Production}
+
+% \begin{itemize}
+%   \item Economic Production Quantity (extension of EOQ with limited production capacity) \cite{Taft1918}
+%   \begin{itemize}
+%     \item Limited production capacity
+%   \end{itemize}
+% \end{itemize}
+
+% Lin 2010 the optimal inventory policy of production management
+% => Take into account holding cost for raw materials
+
+
+% \medskip
+
+% \esgil{complete bibliography}
 
 
 
@@ -576,40 +697,91 @@ Conversely, using lot-size variables as first-step variables would lead to use c
 
 \subsection{Bibliography}
 
-Source of randomness:
-\begin{itemize}
-  \item customer demand
-  \item manufacturing time (internal production time)
-  \item delivery lead time
-\end{itemize}
 
-Randomness was handled by probability (most cases) but also with fuzzy set theory (\eg \cite{Park1987,Lee1999,Wang2007} for extensions of the EOQ and \cite{Ziukov2015} for a complete review of the extensions of EOP, EPQ, Joint Economic Lot Sizing models).
-In what follows, we focus on randomness represented by probability.
+One of the first stochastic ordering problem is the news-vendor problem \cite{Edgeworth88,Arrow1951}.
+The goal is to order a quantity $q$ to satisfy an unknown future demand $d$.
+The trade-off is made between expected remaining inventory and expected shortage.
 
-Literature often include backorder costs!
+
+Many deterministic continuous review inventory models have been extended in stochastic cases.
+\cite{Candace1995} and more recently \cite{Ziukov2015} propose a complete review of the extensions of EOP, EPQ or Joint Economic Lot Sizing models.
+A first remark is that literature often includes backorder costs.
+Second, we see that randomness was mostly handled by fuzzy set theory or by probability.
+
 
 \medskip
 
-\textbf{Ordering}
 
-One period:
-\begin{itemize}
-  \item News-vendor problem \cite{Edgeworth88,Arrow1951}
-\end{itemize}
+A fuzzy set is a sets whose elements have degrees of membership.
+Fuzzy set theory enables to model the partial information and can be understand as a ``possibility''.
+Each parameter like ordered quantity, ordered cost, holding cost or annual demand can be represented with a fuzzy set instead of a unique value.
+\cite{Park1987} was the first to propose fuzzy production inventory models and gives an interpretation of economic order quantity in fuzzy framework.
+Among other models, we can cite \cite{Hsieh2002} which introduced two fuzzy production inventory models with fuzzy parameters: the first with crisp production quantity (\ie a production in a set in the classic sense) and the second with production quantity in a fuzzy set.
+Contrary to vast majority of the literature, \cite{Lee1999} and \cite{Wang2007} propose a model for the economic order quantity in fuzzy framework but without using backorder.
 
-Continuous-review:
-\begin{itemize}
-  \item adaptation of (r,q) policies with EOQ taking into account random demand during lead-time \cite{Gallego1998}
-\end{itemize}
+
+
+The other models use probability like \cite{Friedman1984} which places uncertainty on lead times or \cite{Eynan2007} which places uncertainty on demand, both aiming at minimizing holding, shortage and ordering cost.
+Another probabilistic model can be found in \cite{Sana2011} which proposes an extension of the news-vendor problem adding an uncertainty on sales price which can be correlated to the demand.
+
+
+Finally, \cite{Gallego1998} proposed adaptation of ($r$,$q$) policies with EOQ taking into account random demand during lead-time.
+Its results do not pendent from distribution and are not too far from the real optimum if distribution was considered during the optimization process.
+
 
 \medskip
 
-\textbf{Production}
+
+Like in deterministic cases, the first developed models consider only one item.
+When several items are involved, \cite{Daeschner1975} considers a multi-item inventory systems with stochastic demands with interaction constraints as budget constraints.
+Moreover, its control policies have stochastic resource requirement are examined using a queuing model.
+A quite unusual model comes from \cite{Panda2008} which mix fuzzy set and probability depending on the interpretation of the uncertainty on the parameters.
 
 
 
 
-\esgil{Complete bibliography}
+%and \cite{Ziukov2015} for a complete review of the extensions of EOP, EPQ, Joint Economic Lot Sizing models).
+%In what follows, we focus on randomness represented by probability.
+
+% \cite{Friedman1984}
+% M. F. Friedman, “On a stochastic extension of the EOQ formula,” European Journal of Operational Research, vol. 17, no. 1, pp. 125–127, 198
+% => uncertainty on lead time (probability), holding, shortage and ordering cost. Single item
+% No closed formula.
+
+
+% \cite{Eynan2007}
+% A. Eynan and D. H. Kropp, “Effective and simple EOQ-like solutions for stochastic demand periodic review systems,” European Journal of Operational Research, vol. 180
+% => ordering, holding (cycle and safety), backorder costs
+
+
+% \cite{Sana2011}
+% S. S. Sana, “The stochastic EOQ model with random sales price,” Applied Mathematics and Computation, vol. 218, no. 2, pp. 239–248, 2011
+% => single item
+
+
+% multi-item
+
+
+% \cite{Daeschner1975}
+% Constrained multi-item inventory systems with stochastic demands.
+% The interaction of budget constraints and control policies having stochastic resource requirement are examined using a queuing model
+
+% \cite{Panda2008}
+% D. Panda, S. Kar, and M. Maiti, “Multi-item EOQ model with hybrid cost parameters under fuzzy/fuzzy-stochastic resource constraints: a geometric programming approach,” Computers and Mathematics with Applications, vol. 56, no. 11, pp. 297
+% => multi-item
+
+
+
+
+
+% ----------
+
+
+
+% \cite{Schrady1971} Minimization of total time-weighted shortage subject to inventory investment (holding cost) and to number of setups.
+% They use our formula to find a solution but does not prove it optimality.
+% Ils se ramènent à du déterministe
+
 
 
 

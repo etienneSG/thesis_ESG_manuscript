@@ -139,13 +139,20 @@ It can be easily interpret by companies.
 Justification of such a choice for $\gamma$ can be found in \cref{sec:PDP:numerical-experiments:instances:fitting-parameters}.
 
 
+
+\medskip
+
+
+As in \cref{chap:pdp:numerical-experiments}, results may depend on the number of generated scenarios.
+Thus, we apply the same method drawing \tbc\ scenarios.
+Then, we use $K$-means algorithm (see \cref{sec:PDP:numerical-experiments:k-means}) to construct a set of 100 representative scenarios composed of the $K$ prototypes of each cluster.
+Each prototype gives a scenario weighted by the number of scenarios in its cluster divided by \tbc.
+
+
 % Since we know the historical demand, the generate demand of an item at a period should have the same expectation which explains \cref{enum:multi-sourcing:random-demand-property:expectation}.
 % \cref{enum:multi-sourcing:random-demand-property:constant-volume} is justified by our study of flexibility.
 % Indeed, as explained in \cref{chap:business-context}, we study the ability to face variations of the product mix and assume that we already known the cumulative working hours of production $\sum_{t=1}^{\horizon}\sum_{i\in\REF}\rate^i\va\demand_t^i$.
 % In \label{enum:multi-sourcing:random-demand-property:variance}, there remains a unique unfixed parameter $\gamma$ which enables to chose the level of randomness. As we can see in \cref{eq:multi-sourcing:numerical-experiments:demand:variance}, the greater $\gamma$ is, the greater the variances of demand are.
-
-
-
 
 
 \section{Numerical results}
