@@ -54,8 +54,8 @@ We call this problem the \emph{\tbc}.
 \subsection{Main results}
 
 
-In this chapter, we model the \tbc\ as a mixed integer program (\cref{sec:multi-sourcing-limited-capital:model-formulation}).
-Then, we show that the \tbc\ is $\NP$-hard even in many simple cases (\cref{sec:multi-sourcing-limited-capital:NP-completeness}).
+In this chapter, we model the deterministic multi-sourcing problem with budget constraint as a mixed integer program (\cref{sec:multi-sourcing-limited-capital:model-formulation}).
+Then, we show that the deterministic multi-sourcing problem with budget constraint is $\NP$-hard even in many simple cases (\cref{sec:multi-sourcing-limited-capital:NP-completeness}).
 
 
 % \section{Bibliography}
@@ -76,7 +76,7 @@ We also used the inventory level $\level_t^i$ which is the relative value of the
 We also introduce a binary variable $\open_p^i$ which takes the value 1 if plant $p$ is given the ability to produce item $i$.
 
 
-The \tbc\ can be written as
+The deterministic multi-sourcing problem with budget constraint can be written as
 % \begin{subequations}\label{eq:multi-sourcing:limited capital}
 %   \begin{align}
     % \min\quad & \rlap{$\ds \sum_{t=1}^{\horizon} \sum_{i\in\REF} \backorder^i \backlog_t^i$}
@@ -147,13 +147,13 @@ Constraint~\eqref{eq:det-multi-sourcing:limited-capital:inventory} is the decomp
 \label{sec:multi-sourcing-limited-capital:NP-completeness}
 
 
-The \tbc\ is $\NP$-hard in the strong sense but contrary to the classical deterministic problem, it always has a feasible solution.
+The deterministic multi-sourcing problem with budget constraint is $\NP$-hard in the strong sense but contrary to the classical deterministic problem, it always has a feasible solution.
 (It is sufficient to not give to any plants the ability to produce any items.)
-Moreover, as in the classical deterministic multi-sourcing problem, the difficulty\vl{en quel sens ?} of the \tbc\ is captured either by the lower bounds $\lb_{pt}^i$ on production or by the upper bound $\capital$ on the cumulative assignment cost.
+Moreover, as in the classical deterministic multi-sourcing problem, the difficulty\vl{en quel sens ?} of the deterministic multi-sourcing problem with budget constraint is captured either by the lower bounds $\lb_{pt}^i$ on production or by the upper bound $\capital$ on the cumulative assignment cost.
 
 
 \begin{thm}\label{thm:det-multi-sourcing:limited-capital:strong-NP-hard}
-  The \tbc\ is $\NP$-hard in the strong sense.
+  The deterministic multi-sourcing problem with budget constraint is $\NP$-hard in the strong sense.
 \end{thm}
 
 
@@ -186,9 +186,9 @@ $$
   ,\quad
   \ub_{p,1}^i=\capacity_{p,1}=1.
 $$
-Thus, if we have a solution for the 3-partition problem, finding a solution of the \tbc\ which satisfied the whole demand is straightforward.
+Thus, if we have a solution for the 3-partition problem, finding a solution of the deterministic multi-sourcing problem with budget constraint which satisfied the whole demand is straightforward.
 
-Conversely, suppose that we have a solution of the \tbc\ which satisfies the whole demand.
+Conversely, suppose that we have a solution of the deterministic multi-sourcing problem with budget constraint which satisfies the whole demand.
 Since $\demand_1^i=\frac{a_i}{B}>0$ for each item $i$, each item is assigned to at least one plant (otherwise, there would be backorder).
 Assignment costs being equal to 1 and cumulative assignment cost being upper bounded by the number of item, each item is assigned to exactly one plant.
 Moreover, $\frac{1}{4}\capacity_{p,1}=\frac{1}{4} < \frac{a_i}{B}=\demand_1^i$ ensures that there are at most three items per plant.
@@ -205,14 +205,14 @@ The conclusion follows from the fact that the 3-partition problem is $\NP$-compl
 
 
 \begin{prop}\label{prop:det-multi-sourcing:limited-capital:NP-hard:special-cases}
-  The following special cases of the \tbc\ are $\NP$-hard:
+  The following special cases of the deterministic multi-sourcing problem with budget constraint are $\NP$-hard:
   \begin{enumerate}
     \item\label{item:det-multi-sourcing:limited-capital:NP-hard:2-plants}
-    the \tbc\ with only one period and only two plants,
+    with only one period and only two plants,
     \item\label{item:det-multi-sourcing:limited-capital:NP-hard:unbounded-assignment-cost}
-    the \tbc\ with unbounded cumulative assignment cost,
+    with unbounded cumulative assignment cost,
     \item\label{item:det-multi-sourcing:limited-capital:NP-hard:infinite-capacities}
-    the \tbc\ with one plant and infinite capacities.
+    with one plant and infinite capacities.
   \end{enumerate}
 \end{prop}
 
@@ -243,9 +243,9 @@ $$
   ,\quad
   \ub_{pt}^i=\capacity_{pt}=1.
 $$
-Thus, if we have a solution for the partition problem, finding a solution of the \tbc\ which satisfied the whole demand is straightforward.
+Thus, if we have a solution for the partition problem, finding a solution of the deterministic multi-sourcing problem with budget constraint which satisfied the whole demand is straightforward.
 
-Conversely, suppose that we have a solution of the \tbc\ which satisfied the whole demand.
+Conversely, suppose that we have a solution of the deterministic multi-sourcing problem with budget constraint which satisfied the whole demand.
 Positivity of the $a_i$ ensures that each item is assigned to at least one plant.
 (Otherwise, there would be positive backorder.)
 Assignment cost being equal to 1 and cumulative assignment cost being upper bounded by the number of item, each item is assigned to exactly one plant.
@@ -268,17 +268,17 @@ Hence, we have the following result.
 
 
 % \begin{prop}
-% The \tbc\ is $\NP$-hard even if there is no bound on cumulative assignment cost.
+% The deterministic multi-sourcing problem with budget constraint is $\NP$-hard even if there is no bound on cumulative assignment cost.
 % \end{prop}
 
 
 
 % \begin{prop}
-%   The \tbc\ with one plant and infinite capacities is $\NP$-hard.
+%   The deterministic multi-sourcing problem with budget constraint with one plant and infinite capacities is $\NP$-hard.
 % \end{prop}
 
 
-Reducing the knapsack problem to the \tbc\ with infinite capacities, we show that the \tbc\ with infinite capacities is $\NP$-hard.
+Reducing the knapsack problem to the deterministic multi-sourcing problem with budget constraint and infinite capacities, we show that it is $\NP$-hard.
 We remind that the knapsack problem consists in choosing a subset of a set of $n$ items, each with a positive value $v_i$ and a positive weight $w_i>$, which maximize the sum of their cumulative value and whose cumulative weight is lower than $W>0$.
 This problem is known to be $\NP$-complete (see~\cite{Garey1979}).
 
@@ -309,7 +309,7 @@ $$
   ,\quad
   \ub_{pt}^i=\capacity_{pt}=+\infty.
 $$
-Thus, the \tbc\ can be written as
+Thus, the deterministic multi-sourcing problem with budget constraint can be written as
 \begin{subequations}\label{eq:det-multi-sourcing:limited-capital:knapsack}
   \begin{align+}
     \max\quad & \rlap{$\ds \sum_{i=1}^n v_i\open^i$}
@@ -322,7 +322,7 @@ Thus, the \tbc\ can be written as
     \label{eq:det-multi-sourcing:limited-capital:knapsack:boolean}
   \end{align+}
 \end{subequations}
-and $\bracket{{\open^*}^i}_i$ is an optimal solution solution of the \tbc\ if and only if $\bracket{{\open^*}^i}_i$ is an optimal solution of the knapsack problem.
+and $\bracket{{\open^*}^i}_i$ is an optimal solution solution of the deterministic multi-sourcing problem with budget constraint if and only if $\bracket{{\open^*}^i}_i$ is an optimal solution of the knapsack problem.
 The conclusion follows from the fact that the knapsack problem is $\NP$-hard.
 \end{proof}
 

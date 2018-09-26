@@ -141,7 +141,7 @@ The historical demand are denoted by $\bar{\demand}_t^i$.
 
 The initial inventory is set to $s_0^i=\frac{1}{3}(\bar{\demand}_1^i+\bar{\demand}_2^i+\bar{\demand}_3^i)$.
 
-The other parameters are provided in \cref{tab:instances-characteristics}.
+The other parameters are provided in \cref{tab:pdp:instances-characterisitcs}.
 %In particular, for each value of $v$, we have considered three possible values of the unit backorder cost $\backorder$, which have been determined following a procedure described in Section~\cref{sec:service}. At the moment, we do not discuss further these values and take them as part of the input, as required by the problem formulation.
 The parameter $C$ is the capacity of the line before normalization.
 (Recall that the problem and the model have been formulated in \cref{sec:PDP:stochastic:model} after normalization.)
@@ -154,7 +154,7 @@ We also add the loading indicator $\kappa_t$ at period $t$ defined as:
 \end{equation}
 It is the ratio of cumulative forecast demand up to period $t$ minus the initial inventory over cumulative capacity up to period $t$.
 If there were no flexibility constraints and if the holding costs were not an issue, then for a period $t$, $\kappa_t \le 100\%$ implies that it is possible to supply the whole demand.
-As shown in \cref{tab:instances-characteristics}, the lines $L_0$, $L_1$, $L_2$, $L_3$ and $L_4$ experience overcapacity: the loading indicator is smaller than $100\%$.
+As shown in \cref{tab:pdp:instances-characterisitcs}, the lines $L_0$, $L_1$, $L_2$, $L_3$ and $L_4$ experience overcapacity: the loading indicator is smaller than $100\%$.
 The lines $L_5$ and $L_6$ experience undercapacity: the loading indicator is larger than $100\%$ at some periods.
 
 \begin{table}[ht]
@@ -189,7 +189,7 @@ $L_6$ & $22$ & $8640$ & $13299$ & $8$ & $16$--$23$ & $118\%$ & $98\%$
 \\\hline
 \end{tabular*}
 \caption{Instance characteristics}
-\label{tab:instances-characteristics}
+\label{tab:pdp:instances-characterisitcs}
 \end{center}
 \end{table}
 
@@ -211,15 +211,17 @@ The time limit of the solver has been set to $120$ seconds.
 \label{sec:PDP:numerical-experiments:drawing-realization-of-demand}
 
 
-For the sake of simplicity, in this section, we use index $k\in\range{K}$ to designated a pair $(t,i)\in\range{\horizon}\times\REF$.
+For the sake of simplicity, in this section, we use index $k\in\range{K}$ to represent a pair $(t,i)\in\range{\horizon}\times\REF$.
 We choose to model the distribution of demand $\bracket{\tilde{\va\demand}_1,\ldots,\tilde{\va\demand}_K}$ using the \distrib distribution defined as follow.
 
 
-We define the \distrib distribution of order $K\ge2$, denoted $\cD\bracket{\gamma,\tilde{\demand}_1,\ldots,\tilde{\demand}_K}$, by the probability distribution on $\RR_+^K$ parametrized by $\gamma\in\bracket{0,1}$ and $K$ positive real numbers $\tilde{\demand}_1,\ldots,\tilde{\demand}_K$ such that $\bracket{\tilde{\va\demand}_1,\ldots,\tilde{\va\demand}_K}\sim\cD\bracket{\gamma,\tilde{\demand}_1,\ldots,\tilde{\demand}_K}$ if 
+Let $\gamma\in\bracket{0,1}$ and let $\tilde{\demand}_1,\ldots,\tilde{\demand}_K$ be $K$ positive real numbers. 
+We define the \distrib distribution of order $K$, denoted by $\cD\bracket{\gamma,\tilde{\demand}_1,\ldots,\tilde{\demand}_K}$, to be the probability distribution on $\RR_+^K$ such that $\bracket{\tilde{\va\demand}_1,\ldots,\tilde{\va\demand}_K}\sim\cD\bracket{\gamma,\tilde{\demand}_1,\ldots,\tilde{\demand}_K}$ if 
 \begin{equation}
   \frac{1}{\tilde{\demand}_0}\bracket{\tilde{\va\demand}_1,\ldots,\tilde{\va\demand}_K}\sim\Dir\bracket{\alpha_1,\ldots,\alpha_K}
 \end{equation}
 with $\tilde{\demand}_0=\sum_{k=1}^K\tilde{\demand}_k$, $\alpha_0=\frac{1}{\gamma^2}-1$ and $\alpha_k=\frac{\tilde{\demand}_k}{\tilde{\demand}_0}\alpha_0$, for each $k\in\range{K}$.
+\esgil{Mettre dans 7.3}
 (We remind that $\Dir\bracket{\alpha_1,\ldots,\alpha_K}$ designates the Dirichlet distribution and recall its definition and the main results in \cref{sec:reminders:gamma-and-dirichlet-distributions}.)
 
 
@@ -428,308 +430,6 @@ So \cref{proc:demand:initial-sampling} returns a vector with a \distrib distribu
 
 
 
-
-% \subsection{Probabilistic model properties}
-% \label{sec:PDP:numerical-experiments:probabilistic-model-properties}
-
-
-% The random demand has a distribution $\cD\bracket{\gamma,\bracket{\demand_t^i}_{t,i}}$ which satisfies the following properties.
-% \begin{enumerate}
-%   \item\label{enum:PDP:random-demand-property:expectation} Demand's expectation is equal to its historical value:
-%   \begin{equation}
-%     \espe\sqbracket{\va\demand_t^i} = \tilde{\demand}_t^i\qquad\forall t\in\range{T},\ \forall i\in\REF.
-%   \end{equation}
-%   \item\label{enum:PDP:random-demand-property:constant-volume} Demand's total volume does not depend on the realization:
-%   \begin{equation}
-%     \sum_{t=1}^{\horizon}\sum_{i\in\REF}\va\demand_t^i = \sum_{t=1}^{\horizon}\sum_{i\in\REF}\tilde{\demand}_t^i\qquad\mbox{almost surely.}
-%   \end{equation}
-%   \item\label{enum:PDP:random-demand-property:variance} Demand's variance is equal to
-%   \begin{equation}\label{eq:PDP:numerical-experiments:demand:variance}
-%     (\sigma_t^i)^2=\vari\sqbracket{\va\demand_t^i}=\gamma\,\tilde{\demand}_t^i\sum_{\bracket{j,\tau}\ne\bracket{i,t}}\tilde{\demand}_{\tau}^j\qquad\forall t\in\range{T},\ \forall i\in\REF.
-%   \end{equation}
-%   \item\label{enum:PDP:random-demand-property:easy-simulation} It is easy to simulate.
-%   \item\label{enum:PDP:random-demand-property:past-conditional} It keeps the same properties conditionally to the past realizations.
-% \end{enumerate}
-
-
-% As explained in \cref{chap:business-context}, total volume $\sum_{t,i}\va\demand_t^i$ of the forecast demand is assumed to be constant over every possible outcomes (\cref{enum:PDP:random-demand-property:constant-volume}).
-% Since we want that demand's expectation is equal to its historical value (\cref{enum:PDP:random-demand-property:expectation}), \cref{enum:PDP:random-demand-property:variance} is a consequence of the model.
-% The parameter $\gamma$ in expression~\eqref{eq:PDP:numerical-experiments:demand:variance} is defined from another parameter $v$ which we call \emph{volatility} and whose interpretation is easier.
-% Volatility gives the ratio between standard deviation and expectation of a random variable.
-% Then $\gamma$ is chosen as follow:
-% \begin{equation}
-%   \gamma
-%   =
-%   v\frac
-%   {\sum_{k=1}^K\sqrt{\frac{\tilde{\demand}_0}{\bar{\demand_k}}-1}}
-%   {\sum_{k=1}^K\bracket{\frac{\tilde{\demand}_0}{\bar{\demand_k}}-1}}
-% \end{equation}
-% This choice enables to the volatility of each demand to be close to $v$ and will be justified in \cref{}.
-% As we will see, \cref{enum:PDP:random-demand-property:easy-simulation} and \cref{enum:PDP:random-demand-property:past-conditional} are also consequences of the model.
-
-
-% \cref{proc:demand:initial-sampling} describes a generator of random variables having the properties given in \cref{sec:PDP:numerical-experiments:probabilistic-model-properties}.
-% \cref{enum:PDP:random-demand-property:easy-simulation} is straightforward since most of modern programming languages has a generator of gamma distributed variables.
-% \cref{thm:acuracy:proc:demand:initial-sampling} proves the accuracy of \crefrange{enum:PDP:random-demand-property:expectation}{enum:PDP:random-demand-property:variance} and \cref{prop:dirichlet:conditional} proves the accuracy of \cref{enum:PDP:random-demand-property:past-conditional}.
-
-
-% \begin{thm}\label{thm:acuracy:proc:demand:initial-sampling}
-% For any $\gamma\in\bracket{0,1}$ and any $\tilde{\demand}_1,\ldots,\tilde{\demand}_K$ positive, \cref{proc:demand:initial-sampling} draws a realization $\bracket{\demand_1,\ldots,\demand_K}$ from the distribution of the random vector $\bracket{\va\demand_1,\ldots,\va\demand_K}$ with
-% \begin{subequations}
-%   \begin{align+}
-%     \sum_{k=1}^K \va\demand_k &= \sum_{k=1}^K \tilde{\demand}_k && \mbox{almost surely},
-%     \\
-%     \espe\sqbracket{\va\demand_k} &= \tilde{\demand}_k && \forall k\in\range{K},
-%     \\
-%     \vari\sqbracket{\va\demand_k} &= \gamma^2\bar{\demand_k}\bracket{\tilde{\demand}_0-\tilde{\demand}_k} && \forall k\in\range{K}.
-%     \label{eq:dirichlet:procedure:variance}
-%   \end{align+}
-% \end{subequations}
-% \end{thm}
-
-
-% \begin{proof}
-% We set $\tilde{\demand}_0$ and $\alpha_0,\ldots,\alpha_K$ as in step 1.
-% We have
-% \begin{equation}
-%   \sum_{k=1}^K \alpha_k = \alpha_0 \sum_{k=1}^K\frac{\bar{\demand_k}}{\tilde{\demand}_0} = \alpha_0.
-% \end{equation}
-% According to \cref{proc:dirichlet:generation} given in \cref{sec:reminders:gamma-and-dirichlet-distributions} for generating random realization of Dirichlet distributions, we know that step 2 and 3 produced a realization $\bracket{x_1,\ldots,x_K}$ of $\Dir\bracket{\alpha}$.
-% Setting $\bracket{\demand_1,\ldots,\demand_K}$ as in step 4, we have a realization of the random vector $\bracket{\va\demand_1,\ldots,\va\demand_K}$ with
-% \begin{align}
-%   \sum_{k=1}^K \va\demand_k
-%   &= \tilde{\demand}_0 \sum_{k=1}^K \va x_k
-%   = \tilde{\demand}_0
-%   = \sum_{k=1}^K \tilde{\demand}_k
-%   && \mbox{almost everywhere},
-%   \\
-%   \espe\sqbracket{\va\demand_k}
-%   &= \tilde{\demand}_0\espe\sqbracket{\va x_k}
-%   = \tilde{\demand}_0\ \frac{\alpha_k}{\alpha_0}
-%   = \tilde{\demand}_k
-%   && \forall k\in\range{K}.
-% \end{align}
-% Finally, computing the variance of each variable $\va\demand_k$ gives
-% \begin{subequations}
-% \begin{align}
-%   \vari\sqbracket{\va\demand_k}
-%   &= \tilde{\demand}_0^2\vari\sqbracket{\va x_k}
-%   = \tilde{\demand}_0^2
-%   \frac{\alpha_k\bracket{\alpha_0-\alpha_k}}{\alpha_0^2\bracket{\alpha_0+1}}
-%   && \mbox{(variance of Dirichlet distribution)}
-%   \\
-%   &= \tilde{\demand}_k^2 \bracket{\frac{\alpha_0}{\alpha_k}-1}\frac{1}{\alpha_0+1}
-%   && \mbox{(definition of $\alpha_k$)}
-%   \\
-%   &= \tilde{\demand}_k^2 \bracket{\frac{\bar{\demand}_0}{\tilde{\demand}_k}-1}\gamma^2
-%   && \mbox{(definition of $\gamma$)}
-%   \\
-%   &= \gamma^2 \tilde{\demand}_k \bracket{\bar{\demand}_0-\tilde{\demand}_k}
-% \end{align}
-% \end{subequations}
-% which conclude the proof.
-% \end{proof}
-
-
-
-
-% Before presenting the probabilistic model, we introduce the \emph{coefficient of variation} also known as the \emph{relative standard deviation} \cite{Everitt1998}.
-% \begin{defn}
-% The coefficient of variation $\CV\sqbracket{\va X}$ of a random variable $\va X$ is defined as the ratio of the standard deviation $\sigma\bracket{\va X}$ to the mean $\espe\sqbracket{\va X}$:
-% \begin{equation}
-%   \CV\sqbracket{\va X} = \frac{\sigma\bracket{\va X}}{\espe\sqbracket{\va X}}.
-% \end{equation}
-% \end{defn}
-
-
-% As explained in \cref{chap:business-context}, the global volume $\sum_{t,i}\va\demand_t^i$ of the forecast demand is assumed to be constant over every possible outcomes.
-% Except the previous assumption, we did not obtain a precise description of the real probabilistic model used by the client.
-% We choose a model with few parameters even if it is less realistic.
-% This choice enables to easily see the impact of each parameter.
-% Moreover, methods developed in this thesis being independent from the choice of probabilistic model, they can be apply with more complex model.
-% We obtain the demand via Dirichlet distributions whose parameters are computed from two values.
-% (See \cref{sec:reminders:gamma-and-dirichlet-distributions} for reminders about Dirichlet distributions.)
-% \begin{itemize}
-%   \item A ``volatility'' $v$ chosen in $\crbracket{20\%, 50\%, 80\%}$.
-%   It represents the accuracy of the forecast demand.
-%   The bigger is $v$, the less precise is the forecast demand.
-
-%   For each period $t$ and each item $i$, the coefficient of variation of demand $\va\demand_t^i$ must satisfy as well as possible $\CV\sqbracket{\va\demand_t^i}=v$.
-%   If, due to other constraints, it cannot be equal to the volatility $v$, it must be greater for the items and periods with low expected demand.
-%   Indeed, in practice, we have more accuracy in proportion on best-sellers than on short series.
-%   \item A number of weeks $\tau$ chosen in $\crbracket{4,7,13}$.
-%   The total volume of the forecast demand is constant over the week 1 to $\tau$, then during the week $\tau+1$ to $2\tau$, etc.
-%   The chosen values represent a month, half a quarter and a complete quarter.
-% \end{itemize}
-%Details about the distributions and how its parameters are computed are given in Section~\cref{sec:PDP:numerical-experiments:dirichlet}.
-
-
-
-% \subsection{Generating randomness}
-% \label{sec:PDP:numerical-experiments:dirichlet}
-
-
-% % As explained in Chapter~\cref{chap:business-context}, the global volume of the forecast demand is constant over every possible outcomes.
-% % Thus, we turn to Dirichlet distributions to generate the possible outcomes of demand.
-% % Reminders about Gamma and Dirichlet distributions are given in \cref{sec:reminders:gamma-and-dirichlet-distributions}.
-% We first expose the procedure to generate samples of demand at the beginning of the simulation.
-% Then we adapt the procedure to generate sample knowing the past realizations of the demand.
-% finally, we present how to fit the parameters of the procedure to the probabilistic model.
-% % Then, we remind the definition and the classical properties of Dirichlet distributions, explains how the parameters are computed for the procedure and how these properties are used during the simulation.
-
-% For the sake of simplicity, only in this section, we use index $k\in\range{K}$ to designated a pair $(t,i)$.
-
-
-% \medskip
-
-
-%\subsubsection{Procedure to generate sample of demand}
-
-
-%\textbf{Hypothesis.} We assume that every demand has a positive mean and that there are at least two demands is the set.
-
-% For any $\gamma\in\bracket{0,1}$ and any $\tilde{\demand}_1,\ldots,\tilde{\demand}_K$ positive, we define the following procedure.
-% \begin{proc}\label{proc:demand:initial-sampling}
-% \emph{Initial Sampling}
-
-% \textbf{Step 1.} \emph{Initialize the procedure.}
-% Set
-% %\begin{subequations}
-% %  \begin{align+}
-% %    \tilde{\demand}_0 &= \sum_{k=1}^K\tilde{\demand}_k
-% %    \\
-% %    \gamma &= \min \bracket{1,\
-% %    \frac
-% %    {\sum_{k=1}^K\sqrt{\frac{\tilde{\demand}_0-\tilde{\demand}_k}{\tilde{\demand}_k}}}{\sum_{k=1}^K\frac{\tilde{\demand}_0-\tilde{\demand}_k}{\tilde{\demand}_k}}\ v}
-% %    \\
-% %    \alpha_0 &= \frac{1}{\gamma^2}-1
-% %  \end{align+}
-% %\end{subequations}
-% \begin{equation}
-%     \tilde{\demand}_0 = \sum_{k=1}^K\tilde{\demand}_k
-%     \ \mbox{and}\ 
-%     \alpha_0 = \frac{1}{\gamma^2}-1.
-% \end{equation}
-% For $k=1,\ldots,K$, set $\alpha_k=\frac{\tilde{\demand}_k}{\tilde{\demand}_0}\alpha_0$.
-
-% \textbf{Step 2.} \emph{Generate Gamma realizations.}
-% For $k=1,\ldots,K$, draw a number $y_k$ from gamma distribution $\Gamma\bracket{\alpha_k,1}$.
-
-% \textbf{Step 3.} \emph{Normalize the realization.}
-% For $k=1,\ldots,K$, set $x_k=\frac{y_k}{\sum_{\ell=1}^K y_{\ell}}$.
-
-% \textbf{Step 4.} \emph{Return a sample of demand.}
-% For $k=1,\ldots,K$, set $d_k = x_k \tilde{\demand}_0$.
-% \end{proc}
-
-% \begin{thm}
-% For any $\gamma\in\bracket{0,1}$ and any $\tilde{\demand}_1,\ldots,\tilde{\demand}_K$ positive, \cref{proc:demand:initial-sampling} produces a realization $\bracket{\demand_1,\ldots,\demand_K}$ of the random vector $\bracket{\va\demand_1,\ldots,\va\demand_K}$ with
-% \begin{subequations}
-%   \begin{align+}
-%     \sum_{k=1}^K \va\demand_k &= \sum_{k=1}^K \tilde{\demand}_k && \mbox{almost surely},
-%     \\
-%     \espe\sqbracket{\va\demand_k} &= \tilde{\demand}_k && \forall k\in\range{K},
-%     \\
-%     \vari\sqbracket{\va\demand_k} &= \gamma^2\bar{\demand_k}\bracket{\tilde{\demand}_0-\tilde{\demand}_k} && \forall k\in\range{K}.
-%     \label{eq:dirichlet:procedure:variance}
-%   \end{align+}
-% \end{subequations}
-% \end{thm}
-
-
-% \begin{proof}
-% We set $\tilde{\demand}_0$ and $\alpha_0,\ldots,\alpha_K$ as in step 1.
-% We have
-% \begin{equation}
-%   \sum_{k=1}^K \alpha_k = \alpha_0 \sum_{k=1}^K\frac{\bar{\demand_k}}{\tilde{\demand}_0} = \alpha_0.
-% \end{equation}
-% According to \cref{proc:dirichlet:generation} given in \cref{sec:reminders:gamma-and-dirichlet-distributions} for generating random realization of Dirichlet distributions, we know that step 2 and 3 produced a realization $\bracket{x_1,\ldots,x_K}$ of $\Dir\bracket{\alpha}$.
-% Setting $\bracket{\demand_1,\ldots,\demand_K}$ as in step 4, we have a realization of the random vector $\bracket{\va\demand_1,\ldots,\va\demand_K}$ with
-% \begin{align}
-%   \sum_{k=1}^K \va\demand_k
-%   &= \tilde{\demand}_0 \sum_{k=1}^K \va x_k
-%   = \tilde{\demand}_0
-%   = \sum_{k=1}^K \tilde{\demand}_k
-%   && \mbox{almost everywhere},
-%   \\
-%   \espe\sqbracket{\va\demand_k}
-%   &= \tilde{\demand}_0\espe\sqbracket{\va x_k}
-%   = \tilde{\demand}_0\ \frac{\alpha_k}{\alpha_0}
-%   = \tilde{\demand}_k
-%   && \forall k\in\range{K}.
-% \end{align}
-% Finally, computing the variance of each variable $\va\demand_k$ gives
-% \begin{subequations}
-% \begin{align}
-%   \vari\sqbracket{\va\demand_k}
-%   &= \tilde{\demand}_0^2\vari\sqbracket{\va x_k}
-%   = \tilde{\demand}_0^2
-%   \frac{\alpha_k\bracket{\alpha_0-\alpha_k}}{\alpha_0^2\bracket{\alpha_0+1}}
-%   && \mbox{(variance of Dirichlet distribution)}
-%   \\
-%   &= \tilde{\demand}_k^2 \bracket{\frac{\alpha_0}{\alpha_k}-1}\frac{1}{\alpha_0+1}
-%   && \mbox{(definition of $\alpha_k$)}
-%   \\
-%   &= \tilde{\demand}_k^2 \bracket{\frac{\tilde{\demand}_0_0}{\tilde{\demand}_k}-1}\gamma^2
-%   && \mbox{(definition of $\gamma$)}
-%   \\
-%   &= \gamma^2 \tilde{\demand}_k \bracket{\tilde{\demand}_0_0-\tilde{\demand}_k}
-% \end{align}
-% \end{subequations}
-% which conclude the proof.
-% \end{proof}
-
-
-
-% During the simulation, past demands are known.
-% In order to generate a new sample of scenarios using this information, we relies on \cref{prop:dirichlet:conditional}.
-% For a fixed $m\in\range{K}$, if demands $\va\demand_1,\ldots,\va\demand_m$ are already know and are equal to $\demand_1,\ldots,\demand_m$, \cref{proc:demand:sampling-from-m} describes a generator of random variables having the properties given in \cref{sec:PDP:numerical-experiments:probabilistic-model-properties}.
-
-
-% \begin{proc}\label{proc:demand:sampling-from-m}
-% \emph{Generating sample of demand according to distribution}
-
-% \textbf{Step 1.} \emph{Initialize the procedure.}
-
-% Set $\tilde{\demand}_0 = \sum_{k=1}^K\tilde{\demand}_k$ and $\alpha_0 = \frac{1}{\gamma^2}-1$ and for $k=1,\ldots,K$, set $\alpha_k=\frac{\tilde{\demand}_k}{\tilde{\demand}_0}\alpha_0$.
-
-% \textbf{Step 2.} \emph{Generate Gamma realizations.}
-
-% For $k=1,\ldots,K$, draw a number $y_k$ from gamma distribution $\Gamma\bracket{\alpha_k,1}$.
-
-% \textbf{Step 3.} \emph{Normalize the realization.}
-
-% For $k=1,\ldots,K$, set $x_k=\frac{y_k}{\sum_{\ell=1}^K y_{\ell}}$.
-
-% \textbf{Step 4.} \emph{Return a sample of demand.}
-
-% For $k=1,\ldots,K$, set $d_k = x_k \tilde{\demand}_0$.
-% \end{proc}
-
-
-
-% \begin{prop}\label{prop:dirichlet:conditional}
-%   Let $\va x=\bracket{\va x_1,\ldots,\va x_K}\sim \Dir\bracket{\alpha_1,\ldots,\alpha_K}$ and $m\in\range[1]{k-1}$.
-%   We denote $\va x_{(1)}=\bracket{\va x_1,\ldots,\va x_m}$ and $\va x_{(2)}=\bracket{\va x_{m+1},\ldots,\va x_K}$.
-%   So $\va x_{(2)}|\va x_{(1)}=x_{(1)}$ has a scaled Dirichlet distribution, or equivalently,
-%   $$
-%   \frac{1}{1-1^T x_{(1)}} \bracket{\va x_{(2)}|\va x_{(1)}=x_{(1)}}
-%   \sim
-%   \Dir\bracket{\alpha_{m+1},\ldots,\alpha_K}
-%   $$
-%   where $1^T$ is the vector with length $m$ and all entries equal to 1.
-% \end{prop}
-
-% Indeed, knowing the realization of $\bracket{\va\demand_1,\ldots,\va\demand_m}$ is equivalent to know the realization of $\bracket{\va x_1,\ldots,\va x_m}$ and then, we can use the same procedure to generate a new sample of demand.
-
-% \begin{proof}[Proof of \cref{prop:dirichlet:conditional}]
-% \cite{Kotz2000}
-% \end{proof}
-
-% \esgil{Write proof of \cref{prop:dirichlet:conditional} or find it in a book}
-
-
-
 \subsection{Fitting the parameters to the probabilistic model}
 \label{sec:PDP:numerical-experiments:instances:fitting-parameters}
 
@@ -756,43 +456,6 @@ If $\norm{\ .\ }_1$ or $\norm{\ .\ }_{\infty}$ had been chosen, finding the best
 
 
 
-% The objective is to generate samples of demand $\bracket{\va\demand_1,\ldots,\va\demand_K}$ such that:
-% \begin{subequations}
-%   \begin{align}
-%     \sum_{k=1}^K \va\demand_k &= \sum_{k=1}^K \tilde{\demand}_k && \mbox{almost everywhere},
-%     \label{eq:demand:generation:constant-sum}
-%     \\
-%     \espe\sqbracket{\va\demand_k} &= \tilde{\demand}_k && \forall k\in\range{K},
-%     \label{eq:demand:generation:mean}
-%     \\
-%     \CV\sqbracket{\va\demand_t^i} &= v && \forall k\in\range{K},
-%     \label{eq:demand:generation:variance}
-%   \end{align}
-% \end{subequations}
-% where $v\in\bracket{0,1}$ is the volatility defined in Section~\cref{sec:PDP:numerical-experiments:probabilistic-model}.
-%We first expose the procedure, then justify it and explain why the three properties can be exactly reached.
-
-
-% However, the proposed procedure does not generate random variables satisfying simultaneously constraints \eqref{eq:demand:generation:constant-sum}, \eqref{eq:demand:generation:mean} and \eqref{eq:demand:generation:variance}.
-% Thus, as explained in the \cref{sec:PDP:numerical-experiments:probabilistic-model}, constraints \eqref{eq:demand:generation:constant-sum} and \eqref{eq:demand:generation:mean} are first satisfied and constraint \eqref{eq:demand:generation:variance} is approximate as well as possible.
-% \cref{prop:demand:generation:gamma-choice} gives a possible choice of parameter $\gamma$ for the \cref{proc:demand:initial-sampling}.
-
-% For any $\gamma\in\bracket{0,1}$ and for each index $k$, we denote by $v_k\bracket{\gamma}=\CV\sqbracket{\va\demand_k}$ the coefficient of variation of the random variable $\va\demand_k$ whose realization is produced by \cref{proc:demand:initial-sampling}.
-% % \begin{equation}
-% %   v_k
-% %   = \frac{\sqrt{\vari\sqbracket{\va\demand_k}}}{\tilde{\demand}_k}
-% %   = \gamma\sqrt{\frac{\tilde{\demand}_0}{\bar{\demand_k}}-1}
-% % \end{equation}
-% % which differs from the objective of a single volatility for every index.
-% Thus, we look for $\gamma\in\bracket{0,1}$ which minimizes
-% \begin{equation}
-%   \norm{\bracket{v_1(\gamma')-v,\ldots,v_K(\gamma')-v}}_2.
-% \end{equation}
-% Note that the norm $\norm{\ .\ }_2$ has been chosen.
-% One advantage is the close formula for the value of $\gamma$ (see \cref{prop:demand:generation:gamma-choice}).
-% If $\norm{\ .\ }_1$ or $\norm{\ .\ }_{\infty}$ had been chosen, finding the best $\gamma$ would be done with classical linearization methods and the use of a linear solver.
-
-
 \begin{prop}\label{prop:demand:generation:gamma-choice}
 For any $v\in\bracket{0,1}$ and any $\tilde{\demand}_1,\ldots,\tilde{\demand}_K$ positive,
 \begin{equation}
@@ -807,47 +470,6 @@ $\norm{\bracket{\frac{\sigma_1}{e_1},\ldots,\frac{\sigma_K}{e_K}}-v.1_{(K)}}_2$.
 \end{prop}
 
 
-
-%Before justifying the procedure just note that the objective formulation of the variance given in Section~\cref{sec:PDP:numerical-experiments:historical-data} does not match exactly to the formulation~\eqref{eq:dirichlet:procedure:variance} find at the end of the procedure. However, we succeed in approaching the other objective since the bigger is the demand, the lower is the volatility $v_k=\frac{\sqrt{\vari\sqbracket{\va\demand_k}}}{\tilde{\demand}_k} = \gamma\sqrt{\frac{\tilde{\demand}_0}{\bar{\demand_k}}-1}$.
-
-
-% We first assume that $\gamma$ is an external parameter of the algorithm and justify it with this hypothesis. Setting $\alpha_0,\ldots,\alpha_K$ as in step 1, we have:
-% \begin{equation}
-%   \sum_{k=1}^K \alpha_k = \alpha_0 \sum_{k=1}^K\frac{\bar{\demand_k}}{\tilde{\demand}_0} = \alpha_0
-% \end{equation}
-% According to the procedure previously described for generating random realization of Dirichlet distribution, we know that step 2 and 3 produced a realization $\bracket{x_1,\ldots,x_K}$ of $\Dir\bracket{\alpha}$. Setting $\bracket{\demand_1,\ldots,\demand_K}$ as in step 4, we have a realization of the random vector $\bracket{\va\demand_1,\ldots,\va\demand_K}$ with:
-% \begin{align}
-%   \sum_{k=1}^K \va\demand_k
-%   &= \tilde{\demand}_0 \sum_{k=1}^K \va x_k
-%   = \tilde{\demand}_0
-%   = \sum_{k=1}^K \tilde{\demand}_k
-%   && \mbox{almost everywhere},
-%   \\
-%   \espe\sqbracket{\va\demand_k}
-%   &= \tilde{\demand}_0\espe\sqbracket{\va x_k}
-%   = \tilde{\demand}_0\ \frac{\alpha_k}{\alpha_0}
-%   = \tilde{\demand}_k
-%   && \forall k\in\range{K}.
-% \end{align}
-% Finally, computing the variance of each variable $\va\demand_k$ gives:
-
-% \begin{subequations}
-% \begin{align}
-%   \vari\sqbracket{\va\demand_k}
-%   &= \tilde{\demand}_0^2\vari\sqbracket{\va x_k}
-%   = \tilde{\demand}_0^2
-%   \frac{\alpha_k\bracket{\alpha_0-\alpha_k}}{\alpha_0^2\bracket{\alpha_0+1}}
-%   && \mbox{(variance of Dirichlet distribution)}
-%   \\
-%   &= \tilde{\demand}_k^2 \bracket{\frac{\alpha_0}{\alpha_k}-1}\frac{1}{\alpha_0+1}
-%   && \mbox{(definition of $\alpha_k$)}
-%   \\
-%   &= \tilde{\demand}_k^2 \bracket{\frac{\tilde{\demand}_0}{\tilde{\demand}_k}-1}\gamma^2
-%   && \mbox{(definition of $\gamma$)}
-%   \\
-%   &= \gamma^2 \tilde{\demand}_k \bracket{\bar{\demand}_0-\tilde{\demand}_k}
-% \end{align}
-% \end{subequations}
 
 
 \begin{proof}
@@ -958,9 +580,6 @@ Since $g\bracket{\frac{1}{K},\ldots,\frac{1}{K}}=\frac{1}{\sqrt{K-1}}$, the resu
 \label{sec:PDP:numerical-experiments:k-means}
 
 
-\esgil{Eventually use $k$-medoids algorithm which enables to choose the distance used.}
-
-
 As said in \cref{sec:PDP:numerical-experiments:historical-data}, we use a small number of scenarios to represent every possible outcomes.
 Thus, using only \cref{proc:demand:initial-sampling} gives results which may be very dependent of the generating scenarios.
 In this section, we propose to use a $K$-means algorithm on a bigger set of scenarios to get a small set of representative scenarios.
@@ -982,10 +601,12 @@ Some variations of $K$-means algorithms exist to deal with these points (see \ci
 
 \medskip
 
-In our case, we made a basic utilization of $K$-mean algorithm.
-We first use \cref{proc:demand:initial-sampling} to generate a sample of \tbc\ scenarios which can be seen as real vectors of $\RR^{\horizon\times\REF}$.
-Then, since the number of scenarios that can be used in (2SA-$m$) is bounded due to the computer performance, we initialize $K$ with $m=20$.
-Thus, our set of representative scenarios is composed of the $K$ prototypes of each cluster and the probability of each one is equal to the number of scenarios in its cluster divided by \tbc.
+
+For lack of time, we do not yet implemented $K$-mean algorithm.
+However, our utilization would be basic and would have the following structure.
+We would first use \cref{proc:demand:initial-sampling} to generate a sample of $M$ scenarios which can be seen as real vectors of $\RR^{\horizon\times\REF}$.
+Then, since the number of scenarios that can be used in (2SA-$m$) is bounded due to the computer performance, we would initialize $K$ with $m=20$.
+Thus, our set of representative scenarios would be composed of the $K$ prototypes of each cluster and the probability of each one is equal to the number of scenarios in its cluster divided by $M$.
 
 
 
@@ -999,6 +620,14 @@ Thus, our set of representative scenarios is composed of the $K$ prototypes of e
   \item Results with fill rate service level constraint
 \end{itemize}
 
+
+We run tests on lines described in \cref{tab:pdp:instances-characterisitcs}.
+Complete tables of results are given in \cref{chap:appendix:pdp:numerical-experiments} and the results for line $L_1$ is given in \cref{tab:pdp:results:line-1}.
+(We choose line $L_1$ because it not a line that suffer undercapacity like $L_5$ and $L_6$ neither a line that is clearly overcapacitated like $L_4$.)
+
+
+
+\input{main/PDP/tables/line_1.tex}
 
 
 

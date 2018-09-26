@@ -168,40 +168,48 @@ Thus, we have $\lot_i=\demand_i\cover_i$.
 Continuous review inventory models have been studied for more than a century.
 They aim at deciding when ordering (or producing) and which quantity must be ordered (or produced) making a trade-off between inventory holding costs and ordering (or producing) costs.
 
+\esgil{ajouter que c'est temps continu et un des premier modèles}
+
+\esgil{Find article from Gayon}
+
 
 The first model was developed by \cite{Harris1913} and gives the famous \emph{Economic Order Quantity (EOQ)} (also known as \emph{Wilson Formula}) which consists in finding a trade-off between average holding cost (proportional to the inventory) and fixed reordering cost.
 It is a model for a single item and demand is assumed stationary.
-\vlil{Multiple extension of this model has been studied. A first consits in considering time varying demand, like in \cite{Resh1976,Donaldson1977,Barbosa1978} where they show polynomial time algorithm
-for demand of the form $\demand(t)=\alpha t+\gamma$ or $\demand(t)=\alpha t^{\beta}$. }
+\vlil{Multiple extensions of this model have been studied. A first consists in considering time varying demand, like in \cite{Resh1976,Donaldson1977,Barbosa1978} where they show polynomial time algorithm for demand of the form $\demand(t)=\alpha t+\gamma$ or $\demand(t)=\alpha t^{\beta}$. }
 A first simple variation consists in using time varying demand.
 For example, polynomial-time algorithms exist for a demand with the form $\demand(t)=\alpha t+\gamma$ \cite{Resh1976,Donaldson1977} or with the form $\demand(t)=\alpha t^{\beta}$ \cite{Barbosa1978}.
-However, in general, finding the optimal solution is difficult like in \cite{Padmanabhan1990} where demand is a function of the inventory and \vl{they propose a numerical method to find the optimal solution} where a numerical method must be used to find the optimal solution.
-Another \vl{extension consider} variation relies on a time varying holding cost due to inflation (see \cite{Vrat1990}) which also need numerical method to find the optimal solution.
+However, in general, finding the optimal solution is challenging \esgil{voir dans l'article si NP-hard}. See for example \cite{Padmanabhan1990} where the demand is assumed to be a function of the inventory and they proposed a method from numerical analysis to find the optimal solution.
+\vl{they propose a numerical method to find the optimal solution} where a numerical method must be used to find the optimal solution.
+Another extension considers a time varying holding cost due to inflation (see \cite{Vrat1990}) for which they also propose a method from numerical analysis to find the optimal solution.
 
 
-Although they are deterministic, many models take into account the opportunity of lost sales like \cite{Salameh2003} which introduce a cost for the shortage or \cite{Park1982} where part of unsatisfied demand is lost whereas the other is backordered.
+Although they are deterministic, many models allow lost sales like \cite{Salameh2003} which introduces a shortage cost or \cite{Park1982} where a prefixed percentage of unsatisfied demand is lost while the remaining is backordered.
 
 
 \medskip
 
 
-Previous models deal with single item problems.
+The models we just presented all deal with a single item problems.
 In many real case, an assembly line can produce more than one item.
-A first multi-item model was proposed by \cite{Hadley1963} which also note that perhaps the most important real world constraints are budget restrictions on the amount that can be invested in inventory.
+A first multi-item model was proposed by \cite{Hadley1963} which also note that perhaps the most important real world constraint is budget restriction on the amount that can be invested in inventory.
 Since inventory is often controlled by a trade-off with other costs, a constraint is added in \cite{Ohno2001} where they aim at minimizing holding costs, backorder costs and ordering costs being subject to capacity constraints on the inventory.
+\esgil{ajouter des commentaires sur la méthode et le résultat. \cite{Ohno2001} étudie un modèle où il y a des contraintes sur l'inventaire pour éviter qu'il n'explose...}
 
 
-As explained in \cite{Eynan2007}, when many items are produced on a single line, using periodic review (\ie cover-sizes) instead of continuous review (\ie \vl{la virgule est étrange} lot-sizes) may make coordination between item productions easier.
-Thus, \cite{Madigan1968} and \cite{Chiu2014} propose models with kind of scheduling constraints between periodic productions of items.
-Finally, in order to take into account the opportunity of one ordering cost for many items, \cite{Bomberger1966} and \cite{Goyal1974} impose that every replenishment cycles (cover-sizes) be a multiple of a unit cover-size (which can be a variable in the optimization process like in \cite{Silver1976}).
+\esgil{Clarifier l'origine de la distinction continuous revious vs. periodic review.}
+As explained in \cite{Eynan2007}, when many items are produced on a single line, using periodic review (\ie cover-sizes) instead of continuous review (\ie \vl{la virgule est étrange} lot-sizes) may ease the coordination between the production of various items.
+Similar approach was also studied by \cite{Madigan1968} and more recently \cite{Chiu2014} propose models with a kind of scheduling constraints between periodic productions of items.
+Finally, \cite{Bomberger1966} and \cite{Goyal1974} impose that every replenishment cycles (cover-sizes) be a multiple of a unit cover-size (which can be a variable in the optimization process like in \cite{Silver1976}).
+\esgil{In real applications, it corresponds to mutaliser la commande}
 
 
 \medskip
 
 
-These model are massively developed for ordering.
+These models are mostly developed for ordering.
 Extensions for production is often simple like the \emph{Economic Production Quantity (EPQ)} (see \cite{Taft1918}).
-However it may lead to new issue like the holding cost of raw materials as in \cite{Lin2013}
+However it may lead to new issue like the holding cost of raw materials as in \cite{Lin2013}.
+\esgil{Mettre en intro qu'on regarde plutôt la commande.}
 
 
 % \begin{itemize}
@@ -699,45 +707,58 @@ Conversely, using lot-size variables as first-step variables would lead to use c
 
 \subsection{Bibliography}
 
+\esgil{Préciser que c'est plutôt de l'ordering}
 
-One of the first stochastic ordering problem is the news-vendor problem \cite{Edgeworth88, Arrow1951}.
+One of the first stochastic ordering problems is the news-vendor problem \cite{Edgeworth88, Arrow1951}.
 The goal is to order a quantity $q$ to satisfy an unknown future demand $d$.
-The trade-off is made between expected remaining inventory and expected shortage.
+The challenge is to find a trade-off between expected remaining inventory and expected shortage.
 
 
-Many deterministic continuous review inventory models have been extended in stochastic cases.
-\cite{Candace1995} and more recently \cite{Ziukov2015} propose a complete review of the extensions of EOP, EPQ or Joint Economic Lot Sizing models.
-A first remark is that literature often includes backorder costs.
+Many deterministic continuous review inventory models have been extended to a stochastic setting.
+\cite{Candace1995} and more recently \cite{Ziukov2015} propose a complete review of the extensions of EOQ, EPQ or Joint Economic Lot Sizing models.
+\esgil{Vérifier joint et référence à la section précédente}
+By essence, stochastic problem in literature often includes backorder costs.
 Second, we see that randomness was mostly handled by fuzzy set theory or by probability.
 
 
 \medskip
 
+\esgil{Déorouler naturellement le paragraphe puis dire plus tard que par ailleurs, il existe une litterature fuzzy}
 
-A fuzzy set is a set whose elements have degrees of membership.
-Fuzzy set theory enables to model the partial information and can be understood as a ``possibility''.
-Each parameter like ordered quantity, ordered cost, holding cost or annual demand can be represented with a fuzzy set instead of a unique value.
-\cite{Park1987} was the first to propose fuzzy production inventory models and gives an interpretation of economic order quantity in fuzzy framework.
-Among other models, we can cite \cite{Hsieh2002} which introduced two fuzzy production inventory models with fuzzy parameters: the first with crisp production quantity (\ie a production in a set in the classic sense) and the second with production quantity in a fuzzy set.
-Contrary to the vast majority of the literature, \cite{Lee1999} and \cite{Wang2007} propose a model for the economic order quantity in a fuzzy framework but without using backorder.
-
-
+\esgil{Changer placer l'aléa en modeliser l'alea}
 
 The other models use probability like \cite{Friedman1984} which places uncertainty on lead times or \cite{Eynan2007} which places uncertainty on demand, both aiming at minimizing holding, shortage and ordering cost.
-Another probabilistic model can be found in \cite{Sana2011} which proposes an extension of the news-vendor problem adding an uncertainty on sales price which can be correlated to the demand.
+\cite{Sana2011} proposes extensions of the news-vendor problem adding an uncertainty on sales price.
+Some of these extensions allow sales price to be correlated demand.
 
 
-Finally, \cite{Gallego1998} proposed adaptation of ($r$,$q$) policies with EOQ taking into account random demand during lead-time.
-Its results do not pendent\vl{?} from distribution and are not too far from the real optimum if distribution was considered during the optimization process.
+Finally, \cite{Gallego1998} shows how to adapt ($r$,$q$) policies to \tbc\ taking into account random demand during lead-time.
+\esgil{modifier voir si partially known.}
+Its results do not depend from distribution and are not too far from the optimum if distribution was known during the optimization process.
 
 
 \medskip
 
 
-As in deterministic cases, the first models consider only a single item.
-When several items are involved, \cite{Daeschner1975} considers a multi-item inventory systems with stochastic demands with interaction constraints as budget constraints.
+As in deterministic cases, the models presented above consider only a single item.
+\cite{Daeschner1975} considers a multi-item inventory system with stochastic demands and with a coupling budget constraint.
+Moreover, the ability production depend on viability on 
 Moreover, its control policies have stochastic resource requirement and are examined using a queuing model.
 A quite unusual model comes from \cite{Panda2008} which mix fuzzy set and probability depending on the interpretation of the uncertainty on the parameters.
+
+
+
+\medskip
+
+
+Let us ... there exist another trend to study stochastic continuous namely fuzzy set theory...
+\tbc
+A fuzzy set is a set whose elements have degrees of membership.
+The fuzzy set theory enables to model the partial information and can be understood as a ``possibility''.
+Each parameter like ordered quantity, ordered cost, holding cost or annual demand can be represented with a fuzzy set instead of a unique value.
+\cite{Park1987} was the first to propose fuzzy production inventory models and gives an interpretation of economic order quantity in fuzzy framework.
+Among other models, we can cite \cite{Hsieh2002} which introduced two fuzzy production inventory models with fuzzy parameters: the first with crisp production quantity (\ie a production in a set in the classical sense) and the second with production quantity in a fuzzy set.
+Contrary to the majority of the literature, \cite{Lee1999} and \cite{Wang2007} propose a model for the economic order quantity in a fuzzy framework but without backorder.
 
 
 
