@@ -41,7 +41,7 @@ A scheme of a typical run of the simulation is given in \cref{fig:simulator}.
 \end{figure}
 
 
-C++11 has been chosen for the implementations and Gurobi 6.5.1~\cite{gurobi} was used to solve the model on a PC with 8 processor Intel\textregistered\ Xeon\texttrademark\ E5-2667 @ 3.30GHz and 48Go RAM.
+C++11 has been chosen for the implementations and Gurobi 6.5.1~\citet{gurobi} was used to solve the model on a PC with 8 processor Intel\textregistered\ Xeon\texttrademark\ E5-2667 @ 3.30GHz and 48Go RAM.
 
 
 
@@ -98,14 +98,14 @@ An example is given on \cref{fig:cover-size-heuristic}.
 
 The values $\ell_i^*$ and $\tau_i^*$ are determined using results of \cref{chap:lot-size:single-line}.
 $(\tau_i^*)_{i\in\REF}$ is actually chosen to be the optimal solution to Program~\eqref{eq:cont-rev-det}, which somehow considers the problem at a ``macroscopic'' level
-%(Similar convex programs in the same context have been considered in the literature; see~\cite{Ziegler1982} for example.)
+%(Similar convex programs in the same context have been considered in the literature; see~\citet{Ziegler1982} for example.)
 where the demand $\demand^i$ is chosen equal to $\espe\sqbracket{\sum_{t=1}^{\horizon}\va d_t^i}$.
 
 For each item $i$, the parameter $\ell_i^*$ of the lot-size heuristic is then set to $\demand^i\tau_i^*$.
 
 
 There is no universal formula for safety stocks $\bracket{\safety^i}_i$.
-Thus we turn to the formula used in practice by most of Argon Consulting's clients (see \cite[Chapter 11]{Arnold2007}) where the underlying model assumes that demand has a Gaussian distribution.
+Thus we turn to the formula used in practice by most of Argon Consulting's clients (see \citet[Chapter 11]{Arnold2007}) where the underlying model assumes that demand has a Gaussian distribution.
 Production being decided at the beginning of the period and the demand being revealed at the end of the period, the lead time is one period (and is certain).
 Thus, for each item $i$, the safety stock used to reach cycle service level $\alpha$ is
 \begin{equation}\label{eq:PDP:numerical-experiments:safety-stock}
@@ -587,7 +587,7 @@ Thus, using only \cref{proc:demand:initial-sampling} gives results which may be 
 In this section, we propose to use a $K$-means algorithm on a bigger set of scenarios to get a small set of representative scenarios.
 
 
-We refer to \cite[Chapter 14]{Hastie2009} for a detailed presentation of the method.
+We refer to \citet[Chapter 14]{Hastie2009} for a detailed presentation of the method.
 Roughly, $K$-means clustering aims at partitioning $n$ observations into $K$ clusters in which each observation belongs to the cluster with the nearest mean.
 The mean of each cluster can be used as a prototype (\ie a representative element) of the cluster.
 
@@ -598,7 +598,7 @@ In some cases, other distances might be more relevant.
 Second, the number of clusters $K$ is an input parameter.
 Thus, an inappropriate choice of $K$ may yield poor results.
 Last, results depend of the initialization of the first $K$ prototypes and may lead algorithm to converge to local optimum.
-Some variations of $K$-means algorithms exist to deal with these points (see \cite{Jain2010} for a review of $K$-means algorithm and its extensions).
+Some variations of $K$-means algorithms exist to deal with these points (see \citet{Jain2010} for a review of $K$-means algorithm and its extensions).
 
 
 \medskip
@@ -731,7 +731,7 @@ A more sophisticated one might be to use extensions of the news-vendor problem l
 \subsection{Gamma distributions}
 
 The \emph{gamma distribution} denoted by $\Gamma(k,\theta)$ is a family of continuous two-parameter probability distributions.
-Its definition can be found in \cite[Appendix A]{Delmas2006}.
+Its definition can be found in \citet[Appendix A]{Delmas2006}.
 It is parametrized by a shape parameter $k>0$ and a scale parameter $\theta>0$.
 Its support is $\RR_+$.
 
@@ -747,7 +747,7 @@ where the gamma function is expressed for any $z\in\RR_+^*$ by
 
 \subsection{Dirichlet distributions}
 
-We refer to \cite[Chapter 49]{Kotz2000} for the details of the proofs of classical results about Dirichlet distributions.
+We refer to \citet[Chapter 49]{Kotz2000} for the details of the proofs of classical results about Dirichlet distributions.
 
 
 \subsubsection{Definition}
@@ -827,7 +827,7 @@ The distribution of part of the variables of a Dirichlet conditionally to the ot
 \subsubsection{Generating Dirichlet distributed variables}
 
 
-Realizations of the random vector $\va x=\bracket{\va x_1,\ldots,\va x_K}\sim\Dir\bracket{\alpha_1,\ldots,\alpha_K}$ can be get from a source of Gamma distributed random variates using \cref{proc:dirichlet:generation} described in~\cite{Frigyik2010}.
+Realizations of the random vector $\va x=\bracket{\va x_1,\ldots,\va x_K}\sim\Dir\bracket{\alpha_1,\ldots,\alpha_K}$ can be get from a source of Gamma distributed random variates using \cref{proc:dirichlet:generation} described in~\citet{Frigyik2010}.
 
 
 \begin{proc}\label{proc:dirichlet:generation}
@@ -844,7 +844,7 @@ For any $\alpha_1,\ldots,\alpha_K$ positive, \cref{proc:dirichlet:generation} pr
 \end{prop}
 
 
-The above procedure relies on \cref{prop:dirichlet:generation-from-gamma} proved in \cite{Devroye1986}.
+The above procedure relies on \cref{prop:dirichlet:generation-from-gamma} proved in \citet{Devroye1986}.
 
 \begin{prop}\label{prop:dirichlet:generation-from-gamma}
 Let $\theta,\alpha_1,\ldots,\alpha_K$ be $K+1$ positive real numbers.

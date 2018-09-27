@@ -95,41 +95,41 @@ In \cref{sec:multi-sourcing:stochastic:discussion}, we discuss the choices made 
 
 
 Deciding multi-sourcing in a long term decision and often comes with stochastic considerations.
-A extensive review can be found in \cite{Yao2017}.
+A extensive review can be found in \citet{Yao2017}.
 
 
-A seminal model about stochastic multi-sourcing can be found in \cite{Jordan1995}.
+A seminal model about stochastic multi-sourcing can be found in \citet{Jordan1995}.
 In automotive industry, they aim at deciding which plant (or which line) should have the ability to produce each item.
 This is a single-period model which aims at minimizing the shortfall subject to limited flexibility.
 As in deterministic case, they conclude that a long chain configuration enables to have results almost as good as a complete flexibility.
-A similar model can be found in \cite{Brian2005} which consider risk-neutral and risk averse objective.
-In order to deal with more complicated cases (multi-item and multi-market), \cite{Garavelli2003} uses simulations to quantify impact of flexibility configurations.
+A similar model can be found in \citet{Brian2005} which consider risk-neutral and risk averse objective.
+In order to deal with more complicated cases (multi-item and multi-market), \citet{Garavelli2003} uses simulations to quantify impact of flexibility configurations.
 Again, a limited flexibility seems sufficient to achieve very good results.
 
 
 One goal of stochastic multi-sourcing is to deal with the risk.
 A remark is that risk is often concentrate to single-item problem.
-The news-vendor problem was extensively extended to propose risk aversion extension (see \cite{Vipul2000,Choi2008}).
-More recently, \cite{Arikan2017} propose a classification of existing extension (included those with Average-Value-at-Risk).
-\cite{Ahmed2007} is one of the rare paper using coherent measure of risk for a multi-period inventory problem.
+The news-vendor problem was extensively extended to propose risk aversion extension (see \citet{Vipul2000,Choi2008}).
+More recently, \citet{Arikan2017} propose a classification of existing extension (included those with Average-Value-at-Risk).
+\citet{Ahmed2007} is one of the rare paper using coherent measure of risk for a multi-period inventory problem.
 Its objective minimizes a risk averse function (like $\AVaR$) instead of a risk neutral function (like expectation)
 However, these are production decisions and not multi-sourcing.
 
 
-A single-item single-period multi-sourcing problem is also addressed in \cite{Meena2011}.
+A single-item single-period multi-sourcing problem is also addressed in \citet{Meena2011}.
 In this paper, each supplier has a different rate of failure (\ie to not produce anything) but demand is equally divided between suppliers.
 They studied different cases and in particular, the minimization of the expected total cost for a pre-determined service level.
 
 
-% \cite{Brian2005}
+% \citet{Brian2005}
 % => two stage: assignment then production (single period)
 % => risk neutral and risk averse
 
-% \cite{Garavelli2003}
+% \citet{Garavelli2003}
 % => use simulation to quantify impact of flexibility configuration (multiple product, multiple plants, multiple market)
 
 
-% \cite{Meena2011}
+% \citet{Meena2011}
 % => each supplier has different rate of failure, capacity but demand is equaly reparted
 % => risk on disruption (one supplier which do not deliver)
 % => one item, one period
@@ -137,11 +137,11 @@ They studied different cases and in particular, the minimization of the expected
 
 
 
-% \cite{Arikan2017}
+% \citet{Arikan2017}
 % => news-vendor with $\AVaR$
-% Many references on news-vendors and risk aversion \cite{Vipul2000,Choi2008}
+% Many references on news-vendors and risk aversion \citet{Vipul2000,Choi2008}
 
-% \cite{Ahmed2007}
+% \citet{Ahmed2007}
 % => coherent measure of risk for inventory problem (single item) for both single and multi-period
 % => objective minimize a risk averse function (like $\AVaR$) instead of a risk neutral function (like expectation)
 % => production decisions no multi-sourcing
@@ -160,7 +160,7 @@ Choices made to model the risk will be discuss in \cref{sec:multi-sourcing:stoch
 \subsection{Average Value at Risk}
 
 
-In order to measure and control the service level, we use the \emph{Average Value at Risk ($\AVaR$)} which is a \emph{coherent risk measure} widely studied (see for example \cite{Artzner1999,Rockafellar2000,Rockafellar2002}) and chose the definition given in \cite{Follmer2004}.
+In order to measure and control the service level, we use the \emph{Average Value at Risk ($\AVaR$)} which is a \emph{coherent risk measure} widely studied (see for example \citet{Artzner1999,Rockafellar2000,Rockafellar2002}) and chose the definition given in \citet{Follmer2004}.
 In financial context, measures of risk are used to quantify the risk of a position.
 
 
@@ -256,7 +256,7 @@ Due to the obvious hardness of program~\eqref{eq:stoch-multi-sourcing}, we turn 
 
 
 Linearization of $\AVaR$ constraint can be efficiently made in case of a finite probability space $\Omega$.
-\cref{lem:linearize-AVaR}, based on results by \cite{Rockafellar2000}, gives the complete definition of the polyhedron defined by $\AVaR$ constraint in case of a finite probability space.
+\cref{lem:linearize-AVaR}, based on results by \citet{Rockafellar2000}, gives the complete definition of the polyhedron defined by $\AVaR$ constraint in case of a finite probability space.
 
 
 \begin{lem}\label{lem:linearize-AVaR}
@@ -297,7 +297,7 @@ We have the following equivalences.
     \right.
   \end{align+}
 \end{subequations}
-Equivalence~\eqref{eq:follmer-and-schied-proposition} is given by Proposition~4.37 in \cite{Follmer2004}.
+Equivalence~\eqref{eq:follmer-and-schied-proposition} is given by Proposition~4.37 in \citet{Follmer2004}.
 Equivalence~\eqref{eq:discrete-space probability} comes from the finite space probability.
 \end{proof}
 
@@ -324,7 +324,7 @@ We denote this relaxation by (2SA).
 This approximation is a \emph{two-stage approximation} as we distinguish between two levels of information over the uncertainty: assignment decisions are the \emph{first stage} variables, while all other decisions are \emph{second stage} variables.
 
 
-The (2SA) relaxation is then solved by a classical {\em sample average approximation} (see~\cite{Kleywegt2002} for a presentation of the method).
+The (2SA) relaxation is then solved by a classical {\em sample average approximation} (see~\citet{Kleywegt2002} for a presentation of the method).
 We build a set $\scenarios$ of $m$ scenarios sampled uniformly at random.
 Each of these scenarios is a possible realization of $(\va\demand_1^i,\ldots,\va\demand_{\horizon}^i)$ for each item $i$.
 The parameter $m$ is fixed prior to the resolution.
@@ -554,7 +554,7 @@ true
 
 
 Formulation \eqref{eq:stoch-multi-sourcing:linearized} has a structure which fit with L-shaped method (Bender decomposition of the primal).
-We refer to \cite[Chapter 5]{Birge2011} for a presentation of the method.
+We refer to \citet[Chapter 5]{Birge2011} for a presentation of the method.
 Indeed, introducing the vector $z$ of first-step variables (assignment variables $\bracket{\open_p^i}_{p,i}$ and auxiliary variables $\bracket{m_t^i}_{t,i}$) and for each scenario $\omega$, the vector $w_{\omega}$ of second-step variables (inventory variables $\bracket{\inventory_{t,\omega}^i}_{t,i,\omega}$, production variables $\bracket{\quantity_{pt,\omega}^i}_{p,t,i}$ and auxiliary variables $\bracket{\alpha_{t,\omega}^i}_{t,i,\omega}$, we get the following program
 \begin{subequations}\label{eq:stoch-multi-sourcing:bender}
   \begin{align+}
