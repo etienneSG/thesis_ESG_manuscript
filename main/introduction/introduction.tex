@@ -1,5 +1,44 @@
 \chapter{Introduction}
 
 
-Hello world!
+The research made in this thesis deals with Supply Chain Management.
+They were funded by Argon consulting which is an independent consulting firm whose mission is to help its clients to improve every part of their Supply Chain (from the procurement of raw materials to the deliver of the final product) and conducted throughout an industrial partnership with the \'Ecole des Ponts ParisTech.
+The objective is to develop methods to manage specific parts of the Supply Chain in an optimal way.
 
+
+
+The common thread of the three topics developed in this thesis is the \emph{flexibility}.
+The flexibility is the ability to deliver a service or a product to a costumer although the environment and the future is uncertain.
+Depending on the level of decision, the flexibility is either a constraint (like the ability of an assembly line to easily switch from the production of one item to another) or a decision variable (like deciding between specialization and versatility).
+In general, the closer to the final costumer are the decisions, the more they are subject to flexibility decisions taken by Supply Chain.
+
+
+Our first topic deals with multi-sourcing of production that aims at deciding the flexibility of means of production.
+The second and third topics deals with the reduction of inventories subject to flexibility decisions that were already made.
+
+
+\section{Multi-sourcing of production}
+
+
+Multi-sourcing of production is a strategic decision in Supply Chain management (\ie a long-term decision).
+It consists in deciding the assignment of items to the plants (see \cref{fig:intro:en:multi-sourcing}).
+These decision take time to be implemented and are taken without knowing the future customer demands.
+In this uncertain environment, these decisions will determine the flexibility of the plants and the ability to balance the workload between them.
+
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=.8\textwidth]{main/introduction/images/multi-sourcing.tikz}
+  \caption{Multi-sourcing of production of fours items in two plants}
+  \label{fig:intro:en:multi-sourcing}
+\end{figure}
+
+
+To model the multi-sourcing problem, we relies on \emph{Stochastic Optimization}.
+Stochastic optimization studies optimization problem that involves random objective function or random constraint.
+In case of multi-sourcing, the main uncertainty comes from the demand.
+(This is a choice since many other sources could have been considered like reliability of means of production.)
+We model multi-sourcing problem by a recourse stochastic program whose general formulation is of the form
+\begin{equation}
+  \min_{x \in X} f(x) + \espe_{\xi}\sqbracket{Q\bracket{x,\xi}}
+\end{equation}
