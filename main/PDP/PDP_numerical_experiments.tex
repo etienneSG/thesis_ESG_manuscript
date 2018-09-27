@@ -75,12 +75,14 @@ In addition, if some capacity issues are easily anticipated, the production of a
   \subfloat[lot-size]
   {
     \includegraphics[width=\textwidth]{main/PDP/images/lot-size_heuristic.tikz}
+    %\esgil{TODO: uncomment figure}
     \label{fig:lot-size-heuristic}
   }
   \\
   \subfloat[Cover-size]
   {
     \includegraphics[width=\textwidth]{main/PDP/images/cover-size_heuristic.tikz}
+    %\esgil{TODO: uncomment figure}
     \label{fig:cover-size-heuristic}
   }
   \caption{Computation of produced quantities using lot-size and cover-size heuristics}
@@ -613,21 +615,111 @@ Thus, our set of representative scenarios would be composed of the $K$ prototype
 \section{Numerical results}
 \label{sec:PDP:numerical-experiments:numerical-results}
 
-\esgil{To do when result will be complete}
-
-\begin{itemize}
-  \item Results with backorder costs
-  \item Results with fill rate service level constraint
-\end{itemize}
-
 
 We run tests on lines described in \cref{tab:pdp:instances-characterisitcs}.
 Complete tables of results are given in \cref{chap:appendix:pdp:numerical-experiments} and the results for line $L_1$ is given in \cref{tab:pdp:results:line-1}.
 (We choose line $L_1$ because it not a line that suffer undercapacity like $L_5$ and $L_6$ neither a line that is clearly overcapacitated like $L_4$.)
 
 
+The table is composed as follow.
+In the column \emph{Input}, we give the characteristic of inputs.
+The sub-column \emph{Vol.} gives the volatility of the demand as defined in \cref{sec:PDP:numerical-experiments:drawing-realization-of-demand}.
+The sub-column \emph{Strategy} gives the strategy used to make production decisions (see \cref{sec:PDP:numerical-experiments:heuristics}).
+The abbreviation \emph{det} stands for the deterministic heuristic, \emph{sto} for (2SA-$m$) heuristic, \emph{cover} for cover-size and \emph{lot} for lot-size.
+Finally, the sub-column \emph{Service} gives the service level used to compute backorder costs as explained in \cref{sec:PDP:stochastic:model:backorder}.
+
+
+The output are composed of the following KPI.
+They are all an average over the 30 runs of the simulation.
+In the column \emph{Obj.}, we write the objective value \cref{eq:Uniform-CLSP-BS-2SA-m:backorder:objective} of the solution found by the heuristic (in k\euro{}).
+
+
+The column \emph{Inventory}, we give several KPI relative to stocks.
+The sub-column \emph{Av.} gives the average of the positive part of the inventory over periods, \ie
+\begin{equation}
+  \left<\inventory\right>_{\horizon} = \frac{1}{\horizon}\sum_{t=1}^{\horizon}\sum_{i\in\REF} \bracket{\holding^i\inventory_t^i}^+.
+\end{equation}
+The sub-column \emph{Max} gives the maximum of the positive part of the inventory over periods, \ie
+\begin{equation}
+  \max_{\horizon}\bracket{\inventory} = \max_{t\in\range{\horizon}}\bracket{\sum_{i\in\REF} \bracket{\holding^i\inventory_t^i}^+}.
+\end{equation}
+The sub-column \emph{Cover} gives the average cover-size of items, \ie the average number of periods covered when a production occurred.
+This KPI is taken on average over items and each item is weighted by its holding cost.
+For each item $i$, denoting by $\cT^i$ the subset of $\range{\horizon}$ of periods where item $i$ is produced, the KPI is computed by
+\begin{equation}\label{eq:pdp:numerical-experiments:KPI:cover}
+  \left<\cover\right>_{\REF}
+  = \sum_{i\in\REF} \frac{w^i}{\card{\cT^i}}\sum_{t\in\cT^i} \frac{\quantity_t^i}{\left<\bar{\demand}^i\right>_{\horizon}}
+  \quad\mbox{where}\quad
+  w^i=\frac{\holding^i}{\sum_{j\in\REF}\holding^j}
+  \quad\mbox{and}\quad
+  \left<\bar{\demand}^i\right>_{\horizon}=\frac{1}{\horizon}\sum_{t=1}^{\horizon} \bar{\demand_t^i}.
+\end{equation}
+
+
+The column \emph{Service} gives the KPI relative to service level with the two classical measure.
+The sub-column \emph{Fill rate} gives the average fill rate service level of items.
+This KPI is taken on average over items and each item is weighted by its holding cost.
+It is given by
+\begin{equation}\label{eq:pdp:numerical-experiments:KPI:fill-rate-service-level}
+  \left<\beta\right>_{\REF} = \sum_{i\in\REF} w^i \frac{\sum_{t=1}^{\horizon}\min\bracket{\bracket{\inventory_{t-1}^i}^++\quantity_t^i,\ \demand_t^i}}{\sum_{t=1}^{\horizon}\demand_t^i}
+  \quad\mbox{where}\quad
+  w^i=\frac{\holding^i}{\sum_{j\in\REF}\holding^j}.
+\end{equation}
+The sub-column \emph{Cycle} give the average cycle service level of items.
+This KPI is taken on average over items and each item is weighted by its holding cost.
+It is given by
+\begin{equation}\label{eq:pdp:numerical-experiments:KPI:cycle-service-level}
+  \left<\alpha\right>_{\REF} = \sum_{i\in\REF} w^i\frac{\sum_{t=1}^{\horizon} y_t^i}{\horizon}
+  \quad\mbox{where}\quad
+  w^i=\frac{\holding^i}{\sum_{j\in\REF}\holding^j}
+  \quad\mbox{and}\quad
+  y_t^i =
+  \left\{
+  \begin{array}{ll}
+  1 & \mbox{if}\ \bracket{\inventory_{t-1}^i}^++\quantity_t^i\ge\demand_t^i \\
+  0 & \mbox{otherwise}.
+  \end{array}
+  \right.
+\end{equation}
+Note that these two KPI give priority to satisfy current demand rather than backorder.
+
+
+In the column \emph{Workload}, we compute the average workload of the assembly line.
+This KPI is taken on average over periods.
+It is given by
+\begin{equation}
+  \left<\mbox{Workload}\right>_{\horizon} = \frac{1}{\horizon} \sum_{t=1}^{\horizon} \frac{\sum_{i\in\REF} \quantity_t^i}{\capacity}.
+\end{equation}
+
+
+In the column \emph{Flex.}, we compute the average number of setups used on the assembly line.
+This KPI is taken on average over periods.
+It is given by
+\begin{equation}
+  \left<\mbox{Flexibility}\right>_{\horizon} = \frac{1}{\horizon} \sum_{t=1}^{\horizon} \frac{\sum_{i\in\REF} \setup_t^i}{\nbsetups}.
+\end{equation}
+
+
 
 \input{main/PDP/tables/line_1.tex}
+
+
+\cref{tab:pdp:results:line-1} and the others presented in \cref{chap:appendix:pdp:numerical-experiments} first show that best objective values for the problem is not reach by (2SA-$m$) heuristic.
+In many case, the value found by (2SA-$m$) heuristic is far from the values obtained by other heuristics.
+However, in general, we see than (2SA-$m$) is the heuristic that is the closest from the fill rate service level objective.
+Lot-size heuristic also gives quite good results on fill rate service level but it generates a lot of stock to do so.
+On the other hand, deterministic heuristic have the lowest stocks but also the worst service level.
+Cover-sizes have the same variations: they are shorter for deterministic heuristic than for the other ones.
+
+
+Comparing results between undercapacitated lines ($L_0$ to $L_4$) and overcapacitated lines ($L_5$ and $L_6$) does not show clear difference on the behaviors of the heuristics.
+Lot-size and (2SA-$m$) heuristics remain the heuristics making more stocks but with a better service level and cover-size and deterministic heuristics make few stocks but have a bad service level.
+
+
+By staring at the values of the backorder cost, we can see that the values computed by method proposed in \cref{sec:PDP:numerical-experiments:drawing-realization-of-demand} are very small especially for small desired service level like 85\%.
+Thus, the method to compute the backorder is too optimistic and must be improved.
+A simple way might be to skew the method.
+A more sophisticated one might be to use extensions of the news-vendor problem like the multi-stage extension.
 
 
 

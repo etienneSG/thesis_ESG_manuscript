@@ -144,10 +144,10 @@ Justification of such a choice for $\gamma$ can be found in \cref{sec:PDP:numeri
 
 
 As in \cref{chap:pdp:numerical-experiments}, results may depend on the number of generated scenarios.
-Thus, we apply the same method drawing \tbc\ scenarios.
-Then, we use $K$-means algorithm (see \cref{sec:PDP:numerical-experiments:k-means}) to construct a set of 100 representative scenarios composed of the $K$ prototypes of each cluster.
-Each prototype gives a scenario weighted by the number of scenarios in its cluster divided by \tbc.
-
+Thus, we would like to apply the same method drawing a big number $M$ scenarios.
+Then, we would use $K$-means algorithm (see \cref{sec:PDP:numerical-experiments:k-means}) to construct a set of 100 representative scenarios composed of the $K$ prototypes of each cluster.
+Each prototype gives a scenario weighted by the number of scenarios in its cluster divided by $M$.
+For lack of time, we do not yet implemented $K$-mean algorithm.
 
 % Since we know the historical demand, the generate demand of an item at a period should have the same expectation which explains \cref{enum:multi-sourcing:random-demand-property:expectation}.
 % \cref{enum:multi-sourcing:random-demand-property:constant-volume} is justified by our study of flexibility.
@@ -170,17 +170,53 @@ We remind that parameter $\servicelvl$ enables to control the desired service le
 The volatility is the value used in the Dirichlet model used to generate randomness (see \cref{sec:multi-sourcing:numerical-experiments:generate-randomness}).
 
 
+There are two ways of measuring the output.
+First, they can be made \emph{in-sample}.
+In this cases, the solution of the Program~\eqref{eq:stoch-multi-sourcing:linearized} found is used to compute the KPI as if it stand for the whole possible realizations of the randomness.
+In the other hand, they can be made \emph{out-of-sample}.
+In this case, a new linear program is created from the deterministic version~\eqref{eq:det-multi-sourcing} and from the returned assignment $\bracket{\open_p^{i*}}_{p,i}$.
+Then, we generate $n=10000$ realizations of demand and solve $n$ times the following deterministic program (one for each realization of demand)
+\begin{subequations}\label{eq:det-multi-sourcing:second-step:second-step}
+  \begin{align+}
+    \min\quad & \rlap{$\ds \sum_{i\in\REF} w^i f\bracket{(\quantity_{pt}^i)_{p,t},(\inventory_t^i)_t}$}
+    \label{eq:det-multi-sourcing:second-step:objective}
+    \\
+    \st\quad & \ds \inventory_t^i = \inventory_{t-1}^i + \sum_{p\in\plants}\quantity_{pt}^i - \demand_t^i && \forall t\in\range{\horizon},\ \forall i\in\REF,
+    \label{eq:det-multi-sourcing:second-step:inventory-dynamic}
+    \\
+    & \ds \sum_{i\in\REF}\rate_{pt}^i\quantity_{pt}^i \leq \capacity_{pt} && \forall t\in\range{\horizon},\ \forall p\in\plants,
+    \label{eq:det-multi-sourcing:second-step:capacity}
+    \\
+    & \ds \lb_{pt}^i \open_p^{i*} \le \rate_{pt}^i\quantity_{pt}^i \le \ub_{pt}^i \open_p^{i*} && \forall t\in\range{\horizon},\ \forall p\in\plants, \forall i\in\REF,
+    \label{eq:det-multi-sourcing:second-step:big-M}
+    \\
+    & \ds \quantity_{pt}^i \ge 0 && \forall t\in\range{\horizon},\ \forall p\in\plants, \forall i\in\REF.
+    \label{eq:det-multi-sourcing:second-step:positivity}
+  \end{align+}
+\end{subequations}
+where $f\bracket{(\quantity_{pt}^i)_{p,t},(\inventory_t^i)_t}$ is the fill rate service level of item $i$ given by
+\begin{equation}
+  f\bracket{(\quantity_{pt}^i)_{p,t},(\inventory_t^i)_t} = \frac{\sum_{t=1}^{\horizon}\min\bracket{(\inventory_{t-1}^i)^++\quantity_t^i,\ \demand_t^i}}{\sum_{t=1}^{\horizon}\demand_t^i}
+\end{equation}
+and $w^i$ is the weight of item $i$ in the global fill rate service level KPI and is given by
+\begin{equation}\label{eq:multi-sourcing:numerical-experiments:KPI:weight}
+  w^i=\frac{\rate^i}{\sum_{j\in\REF}\rate^j}.
+\end{equation}
+Problem~\eqref{eq:det-multi-sourcing:second-step:second-step} can clearly be written as a linear program with only continuous variables.
+
+\medskip
+
 The list of outputs are decomposed as follow.
 \begin{itemize}
   \item \emph{Solver best value} (resp. \emph{heuristic value}) gives the value returned by the solver (resp. the heuristic) at the end of the time allowed to find a solution.
   \item $\prob\sqbracket{stock\ge0}$ measures in-sample the probability that inventory is positive.
-  $$\prob\sqbracket{stock\ge0}=\frac{1}{\horizon\times\card{\REF}\times\card{\scenarios}}\sum_{t=1}^{\horizon}\sum_{i\in\REF}\sum_{\omega\in\scenarios} \mathbb{1}_{\crbracket{\inventory_{t,\omega}^i\ge0}}$$
-  More precisely, ``in-sample'' refers to the fact that the measure is made only on the sample used to create the mixed integer program~\eqref{eq:stoch-multi-sourcing:linearized}.
-  Then, for each item $i$ and each period $t$, we measure $\prob\sqbracket{\va\inventory_t^i\ge0}$ as if $\scenarios$ represents the complete probability space.
+  \begin{equation}
+    \prob\sqbracket{stock\ge0}=\frac{1}{\horizon\times\card{\REF}\times\card{\scenarios}}\sum_{t=1}^{\horizon}\sum_{i\in\REF}\sum_{\omega\in\scenarios} \mathbb{1}_{\crbracket{\inventory_{t,\omega}^i\ge0}}
+  \end{equation}
   $\prob\sqbracket{stock\ge0}$ finally returns the average over all periods and all items.
-  \item \emph{Cycle service level} and \emph{fill rate service level} are measured out-of-sample meaning they are measured on the sample of realizations generated after multi-sourcing decision was fixed and after the deterministic second stage was solved.
-  Their values are computed for each item $i$ and each period $t$.
-  Then, the table show the average over all items and all periods.
+  \item \emph{Cycle service level} and \emph{fill rate service level} are measured out-of-sample.
+  They are computed using \cref{eq:pdp:numerical-experiments:KPI:fill-rate-service-level} and \cref{eq:pdp:numerical-experiments:KPI:cycle-service-level} replacing $w^i$ by the expression given by \cref{eq:multi-sourcing:numerical-experiments:KPI:weight}.
+  Then, the table shows the average over all runs of the simulation.
   \item \emph{GAP} is the gap between the best value returned by the solver or the heuristic and the best known lower bound on the problem.
   \item \emph{Solver lower  bound} is the best lower bound found by the solver when the solver is frontally used to solve Program \eqref{eq:stoch-multi-sourcing:linearized}.
   \item \emph{Continuous relaxation} is the value of the continuous relaxation of Program \eqref{eq:stoch-multi-sourcing:linearized}.
