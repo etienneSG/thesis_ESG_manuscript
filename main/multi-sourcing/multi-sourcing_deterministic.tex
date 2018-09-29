@@ -34,9 +34,6 @@ In more complex organizations, deciding the best logistic network relies on many
 Argon Consulting meets multi-sourcing problem with clients from different industries.
 Thus, Argon Consulting aims at getting a versatile model which can be used in many situations and should be not to too dependent on the industry.
 We propose a model which captures the essence of the multi-sourcing problem and which can be easily adapted to particular client cases.
-% For example, inventory cost at the end end of a period will not be taken into account but a particular client may want to bound it.
-% Thus the model have to be able to add this constraint.
-% Solving method must also be able to adapt to model modifications.
 
 
 \subsection{Problem statement}
@@ -68,31 +65,14 @@ We call this problem the \emph{deterministic multi-sourcing problem}.
 \medskip
 
 
-% Some parameters or their time dependence may seem unusual.
 Let's give some explanations.
-% First, the lower bound on the production.
 First, when a company gives a plant $p$ the ability to produce an item $i$, some of them imposes that production of item $i$ must not be under some threshold $\lb_{pt}^i$ at period $t$.
 Is is often to train the workers and in this particular case, these thresholds are usually constant and positive during the first periods after assignment and equal to zero during the last periods.
 Second, the capacity needed to produce one item may depends on time.
 It is often the case when people are involved in production since they become more skilled as time goes by.
-% Finally, as we are interested in multi-sourcing decisions, we do not consider production nor holding costs.
 Finally, since multi-sourcing is a long-term decision and since deciding inventory levels is a mid-term decision, comparing assignment costs to holding costs does not make sense.
 Thus, we do not consider holding costs although it is easy for an industrial to extend the model by adding a constraint keeping inventory below some threshold.
-% However, extending the model by adding holding or production cost or bounding the inventory between each period is straightforward.
 
-
-% \medskip
-
-
-% We also define the \emph{uniform deterministic multi-sourcing problem}. Contrary to \cref{chap:PDP:deterministic}, this model does not rely on applications on real dataset but on technical considerations for proofs. In this problem, we set
-% $$
-% \rate_{pt}^i = 1
-% ,\quad
-% \lb_{pt}^i = 0
-% ,\quad
-% \ub_{pt}^i = \capacity_{pt} = 1
-% .
-% $$
 
 
 \subsection{Main results}
@@ -109,24 +89,23 @@ We model the deterministic multi-sourcing problem as a mixed integer program in 
 
 
 Production multi-sourcing can be viewed as a lot-sizing on several parallel machines.
-Although it is typically a long term decision and for this reason, uncertainty is often considerate, a vast literature exists for the deterministic case.
-Reviews can be found in \citet{Sethi1990,Koste1999,Stevenson2007} even if they are larger than the only multi-sourcing problem.
+Although it is typically a long-term decision and for this reason, uncertainty is often considerate, a vast literature exists for the deterministic case.
+Reviews are proposed by \citet{Sethi1990}, \citet{Koste1999} and \citet{Stevenson2007} even if they are larger than the only multi-sourcing problem.
 They are interest in every types of flexibility whereas we concentrate our research on mix flexibility (ability to produce different combinations of products given certain capacity).
 
 
-As explained in \citet{Fiorotto2018}, deterministic settings may appear in real life.
+As explained by \citet{Fiorotto2018}, deterministic settings may appear in real life.
 For example, in semi-conductor manufacturing, pharmaceutical production, packing for yogurt or textile industry, demand is know but machines must be qualified to produce items.
 They develop a deterministic lot-sizing problem on multiple parallel machines aiming at minimizing the sum of setup, production, holding and backlog costs.
 One main constraint is the maximal flexibility of the configuration.
 Their work is based on ``chains'' and they shows than ``long chains'' configurations give results almost as good as complete flexibility.
 A previous work by \citet{Ignizio2009} aiming at minimizing the balance between the utilization of the machines shows similar results.
-An extensive study of this chains based on simulation can be found in \citet{Muriel2006}.
+An extensive study of this chains based on simulations was made by \citet{Muriel2006}.
 
 
 In previous papers, flexibility is upper bounded and this bound is an input of the model.
 The following models address a complete flexibility but the trade-off is made thanks to the different costs in the objective function.
-In \citet{Rezaei2008}, each supplier have a part of imperfect items and a trade-off must be found between the revenue of selling good and imperfect items and the other costs (like purchase cost or holding cost).
-In \citet{Woarawichai2017}, model also includes logistic costs in the objective.
+In the model proposed by \citet{Rezaei2008}, each supplier have a part of imperfect items and a trade-off must be found between the revenue of selling good and imperfect items and the other costs (like purchase cost or holding cost).
 
 
 Finally, \citet{Snyder2006b} do not directly address a multi-sourcing problem.
@@ -136,33 +115,6 @@ Each facility have a known probability of disruption.
 They aims at minimizing the weighted sum of assignment and reassignment if one or many disruption occurs.
 
 
-% \citet{Rezaei2008}
-% => multi-item and multi-supplier
-% => choose supplier and quantity
-% => imperfection in received quantity
-
-
-% \citet{Woarawichai2017}
-% => multi-item and multi-supplier
-% => choose supplier and quantity
-% => model with logistic cost, etc.
-
-% \citet{Muriel2006}
-% We develop analytical models and an optimization-based simulation tool to study
-% the impact of increasing flexibility on shortages, production variability, component inventories, and order vari-
-% ability 
-% => simultion tool at the end
-
-
-% \citet{Ignizio2009}
-% => multi-item, multi-machine
-% => minimize the gap between machine utilization
-
-
-% \citet{Snyder2006b}
-% => kind of multi-sourcing
-% => minimize the assignment at level $r$ \ie at the $r$th closest facility
-% => but if possible, demand will be served by the closest one (in he objective also)
 
 
 \section{Model formulations}
