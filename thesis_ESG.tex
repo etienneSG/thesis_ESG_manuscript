@@ -107,13 +107,9 @@
 \addtocontents{toc}{\bigskip}
 
 
-\appendix
-
-
 \cleardoublepage
-\part*{Appendix}
-\label{part:appendix}
-\input{main/appendix/PDP_tables.tex}
+\addcontentsline{toc}{chapter}{Conclusion}
+\input{main/conclusion/conclusion.tex}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -124,13 +120,22 @@
 \addtocontents{toc}{\bigskip}
 
 
-
 % La bibliographie
 \cleardoublepage
 \phantomsection
 \bibliographystyle{apalike}
 \addcontentsline{toc}{chapter}{Bibliography}
 \bibliography{tail/bibliography}
+
+
+\appendix
+
+
+\cleardoublepage
+\part*{Appendix}
+\label{part:appendix}
+\input{main/appendix/PDP_tables.tex}
+
 
 
 \end{document}

@@ -22,13 +22,13 @@ The second and third topics deals with the reduction of inventories subject to f
 \label{sec:intro:en:multi-sourcing}
 
 
-Multi-sourcing of production is a strategic decision in Supply Chain management (\ie a long-term decision).
+Multi-sourcing of production is a strategic decision in Supply Chain Management (\ie a long-term decision).
 It consists in deciding if a plant should have the ability to produce an item.
 For example, in \cref{fig:intro:en:multi-sourcing}, the first plant can produce item A, B and C while the second one can produce item B, C and D.
 Then, item A and D are said to be mono-sourced since each can be produced by only one plant whereas item B and C are said to be multi-sourced since they can be produced by at least two plants.
 The first characteristic of multi-sourcing decision is their horizon.
-They take time to be implemented and have long-term impact on Supply Chain management.
-Second, multi-sourcing decisions in a highly uncertain environment.
+They take time to be implemented and have long-term impact on Supply Chain Management.
+Second, multi-sourcing decisions are taken in a highly uncertain environment.
 Among others, the future customer demands, the reliability of means of production, the future availability of raw materials are imperfectly known.
 Finally, multi-sourcing decisions will constrain the future production decisions (\ie mid-term decision).
 Precisely, they determine the flexibility of the plants and the ability to balance the workload between them.
@@ -65,22 +65,22 @@ We apply a classical approximation scheme to solve the stochastic program doing 
 
 Considering its applications, Argon Consulting choose to model the demand as the main source of uncertainty and consider that the total volume of demand is known.
 (In its applications, Argon Consulting is interested by the ability to face variation in the products mix and not in the volume of demand.)
-Then, we propose a model where the first stage variables are the assignment of item to plants and the second stage variable are the production decisions.
-In order to deal with randomness and to capture the long-term impact and the risk of assignment decision, we rely on \emph{risk measures} that were first used in financial applications to quantify the risk of a financial position.
+Then, we propose a model where the first stage variables are the assignment of items to plants and the second stage variable are the production decisions.
+In order to deal with randomness and to capture the long-term impact and the risk of assignment decisions, we rely on \emph{risk measures} that were first used in financial applications to quantify the risk of a financial position.
 We choose to use \emph{Average Value-at-Risk ($\AVaR$)} applied to the inventory level of items which is unusual in supply chain applications.
 Indeed, high inventory level is expensive but enables to easily satisfy demand.
 Reducing inventory is then risky and Average Value-at-Risk aims at quantify the risk of this decision.
 
 
 The Average Value-at-Risk at $\alpha\%$ (also known as expected shortfall) can be interpreted as the expectation restricted to the $\alpha\%$ worst cases, \ie $\alpha\%$ lowest values of inventory.
-It enables the decisions maker to have an indicator which captures both the shortfall probability and the undelivered quantity (which are strongly linked to two indicator used to measure service level: the cycle service level and the fill rate service level).
+It enables the decisions maker to have an indicator which captures both the shortfall probability and the undelivered quantity (which are strongly linked to two indicators used to measure service level: the cycle service level and the fill rate service level).
 Moreover, the parameter $\alpha$ enables to try several risk levels and Average Value-at-Risk can be linearized in order to be used in a MILP formulation leading to tractable formulation.
 
 
 \medskip
 
 
-Real datasets got from Argon Consulting's clients do not contained only historical value of productions and sales.
+Real datasets got from Argon Consulting's clients contain only historical values of production and sales.
 Since we do not have the real demand, we propose a probabilistic model to generate possible realizations of demand from historical values.
 This model is based on \emph{Dirichlet distributions} and aims at being easy to use.
 Its only input are a forecast demand (which can be the historical sales or the historical forecast) and a volatility which is a percentage standing for to the accuracy of the forecast.
@@ -94,7 +94,7 @@ This model meets the assumption made by Argon Consulting on the demand, has few 
 
 Finally, on real datasets, computation times may be long.
 Up-to-date solvers are often unable to find an feasible solution of the problem.
-Then, we propose an heuristic methods which enables to quickly find a feasible solution of the multi-sourcing problem.
+Then, we propose an heuristic methods that enables to quickly find a feasible solution of the multi-sourcing problem.
 The returned solution can be directly used by Argon Consulting's clients or as an initial solution of a generic solver.
 
 
@@ -126,10 +126,10 @@ Continuous-time inventory models consider a continuous vision of time.
 The seminal model known as the \emph{Economic Order Quantity (EOQ)} model from \citet{Harris1913} enables to compute the optimal trade-off between ordering and holding cost.
 In practice, EOQ formula is hard to use since ordering and holding costs are hard to compare.
 Argon Consulting aims at finding the optimal lot-sizes (or cover-sizes) from the flexibility of its assembly lines which is a constraints defines by previous Supply Chain process.
-An assembly line can produce several items by lose time when switching from the production of one item to another.
+An assembly line can produce several items but lose time when switching from the production of one item to another.
 Considering a constant demand rate, \cref{fig:intro:en:continuous-time-inventory-model} shows the consequences of several length of production cycle.
-Too short production cycle lead to stock-out since too much time is spend to switch between the production of two items whereas too long production cycle lead to unnecessary high inventory and unproductive time.
-In real dataset, assembly line produce a lot of items and time lost due to switching from to different production is model by a maximal number of setups.
+Too short production cycle lead to stock-out since too much time is spend to switch between the production of two items whereas too long production cycles lead to unnecessary high inventory and unproductive time.
+In real datasets, assembly lines produce a lot of items and time lost due to switching from to different production is model by a maximal number of setups.
 
 
 \begin{figure}[!ht]
@@ -154,7 +154,86 @@ Moreover, we also study an extension that considers several parallel assembly li
 \label{sec:intro:en:discrete-time-inventory-models}
 
 
-Discrete-time inventory models have a discrete vision of time.
-The 
+Discrete-time inventory models (also called \emph{dynamic lot-sizing problems}) decompose time into discrete period.
+They are used by companies to plan their short-term production.
+A classical model is the \emph{Capacitated Lot-Sizing Problem (CLSP)}.
+It considers an assembly line producing several items during a finite number of periods.
+The demand for each item is deterministic and given for each period.
+It aims at minimizing the sum of the holding costs (due to inventory carried from a period to the following) and the setup costs (fixed cost due to launch of the production) subject to the capacity of the assembly line.
 
+
+The drawback of this formulation according to Argon Consulting and its clients is the difficulty to estimate the value of the setup costs.
+On the other hand, estimate the maximal number of setups for a period is easy for them.
+We propose a model derived from the Capacitated Lot-Sizing Problem replacing the setup costs by an upper bound on the number of setup.
+\cref{fig:intro:en:pdp} shows an example of production planning of four items when at most two items can be produced during a period.
+To the best of our knowledge, this model is new and has not been studied by academics yet.
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=.8\textwidth]{main/introduction/images/pdp.tikz}
+  \caption{Production planning of four items for five weeks}
+  \label{fig:intro:en:pdp}
+\end{figure}
+
+
+Our lot-sizing problem can be written as a \emph{mixed integer linear program (MILP)}.
+We get several theoretical results in deterministic setting that show the difficulties of the problem.
+As expected, this problem is $\NP$-hard.
+A classical method to help solving mixed integer linear program consist in relaxing some constraints to get bound on the optimal value of the problem.
+% Specifically, continuous relaxation consists in relaxing the integrity constraint on variable which make the problem much more easier.
+We try several formulations (compact and extended) but we prove that they all give the same continuous relaxation without additional valid inequalities.
+Finally, we find a simple case whose complexity status remains an open question.
+\begin{question}
+What is the complexity status of our lot-sizing problem when there is no capacity constraints and when the maximal number of setups per period is equal to 1?
+% \begin{subequations}\label{eq:intro:en:Uniform-CLSP-BS}
+%   \begin{align+}
+%     \min\quad & \rlap{$\ds \sum_{t=1}^{\horizon} \sum_{i\in\REF} \holding^i \inventory_t^i$}
+%     \label{eq:intro:en:Uniform-CLSP-BS:objective}
+%     \\
+%     \st\quad & \ds \inventory_t^i = \inventory_{t-1}^i + \quantity_t^i - \demand_t^i && \forall t\in\range{\horizon},\ \forall i\in\REF,
+%     \label{eq:intro:en:Uniform-CLSP-BS:stock-dynamics}
+%     \\
+%     & \ds \quantity_t^i \le M\setup_t^i && \forall t\in\range{\horizon},\ \forall i\in\REF,
+%     \label{eq:intro:en:Uniform-CLSP-BS:item-capacity}
+%     \\
+%     & \ds \sum_{i\in\REF} \setup_t^i \le 1 && \forall t\in\range{\horizon},
+%     \label{eq:intro:en:Uniform-CLSP-BS:setups}
+%     \\
+%     & \ds \setup_t^i \in \crbracket{0,1} && \forall t\in\range{\horizon},\ \forall i\in\REF,
+%     \label{eq:intro:en:Uniform-CLSP-BS:boolean}
+%     \\
+%     & \ds \quantity_t^i,\ \inventory_t^i \ge 0 && \forall t\in\range{\horizon},\ \forall i\in\REF.
+%     \label{eq:intro:en:Uniform-CLSP-BS:positivity}
+%   \end{align+}
+% \end{subequations}
+% where $M=\sum_{t=1}^{\horizon} \sum_{i\in\REF}\demand_t^i$.
+\end{question}
+
+
+\medskip
+
+
+In practice, the demand in not always deterministically known.
+As shown in \cref{fig:intro:en:pdp}, only the production for the firsts periods has to be fixed.
+The forecast production of the other periods may change.
+We propose a stochastic version of our lot-sizing problem based on \emph{Stochastic Optimization} (see \cref{sec:intro:en:multi-sourcing}).
+The difference is that we do not used a risk-averse constraint ($\AVaR$) but stick to the classical risk-neutral vision (the expectation).
+Indeed, production is a repeated decision and a failure at one period is easier to compensated with the other period.
+
+
+Moreover, in stochastic settings, we must accept backorder because production resources are limited and it may be impossible to cover every possible realizations of demand.
+Except when they are enshrined through contracts with the customers, backorder costs can be hard to estimate.
+We propose a method based on the \emph{news-vendor problem} (one of the oldest stochastic models) to linked the backorder cost and the desired service level.
+
+
+As in \cref{sec:intro:en:multi-sourcing}, our stochastic lot-sizing problem is also solved doing first a two-stages approximation and then a sampling of scenarios in order to get a mixed integer linear program.
+Since we do not have scenarios, we generate them using the probabilistic model used in \cref{sec:intro:en:multi-sourcing}.
+
+
+\medskip
+
+
+Our tests on real datasets give good results compared to heuristics used by Argon Consulting's clients.
+However, as for multi-sourcing experiments, they are not sufficient to prove the complete efficiency of the method because they are also too dependent on the sampling methods.
+The same developments as those proposed in \cref{sec:intro:en:multi-sourcing} may enable too remove this sampling dependence.
 
