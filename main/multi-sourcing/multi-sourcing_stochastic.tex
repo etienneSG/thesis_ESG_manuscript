@@ -21,7 +21,6 @@ Since multi-sourcing problem addresses the question of flexibility (see \cref{ch
 
 Dealing with uncertainty leads to consider possible unsatisfied demand.
 Methods to face uncertainty goes from the more conservative which does not allow stock-out in any outcome to methods controlling stock-out probability, stock-out quantity or other relevant indicators.
-\vlil{I have some difficulties in following the arguments here}
 Discussions with Argon Consulting raise two characteristics of unsatisfied demand.
 First, multi-sourcing decisions should lead to ``high long term service level''.
 Indeed, multi-sourcing decisions take time to be implemented.
@@ -42,7 +41,7 @@ Several approaches are possible and will be discussed in \cref{sec:multi-sourcin
 \label{sec:multi-sourcing:stochastic:introduction:problem-statement}
 
 
-For the sake of completeness, we do it in full details but it is very close to the deterministic one.
+For the sake of completeness, we present the problem in full details but it is very close to the deterministic one.
 We consider a set $\plants$ of plants producing a set $\REF$ of items over $\horizon$ periods.
 There is an upper bound $\capacity_{pt}$ on the total period production of plant $p$ at period $t$ (summed over all items).
 This upper bound is expressed in time unit since it correspond to available working hours.
@@ -93,25 +92,25 @@ In \cref{sec:multi-sourcing:stochastic:discussion}, we discuss the choices made 
 \label{sec:multi-sourcing:stochastic:bibliography}
 
 
-Deciding multi-sourcing in a long term decision and often comes with stochastic considerations.
+Deciding multi-sourcing is a long term decision and often comes with stochastic considerations.
 A extensive review is proposed by \citet{Yao2017}.
 
 
 A seminal model about stochastic multi-sourcing is given by \citet{Jordan1995}.
 In automotive industry, they aim at deciding which plant (or which line) should have the ability to produce each item.
 This is a single-period model which aims at minimizing the shortfall subject to limited flexibility.
-As in deterministic case, they conclude that a long chain configuration enables to have results almost as good as a complete flexibility.
+As in the deterministic case, they conclude that a long chain configuration enables to have results almost as good as a complete flexibility.
 A similar model is proposed by \citet{Brian2005} that consider risk-neutral and risk averse objective.
 In order to deal with more complicated cases (multi-item and multi-market), \citet{Garavelli2003} uses simulations to quantify impact of flexibility configurations.
 Again, a limited flexibility seems sufficient to achieve very good results.
 
 
-One goal of stochastic multi-sourcing is to deal with the risk.
-A remark is that risk is often concentrate to single-item problem.
+One goal of stochastic multi-sourcing is to deal with risk.
+Note that risk is often concentrate\vl{?} to single-item problem.
 Risk aversion extension of news-vendor problem was extensively studied (see \citet{Vipul2000} and \citet{Choi2008}).
 More recently, \citet{Arikan2017} propose a classification of existing extensions (included those with Average-Value-at-Risk).
-\citet{Ahmed2007} are one of the rare authors using coherent measure of risk for a multi-period inventory problem.
-Its objective minimizes a risk averse function (like $\AVaR$) instead of a risk neutral function (like expectation).
+\citet{Ahmed2007} are one of the rare authors using coherent risk measure for a multi-period inventory problem.
+Their objective is to minimize a risk averse function (like $\AVaR$) instead of a risk neutral function (like expectation).
 However, these are production decisions and not multi-sourcing decisions.
 
 
@@ -127,14 +126,14 @@ They studied different cases and in particular, the minimization of the expected
 
 
 To model the constraint on the backorder, we first introduce the Average Value at Risk and then present the model.
-Choices made to model the risk will be discuss in \cref{sec:multi-sourcing:stochastic:discussion}.
+Choices made to model the risk will be discussed in \cref{sec:multi-sourcing:stochastic:discussion}.
 
 
 \subsection{Average Value at Risk}
 
 
 In order to measure and control the service level, we use the \emph{Average Value at Risk ($\AVaR$)} which is a \emph{coherent risk measure} widely studied (see for example \citet{Artzner1999,Rockafellar2000,Rockafellar2002}) and chose the definition given in \citet{Follmer2004}.
-In financial context, measures of risk are used to quantify the risk of a position.
+In financial context, risk measures are used to quantify the risk of a position.
 
 
 Fix some level $\lambda\in\bracket{0,1}$. For a random variable $\va X:\scenarios\to\RR$, its \emph{Value at Risk at level $\lambda$} is defined as
@@ -156,7 +155,7 @@ Fix some level $\lambda\in\bracket{0,1}$. For a random variable $\va X:\scenario
 
 
 For the inventory, $\AVaR_{1-\servicelvl}\bracket{\va\inventory}$ seems like the safety stock in the case of a fill rate service level $\servicelvl$.
-More precisely, $\AVaR_{1-\servicelvl}\bracket{\va\inventory}\le 0$ means that the average of safety stocks needed to ensure cycle service level from $\servicelvl$ to 1 is negative (\ie it does not need safety stocks).
+More precisely, $\AVaR_{1-\servicelvl}\bracket{\va\inventory}\le 0$ means that the average of safety stocks needed to ensure cycle service level from $\servicelvl$ to 1 is negative (\ie no safety stocks is required).
 
 
 \cref{fig:avar-examples} represents the Value at Risk and the Average Value at Risk in the case of a Gaussian distribution of the stock $\va\inventory_t^i$.
@@ -343,7 +342,7 @@ Thus, we propose a simple heuristic to find a solution in reasonable time.
 
 
 As explained in \cref{chap:business-context}, randomness comes from the variations of product mix and not from the global volume which is assumed constant.
-Basic idea of the heuristic is to scale the demand of every item at every period with a factor $\alpha\ge1$ and to solve the deterministic version~\eqref{eq:det-multi-sourcing} got with this demand.
+The basic idea of the heuristic is to scale the demand of every item at every period with a factor $\alpha\ge1$ and to solve the deterministic version~\eqref{eq:det-multi-sourcing} got with this demand.
 Then, the obtained assignment should be feasible for $\alpha$ large enough.
 
 
@@ -527,6 +526,8 @@ true
 
 
 Formulation \eqref{eq:stoch-multi-sourcing:linearized} has a structure which fit with L-shaped method (Bender decomposition of the primal).
+\vlil{En fait c'est faux tel quel car il y a la contraintes de risques qui lie les différents scénarios. Dans ta matrices 9.8 il faut donc rajouter une ligne couplante, et se contenter de parler de Bender et non de L-Shaped, contrairement à ce que j'avais dis...}
+
 We refer to \citet[Chapter 5]{Birge2011} for a presentation of the method.
 Indeed, introducing the vector $z$ of first-step variables (assignment variables $\bracket{\open_p^i}_{p,i}$ and auxiliary variables $\bracket{m_t^i}_{t,i}$) and for each scenario $\omega$, the vector $w_{\omega}$ of second-step variables (inventory variables $\bracket{\inventory_{t,\omega}^i}_{t,i,\omega}$, production variables $\bracket{\quantity_{pt,\omega}^i}_{p,t,i}$ and auxiliary variables $\bracket{\alpha_{t,\omega}^i}_{t,i,\omega}$, we get the following program
 \begin{subequations}\label{eq:stoch-multi-sourcing:bender}
@@ -559,7 +560,8 @@ T           & & & & W
 \end{equation}
 
 
-For lack of time, we have not implemented this method but it is promising to accelerate resolution of formulation~\eqref{eq:stoch-multi-sourcing:linearized}.
+
+We did not have the time to implement this method, but it is promising to accelerate resolution of formulation~\eqref{eq:stoch-multi-sourcing:linearized}.
 
 
 
@@ -608,7 +610,7 @@ $$
   ,\quad
   \lb_{p,1}^i=\ub_{p,1}^i=\capacity_{p,1}=100.
 $$
-Since the plant are identical, we simply use the number of open plants as a decision variable and denote by $\va\inventory$ the inventory at the end of the period.
+Since the plants are identical, we simply use the number of open plants as a decision variable and denote by $\va\inventory$ the inventory at the end of the period.
 \cref{tab:indicator-values-depending-on-open-plants} gives the values of the left part of each constraint depending on the number of open plants.
 Orange values correspond to cases where constraint is satisfied.
 The two last lines correspond to the fill rate service level and to the expected number of lost sales depending on the number of open plants.
@@ -682,28 +684,29 @@ As expected by the theory, robust constraint is more conservative than $\AVaR$ w
 \esgil{Essai en supprimant la discussion sur la facilité pour représenter la contrainte. Cette discussion n'apportait pas vraiment.}
 
 We propose seven criterion to compare the constraints.
-First, the ease to linearize the constraint if needed since it can makes us able to use linear programming.
+First, the ease to linearize the constraint if needed since enable us to use linear programming.
 Expectation constraint is already linear making it easy to use.
-On the other hand, probabilistic constraint may be hard to linearize since it may not be convex.
+On the other hand, probabilistic constraint may be hard to linearize since it may not be convex.\vl{thus requires additional binary variables}
 % For robust constraint, every possible outcome must be considered and definition of $\AVaR$ may make it hard to use.
 Robust and $\AVaR$ constraints are convex.
 Then, using scenarios often enables to get linear formulation of robust constraint of reasonable size and as shown in \cref{sec:multi-sourcing:stochastic:avar-linearization}, $\AVaR$ can also be linearized.
 
 
 Interpretation of robust and probabilistic constraints are quite easy.
-Robust constraint consists in satisfying the constraint in every possible outcome.
+Robust constraint\vl{, in its vanilla form,} consists in satisfying the constraint in every possible outcome.
 In multi-sourcing, demand distribution is bounded.
-Thus satisfying the robust constraint consists in having enough stock to satisfy the higher possible demand.
+Thus satisfying the robust constraint consists in having enough stock to satisfy the highest possible demand.
 Probabilistic constraint consists in satisfying the constraint in $100\servicelvl\%$ of the cases.
 In multi-sourcing, this means that in $100\servicelvl\%$ of the cases, stock is high enough to satisfy the demand but in the remaining cases demand can as well be fully, partially or not satisfied at all.
 It perfectly matches with the cycle service level.
-Even though expectation constraint seems easy to interpret, in practice, knowing the behavior of the mean does not give any information on the behavior of the outcomes.
+Even though expectation constraint seems easy to interpret, in practice, knowing the behavior of the mean does not give much information on the behavior of the outcomes.
 For example, if the demand has a all-or-nothing distribution, expectation is far from any outcome.
 More generally, as soon as variance of distribution is high, it is hard to interpret from expectation behavior.
 Understanding $\AVaR$ constraint at level $\lambda\%$ is not straightforward.
 However, it means that $100\bracket{1-\lambda}\%$ of cases satisfies the constraint and that the mean over the remaining cases also satisfy the constraint.
 Thus, it includes the interpretations of a probabilistic constraint at $100\bracket{1-\lambda}\%$ and of an expectation constraint on the bad cases.
 If there is not too many bad cases (\ie if $\lambda$ is small), we might expect a small variance in their distribution (while nothing ensure it).
+\vlil{il faudrait rappeler que l'AVAR constraint est strictement plus dure que la chance constraint - pour un même niveau.}
 
 
 Thus, we easily see that $\AVaR$ constraint enables to control the proportion of bad cases and their value.
@@ -717,7 +720,7 @@ Indeed, the company can easily see the price implied by the service level constr
 On the other hand, there is not any way of changing the robust and expectation constraints behavior.
 
 
-Feasibility issues of each of this constraint is directly linked to it level of conservativeness.
+Feasibility issues of each of this constraints is directly linked to it level of conservativeness.
 Robust constraint is the most conservative and a single very bad outcome lead to an infeasible model.
 At the other extreme, expectation constraint is much more easy to satisfy.
 Choice of the type of constraint for this criteria is strongly linked to the distribution of the random variable.
@@ -730,7 +733,7 @@ On the other hand, expectation and robust constraint are often easier to deal wi
 \medskip
 
 
-We choose $\AVaR$ constraint because of its linearization properties
+We choose $\AVaR$ constraint because of its linearization properties.
 Moreover, as wanted by Argon Consulting, $\AVaR$ enables to control the acceptable proportion of bad cases and their values.
-For Argon Consulting, the real issue is the computational complexity.
+For Argon Consulting, the real issue remains the computational complexity.
 
