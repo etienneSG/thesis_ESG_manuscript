@@ -2,20 +2,25 @@
 \label{chap:intro:en}
 
 
-The\vl{?} research made in this thesis deals with Supply Chain Management.
-They\vl{?} were funded by Argon consulting which is an independent consulting firm whose mission is to help its clients to improve every part of their Supply Chain (from the procurement of raw materials to the delivering of final products) and conducted throughout an industrial partnership with the \'Ecole des Ponts ParisTech.
-The objective is to develop \vl{model and} methods to manage specific parts of the Supply Chain in an optimal way.
-
+Research made in this thesis deals with Supply Chain Management.
+It was funded by Argon consulting which is an independent consulting firm whose mission is to help its clients to improve every part of their Supply Chain (from the procurement of raw materials to the delivering of final products) and conducted throughout an industrial partnership with the \'Ecole des Ponts ParisTech.
+The objective is to model and develop methods to manage specific parts of the Supply Chain in an optimal way.
 
 
 The common thread of the three topics developed in this thesis is the \emph{flexibility}.
 The flexibility is the ability to deliver a service or a product to a costumer although the environment and the future is uncertain.
 Depending on the level of decision, the flexibility is either a constraint (like the ability of an assembly line to easily switch from the production of one item to another) or a decision variable (like deciding between specialization and versatility).
-In general, the closer to the final costumer are the decisions, the more they are subject to flexibility decisions taken by Supply Chain\vl{unclear}.
+In general, the flexibility is a long-term (and sometimes mid-term) decisions.
 
 
-Our first topic deals with multi-sourcing of production that aims at deciding the flexibility of means of production.
-The second and third topics deals with the reduction of inventories subject to flexibility decisions that were already made.
+This manuscript presents the topics following the order in which they were studied during this thesis.
+However, in order to help understanding, we choose to introduce the three topics beginning by the long-term decisions, then the mid-term decisions and finally the short-term decisions.
+The long-term decisions studied in this thesis (\cref{part:multi-sourcing}) deals with multi-sourcing of production that aims at deciding the flexibility of means of production.
+The mid-term decisions (\cref{part:continuous-review-inventory-model}) and the short-term decisions (\cref{part:discrete-review-inventory-model}) both deal with the reduction of inventories subject to flexibility decisions that were already made.
+However, mid-term decisions aim at computing indicators that drive several Supply Chain processes whereas short-term decisions aim at deciding the production that must be launched.
+
+
+
 
 \section{Multi-sourcing of production}
 \label{sec:intro:en:multi-sourcing}
@@ -44,16 +49,17 @@ Precisely, they determine the flexibility of the plants and the ability to balan
 \medskip
 
 
-To model the multi-sourcing problem, we relies on \emph{Stochastic Optimization} which studies optimization problem that involves random objective function \vl{and/}or random constraints.
+To model the multi-sourcing problem, we relies on \emph{Stochastic Programming} which studies optimization problem that involves random objective function and/or random constraints.
 Let $\va \xi$ be a random variable with known distribution.
-The general\vl{risk-neutral} formulation of stochastic programs is of the form
+The general risk-neutral formulation of stochastic programs is of the form
 \begin{equation}
 \begin{array}{rl}
   \mbox{Minimize} \quad & f(x) + \espe_{\va\xi}\sqbracket{Q\bracket{x,\va\xi}} \\
   \mbox{Subject to} \quad & x \in X
 \end{array}
 \end{equation}
-where $\espe_{\va\xi}\sqbracket{.}$ is the expected value over $\va\xi\in\Xi$ and $Q\bracket{x,\xi}$ is a recourse function. \vlil{Typically, $Q\bracket{x,\xi}$ is the value of a so-called second stage optimization problem parametrized by $x$ and $\xi$.}
+where $\espe_{\va\xi}\sqbracket{.}$ is the expected value over $\va\xi\in\Xi$ and $Q\bracket{x,\xi}$ is a recourse function.
+Typically, $Q\bracket{x,\xi}$ is the value of a so-called second stage optimization problem parametrized by $x$ and $\xi$.
 The variables $x$ are the first stage variables.
 They are decided before knowing the realization of the randomness.
 The parameter $\va\xi$ contains all the randomness in the second stage including the recourse variable which are decision taken knowing the realization of the randomness.
@@ -63,7 +69,7 @@ We apply a classical approximation scheme to solve the stochastic program doing 
 \medskip
 
 
-Considering its applications, Argon Consulting choose to model the demand as the main source of uncertainty \vl{with a fixed and known total volume of demand.} and consider that the total volume of demand is known.
+Considering its applications, Argon Consulting choose to model the demand as the main source of uncertainty with a fixed and known total volume of demand.
 (In its applications, Argon Consulting is interested by the ability to face variation in the products mix and not in the volume of demand.)
 Then, we propose a model where first stage variables are the assignment of items to plants and second stage variables are the production decisions.
 In order to deal with randomness and to capture the long-term impact and the risk of assignment decisions, we rely on \emph{risk measures} that were first used in financial applications to quantify the risk of a financial position.
@@ -81,7 +87,7 @@ Moreover, the parameter $\alpha$ enables to try several risk levels and Average 
 
 
 Real datasets given by Argon Consulting's clients contain only historical values of production and sales.
-Since we do not have the actual demand, we propose\vl{in Chapter} a probabilistic model to generate possible realizations of demand from historical values.
+Since we do not have the actual demand, we propose in \cref{chap:pdp:numerical-experiments} a probabilistic model to generate possible realizations of demand from historical values.
 This model is based on \emph{Dirichlet distributions} and aims at being easy to use.
 Its only input are a forecast demand (which can be the historical sales or the historical forecast) and a volatility which is a percentage standing for to the accuracy of the forecast.
 (The lowest the volatility the more accurate the forecast.)
@@ -181,8 +187,8 @@ We get several theoretical results in deterministic setting that show the diffic
 As expected, this problem is $\NP$-hard.
 A classical method to help solving mixed integer linear program consist in relaxing some constraints to get bound on the optimal value of the problem.
 % Specifically, continuous relaxation consists in relaxing the integrity constraint on variable which make the problem much more easier.
-\vlil{We showed that several formulation all yields the same continuous relaxation}
-We try several formulations (compact and extended) but we prove that they all give the same continuous relaxation without additional valid inequalities.
+We showed that several formulation all yields the same continuous relaxation.
+% We try several formulations (compact and extended) but we prove that they all give the same continuous relaxation without additional valid inequalities.
 Finally, we find a simple case whose complexity status remains an open question.
 \begin{question}
 What is the complexity status of our lot-sizing problem when there is no capacity constraints and when the maximal number of setups per period is equal to 1?
@@ -217,7 +223,7 @@ What is the complexity status of our lot-sizing problem when there is no capacit
 In practice, the demand in not always deterministically known.
 As shown in \cref{fig:intro:en:pdp}, only the production for the firsts periods has to be fixed.
 The forecast production of the other periods may change.
-We propose a stochastic version of our lot-sizing problem based on \emph{Stochastic Optimization}\vl{Stochastic Programming} (see \cref{sec:intro:en:multi-sourcing}).
+We propose a stochastic version of our lot-sizing problem based on \emph{Stochastic Programming} (see \cref{sec:intro:en:multi-sourcing}).
 The difference is that we do not used a risk-averse constraint ($\AVaR$) but stick to the classical risk-neutral vision (the expectation).
 Indeed, production is a repeated decision and a failure at one period is easier to compensated with the other period.
 

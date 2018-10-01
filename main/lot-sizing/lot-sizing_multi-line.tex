@@ -4,7 +4,7 @@
 
 
 \cref{chap:lot-size:single-line} was about to decide the optimal cycle stocks when only a single line is involved.
-In this chapter, several are involved in production and we aim at deciding the part of demand assigned to each line and the cycle stocks for each each item on each line.
+In this chapter, several lines are involved in production and we aim at deciding for each line the part of demand assigned and the cycle stocks for each item.
 
 
 
@@ -12,19 +12,19 @@ In this chapter, several are involved in production and we aim at deciding the p
 \label{sec:lot-size:several-lines:motivations}
 
 
-Context is almost the same than in \cref{chap:lot-size:single-line}.
-A company aims at reducing it cycle stocks (which globally helps to decrease the inventory) subject to flexibility constraint of the assemblies lines.
+The context is almost the same as in \cref{chap:lot-size:single-line}.
+A company aims at reducing its cycle stocks (which globally helps decrease the inventory) subject to flexibility constraints of the assembly lines.
 In many applications, a company has many assembly lines and production of a single item may be done on several lines.
-This kind of configuration is very common and are the consequences of multi-sourcing decisions previously made (see \cref{sec:business-context:argon:multi-sourcing} for a description of multi-sourcing issues).
-These lines might be the same plants as well in different ones.
+This kind of configuration is very common and is the consequence of multi-sourcing decisions previously made (see \cref{sec:business-context:argon:multi-sourcing} for a description of multi-sourcing issues).
+These lines might be in the same plants or in different ones.
 But, in both cases, it enables to increase flexibility of production and the workload between lines.
 
 
-As in single line case, assembly lines are managed using $(r,\lot)$ policies or similar ones (like policies using cover).
-The challenge of the multi-line case is that companies must decide the part of demand assigned to each line and the lot (or cover) used for the production of each item on each line.
+As in the single-line case, assembly lines are managed using $(r,\lot)$ policies or similar ones (like policies using cover-sizes).
+The challenge of the multi-line case is that the company must decide the part of demand assigned to each line and the lot-sizes (or cover-sizes) used for the production of each item on each line.
 
 
-In this chapter, we show how to compute the assignment of demand to lines and the lot-sizes and cover-sizes minimizing inventory subject to flexibility constraint.
+In this chapter, we show how to compute the assignment of demand to lines and the lot-sizes and cover-sizes minimizing inventory subject to flexibility constraints.
 
 
 \section{Problem}
@@ -34,20 +34,19 @@ The problem described by Argon Consulting considers a set $\lines$ of assembly l
 Each line is managed using the same policy than in \cref{chap:lot-size:single-line}.
 Parameters for each line $\ell$ are then the same (with an index depending on the line) and we recall them for the sake of completeness.
 The internal production time of item $i$ on line $\ell$ (\ie the quantity of item $i$ produced in one time unit) is $\rate_i^{\ell}$.
-Inventory $\inventory_i^\ell$ of item $i$ must satisfy demand, known in advance.
+Inventory $\inventory_i^\ell$ of item $i$ must satisfy a demand, known in advance.
 The part of demand for item $i$ assigned to line $\ell$ is modeled by a continuous decrease $\demand_i^{\ell}<\rate_i^{\ell}$ units per time unit when line $\ell$ does not produce item $i$ and a continuous increase $\rate_i^{\ell}-\demand_i^{\ell}$ units per time unit when item $i$ is produced.
-The whole demand or item $i$ is modeled by a continuous decrease $\demand_i$ which is assumed positive.
-Since the whole demand must satisfied, we have
+The whole demand of item $i$ is modeled by a continuous decrease $\demand_i$ which is assumed positive.
+Since the whole demand must be satisfied, we have
 \begin{equation}\label{eq:lot-size:multi-line:motivations:whole-demand}
   \sum_{\ell\in\lines}\demand_i^{\ell}=\demand_i\qquad\forall i\in\REF.
 \end{equation}
 
 
-If item $i$ is assigned to line $\ell$, the first time it is produced on line $\ell$ is $t_i^{\ell}$.
-and the production is launched for every $t_i^{\ell}+k\cover_i^{\ell}$ where $k\in\ZZ_+$ and $\cover_i^{\ell}$ is the cover-size of item $i$ for the line $\ell$.
+If item $i$ is assigned to line $\ell$, the first time it is produced on line $\ell$ is $t_i^{\ell}$ and the production is launched for every $t_i^{\ell}+k\cover_i^{\ell}$ where $k\in\ZZ_+$ and $\cover_i^{\ell}$ is the cover-size of item $i$ for the line $\ell$.
 Each production on line $\ell$ lasts $\frac{\demand_i^{\ell}}{\rate_i^{\ell}}\cover_i^{\ell}$ in order to produce exactly the demand assign to line $\ell$ for the next $\cover_i^{\ell}$ unit of time.
 (Each of these quantities is not defined if item $i$ is not assigned to line $\ell$.)
-Like single-line case, the productions of several items can be placed simultaneously.
+Like in the single-line case, the productions of several items can be launched simultaneously.
 
 
 Thus, if item $i$ is assigned to line $\ell$, inventory $\inventory_i^{\ell}\bracket{t}$ generated par line $\ell$ is continuous, right and left differentiable, nonnegative and follows the dynamic
@@ -65,15 +64,15 @@ Thus, if item $i$ is assigned to line $\ell$, inventory $\inventory_i^{\ell}\bra
 \end{equation}
 
 
-Contrary to single-line case, each line has a limited capacity.
-In average over the infinite horizon, the percentage of time spend for production of all items assigned to line $\ell$ must be lower than $\capacity^{\ell}<1$ which can be written as
+Contrary to the single-line case, each line has a limited capacity.
+In average over the infinite horizon, the percentage of time spent for production of all items assigned to line $\ell$ must be smaller than $\capacity^{\ell}<1$ which can be written as
 \begin{equation}\label{eq:lot-size:multi-line:motivations:capacity}
   \sum_{i\in\REF}\frac{\demand_i^{\ell}}{\rate_i^{\ell}}\le\capacity^{\ell}\qquad\forall \ell\in\lines.
 \end{equation}
 Indeed, each production of item $i$ on line $\ell$ lasts $\frac{\demand_i^{\ell}}{\rate_i^{\ell}}\cover_i^{\ell}$ (in order to produce exactly the demand for the next $\cover_i$ unit of time) and then uses $\frac{\demand_i^{\ell}}{\rate_i^{\ell}}$ percents of the production time.
 
 
-Like single-line case, in average over the infinite horizon, the number of setups per unit time for all items must be lower than $\nbsetups^{\ell}$ which can be written as
+Like single-line case, in average over the infinite horizon, the number of setups per unit time for all items must be smaller than $\nbsetups^{\ell}$ which can be written as
 \begin{equation}\label{eq:lot-size:multi-line:motivations:flexibility}
   \limsup_{\horizon\rightarrow+\infty}\ \frac{1}{\horizon} \sum_{i\in\REF^{\ell}} \left\lfloor\frac{\horizon-t_i^{\ell}}{\cover_i^{\ell}}\right\rfloor \le \nbsetups
 \end{equation}
@@ -93,9 +92,9 @@ while satisfying nonnegative inventory, constraints~\eqref{eq:lot-size:multi-lin
 \medskip
 
 
-We call this model the \emph{multi-line Economic Production Quantity model with Bounded number of Setups (multi-line EPQ-BS)}.
+We call this model the \emph{multi-line Economic Production Quantity model with Bounded number of Setups (the multi-line EPQ-BS)}.
 
-Like for single line case, when using lot-sizes $\lot_i^{\ell}$ instead of cover-sizes, the multi-line EPQ-BS can be simply adapt using $\lot_i^{\ell}=\demand_i^{\ell}\cover_i^{\ell}$.
+Like for the single-line case, when using lot-sizes $\lot_i^{\ell}$ instead of cover-sizes, the multi-line EPQ-BS can be simply adapted using $\lot_i^{\ell}=\demand_i^{\ell}\cover_i^{\ell}$.
 
 
 
@@ -140,6 +139,7 @@ By deciding the assignment and the cover-sizes, they aims at minimizing total co
 
 
 We address the following alternative mathematical problem.
+We are going to show that it models the multi-line EPQ-BS.
 \begin{subequations}\label{eq:lot-size:multi-line:unconstrained}
   \begin{align+}
   \min\quad & \ds\sum_{i\in\REF} \frac{1}{2\nbsetups^{\ell}}\bracket{\sum_{i\in\REF}\sqrt{\holding_i^{\ell}\bracket{1-\frac{\demand_i^{\ell}}{\rate_i^{\ell}}}\demand_i^{\ell}}}^2
@@ -157,72 +157,34 @@ We address the following alternative mathematical problem.
 \end{subequations}
 
 
-\begin{thm}\label{thm:lot-size:multi-line:unconstrained:optimality}
-Optimal solutions of Problem~\eqref{eq:lot-size:multi-line:unconstrained} can be found on the extreme point of the constraints polyhedron using an algorithm minimizing concave function on a polyhedron.
-
-Moreover, an optimal solution $\bracket{\demand_i^{\ell*}}_{i\in\REF,\ell\in\lines}$ of Problem~\eqref{eq:lot-size:multi-line:unconstrained} can be completed in an optimal solution of multi-line EPQ-BS setting for each item $i$ assigned to line $\ell$
-\begin{equation}\label{eq:lot-size:multi-line:unconstrained:optimal-cover}
-  \cover_i^{\ell*}= \frac{\sum_{j\in\REF}\sqrt{\holding_j\bracket{1-\frac{\demand_i^{\ell*}}{\rate_i}}\demand_i^{\ell*}}}{\nbsetups\sqrt{\holding_i\bracket{1-\frac{\demand_i^{\ell*}}{\rate_i}}\demand_i^{\ell*}}}.
-\end{equation}
-\end{thm}
+\cref{lem:concave-objective-function} proves that the objective function is concave.
+Minimization of concave function over a polyhedron is $\NP$-hard since it contains Zero-One Linear Programming (see \citet{Raghavachari1969}) which is known to be $\NP$-hard (see \citet{Garey1979}).
+However, there are many efficients algorithms to solve this kind of problem (see \citet{Tuy1964} for the first proposed algorithm and \citet{Benson1998} for a review) and it is well know that an optimal solution can be found in an extreme point of the constraints polytope (see \citet{Benson1985}).
 
 
-Minimization of concave function over a polyhedron is $\NP$-hard since it contains Zero-One Integer Programming (see \citet{Raghavachari1969}) which is known to be $\NP$-hard (see \citet{Garey1979}).
-However, there are many algorithms to solve this kind of problem (see \citet{Tuy1964} for the first proposed algorithm and \citet{Benson1998} for a review) and it is well know that an optimal solution can be found in an extreme point of the constraints polyhedron (see \citet{Benson1985}).
-
-
+\cref{thm:lot-size:multi-line:unconstrained:optimality} gives the formulas of the optimal cover-sizes when an optimal assignment $\bracket{\demand_i^{\ell*}}_{i\in\REF,\ell\in\lines}$ has been found.
 Note that \cref{eq:lot-size:multi-line:unconstrained:optimal-cover} is well-defined.
-Indeed, $\capacity^{\ell}$ is lower than 1.
+Indeed, $\capacity^{\ell}$ is smaller than 1.
 Thus, constraint~\eqref{eq:lot-size:multi-line:unconstrained:capacity} and definition of the cover-sizes only for the items assigned to a line ensure that $\bracket{1-\frac{\demand_i^{\ell*}}{\rate_i}}\demand_i^{\ell*}>0$.
 
 
-We recall the concave monotone superposition of a convex vector-function by a monotone convex function.
-
-
-\begin{lem}[``Concave monotone superposition'']\label{lem:concave-monotone-superposition}
-Let $C$ be a convex subset of $\RR^n$.
-Let $f:x\in C \mapsto f(x) = \bracket{f_1(x),\ldots,f_k(x)}$ be vector-function on $C\subseteq\RR^n$ with concave components $f_i$, and assume that $F$ is a concave function on $\RR^k$ which is monotone, \ie such that $z\le z'$ implies that $F(z)\le F(z')$.
-Then the superposition $\phi(x) = F\bracket{f(x)}=F\bracket{f_1(x),\ldots,f_k(x)}$ is concave on $C$.
-\end{lem}
-
-
-\begin{proof}
-Let $x$ and $x'$ be two vectors of $C$ and let $\lambda$ be a real number in $(0,1)$.
-Since each $f_i$ is concave, we have
-$f\bracket{\lambda x +(1-\lambda) x'} \ge \lambda f(x) + (1-\lambda) f(x')$.
-And then,
-\begin{subequations}
-\begin{align}
-  F\bracket{f\bracket{\lambda x +(1-\lambda) x'}}
-  &\ge F\bracket{\lambda f(x) + (1-\lambda) f(x')}
-  && \mbox{(monotonicity of $F$)}
-  \\
-  &\ge \lambda F\bracket{f(x)} + (1-\lambda) F\bracket{f(x')}.
-  && \mbox{(concavity of $F$)}
-\end{align}
-\end{subequations}
-Finally $\phi\bracket{\lambda x +(1-\lambda) x'} \ge \lambda \phi(x) + (1-\lambda) \phi(x')$ and $\phi$ is concave on $C$.
-\end{proof}
-
-
-
-\begin{lem}\label{lem:concave-objective-function}
+\begin{prop}\label{lem:concave-objective-function}
 The objective function
 \begin{equation}
 \begin{array}{rccl}
-  g: & \ds\bigcup_{\ell\in\lines}\bigcup_{i\in\REF} \sqbracket{0,\rate_i^{\ell}} & \to & \RR_+ \\
+  g: & \ds\prod_{\ell\in\lines,\ i\in\REF} \sqbracket{0,\rate_i^{\ell}} & \to & \RR_+ \\
      & \bracket{\demand_i^{\ell}}_{i,\ell} & \mapsto & \ds\sum_{i\in\REF} \frac{1}{2\nbsetups^{\ell}}\bracket{\sum_{i\in\REF}\sqrt{\holding_i^{\ell}\bracket{1-\frac{\demand_i^{\ell}}{\rate_i^{\ell}}}\demand_i^{\ell}}}^2
 \end{array}
 \end{equation}
 of Problem~\eqref{eq:lot-size:multi-line:unconstrained} is concave.
-\end{lem}
+\end{prop}
 
 
 \begin{proof}
-Let $F: x\in\RR_+^{\REF} \mapsto \bracket{\sum_{i\in\REF} \sqrt{x_i}}^2 \in \RR_+$ be a function on $\RR_+^{\REF}$.
+Let $F: x\in\RR_+^{\REF} \mapsto \bracket{\sum_{i\in\REF} \sqrt{x_i}}^2 \in \RR_+$.
 $F$ is continuous on $\RR_+^{\REF}$ and differentiable on $(\RR_+^*)^{\REF}$ and we have for all $x$ and $y$ in $(\RR_+^*)^{\REF}$
 \begin{equation}
-  \nabla F(x) = \sqrt{F(x)}\bracket{\sqrt{x_1},\ldots,\sqrt{x_{\REF}}}
+  \frac{\diff F}{\diff x_i}\bracket{x} = \sqrt{F(x)}\sqrt{x_i} \quad\forall i\in\REF,
 \end{equation}
 and
 \begin{multline}
@@ -239,12 +201,12 @@ and
 \le 0
 \end{multline}
 Thus, $F$ is concave on $(\RR_+^*)^{\REF}$.
-Since $F$ is continuous on $\RR_+^{\REF}$, $F$ is concave on $\RR_+^{\REF}$.
-For each $x$ and $x'$ in $\RR_+^{\REF}$, $x\le x'$ implies that $F(x)\le F(x')$.
-Using \cref{lem:concave-monotone-superposition} with $f_i^{\ell}:\demand_i^{\ell}\in\sqbracket{0,\rate_i^{\ell}}\to\holding_i^{\ell}\bracket{1-\frac{\demand_i^{\ell}}{\rate_i^{\ell}}}\demand_i^{\ell}$, we have than 
+Since $F$ is continuous on $\RR_+^{\REF}$, it is concave on $\RR_+^{\REF}$.
+For each $x$ and $x'$ in $\RR_+^{\REF}$, the inequality $x\le x'$ implies that $F(x)\le F(x')$.
+Since the maps $f_i^{\ell}:\demand_i^{\ell}\in\sqbracket{0,\rate_i^{\ell}}\mapsto\holding_i^{\ell}\bracket{1-\frac{\demand_i^{\ell}}{\rate_i^{\ell}}}\demand_i^{\ell}$ are concave and since $F$ is concave and monotone (\ie $z\le z'\implies F(z)\le F(z')$), we have that
 \begin{equation}
 \begin{array}{rccl}
-  g^{\ell}: & \sqbracket{0,\rate_1^{\ell}}\times\ldots\times\sqbracket{0,\rate_1^{\ell}} & \to     & \RR_+ \\
+  g^{\ell}: & \sqbracket{0,\rate_1^{\ell}}\times\cdots\times\sqbracket{0,\rate_1^{\ell}} & \to     & \RR_+ \\
             & \bracket{\demand_1^{\ell},\ldots,\demand_{\REF}^{\ell}} & \mapsto & \bracket{\sum_{i\in\REF}\sqrt{\holding_i^{\ell}\bracket{1-\frac{\demand_i^{\ell}}{\rate_i}}\demand_i^{\ell}}}^2
 \end{array}
 \end{equation}
@@ -253,21 +215,63 @@ Thus the objective function $g$ of Problem~\eqref{eq:lot-size:multi-line:unconst
 \end{proof}
 
 
+\begin{prop}\label{thm:lot-size:multi-line:unconstrained:optimality}
+An optimal solution $\bracket{\demand_i^{\ell*}}_{i\in\REF,\ell\in\lines}$ of Problem~\eqref{eq:lot-size:multi-line:unconstrained} can be completed in an optimal solution of multi-line EPQ-BS by setting
+\begin{equation}\label{eq:lot-size:multi-line:unconstrained:optimal-cover}
+  \cover_i^{\ell*}= \frac{\sum_{j\in\REF}\sqrt{\holding_j\bracket{1-\frac{\demand_i^{\ell*}}{\rate_i}}\demand_i^{\ell*}}}{\nbsetups\sqrt{\holding_i\bracket{1-\frac{\demand_i^{\ell*}}{\rate_i}}\demand_i^{\ell*}}}
+\end{equation}
+when item $i$ assigned to line $\ell$.
+\end{prop}
+
+
+% We recall the concave monotone superposition of a convex vector-function by a monotone convex function.
+
+
+% \begin{lem}[``Concave monotone superposition'']\label{lem:concave-monotone-superposition}
+% Let $C$ be a convex subset of $\RR^n$.
+% Let $f:x\in C \mapsto f(x) = \bracket{f_1(x),\ldots,f_k(x)}$ be vector-function on $C\subseteq\RR^n$ with concave components $f_i$, and assume that $F$ is a concave function on $\RR^k$ which is monotone, \ie such that $z\le z'$ implies that $F(z)\le F(z')$.
+% Then the superposition $\phi(x) = F\bracket{f(x)}=F\bracket{f_1(x),\ldots,f_k(x)}$ is concave on $C$.
+% \end{lem}
+
+
+% \begin{proof}
+% Let $x$ and $x'$ be two vectors of $C$ and let $\lambda$ be a real number in $(0,1)$.
+% Since each $f_i$ is concave, we have
+% $f\bracket{\lambda x +(1-\lambda) x'} \ge \lambda f(x) + (1-\lambda) f(x')$.
+% And then,
+% \begin{subequations}
+% \begin{align}
+%   F\bracket{f\bracket{\lambda x +(1-\lambda) x'}}
+%   &\ge F\bracket{\lambda f(x) + (1-\lambda) f(x')}
+%   && \mbox{(monotonicity of $F$)}
+%   \\
+%   &\ge \lambda F\bracket{f(x)} + (1-\lambda) F\bracket{f(x')}.
+%   && \mbox{(concavity of $F$)}
+% \end{align}
+% \end{subequations}
+% Finally $\phi\bracket{\lambda x +(1-\lambda) x'} \ge \lambda \phi(x) + (1-\lambda) \phi(x')$ and $\phi$ is concave on $C$.
+% \end{proof}
+
+
+
+
 \begin{proof}[Proof of \cref{thm:lot-size:multi-line:unconstrained:optimality}]
 Let $\bracket{\demand_i^{\ell}}_{i,\ell}$ be a feasible solution of Problem~\eqref{eq:lot-size:multi-line:unconstrained}.
+We have now $\card{\lines}$ independent problems (one for each line) that correspond to the single-line case.
 Consider a line $\ell\in\lines$ and the set $\REF^{\ell}$ of the items assigned to $\ell$.
-According to \cref{thm:lot-size:single-line:deterministic:unconstrained:optimality}, the covers which minimize the average holding cost over infinite horizon and satisfy nonnegative inventory constraint~\eqref{eq:lot-size:multi-line:motivations:dynamic} and constraint~\eqref{eq:lot-size:multi-line:motivations:flexibility} are given by \cref{eq:lot-size:multi-line:unconstrained:optimal-cover} and the corresponding cost is equal to
+According to \cref{thm:lot-size:single-line:deterministic:unconstrained:optimality}, the cover-sizes which minimize the average holding cost over infinite horizon and satisfy nonnegative inventory constraint~\eqref{eq:lot-size:multi-line:motivations:dynamic} and constraint~\eqref{eq:lot-size:multi-line:motivations:flexibility} are given by \cref{eq:lot-size:multi-line:unconstrained:optimal-cover} and the corresponding cost is equal to
 \begin{equation}\label{eq:lot-size:multi-line:unconstrained:optimality:cost}
   \frac{1}{2\nbsetups}\bracket{\sum_{i\in\REF^{\ell}}\sqrt{\holding_i^{\ell}\bracket{1-\frac{\demand_i^{\ell}}{\rate_i^{\ell}}}\demand_i^{\ell}}}^2.
 \end{equation}
-Indexes in sum expressing holding costs~\eqref{eq:lot-size:multi-line:unconstrained:optimality:cost} can be extend to $\REF$ (since assigned demand is equal to zero).
+This expression is one term of the sum in the objective function~\eqref{eq:lot-size:multi-line:unconstrained:objective} and the cover-sizes are feasible to the multi-line EPQ-BS.
+Indices in this sum expressing the holding costs~\eqref{eq:lot-size:multi-line:unconstrained:optimality:cost} can be extend to $\REF$ (since assigned demand is equal to zero).
 Thus, a feasible solution of Problem~\eqref{eq:lot-size:multi-line:unconstrained} can be completed in a feasible solution of multi-line EPQ-BS with same cost.
 
 
 Conversely, let $\bracket{\demand_i^{\ell},\cover_i^{\ell}}_{i,\ell}$ be a feasible solution of multi-line EPQ-BS.
 It is clearly feasible for Problem~\eqref{eq:lot-size:multi-line:unconstrained}.
-According to \cref{thm:lot-size:single-line:deterministic:unconstrained:optimality}, for each line $\ell$, average holding cost over infinite horizon is greater or equal to \eqref{eq:lot-size:multi-line:unconstrained:optimality:cost}.
-Thus, a feasible solution of multi-line EPQ-BS can be completed in a feasible solution of Problem~\eqref{eq:lot-size:multi-line:unconstrained} whose cost is greater or equal to \eqref{eq:lot-size:multi-line:unconstrained:optimality:cost}.
+According to \cref{thm:lot-size:single-line:deterministic:unconstrained:optimality}, for each line $\ell$, average holding cost over infinite horizon is greater than or equal to \eqref{eq:lot-size:multi-line:unconstrained:optimality:cost}.
+Thus, a feasible solution of multi-line EPQ-BS can be completed in a feasible solution of Problem~\eqref{eq:lot-size:multi-line:unconstrained} whose cost is greater than or equal to \eqref{eq:lot-size:multi-line:unconstrained:optimality:cost}.
 
 
 Finally, thanks to \cref{lem:concave-objective-function}, an optimal solution $\bracket{\demand_i^{\ell*}}_{i,\ell}$ of Problem~\eqref{eq:lot-size:multi-line:unconstrained} can be found minimizing a concave function over a polyhedron.
