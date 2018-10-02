@@ -50,7 +50,7 @@ C++11 has been chosen for the implementations and Gurobi 6.5.1~\citet{gurobi} wa
 \label{sec:PDP:numerical-experiments:heuristics}
 
 
-Our heuristic consists in solving (2SA-$m$) as defined in Problem~\eqref{eq:Uniform-CLSP-BS-2SA-m:backorder} at the beginning of each period $t$.
+Our heuristic consists in solving (2SA-$m$)\vlil{préciser que cela signifie tirer $m$ nouveaux scénario connaissant le passé} as defined in Problem~\eqref{eq:Uniform-CLSP-BS-2SA-m:backorder} at the beginning of each period $t$.
 We compare it with three other heuristics:
 \begin{itemize}
   \item deterministic approximation,
@@ -61,7 +61,7 @@ We compare it with three other heuristics:
 
 The first heuristic is the deterministic version of Problem~\eqref{eq:Uniform-CLSP-BS:backorder}, where the random demand is replaced by its expectation.
 Note that it is not the CLSP-BS described in \cref{chap:PDP:deterministic} since there are backorder costs.
-When backorder cost are not given by the client, we used the method described in \cref{sec:PDP:stochastic:model:backorder} to compute them.
+When backorder costs are not given by the client, we used the method described in \cref{sec:PDP:stochastic:model:backorder} to compute them.
 
 
 The second one, the {\em lot-size heuristic}, consists in determining before the first week once and for all a value $\ell_i^*$ for each item $i\in\REF$.
@@ -305,7 +305,7 @@ Finally, \cref{proc:demand:initial-sampling} and \cref{enum:PDP:random-demand-pr
 \label{sec:PDP:numerical-experiments:k-means}
 
 
-As said in \cref{sec:PDP:numerical-experiments:historical-data}, we use a small number of scenarios to represent every possible outcomes.
+As explained in \cref{sec:PDP:numerical-experiments:historical-data}, we use a small number of scenarios to represent every possible outcomes.
 Thus, using only \cref{proc:demand:initial-sampling} gives results which may be very dependent of the generating scenarios.
 In this section, we propose to use a $K$-means algorithm on a bigger set of scenarios to get a small set of representative scenarios.
 
@@ -327,8 +327,8 @@ Some variations of $K$-means algorithms exist to deal with these points (see \ci
 \medskip
 
 
-For lack of time, we do not yet implemented $K$-mean algorithm.
-However, our utilization would be basic and would have the following structure.
+For lack of time\vl{Due to time constraints}, we have not implemented $K$-mean algorithm.
+However, our utilization would be straightforward and would have the following structure.
 We would first use \cref{proc:demand:initial-sampling} to generate a sample of $M$ scenarios which can be seen as real vectors of $\RR^{\horizon\times\REF}$.
 Then, since the number of scenarios that can be used in (2SA-$m$) is bounded due to the computer performance, we would initialize $K$ with $m=20$.
 Thus, our set of representative scenarios would be composed of the $K$ prototypes of each cluster and the probability of each one is equal to the number of scenarios in its cluster divided by $M$.
@@ -341,7 +341,7 @@ Thus, our set of representative scenarios would be composed of the $K$ prototype
 
 We run tests on lines described in \cref{tab:pdp:instances-characterisitcs}.
 Complete tables of results are given in \cref{chap:appendix:pdp:numerical-experiments} and the results for line $L_1$ is given in \cref{tab:pdp:results:line-1}.
-(We choose line $L_1$ because it not a line that suffer undercapacity like $L_5$ and $L_6$ neither a line that is clearly overcapacitated like $L_4$.)
+(We choose line $L_1$ because it is not a line that suffer undercapacity like $L_5$ and $L_6$ neither a line that is clearly overcapacitated like $L_4$.)
 
 
 The table is composed as follow.
@@ -353,11 +353,11 @@ Finally, the sub-column \emph{Service} gives the service level used to compute b
 
 
 The output are composed of the following KPI.
-They are all an average over the 30 runs of the simulation.
+They are all averaged over the 30 runs of the simulation.
 In the column \emph{Obj.}, we write the objective value \cref{eq:Uniform-CLSP-BS-2SA-m:backorder:objective} of the solution found by the heuristic (in k\euro{}).
 
 
-The column \emph{Inventory}, we give several KPI relative to stocks.
+The column \emph{Inventory} gives several KPI relative to stocks.
 The sub-column \emph{Av.} gives the average of the positive part of the inventory over periods, \ie
 \begin{equation}
   \left<\inventory\right>_{\horizon} = \frac{1}{\horizon}\sum_{t=1}^{\horizon}\sum_{i\in\REF} \bracket{\holding^i\inventory_t^i}^+.
@@ -439,10 +439,7 @@ Comparing results between undercapacitated lines ($L_0$ to $L_4$) and overcapaci
 Lot-size and (2SA-$m$) heuristics remain the heuristics making more stocks but with a better service level and cover-size and deterministic heuristics make few stocks but have a bad service level.
 
 
-By staring at the values of the backorder cost, we can see that the values computed by method proposed in \cref{sec:PDP:numerical-experiments:drawing-realization-of-demand} are very small especially for small desired service level like 85\%.
-Thus, the method to compute the backorder is too optimistic and must be improved.
+By looking at the values of the backorder cost, we can see that the values computed by method proposed in \cref{sec:PDP:numerical-experiments:drawing-realization-of-demand} are very small especially for small desired service level like 85\%.\vl{unclear}
+Thus, the method to compute the backorder\vl{cost ?} is too optimistic and must be improved.
 A simple way might be to skew the method.
 A more sophisticated one might be to use extensions of the news-vendor problem like the multi-stage extension.
-
-
-
