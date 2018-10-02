@@ -423,26 +423,54 @@ It is given by
 \end{equation}
 
 
-
+\begin{table}[!ht]
 \input{main/PDP/tables/line_1.tex}
+\caption{Results for $L_1$}
+\label{tab:pdp:results:line-1}
+\end{table}
 
 
-\cref{tab:pdp:results:line-1} and the others presented in \cref{chap:appendix:pdp:numerical-experiments} first show that best objective values for the problem is not reach by (2SA-$m$) heuristic.
-In many case, the value found by (2SA-$m$) heuristic is far from the values obtained by other heuristics.
-However, in general, we see than (2SA-$m$) is the heuristic that is the closest from the fill rate service level objective.
-Lot-size heuristic also gives quite good results on fill rate service level but it generates a lot of stock to do so.
-On the other hand, deterministic heuristic have the lowest stocks but also the worst service level.
-Cover-sizes have the same variations: they are shorter for deterministic heuristic than for the other ones.
+\cref{tab:pdp:results:line-1} and the others presented in \cref{chap:appendix:pdp:numerical-experiments} first show that best objective values for the problem is always reach by 2SA-$m$ heuristic.
+Then deterministic heuristic also gives good objective value.
+On the other hand, objective value returned by lot-size and cover-size heuristics are about 10 times greater than objective value returned by 2SA-$m$ heuristic.
+About real inventory, we see that it represents the main part of the objective value for each heuristic.
+Naturally, the average cover-sizes for each item are greater for lot-size and cover-size heuristics than for deterministic and 2SA-$m$ heuristics.
 
 
-Comparing results between undercapacitated lines ($L_0$ to $L_4$) and overcapacitated lines ($L_5$ and $L_6$) does not show clear difference on the behaviors of the heuristics.
-Lot-size and (2SA-$m$) heuristics remain the heuristics making more stocks but with a better service level and cover-size and deterministic heuristics make few stocks but have a bad service level.
+Backorder is strongly linked to fill rate service level.
+As expected for strategies with such huge inventory, lot-size and cover-size heuristic have the best fill rate service level.
+However, it is the same for any value of the tested desired service level.
+On the other hand, deterministic and 2SA-$m$ heuristic adapt to the desired service level but they are too optimistic about their ability to satisfied uncertain demand.
 
 
 By staring at the values of the backorder cost, we can see that the values computed by method proposed in \cref{sec:PDP:numerical-experiments:drawing-realization-of-demand} are very small especially for small desired service level like 85\%.
 Thus, the method to compute the backorder is too optimistic and must be improved.
 A simple way might be to skew the method.
 A more sophisticated one might be to use extensions of the news-vendor problem like the multi-stage extension.
+
+
+Comparing results between undercapacitated lines ($L_0$ to $L_4$) and overcapacitated lines ($L_5$ and $L_6$) does not show clear difference on the behaviors of the heuristics.
+However, we simply see that the GAP between the different KPI is smaller in undercapacitated case than in overcapacitated case.
+
+
+
+
+% \cref{tab:pdp:results:line-1} and the others presented in \cref{chap:appendix:pdp:numerical-experiments} first show that best objective values for the problem is not reach by (2SA-$m$) heuristic.
+% In many case, the value found by (2SA-$m$) heuristic is far from the values obtained by other heuristics.
+% However, in general, we see than (2SA-$m$) is the heuristic that is the closest from the fill rate service level objective.
+% Lot-size heuristic also gives quite good results on fill rate service level but it generates a lot of stock to do so.
+% On the other hand, deterministic heuristic have the lowest stocks but also the worst service level.
+% Cover-sizes have the same variations: they are shorter for deterministic heuristic than for the other ones.
+
+
+% Comparing results between undercapacitated lines ($L_0$ to $L_4$) and overcapacitated lines ($L_5$ and $L_6$) does not show clear difference on the behaviors of the heuristics.
+% Lot-size and (2SA-$m$) heuristics remain the heuristics making more stocks but with a better service level and cover-size and deterministic heuristics make few stocks but have a bad service level.
+
+
+% By staring at the values of the backorder cost, we can see that the values computed by method proposed in \cref{sec:PDP:numerical-experiments:drawing-realization-of-demand} are very small especially for small desired service level like 85\%.
+% Thus, the method to compute the backorder is too optimistic and must be improved.
+% A simple way might be to skew the method.
+% A more sophisticated one might be to use extensions of the news-vendor problem like the multi-stage extension.
 
 
 

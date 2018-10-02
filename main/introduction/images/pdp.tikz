@@ -37,8 +37,8 @@
   \draw[prodB] ({(\weeks+1)*\week},{.625*\capacity}) rectangle node[inner sep=.25cm,anchor=west] {$\quad$production item B} ({(\weeks+1.5)*\week},{.500*\capacity});
   \draw[prodA] ({(\weeks+1)*\week},{.875*\capacity}) rectangle node[inner sep=.25cm,anchor=west] {$\quad$production item A} ({(\weeks+1.5)*\week},{.750*\capacity});
 
-  \draw[decorate,decoration={brace,raise=-.1cm}] ({.95*\week},{-.5*\week}) -- node[anchor=north]{Fixed} (0,{-.5*\week});
-  \draw[decorate,decoration={brace,raise=-.1cm}] ({\weeks*\week},{-.5*\week}) -- node[anchor=north]{Forecast} ({1.05*\week},{-.5*\week});
+%  \draw[decorate,decoration={brace,raise=-.1cm}] ({.95*\week},{-.5*\week}) -- node[anchor=north]{Fixed} (0,{-.5*\week});
+%  \draw[decorate,decoration={brace,raise=-.1cm}] ({\weeks*\week},{-.5*\week}) -- node[anchor=north]{Forecast} ({1.05*\week},{-.5*\week});
 \end{scope}
 
 \end{tikzpicture}

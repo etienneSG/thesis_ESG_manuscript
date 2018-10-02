@@ -3,36 +3,37 @@
 
 
 
-This thesis develops optimization methods for Supply Chain Management and are centered around the flexibility which is the ability to deliver a service or a product to a costumer although the environment and the future is uncertain.
-The research were conducted throughout partnership between Argon consulting which is an independent consulting firm in Supply Chains Operations and the \'Ecole des Ponts ParisTech.
+This thesis develops optimization methods for Supply Chain Management and are focused on the flexibility defined as the ability to deliver a service or a product to a costumer although the environment and the future is uncertain.
+The research was conducted throughout a partnership between Argon consulting, which is an independent consulting firm in Supply Chains Operations and the \'Ecole des Ponts ParisTech.
 In this thesis, we explore three topics that are encountered by Argon Consulting and its clients and that correspond to three different levels of decision (long-term, mid-term and short-term).
 
 
-When companies expand their product portfolio, they must decide where produce each item.
-This is a long-term decision since once it is decided, it cannot be be easily changed.
-More than a assignment problem where one item is produced by a single plant, the objective of this problem is to decide if some items should be produced on several plants and by which plants.
-Indeed, demand for items is highly uncertain.
+When companies expand their product portfolio, they must decide in which plants to produce each item.
+This is a long-term decision since once it is decided, it cannot be easily changed.
+More than a assignment problem where one item is produced by a single plant, this problem  consists in deciding if some items should be produced on several plants and by which plants.
+This is motivated by an highly uncertain demand.
 So, in order to satisfy the demand, the assignment must be able to balance the workload between plants.
-This problem is called multi-sourcing of production.
-Since it is not a repeated problem, it is essential to take into account the risk aversion when making the multi-sourcing decision.
-We propose a generic model that includes the technical constraints of the assignment and a risk-averse constraint based on risk measures from the financial applications.
-We develop an algorithm and a heuristic based on standard tools from Operational Research and Stochastic Optimization to solve the multi-sourcing problem and test the efficiency on real datasets.
+We call this problem the multi-sourcing of production.
+Since it is not a repeated problem, it is essential to take into account the risk when making the multi-sourcing decision.
+We propose a generic model that includes the technical constraints of the assignment and a risk-averse constraint based on risk measures from financial theory.
+We develop an algorithm and a heuristic based on standard tools from Operations Research and Stochastic Optimization to solve the multi-sourcing problem and we test their efficiency on real datasets.
 
 
-Before planning the production, some macroscopic indicators must be decided at mid-term level such that the quantity of raw materials to order or the size of produced batches.
-Continuous-time inventory models are used by some companies but they often rely on a trade-off between holding costs and setups costs that are fixed costs paid when production is launched and that are hard to estimate in practice.
-On the other hand, at mid-term level, flexibility of the mean of production is already fixed and companies easily estimate the maximal number of setups.
-We propose extensions of some classical continuous-time inventory models taking into account this bound on the number of setups.
+Before planning the production, some macroscopic indicators must be decided at mid-term level such that the quantity of raw materials to order or the size of produced lots.
+Continuous-time inventory models are used by some companies but these models often rely on a trade-off between holding costs and setups costs.
+These latters are fixed costs paid when production is launched and are hard to estimate in practice.
+On the other hand, at mid-term level, flexibility of the means of production is already fixed and companies easily estimate the maximal number of setups.
+Motivated by this observation, we propose extensions of some classical continuous-time inventory models with no setup costs and with a bound on the number of setups.
 We used standard tools from Continuous Optimization to compute the optimal macroscopic indicators.
 
 
 Finally, planning the production is a short-term decision consisting in deciding which items must be produced by the assembly line during the current period.
 This problem belong to the well-studied class of Lot-Sizing Problems.
 As for mid-term decisions, these problems often rely on a trade-off between holding and setup costs.
-Basing our model on industrial consideration, we propose a new model replacing setup costs by a bound on the number of setups for each period of production.
-Although this are short-term decision, production decisions must take into account future demand which remains uncertain.
-So, we solve our production planning problem using standard tools from Operational Research and Stochastic Optimization, test the efficiency on real datasets and compare it to heuristic used by Argon Consulting's clients.
+Basing our model on industrial consideration, we keep the same point of view (no setup cost and a bound on the number of setups) and propose a new model.
+Although these are short-term decisions, production decisions must take into account future demand which remains uncertain.
+So, we solve our production planning problem using standard tools from Operations Research and Stochastic Optimization, test the efficiency on real datasets, and compare it to heuristic used by Argon Consulting's clients.
 
 
-\secondcolor{Key words}: Supply Chain Management, Operational Research, Stochastic Optimization, Lot-Sizing, Assignment problem, risk measure, heuristics.
+\secondcolor{Key words}: Assignment Problem, Heuristics, Lot-Sizing, Operations Research, Risk Measure, Stochastic Optimization, Supply Chain Management.
 

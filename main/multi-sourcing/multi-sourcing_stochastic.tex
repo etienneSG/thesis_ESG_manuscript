@@ -106,7 +106,7 @@ Again, a limited flexibility seems sufficient to achieve very good results.
 
 
 One goal of stochastic multi-sourcing is to deal with risk.
-Note that risk is often concentrate\vl{?} to single-item problem.
+In literature, production, ordering or multi-sourcing problems taking risk into account are often single-item problem.
 Risk aversion extension of news-vendor problem was extensively studied (see \citet{Vipul2000} and \citet{Choi2008}).
 More recently, \citet{Arikan2017} propose a classification of existing extensions (included those with Average-Value-at-Risk).
 \citet{Ahmed2007} are one of the rare authors using coherent risk measure for a multi-period inventory problem.
@@ -525,40 +525,44 @@ true
 \subsection{Bender decomposition}
 
 
-Formulation \eqref{eq:stoch-multi-sourcing:linearized} has a structure which fit with L-shaped method (Bender decomposition of the primal).
-\vlil{En fait c'est faux tel quel car il y a la contraintes de risques qui lie les différents scénarios. Dans ta matrices 9.8 il faut donc rajouter une ligne couplante, et se contenter de parler de Bender et non de L-Shaped, contrairement à ce que j'avais dis...}
-
+Formulation \eqref{eq:stoch-multi-sourcing:linearized} has a structure which fit with Bender decomposition.
+%\vlil{En fait c'est faux tel quel car il y a la contraintes de risques qui lie les différents scénarios. Dans ta matrices 9.8 il faut donc rajouter une ligne couplante, et se contenter de parler de Bender et non de L-Shaped, contrairement à ce que j'avais dis...}
 We refer to \citet[Chapter 5]{Birge2011} for a presentation of the method.
-Indeed, introducing the vector $z$ of first-step variables (assignment variables $\bracket{\open_p^i}_{p,i}$ and auxiliary variables $\bracket{m_t^i}_{t,i}$) and for each scenario $\omega$, the vector $w_{\omega}$ of second-step variables (inventory variables $\bracket{\inventory_{t,\omega}^i}_{t,i,\omega}$, production variables $\bracket{\quantity_{pt,\omega}^i}_{p,t,i}$ and auxiliary variables $\bracket{\alpha_{t,\omega}^i}_{t,i,\omega}$, we get the following program
+Indeed, introducing the vector $z$ of first-step variables (assignment variables $(\open_p^i)_{p,i}$ and auxiliary variables $(m_t^i)_{t,i}$) and for each scenario $\omega$, the vector $w_{\omega}$ of second-step variables (inventory variables $(\inventory_{t,\omega}^i)_{t,i,\omega}$, production variables $(\quantity_{pt,\omega}^i)_{p,t,i}$ and auxiliary variables $(\alpha_{t,\omega}^i)_{t,i,\omega}$, we get the following program
 \begin{subequations}\label{eq:stoch-multi-sourcing:bender}
   \begin{align+}
     \min\quad & \rlap{$\ds f\bracket{z}$}
     \label{eq:stoch-multi-sourcing:bender:objective}
     \\
-    \st\quad & T z + W u_{\omega} = h_{\omega} && \forall\omega\in\scenarios,
+    \st\quad & A\bracket{z, u} = a && \forall\omega\in\scenarios,
+    \label{eq:stoch-multi-sourcing:bender:avar}
+    \\
+    & T z + W u_{\omega} = h_{\omega} && \forall\omega\in\scenarios,
     \label{eq:stoch-multi-sourcing:bender:constraint}
-    % \\
-    % & \ds u_{\omega}\in \cW && \forall\omega\in\scenarios,
-    % \label{eq:stoch-multi-sourcing:bender:second-step}
     \\
     & \ds z\in \cZ.
     \label{eq:stoch-multi-sourcing:bender:first-step}
   \end{align+}
 \end{subequations}
-where constraint \eqref{eq:stoch-multi-sourcing:bender:constraint} regroups constraints~\eqref{eq:stoch-multi-sourcing:linearized:inventory-dynamic} to \eqref{eq:stoch-multi-sourcing:linearized:positivity} and $\cZ$ is binary constraint on part of first-step variables.
+where
+constraint~\eqref{eq:stoch-multi-sourcing:bender:avar} is the coupling constraint~\eqref{eq:stoch-multi-sourcing:linearized:AVaR:1},
+constraint~\eqref{eq:stoch-multi-sourcing:bender:constraint} regroups constraints~\eqref{eq:stoch-multi-sourcing:linearized:inventory-dynamic}, \eqref{eq:stoch-multi-sourcing:linearized:capacity}, \eqref{eq:stoch-multi-sourcing:linearized:big-M}, \eqref{eq:stoch-multi-sourcing:linearized:AVaR:2} and \eqref{eq:stoch-multi-sourcing:linearized:positivity}
+and $\cZ$ is binary constraint on part of first-step variables.
 Thus, the constraints have the following block structure.
          
 \begin{equation}
 \left(
 \begin{array}{ccccc}
+\hline
+\multicolumn{5}{|c|}{A}
+\\\hline
 T           & W           &   & \multicolumn{2}{c}{\multirow{2}{*}{$\bracket{0}$}} \\               
 T           &             & W &        & \\
 \vdots      & \multicolumn{2}{c}{\multirow{2}{*}{$\bracket{0}$}} & \ddots & \\
-T           & & & & W
+T           & & & & W \\
 \end{array}
 \right)
 \end{equation}
-
 
 
 We did not have the time to implement this method, but it is promising to accelerate resolution of formulation~\eqref{eq:stoch-multi-sourcing:linearized}.
@@ -681,19 +685,17 @@ As expected by the theory, robust constraint is more conservative than $\AVaR$ w
 % We do not pretend to state general truth but rather general trend on common cases.
 
 
-\esgil{Essai en supprimant la discussion sur la facilité pour représenter la contrainte. Cette discussion n'apportait pas vraiment.}
-
 We propose seven criterion to compare the constraints.
 First, the ease to linearize the constraint if needed since enable us to use linear programming.
 Expectation constraint is already linear making it easy to use.
-On the other hand, probabilistic constraint may be hard to linearize since it may not be convex.\vl{thus requires additional binary variables}
+On the other hand, probabilistic constraint may be hard to linearize since it may not be convex and thus it requires additional binary variables.
 % For robust constraint, every possible outcome must be considered and definition of $\AVaR$ may make it hard to use.
 Robust and $\AVaR$ constraints are convex.
 Then, using scenarios often enables to get linear formulation of robust constraint of reasonable size and as shown in \cref{sec:multi-sourcing:stochastic:avar-linearization}, $\AVaR$ can also be linearized.
 
 
 Interpretation of robust and probabilistic constraints are quite easy.
-Robust constraint\vl{, in its vanilla form,} consists in satisfying the constraint in every possible outcome.
+Robust constraint, in its vanilla form, consists in satisfying the constraint in every possible outcome.
 In multi-sourcing, demand distribution is bounded.
 Thus satisfying the robust constraint consists in having enough stock to satisfy the highest possible demand.
 Probabilistic constraint consists in satisfying the constraint in $100\servicelvl\%$ of the cases.
@@ -706,7 +708,8 @@ Understanding $\AVaR$ constraint at level $\lambda\%$ is not straightforward.
 However, it means that $100\bracket{1-\lambda}\%$ of cases satisfies the constraint and that the mean over the remaining cases also satisfy the constraint.
 Thus, it includes the interpretations of a probabilistic constraint at $100\bracket{1-\lambda}\%$ and of an expectation constraint on the bad cases.
 If there is not too many bad cases (\ie if $\lambda$ is small), we might expect a small variance in their distribution (while nothing ensure it).
-\vlil{il faudrait rappeler que l'AVAR constraint est strictement plus dure que la chance constraint - pour un même niveau.}
+Note that, for a same level, $\AVaR$ constraint is more strict than probabilistic constraint since $\AVaR$ constraint implies than probabilistic constraint is satisfied.
+
 
 
 Thus, we easily see that $\AVaR$ constraint enables to control the proportion of bad cases and their value.
