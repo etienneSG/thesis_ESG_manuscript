@@ -1,10 +1,11 @@
+%!TEX root=../../thesis_ESG.tex
 \chapter{Numerical experiments}
 \label{chap:multi-sourcing:numerical-experiments}
 
 
 In order to test the efficiency of our approach, we test our method on datasets from Argon Consulting’s clients.
 The objective is to compare the multi-sourcing currently in use by the client to the multi-sourcing computed from our method.
-In addition to compare their cost, several KPI will be used as the generated stock-out, the probability of stock-out, the load of plants, etc.
+In addition to comparing their cost, several Key Performance Indicators (KPI) will be used as the generated stock-out, the probability of stock-out, the load of plants, etc.
 
 
 \section{Simulation}
@@ -28,8 +29,8 @@ For each realization, we solve a slightly modified version of the second stage (
 Indeed, in deterministic case, $\AVaR_{1-\servicelvl}\bracket{\inventory_t^i}\le0$ is equivalent to $\inventory_t^i\ge0$.
 Yet, in many cases, deterministic model is infeasible.
 (This is all the more foreseeable because we do not use robust constraint.)
-Moreover, when making a production planning, if there is not enough flexibility or capacity, a production planning is always return satisfying as well as possible a service level objective.
-We then get several Key Performance Indicators (KPI) such as fill rate service level, cycle service level, holding costs.
+Moreover, when making a production planning, if there is not enough flexibility or capacity, a production planning is always returned satisfying as well as possible a service level objective.
+We then get several KPI such as fill rate service level, cycle service level, holding costs.
 
 
 C++11 has been chosen for the implementations and Gurobi 6.5.1~\citet{gurobi} was used to solve the model on a PC with 32 processor Intel\textregistered\ Xeon\texttrademark\ E5-2667 @ 3.30GHz and 192Go RAM.
@@ -102,7 +103,7 @@ However, the remaining 100 items of Lux dataset represent 80\% of the production
 Due to limited computational resources, the client prefers that the 400 items excluded from Lux dataset be mono-sourced to concentrate our effort on potential multi-sourced items.
 
 
-Other rules are industrial ones.
+Other rules are industrial ones.\vl{unclear}
 For example, capacity of a plant to a specific item must never exceed 25\% of the plants capacity.
 Indeed, if the demand for this item drastically drop, the plants must be able to rely on other item.
 This constraint is included in the upper bound $\ub_{pt}^i$.
@@ -209,14 +210,14 @@ Problem~\eqref{eq:det-multi-sourcing:second-step:second-step} can clearly be wri
 The list of outputs are decomposed as follow.
 \begin{itemize}
   \item \emph{Solver best value} (resp. \emph{heuristic value}) gives the value returned by the solver (resp. the heuristic) at the end of the time allowed to find a solution.
-  \item $\prob\sqbracket{stock\ge0}$ measures in-sample the probability that inventory is positive.
+  \item $\prob\sqbracket{stock\ge0}$ measures in-sample the probability that inventory \vl{of a random item at a random time} is positive.
   \begin{equation}
     \prob\sqbracket{stock\ge0}=\frac{1}{\horizon\times\card{\REF}\times\card{\scenarios}}\sum_{t=1}^{\horizon}\sum_{i\in\REF}\sum_{\omega\in\scenarios} \mathbb{1}_{\crbracket{\inventory_{t,\omega}^i\ge0}}
   \end{equation}
-  $\prob\sqbracket{stock\ge0}$ finally returns the average over all periods and all items.
+  $\prob\sqbracket{stock\ge0}$ finally returns the average over all periods and all items.\vl{unnecessary}
   \item \emph{Cycle service level} and \emph{fill rate service level} are measured out-of-sample.
   They are computed using \cref{eq:pdp:numerical-experiments:KPI:fill-rate-service-level} and \cref{eq:pdp:numerical-experiments:KPI:cycle-service-level} replacing $w^i$ by the expression given by \cref{eq:multi-sourcing:numerical-experiments:KPI:weight}.
-  Then, the table shows the average over all runs of the simulation.
+  Then, the table\vl{which} shows the average over all runs of the simulation.
   \item \emph{GAP} is the gap between the best value returned by the solver or the heuristic and the best known lower bound on the problem.
   \item \emph{Solver lower  bound} is the best lower bound found by the solver when the solver is frontally used to solve Program \eqref{eq:stoch-multi-sourcing:linearized}.
   \item \emph{Continuous relaxation} is the value of the continuous relaxation of Program \eqref{eq:stoch-multi-sourcing:linearized}.
@@ -353,8 +354,8 @@ $\beta$ & \multicolumn{6}{c|}{Volatility} & \multicolumn{1}{c}{Output}
 
 
 First, note that we do not provide results for Lux dataset without the heuristic.
-Indeed, we do not succeed in finding solution in the allowed time (20 minutes).
-Moreover, for the Lux dataset, it is even impossible compute the continuous relaxation in less than 24 hours for a volatility equal to $1\%$, $50\%$ and $80\%$.
+Indeed, we were not able to find a solution in the allowed time (20 minutes).
+Moreover, for the Lux dataset, it is even impossible to compute the continuous relaxation in less than 24 hours for a volatility equal to $1\%$, $50\%$ and $80\%$.
 
 
 Second important point, on small data set, the frontal used of a solver gives always better results than the heuristic even if this gap decrease with the increase of volatility.
