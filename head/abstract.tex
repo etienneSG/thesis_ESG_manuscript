@@ -3,15 +3,15 @@
 
 
 
-This thesis develops optimization methods for Supply Chain Management and are focused on the flexibility defined as the ability to deliver a service or a product to a costumer although the environment and the future is uncertain.
-The research was conducted throughout a partnership between Argon consulting, which is an independent consulting firm in Supply Chains Operations and the \'Ecole des Ponts ParisTech.
+This thesis develops optimization methods for Supply Chain Management and is focused on the flexibility defined as the ability to deliver a service or a product to a costumer in an uncertain environment.
+The research was conducted throughout a partnership between Argon Consulting, which is an independent consulting firm in Supply Chains Operations and the \'Ecole des Ponts ParisTech.
 In this thesis, we explore three topics that are encountered by Argon Consulting and its clients and that correspond to three different levels of decision (long-term, mid-term and short-term).
 
 
 When companies expand their product portfolio, they must decide in which plants to produce each item.
 This is a long-term decision since once it is decided, it cannot be easily changed.
 More than a assignment problem where one item is produced by a single plant, this problem  consists in deciding if some items should be produced on several plants and by which plants.
-This is motivated by an highly uncertain demand.
+This is motivated by a highly uncertain demand.
 So, in order to satisfy the demand, the assignment must be able to balance the workload between plants.
 We call this problem the multi-sourcing of production.
 Since it is not a repeated problem, it is essential to take into account the risk when making the multi-sourcing decision.
@@ -19,7 +19,7 @@ We propose a generic model that includes the technical constraints of the assign
 We develop an algorithm and a heuristic based on standard tools from Operations Research and Stochastic Optimization to solve the multi-sourcing problem and we test their efficiency on real datasets.
 
 
-Before planning the production, some macroscopic indicators must be decided at mid-term level such that the quantity of raw materials to order or the size of produced lots.
+Before planning the production, some macroscopic indicators must be decided at mid-term level such as the quantity of raw materials to order or the size of produced lots.
 Continuous-time inventory models are used by some companies but these models often rely on a trade-off between holding costs and setups costs.
 These latters are fixed costs paid when production is launched and are hard to estimate in practice.
 On the other hand, at mid-term level, flexibility of the means of production is already fixed and companies easily estimate the maximal number of setups.
@@ -28,11 +28,11 @@ We used standard tools from Continuous Optimization to compute the optimal macro
 
 
 Finally, planning the production is a short-term decision consisting in deciding which items must be produced by the assembly line during the current period.
-This problem belong to the well-studied class of Lot-Sizing Problems.
+This problem belongs to the well-studied class of Lot-Sizing Problems.
 As for mid-term decisions, these problems often rely on a trade-off between holding and setup costs.
-Basing our model on industrial consideration, we keep the same point of view (no setup cost and a bound on the number of setups) and propose a new model.
-Although these are short-term decisions, production decisions must take into account future demand which remains uncertain.
-So, we solve our production planning problem using standard tools from Operations Research and Stochastic Optimization, test the efficiency on real datasets, and compare it to heuristic used by Argon Consulting's clients.
+Basing our model on industrial considerations, we keep the same point of view (no setup cost and a bound on the number of setups) and propose a new model.
+Although these are short-term decisions, production decisions must take future demand into account, which remains uncertain.
+We solve our production planning problem using standard tools from Operations Research and Stochastic Optimization, test the efficiency on real datasets, and compare it to heuristics used by Argon Consulting's clients.
 
 
 \secondcolor{Key words}: Assignment Problem, Heuristics, Lot-Sizing, Operations Research, Risk Measure, Stochastic Optimization, Supply Chain Management.
