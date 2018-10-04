@@ -20,8 +20,6 @@ The mid-term decisions (\cref{part:continuous-review-inventory-model}) and the s
 However, the mid-term decisions we are interested in aim at computing indicators that drive several Supply Chain processes whereas short-term decisions we are interested in aim at deciding the production that must be launched.
 
 
-
-
 \section{Multi-sourcing of production}
 \label{sec:intro:en:multi-sourcing}
 
@@ -107,8 +105,6 @@ Our experimentations already prove that the company that provides the datasets c
 However, computer performances and real dataset sizes prevent from dealing with more than a hundred of scenarios.
 Thus, the method is dependent on the sampling methods and the choice of a representative set of scenarios is critical.
 We propose a concrete way to reduce this dependence on the sampling methods based on clustering methods (as $K$-means).
-% For lack of time\vl{no}, we have not yet implemented and tested this method.
-
 
 
 \section{Continuous-time inventory models}
@@ -152,8 +148,6 @@ In particular, we study continuous and integer number of setups in deterministic
 Moreover, we also study an extension that considers several parallel assembly lines and show that the problem can be stated as a concave minimization problem over a polyhedron (for which there exists an extensive literature).
 
 
-
-
 \section{Discrete-time inventory models}
 \label{sec:intro:en:discrete-time-inventory-models}
 
@@ -171,6 +165,7 @@ On the other hand, estimating the maximal number of setups for a period is an ea
 We propose a model derived from the Capacitated Lot-Sizing Problem that replaces the setup costs by an upper bound on the number of setups.
 \cref{fig:intro:en:pdp} shows an example of production planning of four items when at most two items can be produced during a period.
 To the best of our knowledge, this model is new and has not been studied in the literature.
+
 
 \begin{figure}[!ht]
   \centering
@@ -215,8 +210,6 @@ What is the complexity status of \eqref{eq:intro:en:Uniform-CLSP-BS}?
 
 
 In practice, the demand is not always deterministic.
-% As shown in \cref{fig:intro:en:pdp}, only the production for the firsts periods has to be fixed.
-% The forecast production of the other periods may change.
 We propose a stochastic version of our lot-sizing problem based on \emph{Stochastic Programming} (see \cref{sec:intro:en:multi-sourcing}).
 The difference is that we do not used a risk-averse constraint ($\AVaR$) but stick to the classical risk-neutral vision (the expectation).
 Indeed, production is a repeated decision and a failure at one period is easy to compensate with another period.

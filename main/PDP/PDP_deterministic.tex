@@ -9,10 +9,11 @@
 \subsection{Motivations}
 \label{sec:PDP:deterministic:introduction:motivations}
 
+
 Fixing the production level for the forthcoming period is a basic decision to be taken when managing an assembly line.
 Usually, a demand has to be satisfied at due dates but the limited capacity of the line prevents last minute production.
 On the other hand, too early productions may lead to unnecessary high inventory costs.
-The challenge of this kind of problems, known as {\em lot-sizing problems} in the operational research community, consists in finding a trade-off between demand satisfaction and holding costs.
+The challenge of this kind of problems, known as {\em lot-sizing problems} in the Operations Research community, consists in finding a trade-off between demand satisfaction and holding costs.
 When several items can be produced on a same line -- the so-called {\em multi-item} lot-sizing problem --, the capacity of the assembly line is often all the more reduced as the number of distinct items produced over the current period is high.
 Indeed, changing an item in production stops the line for a moment.
 This additional capacity reduction is usually modeled by setup costs contributing to the total cost.
@@ -23,31 +24,33 @@ Indeed, according to Argon Consulting, many clients aim at minimizing mainly the
 This is essentially because, contrary to inventory costs, setup costs are hard to quantify and a maximal number of possible setups per period is easy to estimate.
 
 
-We are interest in mid-term decisions and consider lot-sizing problem and not scheduling problem which are short-term decisions.
-The difficulty here comes from the settings of the assembly lines to produce one item.
-Thus, if production of two lots of the same items are consecutive, it only counts for one setup.
-Since scheduling is not considered, the number of setups per period matches exactly with the number of of items produced per period.
+We are interested in short-term decisions and consider lot-sizing problem and not scheduling problem which are very short-term decisions.
+At this level of decision, we do not consider the exact scheduling of the item production and approximate the number of setups by the number of items produced over the period.
 
 
 To the best of our knowledge, the problem addressed in this chapter is original and such a bound on the number of distinct items produced over a period has not been considered by academics yet, with the notable exception of the model proposed by \citet{Rubaszewski2011} but, contrary to our problem, their bound is an overall bound for the whole horizon and they still consider setup costs.
 
 
-
 \subsection{Problem}
 \label{sec:PDP:deterministic:introduction:problem}
+
 
 The problem considers an assembly line producing a set $\REF$ of items over $\horizon$ periods.
 The number of distinct items produced over a period $t$ cannot exceed $\nbsetups_t>0$.
 There is also an upper bound $\capacity_t$ on the total period production (summed over all items) and an upper bound $\capacity_t^i$ on the production of item $i$ at period $t$.
 The capacity needed (in time units) to produce one unit of $i$ in period $t$ is $\rate_t^i>0$.
 
+
 The production and the inventory of item $i$ must satisfy a demand $\demand_t^i$ at the end of period $t$.
 When production of item $i$ is not used to satisfy the demand, it can be stored but incurs a unit holding cost $\holding_t^i>0$ per period.
 For each item $i$, there is an initial inventory $s_0^i\in\RR_+$.
 
+
 The goal is to satisfy the whole demand at minimum cost.
 
+
 Since this problem is a variation of the \emph{Capacitated Lot-Sizing Problem (CLSP)} with a new flexibility constraint expressed as an upper bound on the number of setups, we call it the \emph{Capacitated Lot-Sizing Problem with Bounded number of Setups (CLSP-BS)}.
+
 
 In many of our applications, holding costs $\holding_t^i$ and internal production times $\rate_t^i$ do not depend on the period and the upper bounds $\capacity_t^i$ and $\capacity_t$ and the maximal number $\nbsetups_t$ of setups do not depend on the item nor the period.
 Then, we get a simpler version called the \emph{Uniform Capacitated Lot-Sizing Problem with Bounded number of Setups (Uniform CLSP-BS)} where
@@ -69,20 +72,20 @@ This chapter presents in \cref{sec:PDP:deterministic:bibliography} a short revie
 We briefly describe in \cref{sec:PDP:deterministic:solving} possible way to solve it.
 
 
-
 \section{Bibliography}
 \label{sec:PDP:deterministic:bibliography}
 
+
 While there are many variations of lot-sizing problems in industry, they often minimize a combination of holding costs, production costs and setup costs.
 However, production can concern a single or multiple items and be made on single or several assembly lines.
-It can be constrained by capacity or setup time.
+It can be constrained by capacity or setup times.
 Backlog, safety stock, minimal productivity, setup times can be considered.
 Review of models are abundant like those proposed by \citet{Geunes2014} for single-item models, by \citet{Gicquel2008} for multi-item models or by \citet{Karimi2003} for both models.
 A proposition of classification of lot-sizing models is proposed by \citet[Chapter 4 and 12]{Pochet2006}.
 
+
 We do not propose a complete review of the models and only consider some seminal models on a single assembly line.
 
-\medskip
 
 The first model was proposed by \citet{Wagner1958}.
 It is an uncapacitated, single-item model over $\horizon$ periods.
@@ -93,38 +96,34 @@ Its generalization with production cost (proportional to the quantity produced) 
 
 
 The \emph{Capacitated Economic Lot-Sizing Problem (CELSP)} is the same model with production capacities depending on time.
-It is one of the simplest lot-sizing problem which is $\NP$-hard as shown by \citet{Florian1980} but has a fully polynomial approximation schemes given by \citet{vanHoesel2001}.
+It is one of the simplest lot-sizing problem which is $\NP$-hard as shown by \citet{Florian1980} but has a fully polynomial approximation scheme given by \citet{vanHoesel2001}.
 
-\medskip
 
 In many applications, a line can produce more than one item.
 These problems are said to be \emph{multi-item}.
 Two sub-classes are often considered: big bucket models and small bucket models.
 In big bucket models, several items can be produced during a period.
 The \emph{Capacitated Lot-Sizing Problem (CLSP)} is a natural multi-item extension of the CELSP and therefore is $\NP$-hard.
-In small bucket model, only one item per period can be produced.
+In small bucket models, only one item per period can be produced.
 The problem is said to be \emph{continuous} when production can be a fractional part of capacity and \emph{discrete} when production must be done at full capacity.
 The \emph{Capacitated Setup Lot-sizing Problem (CSLP)} is an example of continuous small bucket model and \emph{Discrete Lot sizing and Scheduling Problem (DLSP)} an example of discrete one (see the review of \citet{Gicquel2008} for the complete description of these models).
 
 
-\medskip
-
-
-Flexibility of assembly line is often modeled as a cost and included in setup costs.
+Flexibility of the assembly line is often modeled as a cost and included in setup costs.
 Another way of modeling flexibility consists in adding capacity reduction to the formulation.
 Each time a setup is placed, the capacity is reduced by a fixed quantity like in the Kellogg's case described by \citet[Chapter 4]{Pochet2006}.
 Some lot-sizing and scheduling problems (see for example \citet{Guimaraes2014}) model sequence dependent capacity reduction but keep setup costs.
-
 
 
 \section{Model formulation}
 \label{sec:PDP:deterministic:model}
 
 
-In this section, we introduce a mixed integer program that model the problem.
+In this section, we introduce a mixed integer program that models the problem.
 We introduce the following decision variables.
 The quantity of item $i$ produced at period $t$ is denoted by $\quantity_t^i$ and the inventory at the end of the period is denoted by $\inventory_t^i$.
 We also introduce a binary variable $\setup_t^i$ which takes the value 1 if the item $i$ is produced during period $t$.
+
 
 The CLSP-BS can be written as
 \begin{subequations}\label{eq:CLSP-BS}
@@ -152,6 +151,7 @@ The CLSP-BS can be written as
   \end{align+}
 \end{subequations}
 
+
 Objective~\eqref{eq:CLSP-BS:objective} minimize the holding costs.
 Constraint~\eqref{eq:CLSP-BS:inventory-balance} is the inventory balance.
 Capacity of the assembly line is ensured by constraint~\eqref{eq:CLSP-BS:capacity}.
@@ -160,11 +160,9 @@ Constraint~\eqref{eq:CLSP-BS:setups} limits the number of setups at each period.
 Note that without loss of generality, we can suppose that $\capacity_t^i \le \capacity_t$ for each period $t$ and each item $i$.
 
 
-\medskip
-
 In the uniform case, holding costs $\holding_t^i$ and internal production times $\rate_t^i$ of item $i$ do not depend on time and production capacities $\capacity_t^i$ and $\capacity_t$ depend neither on time nor on item and are equal to $\capacity>0$.
 Then, we normalize production variables setting $\widehat{\quantity}_t^i=\frac{\rate^i\quantity_t^i}{\capacity}$ and replace accordingly the other variables and parameters setting $\widehat{\inventory}_t^i=\frac{\rate^i\inventory_t^i}{\capacity}$, $\widehat{\demand}_t^i=\frac{\rate^i\demand_t^i}{\capacity}$ and $\widehat{\holding}^i=\frac{\capacity\holding^i}{\rate^i}$.
-For the purpose of notation, the hat are omitted and the optimization problem can be written as
+For the purpose of notation, the hats are omitted and the optimization problem can then be written as
 \begin{subequations}\label{eq:Uniform-CLSP-BS}
   \begin{align+}
     \min\quad & \rlap{$\ds \sum_{t=1}^{\horizon} \sum_{i\in\REF} \holding^i \inventory_t^i$}
@@ -194,25 +192,26 @@ For the purpose of notation, the hat are omitted and the optimization problem ca
 \section{Theoretical results}
 \label{sec:PDP:deterministic:theoretical-results}
 
-In this section, we show that our problem is theoretically hard and that classical methods lead to dead end.
-After showing the $\NP$-completeness in \cref{sec:PDP:deterministic:theoretical-results:NP-completeness}, we show that the number $\nbsetups$ of setups is not captured by the continuous relaxation (\cref{sec:PDP:deterministic:theoretical-results:continuous-relaxation}) nor valid inequality (\cref{sec:PDP:deterministic:theoretical-results:valid-inequality}) nor natural extended formulations (\cref{sec:PDP:deterministic:theoretical-results:extended-formulations}).
+
+In this section, we show that our problem is theoretically hard and that classical methods do not seem to be easily applicable.
+After showing the $\NP$-completeness in \cref{sec:PDP:deterministic:theoretical-results:NP-completeness}, we show that the number $\nbsetups$ of setups is not captured by the continuous relaxation (\cref{sec:PDP:deterministic:theoretical-results:continuous-relaxation}) nor by a natural valid inequality (\cref{sec:PDP:deterministic:theoretical-results:valid-inequality}) nor by natural extended formulations (\cref{sec:PDP:deterministic:theoretical-results:extended-formulations}).
 
 
 \subsection{$\NP$-completeness}
 \label{sec:PDP:deterministic:theoretical-results:NP-completeness}
 
+
 For any fixed values of the $\holding_t^i$'s, the CLSP-BS is $\NP$-hard.
+
 
 \begin{thm}
   Deciding if there is a solution of the Uniform CLSP-BS is $\NP$-complete in the strong sense.
 \end{thm}
 
 
-
 Reducing 3-partition problem to the Uniform CLSP-BS, we show that deciding if there is a solution of the Uniform CLSP-BS is $\NP$-complete.
 We remind that the 3-partition problem consists in deciding whether a given multiset of integers can be partitioned into triples that all have the same sum.
 This problem is known to be $\NP$-complete in the strong sense (see~\citet{Garey1979}).
-
 
 
 \begin{proof}
@@ -242,28 +241,29 @@ The conclusion follows from the fact that the 3-partition problem is $\NP$-compl
 \end{proof}
 
 
-The complexity of the following cases is still an open problem.
+The complexity of the following case is the open problem mentioned in \cref{sec:intro:en:discrete-time-inventory-models}.
 \begin{question}
 What is the complexity status of the uncapacitated Uniform CLSP-BS with $\nbsetups=1$?
 \end{question}
-The complexity of the cases with $\nbsetups=2$ are also challenging questions.
-
-
+The complexity of the case with $\nbsetups=2$ is also a challenging question.
 
 
 \subsection{Relaxations}
 \label{sec:PDP:deterministic:theoretical-results:continuous-relaxation}
 
+
 \subsubsection{Continuous relaxation}
 
-The goal of this section is to show that, unless the capacity production of one item is smaller than the production of the line at each period and unless additional valid inequalities are used, continuous relaxation is not a good method to get bound on the CLSP-BS.
 
+The goal of this section is to show that, unless the capacity production of one item is smaller than the production of the line at each period, continuous relaxation is not a good way to get bound on the CLSP-BS.
+It leaves open the question whether it would be possible to find valid inequalities improving the value of the relaxation.
 
 
 \begin{prop}\label{prop:relaxation-independant-N}
 Assume $\nbsetups_t>0$ for all period $t$.
 If $\capacity_t^i\ge\capacity_t$ for all item $i$ and all period $t$, then the continuous relaxation of formulation~\eqref{eq:CLSP-BS} does not depend on $\nbsetups_t$.
 \end{prop}
+
 
 The immediate corollary of this proposition is that the continuous relaxation of formulation~\eqref{eq:Uniform-CLSP-BS} never depends on $\nbsetups$.
 
@@ -299,17 +299,19 @@ Consider the instance of CLSP-BS with
   \inventory_0^i=0.
 \end{array}
 \end{equation}
-This instance enables only one item to be produce at each period ($\nbsetups_t=1$) whereas the assembly line capacity at one period is equal to the sum of capacities for each item ($\capacity_t=\capacity_t^1+\capacity_t^2$).
+This instance enables only one item to be produced at each period ($\nbsetups_t=1$) whereas the assembly line capacity at one period is equal to the sum of capacities for each item ($\capacity_t=\capacity_t^1+\capacity_t^2$).
 Then, the optimal solution of the continuous relaxation of formulation~\eqref{eq:CLSP-BS} with these parameters is $h$ whereas the optimal solution of the continuous relaxation of the formulation~\eqref{eq:CLSP-BS} without the flexibility constraint~\eqref{eq:CLSP-BS:setups} is 0.
 
 
 We now prove \cref{prop:relaxation-independant-N}.
 
+
 \begin{proof}[Proof of \cref{prop:relaxation-independant-N}]
-Consider an instance of CLSP-BS where $\capacity_t^i\ge\capacity_t$ for all period $t$ and all item $i$.
+Consider an instance of CLSP-BS where $\capacity_t^i\ge\capacity_t$ for all periods $t$ and all items $i$.
 Let $v$ denote the optimal value of the continuous relaxation of formulation~\eqref{eq:CLSP-BS} and $\widehat{v}$ the optimal value of the continuous relaxation of formulation~\eqref{eq:CLSP-BS} without the flexibility constraint~\eqref{eq:CLSP-BS:setups}.
 Obviously, we have $v \ge \widehat{v}$.
 Let us show that $v \le \widehat{v}$.
+
 
 Let $\bracket{\widehat{\setup}_t^i, \widehat{\quantity}_t^i, \widehat{\inventory}_t^i}_{t,i}$ be a feasible solution of the continuous relaxation of formulation~\eqref{eq:CLSP-BS} without the flexibility constraint~\eqref{eq:CLSP-BS:setups}.
 For each period $t$ and each item $i$, we define
@@ -329,7 +331,9 @@ For each period $t$ and each item $i$, we define
 \end{equation}
 We now prove that $\bracket{\setup_t^i, \quantity_t^i, \inventory_t^i}_{t,i}$ is a feasible solution of the continuous relaxation of formulation~\eqref{eq:CLSP-BS}.
 
+
 By definition of $\quantity_t^i$ and $\inventory_t^i$, constraints~\eqref{eq:CLSP-BS:inventory-balance} and \eqref{eq:CLSP-BS:capacity} of formulation~\eqref{eq:CLSP-BS} are satisfied.
+
 
 If $\capacity_t^i>0$, by definition of $\setup_t^i$ and $\quantity_t^i$ constraint~\eqref{eq:CLSP-BS:big-M} of formulation~\eqref{eq:CLSP-BS} is satisfied.
 If $\capacity_t^i=0$, since $\bracket{\widehat{\setup}_t^i, \widehat{\quantity}_t^i, \widehat{\inventory}_t^i}_{t,i}$ is feasible, we have $\widehat{\quantity}_t^i=0$ and constraint~\eqref{eq:CLSP-BS:big-M} is satisfied.
@@ -356,24 +360,27 @@ If $\capacity_t>0$, then $\sum_{i\in\REF}\setup_t^i\le 1\le\nbsetups_t$.
 Otherwise, if $\capacity_t=0$, since $\bracket{\widehat{\setup}_t^i, \widehat{\quantity}_t^i, \widehat{\inventory}_t^i}_{t,i}$ is feasible, we have $\quantity_t^i=0$ for each item $i$ and by definition of $\setup_t^i$, we have $\sum_{i\in\REF}\setup_t^i=0\le\nbsetups_t$.
 In both cases, constraint~\eqref{eq:CLSP-BS:setups} is satisfied.
 
+
 If $\capacity_t^i>0$, we have $\setup_t^i=\frac{\rate_t^i\widehat{\quantity}_t^i}{\capacity_t^i}\le\widehat{\setup}_t^i\le 1$.
 Otherwise, if $\capacity_t^i=0$, we have by definition $\setup_t^i=0$.
 In both cases, continuous relaxation of constraint~\eqref{eq:CLSP-BS:boolean} is satisfied.
 
+
 By definition of $\quantity_t^i$ and $\inventory_t^i$, constraint~\eqref{eq:CLSP-BS:positivity} is satisfied.
+
 
 Thus, we get a feasible solution of the continuous relaxation of formulation~\eqref{eq:CLSP-BS}.
 So $v \le \widehat{v}$.
 \end{proof}
 
 
-
-
 \subsection{Valid inequalities}
 \label{sec:PDP:deterministic:theoretical-results:valid-inequality}
 
-Some valid inequalities exist in literature.
-However, they do not provide relaxation depending on the number $\nbsetups_t$ of setups.
+
+% Some valid inequalities exist in literature.
+% However, they do not provide relaxation depending on the number $\nbsetups_t$ of setups.
+
 
 A classical valid inequality relies on the absence of backorder and is given by \cref{prop:valid-inequality:no-backorder}.
 The statement for the Capacitated Economic Lot-sizing Problem (CELSP) is given by \citet{Geunes2014}.
@@ -387,7 +394,7 @@ The statement for the Capacitated Economic Lot-sizing Problem (CELSP) is given b
     \frac{1}{K_t^i} \bracket{ \sum_{t'=1}^{t}\demand_{t'}^i-\inventory_0^i }
     \right\rceil
   \end{equation}
-  is a valid inequality.
+  is a valid inequality for \cref{eq:CLSP-BS}.
 \end{prop}
 
 
@@ -408,9 +415,9 @@ and then
 The conclusion comes from the integrity of $\sum_{t'=1}^t\setup_{t'}^i$.
 \end{proof}
 
+
 Note that we can be more precise when writing valid inequality~\eqref{eq:valid-inequality:no-backorder}.
 It is easy to show that we can remove from the sum $\sum_{t'=1}^{t}\setup_{t'}^i$ every index $t'$ such that $\capacity_{t'}^i=0$.
-
 
 
 % \esgil{TODO: Prove that the continuous relaxation does not depend on $\nbsetups_t$}
@@ -424,12 +431,13 @@ Two natural extended formulations come to mind.
 Unfortunately, their continuous relaxations are equal to the one of the formulation~\eqref{eq:CLSP-BS} as we will show in this section.
 
 
-
 \subsubsection{Model formulations}
+
 
 The first extended formulation is given by the mixed integer program~\eqref{eq:extended-CLSP:periods}.
 We introduce binary variables $y_t^p$ defined for each period $t\in\range{\horizon}$ and each choice $p\in{\REF\choose\nbsetups_t}$ of items.
-$y_t^p$ is equal to 1 if items in $p$ are allowed to be produced at periods $t$.
+The variable $y_t^p$ is equal to 1 if items in $p$ are allowed to be produced at periods $t$.
+
 
 \begin{subequations}\label{eq:extended-CLSP:periods}
   \begin{align+}
@@ -459,7 +467,7 @@ $y_t^p$ is equal to 1 if items in $p$ are allowed to be produced at periods $t$.
 
 The second extended formulation is given by the mixed integer program~\eqref{eq:extended-CLSP:items}.
 We introduce binary variables $z_{\ell}^i$ defined for each item $i\in\REF$ and each choice $\ell\subseteq\range{\horizon}$ of periods.
-$z_{\ell}^i$ is equal to 1 if item $i$ is produced during the periods of $\ell$.
+The variable $z_{\ell}^i$ is equal to 1 if item $i$ is produced during the periods of $\ell$.
 
 
 \begin{subequations}\label{eq:extended-CLSP:items}
@@ -494,26 +502,24 @@ $z_{\ell}^i$ is equal to 1 if item $i$ is produced during the periods of $\ell$.
 It is easy to see that the extended formulations~\eqref{eq:extended-CLSP:periods} and \eqref{eq:extended-CLSP:items} also model the CLSP-BS.
 
 
-
 \subsubsection{Relaxations of extended formulation~\eqref{eq:extended-CLSP:periods}}
-
 
 
 \begin{prop}\label{prop:extended-relaxation:periods}
 The compact formulation~\eqref{eq:CLSP-BS} of CLSP-BS and the extended formulation~\eqref{eq:extended-CLSP:periods} of CLSP-BS have the same continuous relaxations.
 \end{prop}
 
+
 In order to prove \cref{prop:extended-relaxation:periods}, we need the following lemma.
+
 
 \begin{lem}\label{lem:cover-vertex}
 Let $I\in\NN^*$ and let $N\in\range{I}$.
 Let $\bracket{x_1,\ldots,x_I}\in\sqbracket{0,1}^I$ be such that $\sum_{i=1}^I x_i = N$.
 Then, there exists $\bracket{y_p}_{p\in{\range{I}\choose N}}\in\sqbracket{0,1}^{\range{I}\choose N}$ such that
-\begin{equation}
-  \sum_{p\in{\range{I} \choose N}}y_p = 1
-  \ \mbox{and for each $i\in\range{I}$,}\ 
-  x_i \le \sum_{p\in{\range{I} \choose N}~|~i\in p}y_p.
-\end{equation}
+$\ds\sum_{p\in{\range{I} \choose N}}y_p = 1$
+and for each $i\in\range{I}$, we have
+$\ds x_i \le \sum_{p\in{\range{I} \choose N}~|~i\in p}y_p$.
 \end{lem}
 
 
@@ -522,7 +528,6 @@ In case $N=2$, \cref{lem:cover-vertex} gives the following result on a graph.
 If $\bracket{x_i}_i$ represents the weights of the vertices of a complete graph such that $0\le x_i\le1$ and $\sum_i x_i=2$,
 then there exists weights $\bracket{y_p}_p$ of the edges such that the total sum of the weights of the edges is equal to 1 and for each vertex, the sum of the weights of its incident edges is greater or equal to its weight.
 \end{rmq}
-
 
 
 \begin{proof}[Proof of \cref{lem:cover-vertex}]
@@ -542,7 +547,9 @@ To prove the lemma, it is sufficient to prove that the linear program~\eqref{eq:
   \end{align+}
 \end{subequations}
 
+
 So it is sufficient to prove that the dual~\eqref{eq:cover-vertex:dual} of program~\eqref{eq:cover-vertex:primal} is feasible and that its optimum $v_D$ is equal to 1.
+
 
 \begin{subequations}\label{eq:cover-vertex:dual}
   \begin{align+}
@@ -557,9 +564,11 @@ So it is sufficient to prove that the dual~\eqref{eq:cover-vertex:dual} of progr
   \end{align+}
 \end{subequations}
 
+
 First, note that $v_D\ge 1$.
 Indeed, $\bracket{\lambda_1,\ldots,\lambda_I}=\bracket{\frac{1}{N},\ldots,\frac{1}{N}}$ is feasible and provides the value $1$ to the objective function.
 Let us show that $v_D\le 1$.
+
 
 We assume without loss of generality that $x_1\ge\cdots\ge x_I$.
 Let $\lambda^*$ be an optimal solution of program~\eqref{eq:cover-vertex:dual}.
@@ -576,7 +585,6 @@ Moreover, since $\sum_{i\in p}\lambda_i^*$ is maximal when $p=[N]$, we can also 
 Finally, among all $\lambda^*$ satisfying these requirements, we choose one with maximal $\lambda_1^*$, which exists by compactness.
 We deal with two cases.
 
-\medskip
 
 {\bf First case:} \emph{$\lambda_1^*<1$.}
 Suppose first for a contradiction that $\lambda_2^*>\lambda_I^*$.
@@ -602,18 +610,14 @@ If the optimal basis is $\crbracket{\lambda_1,\lambda_2}$, then $\tilde z=0$ and
 If the optimal basis is $\crbracket{\lambda_1,z}$, then $\tilde\lambda_2=0$ and we have $\tilde\lambda_1=1$, which gives a value $x_1$ to the objective function of problem~\eqref{eq:cover-vertex:dual:relaxation}.
 The basis $\crbracket{\lambda_2,z}$ being not feasible, we get $v_D\leq\max\bracket{x_1,1}=1$.
 
-\medskip
 
 {\bf Second case:} \emph{$\lambda_1^*=1$.}
 We have obviously $\lambda_2^*=\cdots=\lambda_I^*=0$, and thus $v_D=x_1\le 1$.
 
-\medskip
 
 In both cases, $v_D\le 1$, as required.
 Hence $v_D = 1$ which concludes the proof.
 \end{proof}
-
-
 
 
 \begin{proof}[Proof of \cref{prop:extended-relaxation:periods}]
@@ -662,15 +666,12 @@ So $\bracket{\inventory_t^i, \quantity_t^i, y_t^p}_{t,i,p}$ is a solution of the
 \end{proof}
 
 
-
 \subsubsection{Relaxations of extended formulation~\eqref{eq:extended-CLSP:items}}
-
 
 
 \begin{prop}\label{prop:extended-relaxation:items}
 The compact formulation~\eqref{eq:CLSP-BS} of CLSP-BS and the extended formulation~\eqref{eq:extended-CLSP:items} of CLSP-BS have the same continuous relaxations.
 \end{prop}
-
 
 
 \begin{proof}
@@ -701,21 +702,22 @@ Let $\bracket{\inventory_t^i, \quantity_t^i, \setup_t^i}_{t,i}$ be a solution of
 For each item $i$, we define the sequence $\bracket{\ell_p^i}_p$ of subsets of $\range{\horizon}$ and the associated sequence $\bracket{z_{\ell_p^i}^i}_p$ of integers as follow
 \begin{equation}
   \begin{aligned}
-  \ell_1^i       &= \crbracket{t\in\range{\horizon}~\Big|~\setup_t^i>0} \\
-  z_{\ell_1^i}^i &= \min\crbracket{\setup_t^i~\Big|~t\in\ell_1^i}
+  \ell_1^i       &= \crbracket{t\in\range{\horizon}~\left|~\setup_t^i>0\right.}, \\
+  z_{\ell_1^i}^i &= \min\crbracket{\setup_t^i~\left|~t\in\ell_1^i\right.},
   \end{aligned}
 \end{equation}
 and for $p\ge1$, while $\ell_p^i\ne\emptyset$,
 \begin{equation}
   \begin{aligned}
-  \ell_{p+1}^i       &= \crbracket{t\in\range{\horizon}~\Big|~\setup_t^i-z_{\ell_p^i}^i>0} \\
-  z_{\ell_{p+1}^i}^i &= \min\crbracket{\setup_t^i-z_{\ell_p^i}^i~\Big|~t\in\ell_p^i}
+  \ell_{p+1}^i       &= \crbracket{t\in\range{\horizon}~\left|~\setup_t^i-\sum_{q=1}^p z_{\ell_p^i}^i>0\right.}, \\
+  z_{\ell_{p+1}^i}^i &= \min\crbracket{\left.\setup_t^i-\sum_{q=1}^p z_{\ell_p^i}^i~\right|~t\in\ell_p^i}.
   \end{aligned}
 \end{equation}
-The sequence $\bracket{\ell_p^i}_p$ is finite and strictly decreasing.
-Note that $z_{\ell}^i$ is now defined for each $\ell$ occurring in the sequence $\bracket{\ell_p^i}_p$.
+The sequence $(\ell_p^i)_p$ is finite and strictly decreasing.
+Note that $z_{\ell}^i$ is now defined for each $\ell$ occurring in the sequence $(\ell_p^i)_p$.
 For the others, we set $z_{\ell}^i=0$.
 An example for the definition of the $\bracket{z_{\ell}^i}_{\ell}$ is given on \cref{fig:relaxation-extended-formulation-by-reference}.
+
 
 \begin{figure}[h]
   \centering
@@ -724,32 +726,31 @@ An example for the definition of the $\bracket{z_{\ell}^i}_{\ell}$ is given on \
   \label{fig:relaxation-extended-formulation-by-reference}
 \end{figure}
 
+
 Then, we have $\setup_t^i = \sum_{\ell\subseteq\range{\horizon}~|~t\in\ell} z_{\ell}^i$ and $\bracket{\inventory_t^i, \quantity_t^i, z_{\ell}^i}_{t,i,\ell}$ is a solution of continuous relaxation of the extended formulation~\eqref{eq:extended-CLSP:items}.
 \end{proof}
-
-
 
 
 \section{Solving the CLSP-BS}
 \label{sec:PDP:deterministic:solving}
 
 
-We present in this section different way to solve the CLSP-BS.
+We present in this section different ways to solve the CLSP-BS.
 
 
 \subsection{Off-the-shelf solver}
 
 
 In the data provided by Argon Consulting from its clients, we have at most 30 items and 13 periods.
-So the number of binary variables is always smaller to 400 in deterministic case which is very small for the solvers up-to-date.
+So the number of binary variables is always smaller to 400, which is very small for the up-to-date solvers.
 We succeed in getting the optimal solution in less than 20 seconds.
-
-
 
 
 \subsection{Dynamic programming with fixed $\REF$}
 
+
 For a fixed set $\REF$ of items, CLSP-BS with infinite capacities is polynomial.
+
 
 \begin{thm}\label{thm:complexity:fixed-number-items:infinite-capacity}
 For a fixed set $\REF$ of items, CLSP-BS with infinite capacities ($\capacity_t=\capacity=+\infty$) is polynomial.
@@ -760,11 +761,9 @@ We first prove that, when there are no initial inventory, there exists an optima
 Then, using dynamic programming, we prove that CLSP-BS with infinite capacities can be solved in $O\bracket{\horizon^{2\card{\REF}+1}}$.
 
 
-
-
 \begin{lem}\label{lem:complexity:fixed-number-items:infinite-capacity:ZIO}
 Consider an instance of CLSP-BS with infinite capacities ($\capacity_t=\capacity=+\infty$) and no initial inventory ($\inventory_0^i=0,\ \forall i\in\REF$).
-Then, there exists an optimal solution which is ZIO (Zero-Inventory-Ordering).
+Then, there exists an optimal solution that is ZIO (Zero-Inventory-Ordering).
 \end{lem}
 
 
@@ -786,9 +785,6 @@ Using this transformation for each period $t$ and item $j$ such that $\inventory
 %   \demand_t^i\longleftarrow\demand_t^i-\max\bracket{0,\ \inventory_0^i-\sum_{t'=1}^{t-1}\demand_{t'}^i}\qquad\forall t\in\range{t},\ \forall i\in\REF.
 % \end{equation}
 % If the initial inventory of item $i$ exceeds its cumulative demand, the item is simply removed from the set $\REF$ since it is optimal to not producing it.
-
-
-
 
 
 \begin{proof}[Proof of \cref{thm:complexity:fixed-number-items:infinite-capacity}]
@@ -840,11 +836,6 @@ V_t\bracket{\inventory_t} =
 There exists an optimal solution such that inventory is equal to zero at the end of the horizon $\horizon$.
 Thus, we can compute the cost $V\bracket{0}$ of an optimal solution in $O\bracket{\horizon^{2\card{\REF}+1}}$.
 \end{proof}
-
-
-\esgil{Check backward vs. forward in the literature.}
-\esgil{Check the notations used in \citet{Geunes2014}.}
-
 
 
 % \esgil{TODO: Finite capacity}
