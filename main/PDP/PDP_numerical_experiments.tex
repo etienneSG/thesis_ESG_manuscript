@@ -3,35 +3,42 @@
 \label{chap:PDP:numerical-experiments}
 
 
-To test the efficiency of our approach, we retrieve datasets from Argon Consulting's clients.
-Then, we simulate the sequence of production periods and emulate the behavior of people making production planning decisions to compare their consequences to the ones of decisions taken by our approach.
-We empirically show that the method we propose lead to an improvement in inventory management.
+% To test the efficiency of our approach, we retrieve datasets from Argon Consulting's clients.
+% Then, we simulate the sequence of production periods and emulate the behavior of people making production planning decisions to compare their consequences to the ones of decisions taken by our approach.
+% We empirically show that the method we propose lead to an improvement in inventory management.
+
+
+In this chapter, we test the practical efficiency of our approach.
+We will simulate realizations of the demand and planning decisions, updated week after week with the help of various heuristics.
 
 
 \section{Simulation}
 
 
-In this chapter, each method used to compute a production planning is called an \emph{heuristic} since it cannot guarantee to reach the optimum.
+In this chapter, each method used to compute a production planning is called a \emph{heuristic} since it cannot guarantee to reach the optimum.
 Moreover, we are not able to prove that one heuristic is theoretically better than another.
-Thus, in order to compare their efficiency, we use simulations.
+Thus, in order to compare their practical efficiency, we use simulation.
 
 
-The simulation emulates the behavior of people making production planning facing uncertainty.
-First, we define assembly line data and a forecast demand which is a function of the current period and of the past outcomes.
-Then, we choose a heuristic to compute the production planning.
+% The simulation emulates the behavior of people making production planning facing uncertainty.
+% First, we define assembly line data and a forecast demand which is a function of the current period and of the past outcomes.
+% Then, we choose a heuristic to compute the production planning.
 
 
-We use a repeated approach starting at period $t=1$.
-For each period $t$, we observe the current inventory level of each item, \ie the inventory at the end of the previous period.
+A simulation requires:
+\begin{itemize}
+  \item the characteristics of the items (holding costs $\holding^i$, initial inventory) and the characteristics of the assembly line (capacity $\capacity$ and upper bound $\nbsetups$ on the number of setups),
+  \item the forecast demand (value and reliability). This forecast demand may depend on time and on past realizations of the demand,
+  \item the choice of the heuristic used to compute the production planning,
+  \item the number $n$ of runs.
+\end{itemize}
+A run of the simulation starts at period $t=1$.
+Then, for each period $t$, we observe the current inventory level of each item, \ie the inventory at the end of the previous period.
 Using the forecast demand function and the chosen heuristic, we compute the production planning and fix the decision for the current period $t$.
-In real life, it correspond to starting the production for the current period without deviating from the planning.
 At the end of the period, we observe the demand outcome for period $t$ and update the inventory level.
-
-
-At the end of the simulation, we get several \emph{Key Performance Indicators (KPI)} measuring the efficiency of the heuristic.
-
-
+At the end of a run, we get several \emph{Key Performance Indicators (KPI)} measuring the efficiency of the heuristic for a particular realization of the demand.
 A scheme of a typical run of the simulation is given in \cref{fig:simulator}.
+
 
 \begin{figure}[h]
   \centering
@@ -41,16 +48,18 @@ A scheme of a typical run of the simulation is given in \cref{fig:simulator}.
 \end{figure}
 
 
-C++11 has been chosen for the implementations and Gurobi 6.5.1~\citet{gurobi} was used to solve the model on a PC with 8 processor Intel\textregistered\ Xeon\texttrademark\ E5-2667 @ 3.30GHz and 48Go RAM.
+After the $n$ runs of the simulation, we compute other KPI's from the KPI of all runs like the average over all runs or the standard deviation.
 
 
+C++11 has been chosen for the implementations and Gurobi 6.5.1 (see \citet{gurobi}) was used to solve the model on a PC with 8 processor Intel\textregistered\ Xeon\texttrademark\ E5-2667 @ 3.30GHz and 48Go RAM.
 
 
 \section{Heuristics}
 \label{sec:PDP:numerical-experiments:heuristics}
 
 
-Our heuristic consists in solving (2SA-$m$)\vlil{préciser que cela signifie tirer $m$ nouveaux scénario connaissant le passé} as defined in Problem~\eqref{eq:Uniform-CLSP-BS-2SA-m:backorder} at the beginning of each period $t$.
+Our heuristic consists drawing $m$ new scenarios of demand knowing the past realizations of the demand.
+Then we solve (2SA-$m$), as defined in Problem~\eqref{eq:Uniform-CLSP-BS-2SA-m:backorder}, at the beginning of each period $t$ with a MIP solver.
 We compare it with three other heuristics:
 \begin{itemize}
   \item deterministic approximation,
@@ -66,9 +75,10 @@ When backorder costs are not given by the client, we used the method described i
 
 The second one, the {\em lot-size heuristic}, consists in determining before the first week once and for all a value $\ell_i^*$ for each item $i\in\REF$.
 At time $t$, if the inventory of item $i$ is below a precomputed safety stock (see \cref{eq:PDP:numerical-experiments:safety-stock}), the quantity $\quantity_t^i$ is chosen so that the inventory of item $i$ exceeds the safety stock of exactly $\ell_i^*$.
-Indeed, as shown in \cref{fig:lot-size-heuristic}, the inventory level at the end of a period may be lower than the safety stock.
+% Indeed, as shown in \cref{fig:lot-size-heuristic}, the inventory level at the end of a period may be below the safety stock.
 In case of capacity issues, the production is postponed and thus backorder costs appear.
 In addition, if some capacity issues are easily anticipated, the production of an item $i$ can be activated even if the inventory is not below the safety stock.
+
 
 \begin{figure}[h]
   \centering
@@ -95,17 +105,17 @@ When the inventory of item $i$ is below the safety stock, the quantity $\quantit
 An example is given on \cref{fig:cover-size-heuristic}.
 
 
-
 The values $\ell_i^*$ and $\tau_i^*$ are determined using results of \cref{chap:lot-size:single-line}.
-$(\tau_i^*)_{i\in\REF}$ is actually chosen to be the optimal solution to Program~\eqref{eq:cont-rev-det}, which somehow considers the problem at a ``macroscopic'' level
+$(\tau_i^*)_{i\in\REF}$ is actually chosen to be the optimal solution to Program~\eqref{eq:lot-size:single-line:deterministic:unconstrained}, which somehow considers the problem at a ``macroscopic'' level
 %(Similar convex programs in the same context have been considered in the literature; see~\citet{Ziegler1982} for example.)
 where the demand $\demand^i$ is chosen equal to $\espe\sqbracket{\sum_{t=1}^{\horizon}\va d_t^i}$.
+
 
 For each item $i$, the parameter $\ell_i^*$ of the lot-size heuristic is then set to $\demand^i\tau_i^*$.
 
 
-There is no universal formula for safety stocks $\bracket{\safety^i}_i$.
-Thus we turn to the formula used in practice by most of Argon Consulting's clients (see \citet[Chapter 11]{Arnold2007}) where the underlying model assumes that demand has a Gaussian distribution.
+There is no universal formula for the safety stocks $\bracket{\safety^i}_i$.
+Thus we turn to the formula used in practice by most of Argon Consulting's clients (see \citet[Chapter 11]{Arnold2007}) where the underlying model assumes that the demand has a Gaussian distribution.
 Production being decided at the beginning of the period and the demand being revealed at the end of the period, the lead time is one period (and is certain).
 Thus, for each item $i$, the safety stock used to reach cycle service level $\alpha$ is
 \begin{equation}\label{eq:PDP:numerical-experiments:safety-stock}
@@ -115,18 +125,13 @@ where $\va\demand^i=\sum_{t=1}^{\horizon}\va\demand_t^i$ and $z_{\alpha}$ is the
 When fill rate service level $\servicelvl$ is used, an abacus gives the coefficient $k_{\servicelvl}$ which must be used instead of $z_{\alpha}$.
 
 
-
-
-
 The cover-size heuristic adapts the production to the realization of the demand, contrary to the lot-size heuristic.
-According to Argon Consulting, it makes the cover-size heuristic more suitable for situations with low short term volatility of demand or for overcapacitated lines, while the lot-size heuristic is expected to behave better with high short term volatility of demand or for undercapacitated lines.
+According to Argon Consulting, it makes the cover-size heuristic more suitable for situations with low short term volatility of demand or for overcapacitated lines, while the lot-size heuristic is expected to behave better with high short term volatility of demand or for undercapacitated lines. Lot-sizes and cover-sizes heuristics are used in practice.
 
 
 Note that the backorder costs are not taken into account at all for determining the values of the parameters $\ell_i^*$ and $\tau_i^*$.
 But playing with safety stocks allows to prevent too large backorder costs.
-However, in real life it is usually the other way round: the company does not associate costs to backorder and aims at keeping the total amount of unsatisfied demand below some predetermined level.
-
-
+However, in real life it is usually the other way round: the company does not associate costs to backorder and plays with the safety stock to address directly the service level.
 
 
 \section{Instances and probabilistic model}
@@ -136,29 +141,34 @@ However, in real life it is usually the other way round: the company does not as
 \subsection{Datasets}
 \label{sec:PDP:numerical-experiments:historical-data}
 
+
 The instances used are realistic and have been provided by a client of Argon Consulting.
-The client gave the data of seven assembly lines and the demand for each week over an full quarter.
+The client gave the data of seven assembly lines and the demand for each week over a full quarter.
 The horizon $\horizon$ is the typical one used in practice by this client, namely $\horizon=13$ weeks.
 
-The historical demand are denoted by $\bar{\demand}_t^i$.
+
+The historical demands are denoted by $\bar{\demand}_t^i$.
+
 
 The initial inventory is set to $s_0^i=\frac{1}{3}(\bar{\demand}_1^i+\bar{\demand}_2^i+\bar{\demand}_3^i)$.
 
+
 The other parameters are provided in \cref{tab:pdp:instances-characterisitcs}.
-%In particular, for each value of $v$, we have considered three possible values of the unit backorder cost $\backorder$, which have been determined following a procedure described in Section~\cref{sec:service}. At the moment, we do not discuss further these values and take them as part of the input, as required by the problem formulation.
-The parameter $C$ is the capacity of the line before normalization.
+The parameter $C$ is the capacity of the line before the normalization leading to formulation~\eqref{eq:Uniform-CLSP-BS}.
 (Recall that the problem and the model have been formulated in \cref{sec:PDP:stochastic:model} after normalization.)
 In the column $\tilde{\holding}^i$, we indicate the range of the holding costs before normalization.
 We obtain the $\holding^i$'s by dividing these costs by $C$ since internal production times $\rate^i$ are unitary.
 
-We also add the loading indicator $\kappa_t$ at period $t$ defined as:
+
+We also add the loading characteristic $\kappa_t$ at period $t$ defined as follows. it is only used to provides an indication of the hardness of the instance.
 \begin{equation}
   \kappa_t = \frac{\sum_{i\in\REF} \bracket{\sum_{t'=1}^{t} \bar{\demand}_{t'}^i}-\inventory_0^i}{ \sum_{t'=1}^{t} \capacity_{t'}}
 \end{equation}
 It is the ratio of cumulative forecast demand up to period $t$ minus the initial inventory over cumulative capacity up to period $t$.
-If there were no flexibility constraints and if the holding costs were not an issue, then for a period $t$, $\kappa_t \le 100\%$ implies that it is possible to supply the whole demand.
+If there were no flexibility constraints and if the holding costs were not an issue, then for a period $t$, the inequality $\kappa_t \le 100\%$ would imply that it is possible to supply the whole demand.
 As shown in \cref{tab:pdp:instances-characterisitcs}, the lines $L_0$, $L_1$, $L_2$, $L_3$ and $L_4$ experience overcapacity: the loading indicator is smaller than $100\%$.
 The lines $L_5$ and $L_6$ experience undercapacity: the loading indicator is larger than $100\%$ at some periods.
+
 
 \begin{table}[ht]
 \begin{center}
@@ -166,8 +176,7 @@ The lines $L_5$ and $L_6$ experience undercapacity: the loading indicator is lar
 \hline
 Instances &
 \multicolumn{7}{c}{Instance characteristics}
-\\\cline{2-8}
-\\
+\\ \cline{2-8} \rule{0pt}{.9\normalbaselineskip}
 & $\card{\REF}$
 & $\max(\bar{\demand}_t^i)$
 & \multicolumn{1}{c}{$\capacity$}
@@ -196,10 +205,9 @@ $L_6$ & $22$ & $8640$ & $13299$ & $8$ & $16$--$23$ & $118\%$ & $98\%$
 \end{center}
 \end{table}
 
+
 The number $m$ of scenarios used to solve (2SA-$m$) is fixed to $20$, determined by preliminary experiments showing that it is a good trade-off between accuracy and tractability.
 The time limit of the solver has been set to $120$ seconds.
-
-
 
 
 \subsection{Demand distribution}
@@ -207,56 +215,65 @@ The time limit of the solver has been set to $120$ seconds.
 
 
 For the sake of simplicity, in this section, we use index $k\in\range{K}$ to represent a pair $(t,i)\in\range{\horizon}\times\REF$.
-We choose to model the distribution of demand $\bracket{\tilde{\va\demand}_1,\ldots,\tilde{\va\demand}_K}$ using the \distrib distribution defined as follow.
+We choose to model the distribution of demand $\bracket{\tilde{\va\demand}_1,\ldots,\tilde{\va\demand}_K}$ using the ``expanded Dirichlet'' distribution defined as follow.
 
 
 Let $\gamma\in\bracket{0,1}$ and let $\tilde{\demand}_1,\ldots,\tilde{\demand}_K$ be $K$ positive real numbers. 
-We define the \distrib distribution of order $K$, denoted by $\cD\bracket{\gamma,\tilde{\demand}_1,\ldots,\tilde{\demand}_K}$, to be the probability distribution on $\RR_+^K$ such that $\bracket{\tilde{\va\demand}_1,\ldots,\tilde{\va\demand}_K}\sim\cD\bracket{\gamma,\tilde{\demand}_1,\ldots,\tilde{\demand}_K}$ if 
+We denote by $\cD\bracket{\gamma,\tilde{\demand}_1,\ldots,\tilde{\demand}_K}$ the probability distribution of $\bracket{\tilde{\va\demand}_1,\ldots,\tilde{\va\demand}_K}$ on $\RR_+^K$ when
 \begin{equation}
-  \frac{1}{\tilde{\demand}_0}\bracket{\tilde{\va\demand}_1,\ldots,\tilde{\va\demand}_K}\sim\Dir\bracket{\alpha_1,\ldots,\alpha_K}
+  \begin{array}{c}
+  \ds\frac{1}{\tilde{\demand}_0}\bracket{\tilde{\va\demand}_1,\ldots,\tilde{\va\demand}_K}\sim\Dir\bracket{\alpha_1,\ldots,\alpha_K}
+  \\ \smallskip
+  \mbox{with}
+  \quad\tilde{\demand}_0=\sum_{k=1}^K\tilde{\demand}_k,
+  \quad\alpha_0=\frac{1}{\gamma^2}-1,
+  \quad\mbox{and}
+  \quad\alpha_k=\frac{\tilde{\demand}_k}{\tilde{\demand}_0}\alpha_0,\ \forall k\in\range{K}.
+  \end{array}
 \end{equation}
-with $\tilde{\demand}_0=\sum_{k=1}^K\tilde{\demand}_k$, $\alpha_0=\frac{1}{\gamma^2}-1$ and $\alpha_k=\frac{\tilde{\demand}_k}{\tilde{\demand}_0}\alpha_0$, for each $k\in\range{K}$.
-\esgil{Mettre dans 7.3}
 (We remind that $\Dir\bracket{\alpha_1,\ldots,\alpha_K}$ designates the Dirichlet distribution and recall its definition and the main results in \cref{sec:reminders:gamma-and-dirichlet-distributions}.)
+We call it the ``expanded Dirichlet'' distribution.
 
 
-Thus, the \distrib distribution has the properties given is \cref{prop:demand-distribution:properties}.
+The ``expanded Dirichlet'' distribution has the following properties.
 
 
 \begin{prop}\label{prop:demand-distribution:properties}
 Let $\gamma$ be a real number in $\bracket{0,1}$ and let $\tilde{\demand}_1,\ldots,\tilde{\demand}_K$ be $K$ positive number (with $K\ge2$).
-Let $\bracket{\va\demand_1,\ldots,\va\demand_K}$ be a random vector with a \distrib distribution $\cD\bracket{\gamma,\tilde{\demand}_1,\ldots,\tilde{\demand}_K}$.
-Then, the following properties holds.
+Let $\bracket{\va\demand_1,\ldots,\va\demand_K}$ be a random vector following an ``expanded Dirichlet'' distribution $\cD\bracket{\gamma,\tilde{\demand}_1,\ldots,\tilde{\demand}_K}$.
+Then, the following properties hold.
 \begin{enumerate}
   \item\label{enum:PDP:random-demand-property:expectation}
-  Expectation of $\va\demand_k$ is equal to
+  Expectation% of $\va\demand_k$ is equal to
   \begin{equation}
-    e_k = \espe\sqbracket{\va\demand_k} = \tilde{\demand}_k\qquad\forall k\in\range{K}.
+    \espe\sqbracket{\va\demand_k} = \tilde{\demand}_k\qquad\forall k\in\range{K}.
   \end{equation}
   \item\label{enum:PDP:random-demand-property:variance}
-  Variance of $\va\demand_k$ is equal to
+  Variance% of $\va\demand_k$ is equal to
   \begin{equation}\label{eq:PDP:numerical-experiments:demand:variance}
-    (\sigma_k)^2=\vari\sqbracket{\va\demand_k}=\gamma\,\tilde{\demand}_k\bracket{\tilde{\demand}_0-\tilde{\demand}_k}\qquad\forall k\in\range{K}.
+    \vari\sqbracket{\va\demand_k}=\gamma\,\tilde{\demand}_k\bracket{\tilde{\demand}_0-\tilde{\demand}_k}\qquad\forall k\in\range{K}.
   \end{equation}
   \item\label{enum:PDP:random-demand-property:constant-volume}
-  Sum of components of the vector $\bracket{\va\demand_1,\ldots,\va\demand_K}$ does not depend on the realization and is equal to
+  Sum% of components of the vector $\bracket{\va\demand_1,\ldots,\va\demand_K}$ does not depend on the realization and is equal to
   \begin{equation}
     \sum_{k=1}^{K}\va\demand_k = \tilde{\demand}_0\qquad\mbox{almost surely.}
   \end{equation}
   \item\label{enum:PDP:random-demand-property:past-conditional}
-  The \distrib\ distribution keeps the same properties conditionally to the past realizations.
-  More formally, let $m$ be an integer in $\range[1]{k-1}$. We denote $\va\demand_{(1)}=\bracket{\va\demand_1,\ldots,\va\demand_m}$, $\va\demand_{(2)}=\bracket{\va\demand_{m+1},\ldots,\va\demand_K}$ and $\demand_{(1)}=\bracket{\demand_1,\ldots,\demand_m}$ a fixed realization of $\va\demand_{(1)}$.
-  Then, $\bracket{\va\demand_{(2)}|\va\demand_{(1)}=\demand_{(1)}}$ has a \distrib distribution $\cD\bracket{\gamma',\tilde{\demand}_{m+1},\ldots,\tilde{\demand}_K}$
+  %The ``expanded Dirichlet'' distribution keeps the same properties conditionally to the past realizations.
+  Let $k$ be an integer in $\range[1]{K-1}$. We denote by $\va\demand_{(1)}=\bracket{\va\demand_1,\ldots,\va\demand_k}$, $\va\demand_{(2)}=\bracket{\va\demand_{k+1},\ldots,\va\demand_K}$ and $\demand_{(1)}=\bracket{\demand_1,\ldots,\demand_k}$ a fixed realization of $\va\demand_{(1)}$.
+  Then, $\bracket{\va\demand_{(2)}\left|\va\demand_{(1)}=\demand_{(1)}\right.}$ has an ``expanded Dirichlet'' distribution $\cD\bracket{\gamma',\tilde{\demand}_{k+1},\ldots,\tilde{\demand}_K}$
   where $\gamma'$ is the unique positive solution of
   \begin{equation}\label{eq:PDP:random-demand-property:past-conditional:gamma}
-    \frac{1}{\gamma'^2}-1 = \bracket{\frac{1}{\gamma^2}-1}\bracket{1-\frac{1^T\demand_{(1)}}{\tilde{\demand}_0}}
+    \frac{1}{\gamma'^2}-1 = \bracket{\frac{1}{\gamma^2}-1}\bracket{1-\frac{\sum_{i=1}^k \demand_i}{\tilde{\demand}_0}}.
   \end{equation}
-  where $1^T$ is the vector with length $m$ and all entries equal to 1. 
 \end{enumerate}
 \end{prop}
 
 
-The parameters of the \distrib distribution used to generate demand are the historical forecast demand $\bar{\demand}_t^i$ for the $\tilde{\demand}_k$ and $\gamma$ is set equal to
+\cref{prop:demand-distribution:properties} is proved \cref{sec:PDP:numerical-experiments:instances:proofs}.
+
+
+The parameters of the ``expanded Dirichlet'' distribution used to generate the demand are the historical forecast demands $\bar{\demand}_t^i$ for the $\tilde{\demand}_k$ and $\gamma$ is set equal to
 \begin{equation}\label{eq:PDP:gamma-from-volatility}
   \gamma
   =
@@ -266,40 +283,52 @@ The parameters of the \distrib distribution used to generate demand are the hist
 \end{equation}
 The parameter $\gamma$ is defined from another parameter $v$ which we call \emph{volatility} and whose interpretation is easier.
 Volatility gives the ratio between standard deviation and expectation of a random variable.
-Defining $\gamma$ as in \cref{eq:PDP:gamma-from-volatility} enables the volatility of each demand to be close to $v$ as well as possible and is justified in \cref{sec:PDP:numerical-experiments:instances:fitting-parameters}.
+Defining $\gamma$ as in \cref{eq:PDP:gamma-from-volatility} enables the volatility of each demand to be as close to $v$ as possible and is justified in \cref{sec:PDP:numerical-experiments:instances:fitting-parameters}.
 
 
-Using \distrib distribution has many advantages.
+Using ``expanded Dirichlet'' distributions has many advantages.
 First, \cref{enum:PDP:random-demand-property:expectation} ensures that demand expectation is equal to the historical forecast demand and \cref{enum:PDP:random-demand-property:constant-volume} ensures that, as explained in \cref{chap:business-context}, total volume $\sum_{t,i}\va\demand_t^i$ of the forecast demand is constant over every possible outcomes.
-Second, \cref{enum:PDP:random-demand-property:past-conditional} ensures that demand distribution keeps its properties when part of demand is revealed.
+Second, \cref{enum:PDP:random-demand-property:past-conditional} ensures that the demand distribution keeps its properties when part of the demand is revealed.
 
 
-Moreover, random variables with a \distrib\ distribution can be easily generated using \cref{proc:demand:initial-sampling} since most of modern programming languages has a generator of gamma distributed variables.
+Moreover, random variables with an ``expanded Dirichlet'' distribution can be easily generated using Algorithm~\ref{alg:demand:initial-sampling} since most of modern programming languages have a generator of gamma distributed variables.
 
 
-\begin{proc}\label{proc:demand:initial-sampling}
-\emph{Generator of \distrib\ distribution $\cD\bracket{\gamma,\tilde{\demand}_1,\ldots,\tilde{\demand}_K}$}
+\begin{algorithm}[H]
+\Input{$\gamma,\tilde{\demand}_1,\ldots,\tilde{\demand}_K$}
+\Output{Random realization $\bracket{\demand_1,\ldots,\demand_K}$ of $\cD\bracket{\gamma,\tilde{\demand}_1,\ldots,\tilde{\demand}_K}$}
 
-\textbf{Step 1.} \emph{Initialize the procedure.}
+\BlankLine
 
-Set $\tilde{\demand}_0 = \sum_{k=1}^K\tilde{\demand}_k$ and $\alpha_0 = \frac{1}{\gamma^2}-1$ and for $k=1,\ldots,K$, set $\alpha_k=\frac{\tilde{\demand}_k}{\tilde{\demand}_0}\alpha_0$.
+$\ds\tilde{\demand}_0:= \sum_{k=1}^K\tilde{\demand}_k$\;
 
-\textbf{Step 2.} \emph{Generate Gamma realizations.}
+$\ds\alpha_0:= \frac{1}{\gamma^2}-1$\;
 
-For $k=1,\ldots,K$, draw a number $y_k$ from gamma distribution $\Gamma\bracket{\alpha_k,1}$.
+\lFor{$k=1,\ldots,K$}{$\ds\alpha_k:=\frac{\tilde{\demand}_k}{\tilde{\demand}_0}\alpha_0$}
 
-\textbf{Step 3.} \emph{Normalize the realization.}
+\For{$k=1,\ldots,K$}{draw a number $y_k$ from Gamma distribution $\Gamma\bracket{\alpha_k,1}$}
 
-For $k=1,\ldots,K$, set $x_k=\frac{y_k}{\sum_{\ell=1}^K y_{\ell}}$.
+\lFor{$k=1,\ldots,K$}{$\ds \demand_k:= \frac{y_k}{\sum_{\ell=1}^K y_{\ell}} \tilde{\demand}_0$}
 
-\textbf{Step 4.} \emph{Return a sample of the \distrib\ distribution $\cD\bracket{\gamma,\tilde{\demand}_1,\ldots,\tilde{\demand}_K}$.}
+\BlankLine
 
-For $k=1,\ldots,K$, set $d_k = x_k \tilde{\demand}_0$.
-\end{proc}
+\Return $\bracket{\demand_1,\ldots,\demand_K}$\;
+
+\BlankLine
+\caption{Generator of ``expanded Dirichlet'' distribution $\cD\bracket{\gamma,\tilde{\demand}_1,\ldots,\tilde{\demand}_K}$}
+\label{alg:demand:initial-sampling}
+\end{algorithm}
 
 
-Finally, \cref{proc:demand:initial-sampling} and \cref{enum:PDP:random-demand-property:past-conditional} of \cref{prop:demand-distribution:properties} enables to easily generate a realization of the demand when part of the demand is already revealed.
+\begin{prop}\label{prop:correctness-expanded-dirichlet-generator}
+For any $\gamma\in\bracket{0,1}$ and any $\tilde{\demand}_1,\ldots,\tilde{\demand}_K$ positive real numbers, Algorithm~\ref{alg:demand:initial-sampling} produces a realization $\bracket{x_1,\ldots,x_K}$ of the ``expanded Dirichlet'' distribution $\cD\bracket{\gamma,\tilde{\demand}_1,\ldots,\tilde{\demand}_K}$.
+\end{prop}
 
+
+\cref{prop:correctness-expanded-dirichlet-generator} is proved \cref{sec:PDP:numerical-experiments:instances:proofs}.
+
+
+Finally, Algorithm~\ref{alg:demand:initial-sampling} and \cref{enum:PDP:random-demand-property:past-conditional} of \cref{prop:demand-distribution:properties} enable to generate easily a realization of the demand when part of the demand is already revealed.
 
 
 \section{Use of $K$-means algorithm}
@@ -307,7 +336,7 @@ Finally, \cref{proc:demand:initial-sampling} and \cref{enum:PDP:random-demand-pr
 
 
 As explained in \cref{sec:PDP:numerical-experiments:historical-data}, we use a small number of scenarios to represent every possible outcomes.
-Thus, using only \cref{proc:demand:initial-sampling} gives results which may be very dependent of the generating scenarios.
+Thus, using only Algorithm~\ref{alg:demand:initial-sampling} gives results which may be very dependent of the generating scenarios.
 In this section, we propose to use a $K$-means algorithm on a bigger set of scenarios to get a small set of representative scenarios.
 
 
@@ -316,25 +345,23 @@ Roughly, $K$-means clustering aims at partitioning $n$ observations into $K$ clu
 The mean of each cluster can be used as a prototype (\ie a representative element) of the cluster.
 
 
-$K$-means algorithm is easy to implement but have some drawbacks.
+$K$-means algorithm is easy to implement but its simplest version have some well-known limitations.
 First, it uses Euclidean distance as a metric and variance is used to measure cluster scatter.
-In some cases, other distances might be more relevant.
+In some cases, other distances might be more relevant and choosing a more appropriate one may not be an easy task.
 Second, the number of clusters $K$ is an input parameter.
 Thus, an inappropriate choice of $K$ may yield poor results.
 Last, results depend of the initialization of the first $K$ prototypes and may lead algorithm to converge to local optimum.
 Some variations of $K$-means algorithms exist to deal with these points (see \citet{Jain2010} for a review of $K$-means algorithm and its extensions).
 
 
-
-
-
-
-For lack of time\vl{Due to time constraints}, we have not implemented $K$-mean algorithm.
-However, our utilization would be straightforward and would have the following structure.
-We would first use \cref{proc:demand:initial-sampling} to generate a sample of $M$ scenarios which can be seen as real vectors of $\RR^{\horizon\times\REF}$.
-Then, since the number of scenarios that can be used in (2SA-$m$) is bounded due to the computer performance, we would initialize $K$ with $m=20$.
-Thus, our set of representative scenarios would be composed of the $K$ prototypes of each cluster and the probability of each one is equal to the number of scenarios in its cluster divided by $M$.
-
+Due to time constraints, we have not implemented $K$-means algorithm.
+However, a straightforward way to use it would consists in:
+\begin{itemize}
+  \item using Algorithm~\ref{alg:demand:initial-sampling} to generate a sample of $M$ scenarios which can be seen as real vectors of $\RR^{\horizon\times\REF}$,
+  \item initializing $K$ with $m=20$,
+  \item using $K$-means algorithm to classify the $M$ scenarios into $m$ clusters.
+\end{itemize}
+Then, our set $\scenarios$ of representative scenarios used in \cref{eq:Uniform-CLSP-BS-2SA-m:backorder} would be composed of the prototype of each cluster, with a probability equal to the number of scenarios in its cluster divided by $M$.
 
 
 \section{Numerical results}
@@ -343,20 +370,20 @@ Thus, our set of representative scenarios would be composed of the $K$ prototype
 
 We run tests on lines described in \cref{tab:pdp:instances-characterisitcs}.
 Complete tables of results are given in \cref{chap:appendix:pdp:numerical-experiments} and the results for line $L_1$ is given in \cref{tab:pdp:results:line-1}.
-(We choose line $L_1$ because it is not a line that suffer undercapacity like $L_5$ and $L_6$ neither a line that is clearly overcapacitated like $L_4$.)
+(We choose line $L_1$ because it does not suffer from undercapacity like $L_5$ and $L_6$, and it is not a line that is clearly overcapacitated like $L_4$.)
 
 
-The table is composed as follow.
-In the column \emph{Input}, we give the characteristic of inputs.
+The table is composed as follows.
+In the column \emph{Input}, we give the characteristic of the inputs.
 The sub-column \emph{Vol.} gives the volatility of the demand as defined in \cref{sec:PDP:numerical-experiments:drawing-realization-of-demand}.
-The sub-column \emph{Strategy} gives the strategy used to make production decisions (see \cref{sec:PDP:numerical-experiments:heuristics}).
+The sub-column \emph{Heur.} gives the heuristic used to make production decisions (see \cref{sec:PDP:numerical-experiments:heuristics}).
 The abbreviation \emph{det} stands for the deterministic heuristic, \emph{sto} for (2SA-$m$) heuristic, \emph{cover} for cover-size and \emph{lot} for lot-size.
-Finally, the sub-column \emph{Service} gives the service level used to compute backorder costs as explained in \cref{sec:PDP:stochastic:model:backorder}.
+Finally, the sub-column \emph{$\servicelvl$} gives the service level used to compute backorder costs as explained in \cref{sec:PDP:stochastic:model:backorder}.
 
 
-The output are composed of the following KPI.
+The outputs are composed of the following KPI's.
 They are all averaged over the 30 runs of the simulation.
-In the column \emph{Obj.}, we write the objective value \cref{eq:Uniform-CLSP-BS-2SA-m:backorder:objective} of the solution found by the heuristic (in k\euro{}).
+In the column \emph{Obj.}, we write the objective value \eqref{eq:Uniform-CLSP-BS-2SA-m:backorder:objective} of the solution found by the heuristic (in k\euro{}).
 
 
 The column \emph{Inventory} gives several KPI relative to stocks.
@@ -368,7 +395,7 @@ The sub-column \emph{Max} gives the maximum of the positive part of the inventor
 \begin{equation}
   \max_{\horizon}\bracket{\inventory} = \max_{t\in\range{\horizon}}\bracket{\sum_{i\in\REF} \bracket{\holding^i\inventory_t^i}^+}.
 \end{equation}
-The sub-column \emph{Cover} gives the average cover-size of items, \ie the average number of periods covered when a production occurred.
+The sub-column \emph{Cover} gives the average cover-size of items, \ie the average number of periods covered when a production occurrs.
 This KPI is taken on average over items and each item is weighted by its holding cost.
 For each item $i$, denoting by $\cT^i$ the subset of $\range{\horizon}$ of periods where item $i$ is produced, the KPI is computed by
 \begin{equation}\label{eq:pdp:numerical-experiments:KPI:cover}
@@ -432,21 +459,22 @@ It is given by
 \end{table}
 
 
-\cref{tab:pdp:results:line-1} and the others presented in \cref{chap:appendix:pdp:numerical-experiments} first show that best objective values for the problem is always reach by 2SA-$m$ heuristic.
-Then deterministic heuristic also gives good objective value.
-On the other hand, objective value returned by lot-size and cover-size heuristics are about 10 times greater than objective value returned by 2SA-$m$ heuristic.
-About real inventory, we see that it represents the main part of the objective value for each heuristic.
-Naturally, the average cover-sizes for each item are greater for lot-size and cover-size heuristics than for deterministic and 2SA-$m$ heuristics.
+\cref{tab:pdp:results:line-1} and the others presented in \cref{chap:appendix:pdp:numerical-experiments} first show that the best objective values for the problem are always reach by the (2SA-$m$) heuristic.
+Then the deterministic heuristic also gives good objective values.
+On the other hand, the objective values returned by the lot-size and cover-size heuristics are about 10 times greater than the objective values returned by the (2SA-$m$) heuristic.
+Regarding the real inventory, we see that it represents the main part of the objective value for each heuristic.
+Naturally, the average cover-sizes for each item are greater for lot-size and cover-size heuristics than for the deterministic and the (2SA-$m$) heuristics.
 
 
 Backorder is strongly linked to fill rate service level.
-As expected for strategies with such huge inventory, lot-size and cover-size heuristic have the best fill rate service level.
+As expected for heuristics with such huge inventory, lot-size and cover-size heuristics have the best fill rate service level.
 However, it is the same for any value of the tested desired service level.
-On the other hand, deterministic and 2SA-$m$ heuristic adapt to the desired service level but they are too optimistic about their ability to satisfied uncertain demand.
+On the other hand, deterministic and (2SA-$m$) heuristics adapt to the desired service level but they are too optimistic about their ability to satisfied uncertain demand.
 
 
-By looking at the values of the backorder cost, we can see that the values computed by method proposed in \cref{sec:PDP:numerical-experiments:drawing-realization-of-demand} are very small especially for small desired service level like 85\%.\vl{unclear}
-Thus, the method to compute the backorder\vl{cost ?} is too optimistic and must be improved.
+By looking at the values of the backorder cost, we can see that the values computed by method proposed in \cref{sec:PDP:numerical-experiments:drawing-realization-of-demand} are very small.
+It is especially visible for small desired service level like $\servicelvl=85\%$.
+Thus, the method to compute the backorder cost is too optimistic and must be improved.
 A simple way might be to skew the method.
 A more sophisticated one might be to use extensions of the news-vendor problem like the multi-stage extension.
 
@@ -455,6 +483,9 @@ Comparing results between undercapacitated lines ($L_0$ to $L_4$) and overcapaci
 However, we simply see that the GAP between the different KPI is smaller in undercapacitated case than in overcapacitated case.
 
 
+Finally, we recall that the lot-size and the cover-size heuristics are used in practice.
+However, we do not know every technical detail of the implementation.
+Thus, the results that can be obtained by the planners may be slightly better that those that we obtain.
 
 
 % \cref{tab:pdp:results:line-1} and the others presented in \cref{chap:appendix:pdp:numerical-experiments} first show that best objective values for the problem is not reach by (2SA-$m$) heuristic.

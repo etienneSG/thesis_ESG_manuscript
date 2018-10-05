@@ -10,16 +10,19 @@
 \tikzstyle{alea}             = [treenode, draw=argon gray, fill=argon gray!25]
 \tikzstyle{edge from parent} = [draw, -latex]
 
+\node (random1) at ({1.2*\lvlwidth},{7.5*\lvlheight}) {Randomness};
+\node (random2) at ({3.6*\lvlwidth},{7.5*\lvlheight}) {Randomness};
+
 \begin{scope}[local bounding box=CompleteTree, scale=1.2]
 % level 0
 \node[root] (present) at (0,{2.5*\lvlheight}) {Present};
 
 % level 1
-\foreach \x in {1,2,...,3} \node[alea,font=\scriptsize] (alea\x) at (\lvlwidth,{(6.5-2*\x)*\lvlheight}) {Hazard \x};
+\foreach \x in {1,2,...,3} \node[alea,font=\scriptsize] (alea\x) at (\lvlwidth,{(6.5-2*\x)*\lvlheight}) {Realization \x};
 \foreach \x in {1,2,...,3} \node[future,font=\scriptsize] (future\x) at ({2*\lvlwidth},{(6.5-2*\x)*\lvlheight}) {Future \x};
 
 % level 2
-\foreach \x in {1,2,...,3} \foreach \y in {1,2,...,2} \node[alea] (alea\x\y) at ({3*\lvlwidth},{(8-2*\x-\y)*\lvlheight}) {Hazard \x.\y};
+\foreach \x in {1,2,...,3} \foreach \y in {1,2,...,2} \node[alea] (alea\x\y) at ({3*\lvlwidth},{(8-2*\x-\y)*\lvlheight}) {Realization \x.\y};
 \foreach \x in {1,2,...,3} \foreach \y in {1,2,...,2} \node[future] (future\x\y) at ({4*\lvlwidth},{(8-2*\x-\y)*\lvlheight}) {Future \x.\y};
 
 \foreach \x in {1,2,...,3} \draw[edge from parent] (present.east) -- (alea\x.west);
@@ -46,7 +49,7 @@
 \node[root] (present) at (0,{1.5*\lvlheight}) {Present};
 
 % level 1
-\foreach \x in {1,2,...,3} \node[alea,font=\scriptsize] (alea\x) at (\lvlwidth,{(3.5-\x)*\lvlheight}) {Hazard \x};
+\foreach \x in {1,2,...,3} \node[alea,font=\scriptsize] (alea\x) at (\lvlwidth,{(3.5-\x)*\lvlheight}) {Realization \x};
 \foreach \x in {1,2,...,3} \node[future,font=\scriptsize] (future\x) at ({2*\lvlwidth},{(3.5-\x)*\lvlheight}) {Future \x};
 
 % level 2
@@ -73,7 +76,7 @@
 \node[root] (present) at (0,{2*\lvlheight}) {Present};
 
 % level 1
-\foreach \x in {1,2,...,2} \node[alea,font=\scriptsize] (alea\x) at (\lvlwidth,{(3.5-\x)*\lvlheight}) {Hazard \x};
+\foreach \x in {1,2,...,2} \node[alea,font=\scriptsize] (alea\x) at (\lvlwidth,{(3.5-\x)*\lvlheight}) {Realization \x};
 \foreach \x in {1,2,...,2} \node[future,font=\scriptsize] (future\x) at ({2*\lvlwidth},{(3.5-\x)*\lvlheight}) {Future \x};
 
 % level 2

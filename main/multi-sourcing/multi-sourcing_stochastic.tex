@@ -335,6 +335,7 @@ This mixed-integer program can be solved by any linear solver for small dataset 
 
 
 \subsection{Heuristic to solve mixed integer program~\eqref{eq:stoch-multi-sourcing:linearized}}
+\label{sec:multi-sourcing:stochastic:solving-method:heuristic}
 
 
 When working on big dataset, LP solver are unable to find feasible solutions (see \cref{sec:multi-sourcing:numerical-experiments:numerical-results}).
@@ -429,7 +430,7 @@ That is why, finding the smallest $\alpha$ such that (P$_{\alpha}$) is feasible 
 
 However, the set of $\alpha$ such that (P$_{\alpha}$) is feasible and such that mixed integer program~\eqref{eq:stoch-multi-sourcing:linearized} with assignment equal to the optimal solution $\bracket{\open_p^i(\alpha)}_{p,i}$ of (P$_{\alpha}$) is not an interval.
 Consider the following example.
-We have two items, two plants with capacities $\capacity_1=100$ and $\capacity_2=55$, and one period and 2 scenarios with same probability.
+We have two items, two plants with capacities $\capacity_1=100$ and $\capacity_2=55$, one period, and two scenarios with same probability.
 The parameter $\servicelvl$ is chosen equal to $100\%$ preventing from any stock-out.
 The other parameters of the multi-sourcing problem are given in \cref{tab:multi-sourcing:heuristic:counterexample:data}.
 \begin{table}[h]

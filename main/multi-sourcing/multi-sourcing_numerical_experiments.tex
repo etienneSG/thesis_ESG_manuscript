@@ -5,35 +5,88 @@
 
 In order to test the efficiency of our approach, we test our method on datasets from Argon Consulting’s clients.
 The objective is to compare the multi-sourcing currently in use by the client to the multi-sourcing computed from our method.
-In addition to comparing their cost, several Key Performance Indicators (KPI) will be used as the generated stock-out, the probability of stock-out, the load of plants, etc.
+In addition to comparing their cost, several Key Performance Indicators (KPI) will be used as the generated stock-out, the probability of stock-out, the workload of plants, etc.
 
 
-\section{Simulation}
+\section{Preliminary discussion}
 
 
-Simulation is based on real dataset from Argon Consulting’s clients.
-We first retrieve the historical data and the current multi-sourcing to establish a comparison point.
-%Objective of this part is to identify the available information when multi-sourcing decisions were made and only used this one.
+We are unable to evaluate the quality of a solution $(\open_p^i)_{p,i}$.
+To do so, we must check if $(\open_p^i)_{p,i}$ is feasible for Problem~\eqref{eq:stoch-multi-sourcing:linearized} with a huge number of scenarios.
+Although Problem~\eqref{eq:stoch-multi-sourcing:linearized} becomes a linear program (without integer variables), its size prevents us from using a solver to frontally solve it.
 
 
-The simulation emulates the behavior of people making multi-sourcing decisions.
-First, we define plants data (capacities, internal production times, eligibility or not to be given the ability to produce items) and a forecast demand which is a function of the current period and of the past outcomes.
-Then, we construct our model defined in \cref{chap:multi-sourcing:stochastic}.
-Finally, we solve it and get a multi-sourcing decision.
-This first step enables to compare current and computed multi-sourcing costs.
+% \esgil{Faire tourner un test avec $m=100000$ scenarios.}
 
 
-However, to show its practical efficiency, we fixed these decisions and emulated the behavior of people making production planning decisions (\ie mid-term decisions) subject to multi-sourcing decisions (\ie long-term decisions) already fixed.
-We generate a sample of realizations of the demand.
-For each realization, we solve a slightly modified version of the second stage (which is now deterministic) maximizing the fill rate service level and where $\AVaR_{1-\servicelvl}\bracket{\inventory_t^i}\le0$ is removed.
-Indeed, in deterministic case, $\AVaR_{1-\servicelvl}\bracket{\inventory_t^i}\le0$ is equivalent to $\inventory_t^i\ge0$.
-Yet, in many cases, deterministic model is infeasible.
-(This is all the more foreseeable because we do not use robust constraint.)
-Moreover, when making a production planning, if there is not enough flexibility or capacity, a production planning is always returned satisfying as well as possible a service level objective.
-We then get several KPI such as fill rate service level, cycle service level, holding costs.
+Thus, we choose another way to evaluate our solution, which actually is also a way to assess the relevance of the original problem.
+We do the following to ``evaluate'' a solution $(\open_p^i)_{p,i}$.
+\begin{itemize}
+  \item Draw $n=10000$ scenarios of demand.
+  \item For each scenario, solve a slightly modified version of the second stage (which is now deterministic) maximizing the fill rate service level and where $\AVaR_{1-\servicelvl}\bracket{\inventory_t^i}\le0$ is removed.
+  \item Return the average of the KPI of multi-sourcing (as the fill rate service level, the average workload of the plants or the average inventory).
+\end{itemize}
 
 
-C++11 has been chosen for the implementations and Gurobi 6.5.1~\citet{gurobi} was used to solve the model on a PC with 32 processor Intel\textregistered\ Xeon\texttrademark\ E5-2667 @ 3.30GHz and 192Go RAM.
+We choose to remove the $\AVaR$ constraint because in deterministic case, $\AVaR_{1-\servicelvl}\bracket{\inventory_t^i}=-\inventory_t^i$ and the $\AVaR$ constraint becomes $\inventory_t^i\ge0$.
+Thus, in many cases, the deterministic model may be infeasible whereas the stochastic model may not be since $\AVaR$ may authorized negative values.
+
+
+Consider the following example.
+We have one item, one plant with capacity $\capacity=100$, three periods, and two scenarios with same probability.
+The parameter $\servicelvl$ is chosen equal to $0\%$ which gives $\AVaR_{100\%}\bracket{\va\inventory_t^i} = -\espe\sqbracket{\va\inventory_t^i}$.
+The other parameters of the multi-sourcing problem are given in \cref{tab:multi-sourcing:numerical-experiments:example}.
+\begin{table}[h]
+\subfloat[Demand $\demand_{1,\omega}^i$]
+{\begin{tabular}{@{\extracolsep{\fill}}lccc@{\extracolsep{\fill}}}
+\cline{2-4}
+         & period 1 & period 2 & period 3 \\
+\hline
+scenario 1 & 101    & 98       & 101 \\
+scenario 2 & 99     & 102      & 99  \\
+\hline
+\end{tabular}}
+\hfill
+\subfloat[Other parameters]
+{\begin{tabular}{p{2cm}lp{2cm}}
+& $\rate_{p,1}^i = 1$   & \\
+& $\lb_{p,1}^i   = 0$   & \\
+& $\ub_{p,1}^i   = 100$ & \\
+\end{tabular}}
+\caption{Parameters of the counterexample}
+\label{tab:multi-sourcing:numerical-experiments:example}
+\end{table}
+Every scenario is infeasible in deterministic case.
+However, the complete scenario tree is feasible in stochastic case.
+(It is straightforward to construct an example with as many scenarios as desired and every scenario infeasible in deterministic settings and the whole set of scenarios feasible in stochastic settings.)
+
+
+Secondly, in Problem~\eqref{eq:stoch-multi-sourcing}, the $\AVaR$ constraint aims at controlling service level and thus backorder.
+Since this constraint is removed and since the current objective is constant and equal to the cost of the fixed assignment $(\open_p^i)_{p,i}$, we choose to use the fill rate service level as a second order objective to maximize.
+
+
+% \section{Simulation}
+
+
+% Simulation is based on real dataset from Argon Consulting’s clients.
+% We first retrieve the historical data and the current multi-sourcing to establish a comparison point.
+
+
+% The simulation emulates the behavior of people making multi-sourcing decisions.
+% First, we define plants data (capacities, internal production times, eligibility or not to be given the ability to produce items) and a forecast demand which is a function of the current period and of the past outcomes.
+% Then, we construct our model defined in \cref{chap:multi-sourcing:stochastic}.
+% Finally, we solve it and get a multi-sourcing decision.
+% This first step enables to compare current and computed multi-sourcing costs.
+
+
+% However, to show its practical efficiency, we fixed these decisions and emulated the behavior of people making production planning decisions (\ie mid-term decisions) subject to multi-sourcing decisions (\ie long-term decisions) already fixed.
+% We generate a sample of realizations of the demand.
+% For each realization, we solve a slightly modified version of the second stage (which is now deterministic) maximizing the fill rate service level and where $\AVaR_{1-\servicelvl}\bracket{\inventory_t^i}\le0$ is removed.
+% Indeed, in deterministic case, $\AVaR_{1-\servicelvl}\bracket{\inventory_t^i}\le0$ is equivalent to $\inventory_t^i\ge0$.
+% Yet, in many cases, deterministic model is infeasible.
+% (This is all the more foreseeable because we do not use robust constraint.)
+% Moreover, when making a production planning, if there is not enough flexibility or capacity, a production planning is always returned satisfying as well as possible a service level objective.
+% We then get several KPI such as fill rate service level, cycle service level, holding costs.
 
 
 \section{Instance}
@@ -41,12 +94,14 @@ C++11 has been chosen for the implementations and Gurobi 6.5.1~\citet{gurobi} wa
 
 \subsection{Datasets}
 
+
 In practice, we have access to every technical characteristics of the plant (like capacity, internal production time) or assignment costs.
 We also have the forecast demand and the quantities really produced.
 However, as usual, real demand may be slightly different from historical one.
 Indeed, it is almost always impossible to trace if, after a stock-out, a client changes its mind for another item or do not buy anything.
 % About opening costs, they are not straightforward.
 % Discussions lead to consider the time loss to install assembly lines, to train employees and to ramp up production as the opening cost.
+
 
 \cref{tab:multi-sourcing:instances-characteristics} summarize the characteristics of the two instances used for tests.
 \begin{table}[h]
@@ -80,21 +135,16 @@ Assignment cost & $\affect_p^i$ & $8392$ &--& $82196$ & $3516$ &--& $62234$
 \label{tab:multi-sourcing:instances-characteristics}
 \end{table}
 
+
 The parameter $\servicelvl$ which control the service level objective is chosen in $\crbracket{70\%,85\%,95\%}$.
 The number $m$ of scenarios used to solve (2SA-$m$) is fixed to $100$ due to tractability restrictions.
 The time limit to return a solution has been set to $20$ minutes because the clients wants to try several service level target.
 Thus, the parameters for the heuristic are $N=10$ iterations to find $\alpha$ and $\tau=120$ second to find a solution of deterministic version~\eqref{eq:det-multi-sourcing} with demand scaled by $\alpha$.
 
 
-\medskip
-
-
 Mel dataset is a toy problem.
 It is a simplified dataset created by a client of Argon Consulting to enable student from \'Ecole des Ponts to train and to propose new approach of multi-sourcing.
 We use it as a test case due to its size.
-
-
-\medskip
 
 
 Lux dataset comes from the luxury industry.
@@ -115,6 +165,7 @@ Argon Consulting's client want to compare its actual multi-sourcing to the ideal
 
 \subsection{Demand distribution}
 \label{sec:multi-sourcing:numerical-experiments:demand-distribution}
+
 
 %\esgil{Completer après la réunion du 05/09 avec Fabrice, Frédéric et Vincent.}
 
@@ -140,15 +191,12 @@ It can be easily interpret by companies.
 Justification of such a choice for $\gamma$ can be found in \cref{sec:PDP:numerical-experiments:instances:fitting-parameters}.
 
 
-
-\medskip
-
-
 As in \cref{chap:pdp:numerical-experiments}, results may depend on the number of generated scenarios.
 Thus, we would like to apply the same method drawing a big number $M$ scenarios.
 Then, we would use $K$-means algorithm (see \cref{sec:PDP:numerical-experiments:k-means}) to construct a set of 100 representative scenarios composed of the $K$ prototypes of each cluster.
 Each prototype gives a scenario weighted by the number of scenarios in its cluster divided by $M$.
 For lack of time, we do not yet implemented $K$-mean algorithm.
+
 
 % Since we know the historical demand, the generate demand of an item at a period should have the same expectation which explains \cref{enum:multi-sourcing:random-demand-property:expectation}.
 % \cref{enum:multi-sourcing:random-demand-property:constant-volume} is justified by our study of flexibility.
@@ -160,7 +208,10 @@ For lack of time, we do not yet implemented $K$-mean algorithm.
 \label{sec:multi-sourcing:numerical-experiments:numerical-results}
 
 
-\esgil{Complete with KPI given by Fabrice and Pierre-Fabrice.}
+% \esgil{Complete with KPI given by Fabrice and Pierre-Fabrice.}
+
+
+C++11 has been chosen for the implementations and Gurobi 6.5.1~\citet{gurobi} was used to solve the model on a PC with 32 processor Intel\textregistered\ Xeon\texttrademark\ E5-2667 @ 3.30GHz and 192Go RAM.
 
 
 Simulation results for Mel dataset without using the heuristic are given in \cref{tab:multi-sourcing:results:mel:without-heuristic} and using heuristic in \cref{tab:multi-sourcing:results:mel:with-heuristic}.
@@ -205,7 +256,6 @@ and $w^i$ is the weight of item $i$ in the global fill rate service level KPI an
 \end{equation}
 Problem~\eqref{eq:det-multi-sourcing:second-step:second-step} can clearly be written as a linear program with only continuous variables.
 
-\medskip
 
 The list of outputs are decomposed as follow.
 \begin{itemize}
@@ -267,7 +317,6 @@ $\beta$ & \multicolumn{6}{c|}{Volatility} & \multicolumn{1}{c}{Output}
 \end{table}
 
 
-
 \begin{table}[h]
 \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}c|r|r|r|r|r|r|l@{\extracolsep{\fill}}}
 $\beta$ & \multicolumn{6}{c|}{Volatility} & \multicolumn{1}{c}{Output}
@@ -308,7 +357,6 @@ $\beta$ & \multicolumn{6}{c|}{Volatility} & \multicolumn{1}{c}{Output}
 \caption{Results for Mel dataset (with heuristic)}
 \label{tab:multi-sourcing:results:mel:with-heuristic}
 \end{table}
-
 
 
 \begin{table}[h]
