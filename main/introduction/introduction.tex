@@ -65,15 +65,15 @@ Considering its applications, Argon Consulting chooses to model the demand as th
 (In its applications, Argon Consulting is interested by the ability to face variations in the product mix and not in the volume of demand.)
 We model the problem as a \emph{stochastic program} with recourses where first-stage variables are the assignment of items to plants and second-stage variables are the production decisions.
 In order to deal with randomness and to capture the long-term impact and the risk of assignment decisions, we rely on \emph{risk measures}, which are tools from financial theory used to quantify the risk of a financial position.
-We choose to use the \emph{Average Value-at-Risk ($\AVaR$)} applied to the inventory level of items.
+We choose to use the \emph{Average-Value-at-Risk ($\AVaR$)} applied to the inventory level of items.
 To the best of our knowledge, it is almost the first time that such a tools is used in Supply Chain applications.
 High inventory level is expensive but enables to easily satisfy the demand.
-Reducing inventory is then risky and Average Value-at-Risk aims at quantifying the risk of this decision.
+Reducing inventory is then risky and Average-Value-at-Risk aims at quantifying the risk of this decision.
 
 
-The Average Value-at-Risk at $\alpha\%$ (also known as Expected Shortfall or Conditional Value-at-Risk) can be interpreted as the expectation restricted to the $\alpha\%$ worst cases, \ie $\alpha\%$ lowest values of inventory.
+The Average-Value-at-Risk at $\alpha\%$ (also known as Expected Shortfall or Conditional Value-at-Risk) can be interpreted as the expectation restricted to the $\alpha\%$ worst cases, \ie $\alpha\%$ lowest values of inventory.
 It enables the decision maker to have an indicator which captures both the shortfall probability and the undelivered quantity (which are strongly linked to two indicators used to measure service level: the cycle service level and the fill rate service level).
-Moreover, the parameter $\alpha$ provides a simple way to address the control of the risk level and the Average Value-at-Risk can be linearized.
+Moreover, the parameter $\alpha$ provides a simple way to address the control of the risk level and the Average-Value-at-Risk can be linearized.
 We apply a classical approximation scheme to solve the stochastic program doing first a two-stages approximation and then a sampling of scenarios in order to be get a \emph{mixed integer linear program (MILP)} leading to tractable formulation.
 
 

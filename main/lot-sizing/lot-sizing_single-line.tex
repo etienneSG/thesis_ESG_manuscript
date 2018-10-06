@@ -7,9 +7,9 @@ As explained in \cref{sec:business-context:argon:pdp}, the objective is to reduc
 This chapter presents a model which aims at deciding the optimal cycle stocks.
 
 
-
 \section{Motivations}
 \label{sec:lot-size:single-line:motivations}
+
 
 Cycle stocks form the portion of inventory that varies over time due to production and demand satisfaction.
 Low cycle stocks contribute to globally decrease inventory but it requires a high flexibility of means of production.
@@ -39,11 +39,13 @@ We propose a method in both deterministic and stochastic settings.
 \section{Deterministic settings}
 \label{sec:lot-size:single-line:deterministic}
 
+
 In this section, data are assumed to be deterministic.
 
 
 \subsection{Problem}
 \label{sec:lot-size:single-line:deterministic:problems}
+
 
 The problem described by Argon Consulting considers an assembly line producing a set $\REF$ of items over an infinite horizon.
 The internal production time of item $i$ (\ie the quantity of item $i$ produced in one time unit) is $\rate_i$.
@@ -108,7 +110,6 @@ The notations and a corresponding inventory profile is representing in \cref{fig
   \caption{Inventory of item $i$ depending on time for a given cover-size $\cover_i$}
   \label{fig:cover-size-item-i}
 \end{figure}
-
 
 
 Since this model is a variation of the \emph{Economic Production Quantity (EPQ)} model, we call it \emph{Economic Production Quantity model with Bounded number of Setups (EPQ-BS)}.
@@ -179,7 +180,6 @@ Finally, even if the interpretation of its coefficient is different from our, \c
 However, since its objective function keeps a linear term, he was not able to propose a closed-form formula and propose a polynomial approximation algorithm.
 
 
-
 \subsection{Unconstrained EPQ-BS}
 \label{sec:lot-size:single-line:models:unconstrained}
 
@@ -199,12 +199,14 @@ We address the following alternative mathematical problem. We are going to show 
 \end{subequations}
 where $\tilde{\demand}_i=\bracket{1-\frac{\demand_i}{\rate_i}}\demand_i$ for each item $i$.
 
+
 \begin{thm}\label{thm:lot-size:single-line:deterministic:unconstrained:optimality}
 Problem~\eqref{eq:lot-size:single-line:deterministic:unconstrained} has a unique optimal solution $(\cover_i^*)_{i\in\REF}$ with
 \begin{equation}\label{eq:lot-size:single-line:deterministic:unconstrained:optimal-cover}
   \cover_i^*= \frac{\sum_{j\in\REF}\sqrt{\holding_j\tilde{\demand}_j}}{\nbsetups\sqrt{\holding_i\tilde{\demand}_i}}\qquad\forall i\in\REF,
 \end{equation}
 and an optimal cost equal to $\frac{1}{2\nbsetups}\bracket{\sum_{i\in\REF}\sqrt{\holding_i\tilde{\demand_i}}}^2$.
+
 
 Moreover, the optimal solution of Problem~\eqref{eq:lot-size:single-line:deterministic:unconstrained} is the optimal solution of unconstrained EPQ-BS.
 \end{thm}
@@ -221,7 +223,6 @@ We recall that a policy is said to be ZIO if an order can only occur when the in
 Due to flexibility constraint \eqref{eq:lot-size:single-line:deterministic:motivations:flexibility}, production should have to be anticipated before inventory reaches zero.
 
 
-
 \begin{lem}\label{lem:lot-size:single-line:deterministic:unconstrained:optimality}
 Problem~\eqref{eq:lot-size:single-line:deterministic:unconstrained} has a unique optimal solution $(\cover_i^*)_{i\in\REF}$ given by \cref{eq:lot-size:single-line:deterministic:unconstrained:optimal-cover}.
 \end{lem}
@@ -230,7 +231,6 @@ Problem~\eqref{eq:lot-size:single-line:deterministic:unconstrained} has a unique
 \begin{proof}
 Since Problem~\eqref{eq:lot-size:single-line:deterministic:unconstrained} is a convex problem with qualified constraints, solving it is straightforward using the Karush-Kuhn-Tucker conditions which gives the unique solution given by \cref{eq:lot-size:single-line:deterministic:unconstrained:optimal-cover} and the optimal cost of Problem~\eqref{eq:lot-size:single-line:deterministic:unconstrained} is $\frac{1}{2\nbsetups}\bracket{\sum_{i\in\REF}\sqrt{\holding_i\tilde{\demand_i}}}^2$.
 \end{proof}
-
 
 
 \begin{lem}\label{lem:lot-size:deterministic:single-line:models:average-setup}
@@ -314,7 +314,6 @@ $\sum_{i\in\REF}\frac{1}{2}\holding_i\bracket{1-\frac{\demand_i}{\rate_i}}\deman
 \end{proof}
 
 
-
 \begin{proof}[Proof of \cref{thm:lot-size:single-line:deterministic:unconstrained:optimality}]
 \cref{lem:lot-size:deterministic:single-line:models:average-setup} and \cref{lem:lot-size:deterministic:single-line:models:ZIO} prove that every feasible solution of unconstrained EPQ-BS is a feasible solution of Problem~\eqref{eq:lot-size:single-line:deterministic:unconstrained} with greater or equal cost.
 Conversely, a feasible solution of Problem~\eqref{eq:lot-size:single-line:deterministic:unconstrained} can be completed in a solution of unconstrained EPQ-BS with the same cost setting the first production setup $t_i$ of item $i$ equal to $\frac{\inventory_i(0)}{\demand_i}$.
@@ -327,8 +326,6 @@ Then, the unique optimal solution of Problem~\eqref{eq:lot-size:single-line:dete
 
 Note that this model simply adapts to the case where production is considered instantaneous (\ie $\rate_i\rightarrow\infty$).
 In this case, just use the real demand $\demand_i$ instead of the modified demand $\tilde{\demand}_i=\bracket{1-\frac{\demand_i}{\rate_i}}\demand_i$.
-
-
 
 
 \subsection{Integer EPQ-BS}
@@ -371,7 +368,6 @@ Implementation of these algorithms is not easy.
 Dynamic programming might be used instead, but its complexity is only $O\bracket{\card{\REF}\nbsetups^2}$ which is pseudo-polynomial.
 
 
-
 \section{Stochastic settings}
 
 
@@ -395,7 +391,6 @@ Moreover, $\va\demand_i$ is assumed to be almost surely positive and smaller tha
 Once $\demand_i$ is revealed, it is fixed forever.
 
 
-
 We introduce now the decision variables $\cover_i$ and $\va t_i$ of the problem.
 For each item $i$, the first time item $i$ is produced is $\va t_i$.
 Then, the production is launched for every $\va t_i+k\cover_i$ where $k\in\ZZ_+$.
@@ -403,7 +398,6 @@ Each production lasts $\frac{\va\demand_i}{\rate_i}\cover_i$ in order to produce
 In the stochastic case, cover-sizes $\bracket{\cover_i}_i$ are decided before the demand is revealed and thus are called \emph{first-stage decisions} since they are decided before demand realization.
 On the other hand, first production setups $\bracket{\va t_i}_i$ and produced quantities are called second-stage decisions (or recourse) since they can be decided knowing the demand realization.
 The production decisions and the demand give the inventory of item $i$ which is denoted $\va\inventory_i$.
-
 
 
 Thus, for each item $i$, inventory $\va\inventory_i\bracket{t}$ is continuous, right and left differentiable, nonnegative and follows the dynamic
@@ -442,7 +436,6 @@ The objective is to find the cover-sizes which minimize the average cycle stock 
 while satisfying almost surely nonnegative inventory, constraint~\eqref{eq:lot-size:single-line:stochastic:motivations:dynamic} and constraint~\eqref{eq:lot-size:single-line:stochastic:motivations:flexibility}.
 
 
-
 We call this problem \emph{stochastic Economic Production Quantity model with Bounded number of Setups (stochastic EPQ-BS)} and will consider the same two versions as in deterministic case:
 \begin{itemize}
   \item the cover-sizes can be any nonnegative real numbers (called \emph{unconstrained}),
@@ -450,12 +443,10 @@ We call this problem \emph{stochastic Economic Production Quantity model with Bo
 \end{itemize}
 
 
-
 When using lot-sizes instead of cover-sizes, one needs to pay more attention to the measurability of variables.
 Indeed, the lot-size $\va\lot_i$ is the quantity produced to satisfy the demand for the next $\cover_i$ units of time.
 Thus, in stochastic settings, if cover-sizes are first-stage variables, then lot-sizes are second-stage variables and are given by $\va\lot_i=\va\demand_i\cover_i$.
 Conversely, using lot-size variables as first-stage variables would lead to use cover-sizes as second-stage variables.
-
 
 
 \subsection{Bibliography}
@@ -512,10 +503,6 @@ Among other models, we can cite \citet{Hsieh2002} which introduces two fuzzy pro
 Contrary to most of the literature, \citet{Lee1999} propose a model for the economic order quantity in a fuzzy framework but without backorder.
 
 
-
-
-
-
 \subsection{Unconstrained stochastic EPQ-BS}
 
 
@@ -543,6 +530,7 @@ Problem~\eqref{eq:lot-size:single-line:stochastic:unconstrained} has a unique op
   \cover_i^*= \frac{\sum_{j\in\REF}\sqrt{\holding_j\check{\demand}_j}}{\nbsetups\sqrt{\holding_i\check{\demand}_i}}\qquad\forall i\in\REF
 \end{equation}
 and an optimal cost equal to $\frac{1}{2\nbsetups}\bracket{\sum_{i\in\REF}\sqrt{\holding_i\check{\demand}_i}}^2$.
+
 
 Moreover, the optimal solution of Problem~\eqref{eq:lot-size:single-line:stochastic:unconstrained} is the optimal solution of unconstrained stochastic EPQ-BS.
 \end{thm}
@@ -579,7 +567,6 @@ Since $\va t_i$ is assumed to be almost surely finite, the result follows.
 \end{proof}
 
 
-
 \begin{lem}\label{lem:lot-size:stochastic:single-line:models:ZIO}
 Let $\bracket{\va t_i,\cover_i}_{i\in\REF}$ be a feasible solution of unconstrained stochastic EPQ-BS.
 Then, its cost is at least
@@ -603,7 +590,6 @@ Since demand $\va\demand_i$ is assumed to be almost surely finite, the expectati
 \end{proof}
 
 
-
 \begin{proof}[Proof of \cref{thm:lot-size:single-line:stochastic:unconstrained:optimality}]
 \cref{lem:lot-size:stochastic:single-line:models:average-setup} and \cref{lem:lot-size:stochastic:single-line:models:ZIO} prove that every feasible solution of unconstrained EPQ-BS is a feasible solution of Problem~\eqref{eq:lot-size:single-line:stochastic:unconstrained} with the same cost.
 Conversely, a feasible solution of Problem~\eqref{eq:lot-size:single-line:stochastic:unconstrained} can be completed in a solution of unconstrained EPQ-BS with the same cost setting the first production setup $\va t_i$ of item $i$ equal to $\frac{\inventory_i(0)}{\va\demand_i}$.
@@ -612,9 +598,7 @@ Then, the unique optimal solutions of Problem~\eqref{eq:lot-size:single-line:sto
 \end{proof}
 
 
-
 \subsection{Integer stochastic EPQ-BS}
-
 
 
 When dealing with integer frequencies, we use the following formulation.
@@ -638,4 +622,5 @@ Moreover, like in the deterministic case, dealing with a finite or infinite inte
 
 
 Finally, adaptation of results proved in deterministic case is straightforward since program~\eqref{eq:lot-size:single-line:stochastic:integer} is a correct formulation of the stochastic integer EPQ-BS.
+
 

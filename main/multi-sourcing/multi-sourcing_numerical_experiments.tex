@@ -174,10 +174,10 @@ As explained in \cref{chap:business-context}, we study the ability to face varia
 Since production rate are not the same between item, we deal with the production hours $\bracket{\va p_t^i}_{t,i}=\bracket{\rate^i\va\demand_t^i}_{t,i}$ as random variables instead of the demand $\bracket{\va\demand_t^i}_{t,i}$.
 
 
-We generate randomness from historical data using \distrib distributions as in \cref{chap:PDP:numerical-experiments} and we refer to \cref{sec:PDP:numerical-experiments:drawing-realization-of-demand} for the properties of the distribution of the $\bracket{\va p_t^i}_{t,i}$ (\cref{prop:demand-distribution:properties}) and for the definitions of a generator of vectors with this distribution (\cref{proc:demand:initial-sampling}).
+We generate randomness from historical data using ``expanded Dirichlet'' distributions as in \cref{chap:PDP:numerical-experiments} and we refer to \cref{sec:PDP:numerical-experiments:drawing-realization-of-demand} for the properties of the distribution of the $\bracket{\va p_t^i}_{t,i}$ (\cref{prop:demand-distribution:properties}) and for the definitions of a generator of vectors with this distribution (\cref{proc:demand:initial-sampling}).
 
 
-The parameters of the \distrib distribution used to generate the working hours of production are computing from the historical forecast demand and are equal to $\rate^i\bar{\demand}_t^i=\bar{p}_t^i$ for the $\tilde{p}_t^i$ and $\gamma$ is set equal to
+The parameters of the ``expanded Dirichlet'' distribution used to generate the working hours of production are computing from the historical forecast demand and are equal to $\rate^i\bar{\demand}_t^i=\bar{p}_t^i$ for the $\tilde{p}_t^i$ and $\gamma$ is set equal to
 \begin{equation}
   \gamma
   =
