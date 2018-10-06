@@ -2,7 +2,6 @@
 \label{chap:conclusion}
 
 
-
 This thesis develops optimization methods for Supply Chain Management and is focused on the flexibility.
 Argon Consulting was our partner during this thesis and we applied our work to the cases of its clients.
 
@@ -10,19 +9,19 @@ Argon Consulting was our partner during this thesis and we applied our work to t
 The first part deals with mid-term decisions.
 It aims at computing lot-sizes and cover-sizes which are used in several Supply Chain processes as MRP (to decide the quantity of raw materials to order) or production planning (to decide the size of produced lots).
 At this level of decision, the objective for Argon Consulting is to reduce future inventory and the main constraint is the flexibility.
-Motivated by industrial consideration, we propose extensions of classical continuous-time inventory models by replacing setup costs by a bound on the maximal number of setups.
-We find close formulas in the single-line cases and proposed efficient methods for multi-line case.
+Motivated by industrial considerations, we propose extensions of classical continuous-time inventory models by replacing setup costs by a bound on the maximal number of setups.
+We find close formulas in the single-line cases and proposed efficient methods for multi-line cases.
 Argon Consulting was very enthusiastic about this formula because contrary to the setups costs, the bound on the number of setups captures the interaction between items and is easy to estimate.
 Moreover, the close formula makes it very easy to use and is already used by practitioners.
 
 
 The second part deals with short-term decisions.
-It aims at deciding the production for the following periods in a uncertain environment.
+It aims at deciding the production for the following periods in an uncertain environment.
 (Indeed, even if the data may be reliable for the current period, they are often uncertain for the next periods and must be anticipated.)
 As in mid-term decisions, our study was motivated by industrial considerations.
 Argon Consulting aims at minimizing the inventory subject to flexibility constraint modeled by an upper bound on the number of setups per period.
 We propose a new model based on the classical Capacitated Lot-Sizing Problem in both deterministic and stochastic settings.
-In order to solve it in reasonable time, we used a classical approximation scheme (two-stage approximation and a sampling method).
+In order to solve it in reasonable time, we use a classical approximation scheme (two-stage approximation and a sampling method).
 However, Argon Consulting's clients were not able to provide us a set of scenarios of demand.
 Thus, we develop a probabilistic model to generate the set of scenarios, which is easy to use while keeping some likelihood.
 Our experimentations already prove that the company that provides the datasets can reduce its inventory costs while keeping a good service level.
@@ -32,15 +31,15 @@ The last part deals with long-term decisions.
 Its aims at deciding the multi-sourcing of production, \ie if some items should be produced on several plants and by which plants.
 These decisions are made in a highly uncertain environment and contrary to short-term decision, they are not repeated.
 In order to take into account the risk in multi-sourcing decision, we introduce the Average-Value-at-Risk in our model to quantify the risk of an assignment.
-This risk measure can be interpreted by the decision makers since it captures both some characteristics of cycle service level and of fill rate service level and it have good computational properties.
+This risk measure can be interpreted by the decision makers since it captures both some characteristics of cycle service level and of fill rate service level and it has good computational properties.
 However, size of the problem prevents us from frontally using up-to-date solvers.
 We develop a heuristic to find a feasible solution which can be used by practitioners or as an initial solution for a solver.
 Our experimentations already prove that the company that provides the datasets can reduce its multi-sourcing (thus its costs) while keeping a good service level.
 
 
 First extensions of our work must be done on the sampling method.
-We propose a concrete way to reduce the dependence on the sampling methods based on clustering methods but for lack of time, we have not implemented it yet.
+We propose a concrete way to reduce the dependence on the sampling based on clustering methods but, for lack of time, we have not implemented it yet.
 Secondly, to accelerate the solving of the mixed integer linear program, we propose decomposition methods (such as Bender decomposition) but again, for lack of time, we have not implemented it yet.
-Finally, our work uses expectation for the short-term decision and Average-Value-at-Risk for the long-decision.
+Finally, our work uses expectation for the short-term decisions and Average-Value-at-Risk for the long-term decisions.
 A natural evolution would be to compare to robust optimization to quantify the savings made and the price of robustness.
 

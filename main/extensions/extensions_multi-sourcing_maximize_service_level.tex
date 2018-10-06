@@ -1,6 +1,5 @@
 %!TEX root=../../thesis_ESG.tex
-\chapter{Multi-sourcing maximizing the service level}
-
+\chapter{Multi-sourcing problem with budget constraint}
 
 
 \section{Introduction}
@@ -11,15 +10,14 @@
 
 As explained in \cref{part:multi-sourcing}, multi-sourcing decisions consist in deciding which plants should have the ability to produce an item.
 They are long-term decisions and are piloted by company's strategy.
-When making multi-sourcing decisions, companies have already defined the desired service level and want to reached it at minimal cost.
-However, because they deal with long-term decisions, we used a risk constraint to control stock-out and ensure service level.
+When making multi-sourcing decisions, companies have already defined the desired service level and want to reach it at a minimal cost.
+However, because they deal with long-term decisions, we use a risk constraint to control stock-out and ensure service level.
 Finally, company's strategy is a trade-off between service level and costs to ensure it.
 
 
-In this chapter, we propose an alternative version of the multi-sourcing problem describe in \cref{chap:multi-sourcing:deterministic} reversing the roles of service level and cost of multi-sourcing.
-Like in \citet{Fiorotto2018}, we suppose that we have a limited budget for the flexibility (\ie to multi-source production of item) and that demand is deterministically known.
-Thus, companies are likely to not satisfied the whole demand and aim at minimizing their backorder.
-
+In this chapter, we propose an alternative version of the multi-sourcing problem described in \cref{chap:multi-sourcing:deterministic} reversing the roles of service level and cost of multi-sourcing.
+Like in \citet{Fiorotto2018}, we suppose that we have a limited budget for the flexibility (\ie to multi-source production of items) and that the demand is deterministically known.
+Thus, companies are likely to not satisfy the whole demand and aim at minimizing their backorder.
 
 
 \subsection{Problem statement}
@@ -28,11 +26,11 @@ Thus, companies are likely to not satisfied the whole demand and aim at minimizi
 For the sake of completeness, we recall every parameters including those which are identical to those of the multi-sourcing problem.
 We consider a set $\plants$ of plants producing a set $\REF$ of items over $\horizon$ periods.
 There is an upper bound $\capacity_{pt}$ on the total period production of plant $p$ at period $t$ (summed over all items).
-This upper bound is expressed in time unit since it correspond to available working hours.
+This upper bound is expressed in time units since it corresponds to available working hours.
 
 
 Giving a plant $p$ the ability to produce an item $i$ has a cost $\affect_p^i$.
-This cost is paid once and for all for the whole horizon and cumulative assignment cost must not exceed a quantity $\capital$.
+This cost is paid once and for all for the whole horizon and the cumulative assignment cost must not exceed a quantity $\capital$.
 When a plant $p$ is able to produce item $i$, there is an upper (resp. lower) bound $\ub_{pt}^i\ge 0$ (resp. $\lb_{pt}^i\ge 0$) on the production of item $i$ in plant $p$ at period $t$.
 The capacity needed (in time units) to produce one unit of item $i$ in plant $p$ in period $t$ is $\rate_{pt}^i>0$.
 
@@ -46,63 +44,35 @@ For each item $i$, there is an initial inventory $\inventory_0^i\in\RR_+$.
 The goal is to minimize the backorder cost.
 
 
-We call this problem the \emph{\tbc}.
-
+We call this problem the \emph{multi-sourcing problem with budget constraint}.
 
 
 \subsection{Main results}
 
 
-In this chapter, we model the deterministic multi-sourcing problem with budget constraint as a mixed integer program (\cref{sec:multi-sourcing-limited-capital:model-formulation}).
-Then, we show that the deterministic multi-sourcing problem with budget constraint is $\NP$-hard even in many simple cases (\cref{sec:multi-sourcing-limited-capital:NP-completeness}).
+In this chapter, we model the multi-sourcing problem with budget constraint as a mixed integer program (\cref{sec:multi-sourcing-limited-capital:model-formulation}).
+Then, we show that the multi-sourcing problem with budget constraint is $\NP$-hard even in many simple cases (\cref{sec:multi-sourcing-limited-capital:NP-completeness}).
 
 
 % \section{Bibliography}
 
-% \esgil{Complete bibliography or fuse bibliography with bibliography of part~\ref{part:multi-sourcing}}
 
+% \esgil{Complete bibliography or fuse bibliography with bibliography of part~\ref{part:multi-sourcing}}
 
 
 \section{Model formulation}
 \label{sec:multi-sourcing-limited-capital:model-formulation}
 
 
-In this section, we introduce a mixed integer program which models the \tbc.
+In this section, we introduce a mixed integer program which models the multi-sourcing problem with budget constraint.
 We introduce the following decision variables.
 The quantity of item $i$ produced at period $t$ by plant $p$ is denoted by $\quantity_{pt}^i$ and the inventory at the end of the period is denoted by $\inventory_t^i$.
 The backorder of item $i$ at the end of the period $t$ is denoted by $\backlog_t^i$.
-We also used the inventory level $\level_t^i$ which is the relative value of the inventory of item $i$ at the end of period $t$ (\ie the inventory minus the backorder).
+We also use the inventory level $\level_t^i$ that is the relative value of the inventory of item $i$ at the end of period $t$ (\ie the inventory minus the backorder).
 We also introduce a binary variable $\open_p^i$ which takes the value 1 if plant $p$ is given the ability to produce item $i$.
 
 
-The deterministic multi-sourcing problem with budget constraint can be written as
-% \begin{subequations}\label{eq:multi-sourcing:limited capital}
-%   \begin{align}
-    % \min\quad & \rlap{$\ds \sum_{t=1}^{\horizon} \sum_{i\in\REF} \backorder^i \backlog_t^i$}
-    % \label{eq:det-multi-sourcing:limited-capital:objective}
-    % \\
-    % \st\quad & \ds \level_t^i = \inventory_t^i - \backlog_t^i && \forall t\in\range{\horizon},\ \forall i\in\REF,
-    % \label{eq:det-multi-sourcing:limited-capital:inventory}
-    % \\
-    % & \ds \level_t^i = \level_{t-1}^i + \sum_{p\in\plants}\quantity_{pt}^i - \demand_t^i && \forall t\in\range{\horizon},\ \forall i\in\REF,
-    % \label{eq:det-multi-sourcing:limited-capital:dynamic}
-    % \\
-    % & \ds \quantity_{pt}^i \le \capacity_p^i \open_p^i && \forall t\in\range{\horizon},\ \forall p\in\plants,\ \forall i\in\REF
-    % \label{eq:det-multi-sourcing:limited-capital:big M}
-    % \\
-    % & \ds \sum_{i\in\REF}\quantity_{pt}^i \le \capacity_p && \forall t\in\range{\horizon},\ \forall p\in\plants,
-    % \label{eq:det-multi-sourcing:limited-capital:capacity}
-    % % \\
-    % & \ds \sum_{i\in\REF} \sum_{p\in\plants}\affect_{pt}^i\open_p^i \le \capital && \forall t\in\range{\horizon},
-    % \label{eq:det-multi-sourcing:limited-capital:capital}
-    % \\
-%     & \ds \inventory_t^i,\ \backlog_t^i,\ \quantity_{pt}^i \ge 0 && \forall t\in\range{\horizon},\ \forall p\in\plants,\ \forall i\in\REF,
-%     \label{eq:det-multi-sourcing:limited-capital:nonnegativity}
-%     \\
-%     & \ds \open_p^i \in \crbracket{0,1} && \forall p\in\plants,\ \forall i\in\REF,
-%     \label{eq:det-multi-sourcing:limited-capital:binary}
-%   \end{align}
-% \end{subequations}
+The multi-sourcing problem with budget constraint can be written as
 \begin{subequations}\label{eq:det-multi-sourcing:limited-capital}
   \begin{align+}
     \min\quad & \rlap{$\ds \sum_{t=1}^{\horizon} \sum_{i\in\REF} \backorder^i \backlog_t^i$}
@@ -140,30 +110,30 @@ Capital invested in assignment is limited by constraint~\eqref{eq:det-multi-sour
 Constraint~\eqref{eq:det-multi-sourcing:limited-capital:inventory} is the decomposition of the inventory in its positive and negative parts.
 
 
-
-
 \section{$\NP$-completeness}
 \label{sec:multi-sourcing-limited-capital:NP-completeness}
 
 
-The deterministic multi-sourcing problem with budget constraint is $\NP$-hard in the strong sense but contrary to the classical deterministic problem, it always has a feasible solution.
-(It is sufficient to not give to any plants the ability to produce any items.)
-Moreover, as in the classical deterministic multi-sourcing problem, the combinatorial difficulty of the deterministic multi-sourcing problem with budget constraint is captured either by the lower bounds $\lb_{pt}^i$ on production or by the upper bound $\capital$ on the cumulative assignment cost.
+The multi-sourcing problem with budget constraint is $\NP$-hard in the strong sense but contrary to the deterministic multi-sourcing problem introduced in \cref{sec:multi-sourcing:deterministic:model-formulation}, it always has a feasible solution.
+(It is sufficient to give to no plants the ability to produce any item.)
+Moreover, as in the deterministic multi-sourcing problem, the combinatorial difficulty of the multi-sourcing problem with budget constraint is due either to the lower bounds $\lb_{pt}^i$ on production, or to the upper bound $\capital$ on the cumulative assignment cost.
 
 
 \begin{thm}\label{thm:det-multi-sourcing:limited-capital:strong-NP-hard}
-  The deterministic multi-sourcing problem with budget constraint is $\NP$-hard in the strong sense.
+  The multi-sourcing problem with budget constraint is $\NP$-hard in the strong sense.
 \end{thm}
 
 
-Proof is very close to proof of $\NP$-hardness of classical multi-sourcing problem since it uses reduction of 3-partition problem to the \tbc.
+The proof is very close to the proof of $\NP$-hardness of the deterministic multi-sourcing of problem \cref{chap:multi-sourcing:deterministic} since it uses a reduction of 3-partition problem to the multi-sourcing problem with budget constraint.
 
 
 \begin{proof}
 Let $\crbracket{a_1,\ldots,a_{3m}}$ be an instance of the 3-partition problem such that $\frac{B}{4} < a_i < \frac{B}{2}$ for each $i$ with $B=\frac{1}{m}\sum_{i=1}^{3m}a_i$ (it is known to be $\NP$-complete according to \citet{Garey1979}).
-We reduce polynomially this problem to an instance of the \tbc.
+We reduce polynomially this problem to an instance of the multi-sourcing problem with budget constraint.
 We set
-$$
+\begin{equation}
+\begin{array}{c}
+  \ds
   \horizon=1
   ,\quad
   \plants=\range[1]{m}
@@ -171,8 +141,8 @@ $$
   \REF=\range[1]{3m}
   ,\quad
   \capital = 3m,
-$$
-$$
+  \\ \smallskip
+  \ds
   \backorder^i=1
   ,\quad
   \affect_p^i=1
@@ -184,43 +154,47 @@ $$
   \lb_{p,1}^i=0
   ,\quad
   \ub_{p,1}^i=\capacity_{p,1}=1.
-$$
-Thus, if we have a solution for the 3-partition problem, finding a solution of the deterministic multi-sourcing problem with budget constraint which satisfied the whole demand is straightforward.
+\end{array}
+\end{equation}
+Thus, if we have a solution for the 3-partition problem, finding a solution of the multi-sourcing problem with budget constraint that satisfies the whole demand is straightforward.
 
-Conversely, suppose that we have a solution of the deterministic multi-sourcing problem with budget constraint which satisfies the whole demand.
+
+Conversely, suppose that we have a solution of the multi-sourcing problem with budget constraint which satisfies the whole demand.
 Since $\demand_1^i=\frac{a_i}{B}>0$ for each item $i$, each item is assigned to at least one plant (otherwise, there would be backorder).
-Assignment costs being equal to 1 and cumulative assignment cost being upper bounded by the number of item, each item is assigned to exactly one plant.
+Assignment costs being equal to 1 and the cumulative assignment cost being upper bounded by the number of items, each item is assigned to exactly one plant.
 Moreover, $\frac{1}{4}\capacity_{p,1}=\frac{1}{4} < \frac{a_i}{B}=\demand_1^i$ ensures that there are at most three items per plant.
 Then, we get a collection of $m$ triples.
-Plants having the same capacity and sum of plant capacities being equal to sum of demands, each triple has the same sum.
+Plants having the same capacity and the sum of plant capacities being equal to the sum of demands, each triple has the same sum.
 Thus, we get a solution of the 3-partition problem.
+
 
 The conclusion follows from the fact that the 3-partition problem is $\NP$-complete in the strong sense even if $\frac{B}{4} < a_i < \frac{B}{2}$ for each $i$.
 \end{proof}
 
 
-\cref{prop:det-multi-sourcing:limited-capital:NP-hard:special-cases} gives some special cases which are still $\NP$-hard.
-
+\cref{prop:det-multi-sourcing:limited-capital:NP-hard:special-cases} gives some special cases that are still $\NP$-hard.
 
 
 \begin{prop}\label{prop:det-multi-sourcing:limited-capital:NP-hard:special-cases}
-  The following special cases of the deterministic multi-sourcing problem with budget constraint are $\NP$-hard:
+  The following special cases of the multi-sourcing problem with budget constraint are $\NP$-hard:
   \begin{enumerate}
     \item\label{item:det-multi-sourcing:limited-capital:NP-hard:2-plants}
-    with only one period and only two plants,
+    with only one period and only two plants ($\horizon=1$ $\plants=\crbracket{1,2}$),
     \item\label{item:det-multi-sourcing:limited-capital:NP-hard:unbounded-assignment-cost}
-    with unbounded cumulative assignment cost,
+    with no budget constraint ($\capital=+\infty$),
     \item\label{item:det-multi-sourcing:limited-capital:NP-hard:infinite-capacities}
-    with one plant and infinite capacities.
+    with one plant and infinite capacities ($\capacity_{pt}=+\infty$).
   \end{enumerate}
 \end{prop}
 
 
 \begin{proof}[Proof of \cref{prop:det-multi-sourcing:limited-capital:NP-hard:special-cases} (\cref{item:det-multi-sourcing:limited-capital:NP-hard:2-plants})]
 Let $\crbracket{a_1,\ldots,a_m}$ be an instance of the partition problem (it is known to be $\NP$-complete according to \citet{Garey1979}).
-We reduce polynomially this problem to an instance of the \tbc.
+We reduce polynomially this problem to an instance of the multi-sourcing problem with budget constraint.
 We set
-$$
+\begin{equation}
+\begin{array}{c}
+  \ds
   \horizon=1
   ,\quad
   \plants=\crbracket{1,2}
@@ -228,8 +202,8 @@ $$
   \REF=\range[1]{m}
   ,\quad
   \capital = m,
-$$
-$$
+  \\ \smallskip
+  \ds
   \backorder^i=1
   ,\quad
   \affect_p^i=1
@@ -241,52 +215,44 @@ $$
   \lb_{pt}^i=0
   ,\quad
   \ub_{pt}^i=\capacity_{pt}=1.
-$$
-Thus, if we have a solution for the partition problem, finding a solution of the deterministic multi-sourcing problem with budget constraint which satisfied the whole demand is straightforward.
+\end{array}
+\end{equation}
+Thus, if we have a solution for the partition problem, finding a solution of the multi-sourcing problem with budget constraint that satisfies the whole demand is straightforward.
 
-Conversely, suppose that we have a solution of the deterministic multi-sourcing problem with budget constraint which satisfied the whole demand.
-Positivity of the $a_i$ ensures that each item is assigned to at least one plant.
+
+Conversely, suppose that we have a solution of the multi-sourcing problem with budget constraint that satisfies the whole demand.
+The positivity of the $a_i$ ensures that each item is assigned to at least one plant.
 (Otherwise, there would be positive backorder.)
-Assignment cost being equal to 1 and cumulative assignment cost being upper bounded by the number of item, each item is assigned to exactly one plant.
+The assignment cost being equal to 1 and the sum of assignment cost being upper bounded by the number of items, each item is assigned to exactly one plant.
 Plants having the same capacity and sum of plant capacities being equal to sum of demands, each subset define by the assignment has the same sum.
 Thus, we get a solution of the partition problem.
+
 
 The conclusion follows from the fact that the partition problem is $\NP$-complete.
 \end{proof}
 
 
-
-Looking at the proofs of \cref{thm:det-multi-sourcing:limited-capital:strong-NP-hard} and of \cref{prop:det-multi-sourcing:limited-capital:NP-hard:special-cases} (\cref{item:det-multi-sourcing:limited-capital:NP-hard:2-plants}), we see that they can be easily adapted to the case of infinite upper bound on cumulative assignment cost.
-
+Looking at the proofs of \cref{thm:det-multi-sourcing:limited-capital:strong-NP-hard} and of \cref{prop:det-multi-sourcing:limited-capital:NP-hard:special-cases} (\cref{item:det-multi-sourcing:limited-capital:NP-hard:2-plants}), we see that they can be easily adapted to the case of infinite upper bound on the sum of assignment cost.
 
 
 \begin{proof}[Proof of \cref{prop:det-multi-sourcing:limited-capital:NP-hard:special-cases} (\cref{item:det-multi-sourcing:limited-capital:NP-hard:unbounded-assignment-cost})]
-In the proofs of \cref{thm:det-multi-sourcing:limited-capital:strong-NP-hard} and of \cref{prop:det-multi-sourcing:limited-capital:NP-hard:special-cases} (\cref{item:det-multi-sourcing:limited-capital:NP-hard:2-plants}), lower bounds $\lb_{pt}^i$ on production must be taken equal to $\demand_1^i$ and capacities of plants and demand satisfaction imply that each item is produced in exactly one plant.
-Hence, we have the following result.
+In the proofs of \cref{thm:det-multi-sourcing:limited-capital:strong-NP-hard} and of \cref{prop:det-multi-sourcing:limited-capital:NP-hard:special-cases} (\cref{item:det-multi-sourcing:limited-capital:NP-hard:2-plants}), the lower bounds $\lb_{pt}^i$ on production must be taken equal to $\demand_1^i$ and the capacities of plants and demand satisfaction imply that each item is produced in exactly one plant.
+Hence, we have the desired result.
 \end{proof}
 
 
-% \begin{prop}
-% The deterministic multi-sourcing problem with budget constraint is $\NP$-hard even if there is no bound on cumulative assignment cost.
-% \end{prop}
-
-
-
-% \begin{prop}
-%   The deterministic multi-sourcing problem with budget constraint with one plant and infinite capacities is $\NP$-hard.
-% \end{prop}
-
-
-Reducing the knapsack problem to the deterministic multi-sourcing problem with budget constraint and infinite capacities, we show that it is $\NP$-hard.
-We remind that the knapsack problem consists in choosing a subset of a set of $n$ items, each with a positive value $v_i$ and a positive weight $w_i>$, which maximize the sum of their cumulative value and whose cumulative weight is lower than $W>0$.
+Reducing the knapsack problem to the multi-sourcing problem with budget constraint and infinite capacities, we show that this latter is $\NP$-hard.
+We remind that the knapsack problem consists in choosing a subset of a set of $n$ items, each with a positive value $v_i$ and a positive weight $w_i>$, which maximizes the sum of their cumulative value and whose cumulative weight is lower than $W>0$.
 This problem is known to be $\NP$-complete (see~\citet{Garey1979}).
 
 
 \begin{proof}[Proof of \cref{prop:det-multi-sourcing:limited-capital:NP-hard:special-cases} (\cref{item:det-multi-sourcing:limited-capital:NP-hard:infinite-capacities})]
 Let $\bracket{\bracket{v_i,w_i}_{i\in\range{n}},W}$ be an instance of the knapsack problem.
-We reduce polynomially this problem to an instance of the \tbc.
+We reduce polynomially this problem to an instance of the multi-sourcing problem with budget constraint.
 We set
-$$
+\begin{equation}
+\begin{array}{c}
+  \ds
   \horizon=1
   ,\quad
   \plants=\crbracket{1}
@@ -294,8 +260,8 @@ $$
   \REF=\range[1]{n}
   ,\quad
   \capital = W,
-$$
-$$
+  \\ \smallskip
+  \ds
   \backorder^i=1
   ,\quad
   \affect_p^i=w_i
@@ -307,8 +273,9 @@ $$
   \lb_{pt}^i=0
   ,\quad
   \ub_{pt}^i=\capacity_{pt}=+\infty.
-$$
-Thus, the deterministic multi-sourcing problem with budget constraint can be written as
+\end{array}
+\end{equation}
+Thus, the multi-sourcing problem with budget constraint can be written as
 \begin{subequations}\label{eq:det-multi-sourcing:limited-capital:knapsack}
   \begin{align+}
     \max\quad & \rlap{$\ds \sum_{i=1}^n v_i\open^i$}
@@ -321,20 +288,21 @@ Thus, the deterministic multi-sourcing problem with budget constraint can be wri
     \label{eq:det-multi-sourcing:limited-capital:knapsack:boolean}
   \end{align+}
 \end{subequations}
-and $\bracket{{\open^*}^i}_i$ is an optimal solution solution of the deterministic multi-sourcing problem with budget constraint if and only if $\bracket{{\open^*}^i}_i$ is an optimal solution of the knapsack problem.
+and $\bracket{{\open^*}^i}_i$ is an optimal solution solution of the multi-sourcing problem with budget constraint if and only if $\bracket{{\open^*}^i}_i$ is an optimal solution of the knapsack problem.
 The conclusion follows from the fact that the knapsack problem is $\NP$-hard.
 \end{proof}
 
 
-
-
 % \section{Stochastic model}
 
+
 % \subsection{Model formulation}
+
 
 % Like in previous parts, we choose to only consider randomness on demand although it could be consider on internal production time, available capacity, etc.
 % We use a measure of risk $\rho$ to quantify the objective function.
 % The easiest measure of risk is the expectation, but we could choose an other one like $\AVaR$.
+
 
 % \begin{subequations}\label{eq:stochastic multi-sourcing:limited capital}
 %   \begin{align}
@@ -367,6 +335,7 @@ The conclusion follows from the fact that the knapsack problem is $\NP$-hard.
 %   \end{align}
 % \end{subequations}
 
+
 % In this model, bold variables are stochastic whereas normal variable are deterministic.
 % Every constraint has the same meaning than their deterministic counterpart.
 % We also add the constraints \eqref{eq:stochastic multi-sourcing:limited capital:non-anticipation} which are non anticipative constraints and prevent from taking decision knowing the future realizations of randomness.
@@ -378,11 +347,14 @@ The conclusion follows from the fact that the knapsack problem is $\NP$-hard.
 % In order to deal with the complexity of stochastic cases, we assume that the encoding of the stochastic version of the problem is polynomial in the size of deterministic data.
 % Since deterministic cases are special cases of stochastic cases, every $\NP$-hard deterministic case is still $\NP$-hard when demand is stochastic.
 
+
 % For the polynomial deterministic case, we have the following result for its stochastic counterpart.
+
 
 % \begin{prop}
 % The stochastic version of the multi-sourcing problem subject to limited capital~\eqref{eq:stochastic multi-sourcing:limited capital} is polynomial if $\capacity_p^i=\capacity_p=\infty$ and $\affect_p^i=1$, for all $p\in\plants$ and all $i\in\REF$.
 % \end{prop}
+
 
 % \begin{proof}
 % Obvious when $\rho=\espe$.
@@ -390,6 +362,5 @@ The conclusion follows from the fact that the knapsack problem is $\NP$-hard.
 
 % \tbc
 % \end{proof}
-
 
 

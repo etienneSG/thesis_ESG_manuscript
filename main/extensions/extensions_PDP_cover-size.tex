@@ -14,17 +14,16 @@ Sometimes, companies compute the cycle stocks of items and use them as an input 
 
 
 $\bracket{r,\ell}$ policies are easy to compute and to use but they do not take into account part of the available information when making their optimization process.
-On the other hand, production planning algorithms are more sophisticated and sometimes less convenient to use but they take take into account much more information to find the optimal production (variation of demand over time, uncertainty).
+On the other hand, production planning algorithms are more sophisticated and sometimes less convenient to use but they take into account much more information to find the optimal production (variation of demand over time, uncertainty).
 Thus, their output is likely to be more accurate.
 
 
-In this chapter, we aim at considering the variations of demand over time to find the optimal cover-sizes.
+In this chapter, we aim at considering the variations of demand in our computation of the optimal cover-sizes defined in \cref{chap:lot-size:single-line}.
 Context and modeling choices are quite the same as in \cref{chap:PDP:deterministic}.
 A company aims at minimizing its inventory subject to flexibility constraint.
-As explained in \cref{chap:business-problem}, when deciding cover-sizes, flexibility is already fixed and many companies express it with an upper bound on the number of items produced during a period.
+As explained in \cref{chap:business-context}, when deciding cover-sizes, flexibility is already fixed and many companies express it with an upper bound on the number of items produced during a period.
 At mid-term, it matches with the number of setups since scheduling is not taken into account.
 However, contrary to \cref{chap:PDP:deterministic}, we do not look for production levels but to find the optimal cover-sizes.
-
 
 
 \subsection{Problem statement}
@@ -40,15 +39,15 @@ The capacity needed (in time units) to produce one unit of $i$ is $\rate^i>0$.
 The production of item $i$ must satisfy a demand $\demand_t^i$ at the end of period $t$.
 When production of a item $i$ is not used to satisfy the demand, it can be stored but incurs a unit holding cost $\holding^i>0$ per period.
 For each item $i$, there is an initial inventory $s_0^i\in\RR_+$.
-Since we use cover-sizes, we also impose that for a item $i$ the time interval between two periods of production of $i$ was identical over the horizon of planning and belong to a set $\coverset_r\subseteq\range{\horizon}$ of possible cover-sizes.
-These cover-sizes are integers making them easier to use for people making production planning.
+Since we use cover-sizes, the production of item $i$ must satisfy exactly the demand between two setups.
+Moreover, for an item $i$, the time interval between two consecutive setups of $i$ is identical over the planning horizon and belong to a set $\coverset_i\subseteq\range{\horizon}$ of possible cover-sizes.
+These cover-sizes are integers, which makes them easier to use for planners.
 
 
 The goal is to satisfy the whole demand at minimum cost.
 
 
 Since this problem is a variation of the Uniform CLSP-BS with the use of cover-size instead of production levels, we call it the \emph{Uniform Capacitated Cover-Sizing Problem with Bounded number of Setups (Uniform CCSP-BS)}.
-
 
 
 \subsection{Main results}
@@ -58,23 +57,20 @@ In this chapter, we model the Uniform CCSP-BS as a mixed integer program and sho
 Then, we present the method used to test the efficiency and the reasons for which we do not make further investigations (\cref{sec:pdp-cover:numerical-experiments}).
 
 
-
-% \section{Bibliography}
-
-
-% \esgil{Complete bibliography or fuse bibliography with bibliography of part~\ref{part:continuous-review-inventory-model}}
-
-
 \section{Model formulation}
 \label{sec:pdp-cover:model-formulation}
 
-In this section, we introduce a mixed integer program which model the problem.
+
+\esgil{To chose: write the model with no initial inventory or say that we replace the demand by decreasing it with the initial inventory}
+
+
+In this section, we introduce a mixed integer program which models the problem.
 We introduce the following decision variables.
-The quantity of item $i$ produced at period $t$ is denoted by $\quantity_t^i$ and the inventory at the end of the period is denoted by $\inventory_t^i$. We also introduce a binary variable $\setup_{t,\cover_r}^i$ which takes the value $1$ if the item $i$ is produced over week $t$ and its cover-size is $\cover_r$ and $0$ otherwise.
+The quantity of item $i$ produced at period $t$ is denoted by $\quantity_t^i$ and the inventory at the end of the period is denoted by $\inventory_t^i$. We also introduce a binary variable $\setup_{t,\cover_i}^i$ which takes the value $1$ if the item $i$ is produced over week $t$ and its cover-size is $\cover_i$ and $0$ otherwise.
 
 
-We normalize production variables setting $\widehat{\quantity}_t^i=\frac{\rate^i\quantity_t^i}{\capacity}$ and replace accordingly the other variables and parameters setting $\widehat{\inventory}_t^i=\frac{\rate^i\inventory_t^i}{\capacity}$, $\widehat{\demand}_t^i=\frac{\rate^i\demand_t^i}{\capacity}$ and $\widehat{\holding}^i=\frac{\capacity\holding^i}{\rate^i}$.
-For the sake of notational clarity, hats are omitted and the Uniform CCSP-BS can be written as
+We normalize the production variables by setting $\widehat{\quantity}_t^i=\frac{\rate^i\quantity_t^i}{\capacity}$ and replace accordingly the other variables and parameters by setting $\widehat{\inventory}_t^i=\frac{\rate^i\inventory_t^i}{\capacity}$, $\widehat{\demand}_t^i=\frac{\rate^i\demand_t^i}{\capacity}$ and $\widehat{\holding}^i=\frac{\capacity\holding^i}{\rate^i}$.
+For the purpose of notation, hats are omitted and the Uniform CCSP-BS can be written as
 \begin{subequations}\label{eq:pdp:cover-MIP}
   \begin{align+}
     \min\quad & \rlap{$\ds \sum_{t=1}^{\horizon} \sum_{i\in\REF} \holding^i \inventory_t^i$}
@@ -86,19 +82,19 @@ For the sake of notational clarity, hats are omitted and the Uniform CCSP-BS can
     & \ds \sum_{i\in\REF} \quantity_t^i \le 1 && \forall t\in\range{\horizon},
     \label{eq:pdp:cover-MIP:total-capacity}
     \\
-    & \ds \sum_{\cover_r\in\coverset_r} \sum_{t=1}^{\cover_r} \setup_{t,\cover_r}^i = 1 && \forall i\in\REF,
+    & \ds \sum_{\cover_i\in\coverset_i} \sum_{t=1}^{\cover_i} \setup_{t,\cover_i}^i = 1 && \forall i\in\REF,
     \label{eq:pdp:cover-MIP:one-cover}
     \\
-    & \ds \setup_{t+\cover_r,\cover_r}^i = \setup_{t,\cover_r}^i && \forall i\in\REF,\ \forall \cover_r\in\coverset_r,\ \forall t\in\range{\horizon-\cover_r},
+    & \ds \setup_{t+\cover_i,\cover_i}^i = \setup_{t,\cover_i}^i && \forall i\in\REF,\ \forall \cover_i\in\coverset_i,\ \forall t\in\range{\horizon-\cover_i},
     \label{eq:pdp:cover-MIP:periodic-cover}
     \\
-    & \ds \quantity_t^i = \sum_{\cover_r\in\coverset_r} \bracket{\sum_{t'=t}^{\min\crbracket{t+\cover_r-1,\horizon}}\demand_{t'}^i} \setup_{t,\cover_r}^i  && \forall i\in\REF,\ \forall t\in\range{\horizon},
+    & \ds \quantity_t^i = \sum_{\cover_i\in\coverset_i} \bracket{\sum_{t'=t}^{\min\crbracket{t+\cover_i-1,\horizon}}\demand_{t'}^i} \setup_{t,\cover_i}^i  && \forall i\in\REF,\ \forall t\in\range{\horizon},
     \label{eq:pdp:cover-MIP:quantity}
     \\
-    & \ds \sum_{i\in\REF} \sum_{\cover_r\in\coverset_r} \setup_{t,\cover_r}^i \le \nbsetups && \forall t\in\range{\horizon},
+    & \ds \sum_{i\in\REF} \sum_{\cover_i\in\coverset_i} \setup_{t,\cover_i}^i \le \nbsetups && \forall t\in\range{\horizon},
     \label{eq:pdp:cover-MIP:setups-per-period}
     \\
-    & \ds \setup_{t,\cover_r}^i \in \crbracket{0,1} && \forall i\in\REF,\ \forall \cover_r\in\coverset_r,\ \forall t\in\range{\horizon},
+    & \ds \setup_{t,\cover_i}^i \in \crbracket{0,1} && \forall i\in\REF,\ \forall \cover_i\in\coverset_i,\ \forall t\in\range{\horizon},
     \label{eq:pdp:cover-MIP:boolean-constraint}
     \\
     & \ds \quantity_t^i,\ \inventory_t^i \ge 0 && \forall i\in\REF,\ \forall t\in\range{\horizon},
@@ -106,10 +102,14 @@ For the sake of notational clarity, hats are omitted and the Uniform CCSP-BS can
   \end{align+}
 \end{subequations}
 
-Inventory balance~\eqref{eq:pdp:cover-MIP:inventory-balance}, capacity constraint~\eqref{eq:pdp:cover-MIP:total-capacity} and upper bound on the number of setups~\eqref{eq:pdp:cover-MIP:setups-per-period} are similar to their counterparts in program~\eqref{eq:Uniform-CLSP-BS}.
-We add three other constraints to model the use of cover-sizes.
+
+Inventory balance~\eqref{eq:pdp:cover-MIP:inventory-balance}, capacity constraint~\eqref{eq:pdp:cover-MIP:total-capacity} and the upper bound on the number of setups~\eqref{eq:pdp:cover-MIP:setups-per-period} are similar to their counterparts in program~\eqref{eq:Uniform-CLSP-BS}.
+We add three other constraints to the model.
 The choice of exactly one cover-size for each item is ensured by constraint~\eqref{eq:pdp:cover-MIP:one-cover} and the periodicity of production setups by constraint~\eqref{eq:pdp:cover-MIP:periodic-cover}.
 Constraint~\eqref{eq:pdp:cover-MIP:quantity} defines the quantity that must be produced according to the chosen cover-size and first period of production.
+
+
+\esgil{Constraint \eqref{eq:pdp:cover-MIP:one-cover} imposes the choice of exactly one cover-size. With $\le$, we can chose no cover-size.}
 
 
 \medskip
@@ -117,12 +117,13 @@ Constraint~\eqref{eq:pdp:cover-MIP:quantity} defines the quantity that must be p
 
 Like the Uniform CLSP-BS, the Uniform CCSP-BS is $\NP$-hard for any fixed values of the $\holding_t^i$'s.
 
+
 \begin{thm}
   Deciding if there is a solution of the Uniform CCSP-BS is $\NP$-complete in the strong sense.
 \end{thm}
 
 
-Proof is very close to proof of $\NP$-hardness of CLSP-BS since it uses reduction of 3-partition problem to the Uniform CCSP-BS.
+The proof is very close to proof of $\NP$-hardness of CLSP-BS since it uses reduction of 3-partition problem to the Uniform CCSP-BS.
 
 
 \begin{proof}
@@ -135,7 +136,7 @@ We set
   ,\quad
   \horizon=m
   ,\quad
-  \coverset_r=\crbracket{m}
+  \coverset_i=\crbracket{m}
   ,\quad
   \nbsetups=3
   ,\quad
@@ -161,13 +162,13 @@ The efficiency of this approach is also tested using simulations. (See \cref{cha
 
 
 This new heuristic, called \emph{MIP-cover-size heuristic}, is very close to the cover-size heuristic.
-It also consists in determining before the first week once and for all a value $\cover_i^*$ for each item $i\in\REF$.
-Cover-sizes are computed from Problem~\eqref{eq:pdp:cover-MIP} where the deterministic demand is taken equal to the demand expectation.
-Then, like in cover-size heuristic, at time $t$, if the inventory of item $i$ is below a precomputed safety stock (see \cref{eq:PDP:numerical-experiments:safety-stock}), the quantity $\quantity_t^i$ is computed so that the inventory of item $i$ exceeds the safety stock of the expected demand for the next $\tau_i^*$ weeks.
+It also consists in determining before the first week once and for all a value $\cover_i^*$ for each item $i\in\REF$, from Problem~\eqref{eq:pdp:cover-MIP} where the deterministic demand is taken equal to the demand expectation.
+Then, like in the cover-size heuristic, at time $t$, if the inventory of item $i$ is below a precomputed safety stock (see \cref{eq:PDP:numerical-experiments:safety-stock}), the quantity $\quantity_t^i$ is computed so that the inventory of item $i$ exceeds the safety stock of the expected demand for the next $\tau_i^*$ weeks.
 In addition, if some capacity issues are easily anticipated, the production of an item $i$ can be activated even if the inventory is not below the safety stock.
 
 
 Tests with MIP-cover-size heuristic show that this approach is bad.
-First, inventory holding costs and service level are worst than with the classic cover-size heuristic.
-Moreover, computing cover-sizes from Problem~\eqref{eq:pdp:cover-MIP} is hard and takes times (contrary to the closed-form formula in the classic cover-size heuristic).
+First, inventory holding costs and service level are worse than with the classical cover-size heuristic.
+Moreover, computing cover-sizes from Problem~\eqref{eq:pdp:cover-MIP} is hard and takes times (contrary to the closed-form formula in the classical cover-size heuristic).
+
 
