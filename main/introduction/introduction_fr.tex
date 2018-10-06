@@ -1,0 +1,229 @@
+\chapter{Introduction (version française)}
+\label{chap:intro:fr}
+
+
+La recherche effectuée dans le cadre de cette thèse porte sur la gestion de la Supply Chain.
+Elle a été financée par Argon Consulting, cabinet de conseil indépendant dont la mission est d'aider ses clients à améliorer l'ensemble de leur Supply Chain (de l'approvisionnement en matières premières à la livraison des produits finis) et est menée dans le cadre d'un partenariat industriel avec l'\'Ecole des Ponts ParisTech.
+L'objectif est de modéliser et de développer des méthodes pour gérer de manière optimale des fonctions spécifiques de la Supply Chain.
+
+
+Le point commun des trois sujets développés dans cette thèse est la flexibilité.
+Nous définissons la flexibilité comme la capacité à fournir un service ou un produit à un client dans un environnement incertain.
+Selon le niveau de décision, la flexibilité est soit une contrainte (comme la capacité d'une ligne de production à passer facilement de la production d'un article à un autre) soit une variable de décision (comme décider entre spécialisation et polyvalence).
+En général, décider de la flexibilité d'un système est une décision à long terme (et parfois à moyen terme).
+
+
+Afin d'aider à la compréhension globale des sujets, nous avons choisi d'introduire les trois sujets en commençant par les décisions à long terme, puis les décisions à moyen terme, et enfin les décisions à court terme.
+Cependant, ce manuscrit suit un ordre différent dû à l'introduction de notions et de résultats réutilisés d'une partie sur l'autre.
+Les décisions à long terme étudiées dans cette thèse (Partie~\ref{part:multi-sourcing}) portent sur la multi-sourcing de la production qui vise à décider de la flexibilité des moyens de production tout en gardant un coût raisonnable.
+Les décisions à moyen terme (Partie~\ref{part:continuous-review-inventory-model}) et les décisions à court terme (Partie~\ref{art:production planning}) traitent toutes deux de la réduction des stocks sous la contrainte des décisions de flexibilité déjà prises.
+Cependant, les décisions à moyen terme qui nous intéressent visent à calculer des indicateurs qui pilotent plusieurs processus de la Supply Chain alors que les décisions à court terme qui nous intéressent visent à décider de la production qui doit être lancée.
+
+
+\section{Multi-sourcing de la production}
+\label{sec:intro:fr:multi-sourcing}
+
+
+Le multi-sourcing de la production est une décision stratégique dans la gestion de la Supply Chain (\emph{i.e.} une décision à long terme).
+Elle consiste à décider si une usine doit avoir la capacité de produire un article.
+Par exemple, dans la Figure~\ref{fig:intro:fr:multi-sourcing}, la première usine peut produire les articles A, B et C tandis que la seconde peut produire les articles B, C et D.
+Les articles A et D sont dits mono-sourcés puisque chacun peut être produit par une seule usine alors que les articles B et C sont dits multi-sourcés puisqu'ils peuvent être produits par au moins deux usines.
+La première caractéristique des décisions de multi-sourcing est leur horizon.
+Leur mise en \oe{}uvre prend du temps et a un impact à long terme sur la gestion de la Supply Chain.
+Deuxièmement, les décisions de multi-sourcing sont prises dans un environnement très incertain.
+Entre autres, les demandes futures des clients, la fiabilité des moyens de production, la disponibilité future des matières premières sont mal connues.
+Enfin, les décisions de multi-sourcing contraindront les décisions de production futures (décision à moyen terme).
+Plus précisément, elles déterminent la flexibilité des usines et la capacité à équilibrer la charge de travail entre elles.
+
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=.8\textwidth]{main/introduction/images/multi-sourcing_fr.tikz}
+  \caption{Multi-sourcing de la production de quatre articles sur deux usines}
+  \label{fig:intro:fr:multi-sourcing}
+\end{figure}
+
+
+Considérant ses applications, Argon Consulting choisit de modéliser la demande comme principale source d'incertitude avec un volume total de demande fixe et connu.
+(Dans ses applications, Argon Consulting s'intéresse à la capacité de faire face aux variations du mix produit et non du volume de la demande.)
+Nous modélisons le problème comme un \emph{programme stochastique} avec recours où les variables de première étape sont l'affectation des articles aux usines et les variables de deuxième étape sont les décisions de production.
+Afin d'intégrer le caractère aléatoire et de prendre en compte l'impact à long terme et le risque des décisions d'affectation, nous nous appuyons sur les \emph{mesures de risque}, qui sont des outils de la théorie financière utilisés pour quantifier le risque lié à une position financière.
+Nous choisissons d'utiliser l'Average-Value-at-Risk ($\AVaR$) appliquée au niveau de stock des articles.
+A notre connaissance, un tel outil a rarement été utilisé dans des applications Supply Chain.
+Un niveau de stock élevé est coûteux mais permet de satisfaire facilement la demande.
+La réduction des stocks est alors risquée et l'Average-Value-at-Risk vise à quantifier le risque lié à cette décision.
+
+
+L'Average-Value-at-Risk à $\alpha\%$ (aussi connue sous le nom d'Expected Shortfall ou de Conditionnal-Value-at-Risk) peut être interprétée comme l'espérance restreinte aux $\alpha\%$ pires cas, \emph{i.e.} au $\alpha\%$ plus basses valeurs du stocks.
+Elle permet au décideur de disposer d'un indicateur qui saisit à la fois la probabilité de rupture et la quantité non livrée (qui sont fortement liés à deux indicateurs utilisés pour mesurer le niveau de service : le \emph{cycle service level} et le \emph{fill rate service level}).
+De plus, le paramètre $\alpha$ fournit un moyen simple de contrôler le niveau de risque et l'Average-Value-at-Risk peut être linéarisée.
+Nous appliquons un schéma d'approximation classique pour résoudre le programme stochastique en faisant d'abord une approximation en deux étapes, puis un échantillonnage de scénarios afin d'obtenir un \emph{Programme Linéaire en Nombres Entiers (PLNE)} menant à une formulation tractable.
+
+
+\medskip
+
+
+Les jeux de données réels fournies par les clients d'Argon Consulting ne contiennent que les valeurs historiques de production et de ventes.
+Comme nous n'avons pas la demande réelle, nous proposons dans le Chapitre~\ref{chap:PDP:numerical-experiments} un modèle probabiliste pour générer des réalisations possibles de la demande à partir de valeurs historiques.
+Ce modèle est basé sur les \emph{distributions de Dirichlet} et vise à être facile à utiliser tout en gardant une certaine vraisemblance.
+Sa seule entrée est une demande prévisionnelle (qui peut être l'historique des ventes ou l'historique des prévisions) et une volatilité qui est un pourcentage représentant l'exactitude de la prévision.
+(Plus la volatilité est faible, plus la prévision est précise.)
+Notre modèle probabiliste fournit des scénarios de demande de sorte que le volume total de la demande soit le même dans chaque scénario, de sorte que l'espérance de chaque réalisation soit égale à la prévision et que l'écart type divisé par l'espérance soit proche de la volatilité.
+Ce modèle répond aux hypothèses faite par Argon Consulting sur la demande, a peu de paramètres et est facile à simuler (même conditionnellement au passé).
+
+
+\medskip
+
+
+Enfin, sur des jeux de données réels, les temps de calcul peuvent être longs.
+Les solveurs modernes sont souvent incapables de trouver une solution réalisable au problème.
+Nous proposons une heuristique qui permet de trouver rapidement une solution réalisable au problème du multi-sourcing.
+La solution retournée peut être utilisée directement par les clients d'Argon Consulting ou comme solution initiale d'un solveur générique.
+
+
+\medskip
+
+
+Nos expérimentations prouvent d'ores et déjà que l'entreprise qui fournit les jeux de données peut réduire sa proportion d'articles multi-sourcés (réduisant ainsi ses coûts) tout en conservant une bonne capacité à satisfaire la demande.
+Cependant, les performances des ordinateurs et la taille réelle des jeux de données empêchent de traiter plus d'une centaine de scénarios.
+La méthode dépend donc de l'échantillonnage et le choix d'un ensemble représentatif de scénarios est essentiel.
+Nous proposons une façon concrète de réduire cette dépendance vis-à-vis de l'échantillonnage basées sur les méthodes de clustering (telles $K$-means).
+
+
+\section{Modèles de stock en temps continu}
+\label{sec:intro:fr:continuous-time-inventory-models}
+
+
+Argon Consulting utilise des modèle de stock en temps continu pour calculer des paramètres macroscopiques au niveau tactique (décisions à moyen terme).
+Les exemples classiques sont la \emph{taille de lot} et la \emph{taille de la couverture}.
+La taille du lot donne la quantité d'un même article produite à chaque lancement de production.
+La taille de la couverture indique le nombre d'unités de temps suivant un lancement de production pendant lequel le stock doit être positif.
+Ces paramètres sont utilisés comme entrée pour d'autres processus de décision dans la Supply Chain comme pour la planification des besoins en composants (MRP).
+Par exemple, avoir une estimation des tailles de lot ou des tailles de couverture permet de décider de la quantité de matières premières qui doit être commandée.
+Ils sont également utilisés comme entrées pour planifier la production puisqu'ils donnent les tailles de lot à produire.
+(Lors de l'étude des modèles en temps discret, nous proposerons de supprimer cette contrainte des modèles.)
+
+
+Les modèle de stock en temps continu présupposent une vision continue du temps.
+Le modèle fondateur connu sous le nom de \emph{Formule de Wilson} et développé par \citet{Harris1913} permet de calculer le compromis optimal entre les coûts de commande et les coûts de stockage.
+En pratique, la formule de Wilson est difficile à utiliser car les coûts de commande et de stockage sont difficiles à comparer.
+Argon Consulting cherche à trouver les tailles de lot (ou tailles de couverture) optimales à partir de la flexibilité de ses lignes de production, qui est considérée comme fixe et définie par les processus amonts de la Supply Chain.
+Une ligne de production peut produire plusieurs articles mais perd du temps lorsqu'elle change de la production d'un article à un autre.
+En considérant un taux de demande constant, la Figure~\ref{fig:intro:fr:continuous-time-inventory-model} montre les conséquences de plusieurs longueurs de cycles de production.
+Des cycles de production trop courts entraînent des ruptures de stock car trop de temps est perdu dans les changement de production, alors que des cycles de production trop longs entraînent des sur-stocks et des temps improductifs.
+Dans les jeux de données réels, les lignes de production produisent beaucoup d'articles et le temps perdu dû au changement entre différents éléments est modélisé par un nombre maximal de changements.
+
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=\textwidth]{main/introduction/images/campaign_size_effect_fr.tikz}
+  \caption{Modèle de stock en temps continu pour une ligne produisant deux articles}
+  \label{fig:intro:fr:continuous-time-inventory-model}
+\end{figure}
+
+
+\medskip
+
+
+En remplaçant les coûts de changement par une borne supérieure sur le nombre de changements, nous proposons des généralisations de la formule classique de Wilson pour des cas avec plusieurs articles.
+Elles ont d'ores-et-déjà été utilisées par Argon Consulting.
+En particulier, nous étudions les cas où les tailles de couverture sont continues ou entières dans des contextes déterministes et stochastiques.
+De plus, nous étudions également une extension qui prend en compte plusieurs lignes de production parallèles et montre que le problème peut être décrit comme un problème de minimisation concave sur un polyèdre (pour lequel il existe une vaste littérature).
+
+
+\section{Modèles de stock en temps discret}
+\label{sec:intro:fr:discrete-time-inventory-models}
+
+
+Les modèles de stock en temps discret (également appelés \emph{dynamic lot-sizing problem}) supposent que le temps est décomposé en périodes discrètes.
+Ils sont utilisés par les entreprises pour planifier leurs productions à court terme.
+Un modèle classique est le \emph{Capacitated Lot-Sizing Problem (CLSP)}.
+Il s'agit d'une ligne de production produisant plusieurs articles pendant un nombre fini de périodes.
+La demande pour chaque article est déterministe et donnée pour chaque période.
+Il vise à minimiser la somme des coûts de stockage (dus aux stocks reportés d'une période à l'autre) et des coûts de lancement (coûts fixes liés au lancement de la production) sous contrainte de capacité de la ligne de production.
+
+
+Comme déjà mentionné en Section~\ref{sec:intro:fr:continuous-time-inventory-models}, l'inconvénient de cette formulation selon Argon Consulting et ses clients est la difficulté d'estimer la valeur des coûts de lancement.
+D'autre part, l'estimation du nombre maximal de lancements pour une période donnée est une tâche facile pour les clients d'Argon Consulting.
+Nous proposons un modèle dérivé du Capacitated Lot-Sizing Problem qui remplace les coûts d'installation par une borne supérieure sur le nombre de lancements.
+La Figure~\ref{fig:intro:fr:pdp} montre un exemple de planification de la production de quatre articles sous contrainte qu'au plus deux éléments peuvent être produits pendant une période.
+\`A notre connaissance, ce modèle est nouveau et n'a pas été étudié dans la littérature.
+
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=.8\textwidth]{main/introduction/images/pdp_fr.tikz}
+  \caption{Planification de la production de quatre articles sur cinq semaines}
+  \label{fig:intro:fr:pdp}
+\end{figure}
+
+
+Notre problème de taille de lot peut être écrit comme un \emph{Programme Linéaire en Nombres Entiers (PLNE)}.
+Nous obtenons plusieurs résultats théoriques dans le cadre déterministe qui montrent les difficultés du problème.
+Comme prévu, ce problème est $\NP$-hard.
+Une méthode classique pour aider à résoudre les programmes linéaires en nombres entiers consiste à relâcher certaines contraintes pour obtenir une borne sur la valeur optimale du problème.
+Nous montrons que plusieurs formulations naturelles produisent toutes la même relaxation continue.
+Enfin, nous n'avons pas pu répondre à la question suivante : quel est la complexité de notre problème de Lot-Sizing lorsqu'il n'y a pas de contraintes de capacité et que le nombre maximal de changements par période est égal à 1 ?
+Mathématiquement, il peut être formulé comme suit.
+Considérez le problème
+\begin{equation}\tag{P}\label{eq:intro:fr:Uniform-CLSP-BS}
+  \begin{array}{rlll}
+    \min\quad & \ds \sum_{t=1}^{\horizon} \sum_{i\in\REF} \holding^i \inventory_t^i
+    \\ \smallskip
+    \st\quad & \ds \inventory_t^i = \inventory_{t-1}^i + \quantity_t^i - \demand_t^i && \forall t\in\range{\horizon},\ \forall i\in\REF,
+    \\ \smallskip
+    & \ds \quantity_t^i \le M\setup_t^i && \forall t\in\range{\horizon},\ \forall i\in\REF,
+    \\ \smallskip
+    & \ds \sum_{i\in\REF} \setup_t^i \le 1 && \forall t\in\range{\horizon},
+    \\ \smallskip
+    & \ds \setup_t^i \in \crbracket{0,1} && \forall t\in\range{\horizon},\ \forall i\in\REF,
+    \\ \smallskip
+    & \ds \quantity_t^i,\ \inventory_t^i \ge 0 && \forall t\in\range{\horizon},\ \forall i\in\REF,
+  \end{array}
+\end{equation}
+où les $\demand_t^i$ et les $\holding^i$ sont des nombres réels positifs et $M$ est un grand réel positif.
+\begin{question}
+Quel est la complexité de \eqref{eq:intro:fr:Uniform-CLSP-BS} ?
+\end{question}
+
+
+\medskip
+
+
+En pratique, la demande n'est pas toujours déterministe.
+Nous proposons une version stochastique de notre problème de taille de lot basée sur la programmation stochastique. (voir Section~\ref{sec:intro:intro:fr:multi-sourcing}).
+La différence est que nous n'utilisons pas une contrainte d'aversion au risque ($\AVaR$) mais nous nous en tenons à la vision classique de neutralité au risque (l'espérance).
+En effet, la production est une décision répétée et un échec lors d'une période est facile à compenser par une autre période.
+
+
+De plus, dans un contexte stochastique, nous devons autoriser le backorder (\emph{i.e.} les commandes livrées en retard) parce que les capacités de production sont limitées et qu'il peut être impossible de couvrir toutes les réalisations possibles de la demande.
+Ici, le backorder vient avec des coûts dans la fonction d'objectif.
+\`A moins qu'ils ne soient contractualisés avec les clients, les coûts de backorder peuvent être difficiles à estimer.
+Nous proposons une méthode basée sur le problème du \emph{vendeur de journaux} (l'un des plus anciens modèles stochastiques) pour lier le coût de backorder et la part souhaitée de la demande satisfaite.
+
+
+Comme dans la Section~\ref{sec:intro:fr:multi-sourcing}, notre problème de taille de lot stochastique est également résolu en faisant d'abord une approximation en deux étapes, puis un échantillonnage de scénarios afin d'obtenir un programme linéaire en nombres entiers.
+Comme nous n'avons pas de scénarios, nous les générons en utilisant le modèle probabiliste mentionné en Section~\ref{sec:intro:fr:multi-sourcing}.
+
+
+\medskip
+
+
+Nos expérimentations prouvent déjà que l'entreprise qui fournit les jeux de données peut réduire ses coûts de stockage tout en conservant une bonne capacité à satisfaire la demande.
+Cependant, comme dans la Section~\ref{sec:intro:fr:multi-sourcing}, les performance des ordinateurs, la taille réelle des jeux de données et le temps limité pour retourner un plan de production empêchent de traiter plus de vingt scénarios.
+Puisque la méthode dépend de l'échantillonnage, nous proposons encore une fois une façon concrète de réduire cette dépendance fondées sur les méthodes de regroupement (comme $K$-means).
+
+
+\section{Extensions}
+
+
+Dans la Partie~\ref{part:extensions}, nous présentons deux extensions de notre travail.
+La première est une version alternative du problème de multi-sourcing abordé dans la Partie~\ref{part:multi-sourcing}.
+La différence est que l'entreprise a un budget limité à investir dans la flexibilité.
+Dans ce cas, l'entreprise cherche à décider d'une affectation qui maximise la demande qui peut être satisfaite.
+Nous modélisons ce problème alternatif et montrons qu'il est $\NP$-difficile ans plusieurs cas simples.
+
+
+La seconde est une extension des modèles de stock abordés dans la Partie~\ref{part:continuous-review-inventory-model} et \ref{part:production planning}.
+Notre objectif est de calculer les tailles de couverture à moyen terme à l'aide d'un modèle s'appuyant sur la planification de la production à court terme.
+Nous modélisons ce problème alternatif et montrons expérimentalement qu'il présente de nombreux inconvénients par rapport aux modèles de stock en temps continu.

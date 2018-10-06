@@ -1,6 +1,6 @@
 \begin{tikzpicture}
 
-  \newcommand{\shortcampain}[3][black]{\draw[#1] (#2,#3) -- ({#2+1},{#3+2}) -- ({#2+5},#3) -- node[anchor=west,rotate=90,font=\footnotesize]{stock-out} ({#2+6},#3)}%
+  \newcommand{\shortcampain}[3][black]{\draw[#1] (#2,#3) -- ({#2+1},{#3+2}) -- ({#2+5},#3) -- node[anchor=west,rotate=90,font=\footnotesize]{rupture} ({#2+6},#3)}%
   \newcommand{\shortproduction}[3][black]{\draw[#1,fill=#1] (#2,{#3-.4}) rectangle ({#2+1},{#3-.7});}%
   \pgfmathsetmacro{\ordinateshort}{0}%
 
@@ -16,14 +16,14 @@
   \begin{scope}[local bounding box=VaR, scale=.4]
 
     % Short campain
-    \draw[->,argon gray!75] (-.3,\ordinateshort) -- (20,\ordinateshort) node[right] {time};
-    \draw[->,argon gray!75] (0,{\ordinateshort-.2}) -- (0,{\ordinateshort+3}) node[above, anchor=south] {inventory level};
+    \draw[->,argon gray!75] (-.3,\ordinateshort) -- (20,\ordinateshort) node[right] {temps};
+    \draw[->,argon gray!75] (0,{\ordinateshort-.2}) -- (0,{\ordinateshort+3}) node[above, anchor=south] {niveau de stock};
 
     \foreach \x in {0,6,...,12} \shortcampain[argon orange]{\x}{\ordinateshort};
     \foreach \x in {0,6,...,19} \shortproduction[argon orange]{\x}{\ordinateshort};
     \draw[argon orange] (18,\ordinateshort) -- (19,{\ordinateshort+2}) -- (20,{\ordinateshort+1.5});
 
-    \draw[argon gray] (0,{\ordinateshort+1}) -- (2,\ordinateshort) -- node[anchor=west,rotate=90,font=\footnotesize]{stock-out} (3,\ordinateshort);
+    \draw[argon gray] (0,{\ordinateshort+1}) -- (2,\ordinateshort) -- node[anchor=west,rotate=90,font=\footnotesize]{rupture} (3,\ordinateshort);
     \foreach \x in {3,9,...,14} \shortcampain[argon gray]{\x}{\ordinateshort};
     \foreach \x in {3,9,...,19} \shortproduction[argon gray]{\x}{\ordinateshort};
     \draw[argon gray] (15,{\ordinateshort}) -- (16,{\ordinateshort+2}) -- (20,\ordinateshort);
@@ -32,8 +32,8 @@
 
 
     % Long campain
-    \draw[->,argon gray!75] (-.3,\ordinatelong) -- (20,\ordinatelong) node[right] {time};
-    \draw[->,argon gray!75] (0,{\ordinatelong-.2}) -- (0,{\ordinatelong+5}) node[above, anchor=south] {inventory level};
+    \draw[->,argon gray!75] (-.3,\ordinatelong) -- (20,\ordinatelong) node[right] {temps};
+    \draw[->,argon gray!75] (0,{\ordinatelong-.2}) -- (0,{\ordinatelong+5}) node[above, anchor=south] {niveau de stock};
 
     \foreach \x in {0,10,...,10} \longcampain[argon orange]{\x}{\ordinatelong};
     \draw[argon gray] (0,{\ordinatelong+2}) -- (4,\ordinatelong);
@@ -48,8 +48,8 @@
 
 
     % Optimal campain
-    \draw[->,argon gray!75] (-.3,\ordinateoptimal) -- (20,\ordinateoptimal) node[right] {time};
-    \draw[->,argon gray!75] (0,{\ordinateoptimal-.2}) -- (0,{\ordinateoptimal+3.5}) node[above, anchor=south] {inventory level};
+    \draw[->,argon gray!75] (-.3,\ordinateoptimal) -- (20,\ordinateoptimal) node[right] {temps};
+    \draw[->,argon gray!75] (0,{\ordinateoptimal-.2}) -- (0,{\ordinateoptimal+3.5}) node[above, anchor=south] {niveau de stock};
 
     \foreach \x in {0,6.666666,...,15} \optimalcampain[argon orange]{\x}{\ordinateoptimal};
     \draw[argon gray] (0,{\ordinateoptimal+5/3}) -- ({10/3},\ordinateoptimal);
@@ -64,18 +64,18 @@
 
     % Legend
     \draw[argon orange,fill=argon orange] (23,-6.5) rectangle (23.75,-5.75);
-    \draw (24,-6.125) node[argon gray,anchor=west]{production item A};
+    \draw (24,-6.125) node[argon gray,anchor=west]{production article A};
     \draw[argon gray,fill=argon gray] (23,-8) rectangle (23.75,-7.25);
-    \draw (24,-7.625) node[argon gray,anchor=west]{production item B};
+    \draw (24,-7.625) node[argon gray,anchor=west]{production article B};
     \draw[black] (23,-9.5) rectangle (23.75,-8.75);
-    \draw (24,-9.125) node[argon gray,anchor=west]{time for switching};
+    \draw (24,-9.125) node[argon gray,anchor=west]{temps de changement};
     \draw[red!25,fill=red!25] (23,-11) rectangle (23.75,-10.25);
-    \draw (24,-10.625) node[argon gray,anchor=west]{unproductive time};
+    \draw (24,-10.625) node[argon gray,anchor=west]{temps improductif};
 
 
-    \draw (20,{\ordinateshort+4}) node[black,anchor=east,font=\small]{\fbox{short production cycles}};
-    \draw (20,{\ordinatelong+5.2}) node[black,anchor=east,font=\small]{\fbox{long production cycles}};
-    \draw (20,{\ordinateoptimal+3.7}) node[black,anchor=east,font=\small]{\fbox{optimal production cycles}};
+    \draw (20,{\ordinateshort+4}) node[black,anchor=east,font=\small]{\fbox{cycles de production courts}};
+    \draw (20,{\ordinatelong+5.2}) node[black,anchor=east,font=\small]{\fbox{cycles de production longs}};
+    \draw (20,{\ordinateoptimal+3.7}) node[black,anchor=east,font=\small]{\fbox{cycles de production optimaux}};
   \end{scope}
   
 \end{tikzpicture}

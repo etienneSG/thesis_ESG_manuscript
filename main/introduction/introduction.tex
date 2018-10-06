@@ -71,7 +71,7 @@ High inventory level is expensive but enables to easily satisfy the demand.
 Reducing inventory is then risky and Average-Value-at-Risk aims at quantifying the risk of this decision.
 
 
-The Average-Value-at-Risk at $\alpha\%$ (also known as Expected Shortfall or Conditional Value-at-Risk) can be interpreted as the expectation restricted to the $\alpha\%$ worst cases, \ie $\alpha\%$ lowest values of inventory.
+The Average-Value-at-Risk at $\alpha\%$ (also known as Expected Shortfall or Conditional-Value-at-Risk) can be interpreted as the expectation restricted to the $\alpha\%$ worst cases, \ie $\alpha\%$ lowest values of inventory.
 It enables the decision maker to have an indicator which captures both the shortfall probability and the undelivered quantity (which are strongly linked to two indicators used to measure service level: the cycle service level and the fill rate service level).
 Moreover, the parameter $\alpha$ provides a simple way to address the control of the risk level and the Average-Value-at-Risk can be linearized.
 We apply a classical approximation scheme to solve the stochastic program doing first a two-stages approximation and then a sampling of scenarios in order to be get a \emph{mixed integer linear program (MILP)} leading to tractable formulation.
@@ -240,10 +240,10 @@ In \cref{part:extensions}, we present two extensions of our work.
 The first is an alternative version of the multi-sourcing problem addressed in \cref{part:multi-sourcing}.
 The difference is that the company has a limited budget to invest in flexibility.
 In this case, the company aims at deciding an assignment which maximizing the demand that can be satisfied.
-We model this alternative problem, show that it is $\NP$-hard and give some polynomial cases.
+We model this alternative problem and show that it is $\NP$-hard in several simple cases.
 
 
 The second is an extension of the inventory models addressed in \cref{part:continuous-review-inventory-model} and \ref{part:production planning}.
-We aim at computing the cover-sizes at mid-term horizon using a model relying on production planning.
+We aim at computing the cover-sizes at mid-term horizon using a model relying on production planning at short-term.
 We model this alternative problem and experimentally show that it has many drawback compared to the continuous-time inventory models.
 
