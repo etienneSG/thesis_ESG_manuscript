@@ -64,11 +64,11 @@
 {
   \begin{minipage}{.95\linewidth}
   \small
-  In first cycle, cycle stock enables to perfectly satisfy the demand.
-  In second cycle, an increase of demand is announced.
-  Then, an anticipation inventory is produced in addition to cycle stock.
-  In third cycle, the demand is bigger than expected.
-  Thus part of the demand is satisfied using safety stock.
+  In the first cycle, cycle stock enables to satisfy perfectly the demand.
+  In the second cycle, an increase of demand is announced.
+  Then, an anticipation inventory is produced in addition to the cycle stock.
+  In the third cycle, the demand is bigger than expected.
+  Thus part of the demand is satisfied using the safety stock.
   \end{minipage}
 };
 

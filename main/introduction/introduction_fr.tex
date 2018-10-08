@@ -4,7 +4,7 @@
 
 La recherche effectuée dans le cadre de cette thèse porte sur la gestion de la Supply Chain.
 Elle a été financée par Argon Consulting, cabinet de conseil indépendant dont la mission est d'aider ses clients à améliorer l'ensemble de leur Supply Chain (de l'approvisionnement en matières premières à la livraison des produits finis) et est menée dans le cadre d'un partenariat industriel avec l'\'Ecole des Ponts ParisTech.
-L'objectif est de modéliser et de développer des méthodes pour gérer de manière optimale des fonctions spécifiques de la Supply Chain.
+L'objectif est de modéliser et de développer des méthodes pour gérer de manière optimale certaines fonctions spécifiques de la Supply Chain.
 
 
 Le point commun des trois sujets développés dans cette thèse est la flexibilité.
@@ -16,7 +16,7 @@ En général, décider de la flexibilité d'un système est une décision à lon
 Afin d'aider à la compréhension globale des sujets, nous avons choisi d'introduire les trois sujets en commençant par les décisions à long terme, puis les décisions à moyen terme, et enfin les décisions à court terme.
 Cependant, ce manuscrit suit un ordre différent dû à l'introduction de notions et de résultats réutilisés d'une partie sur l'autre.
 Les décisions à long terme étudiées dans cette thèse (Partie~\ref{part:multi-sourcing}) portent sur la multi-sourcing de la production qui vise à décider de la flexibilité des moyens de production tout en gardant un coût raisonnable.
-Les décisions à moyen terme (Partie~\ref{part:continuous-review-inventory-model}) et les décisions à court terme (Partie~\ref{art:production planning}) traitent toutes deux de la réduction des stocks sous la contrainte des décisions de flexibilité déjà prises.
+Les décisions à moyen terme (Partie~\ref{part:continuous-review-inventory-model}) et les décisions à court terme (Partie~\ref{part:production planning}) traitent toutes deux de la réduction des stocks sous la contrainte des décisions de flexibilité déjà prises.
 Cependant, les décisions à moyen terme qui nous intéressent visent à calculer des indicateurs qui pilotent plusieurs processus de la Supply Chain alors que les décisions à court terme qui nous intéressent visent à décider de la production qui doit être lancée.
 
 
@@ -191,7 +191,7 @@ Quel est la complexité de \eqref{eq:intro:fr:Uniform-CLSP-BS} ?
 
 
 En pratique, la demande n'est pas toujours déterministe.
-Nous proposons une version stochastique de notre problème de taille de lot basée sur la programmation stochastique. (voir Section~\ref{sec:intro:intro:fr:multi-sourcing}).
+Nous proposons une version stochastique de notre problème de taille de lot basée sur la programmation stochastique. (voir Section~\ref{sec:intro:fr:multi-sourcing}).
 La différence est que nous n'utilisons pas une contrainte d'aversion au risque ($\AVaR$) mais nous nous en tenons à la vision classique de neutralité au risque (l'espérance).
 En effet, la production est une décision répétée et un échec lors d'une période est facile à compenser par une autre période.
 

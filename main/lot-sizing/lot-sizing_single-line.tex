@@ -484,7 +484,7 @@ Solving the resulting problem against the worst possible distribution in this cl
 
 
 Another class of continuous time inventory models is based on discrete arrivals of demand.
-A simple model is proposed by \citet{Gavish1980} where the demand arrivals of a single item follows a Poisson process.
+A simple model is proposed by \citet{Gavish1980} where the demand arrivals of a single item follow a Poisson process.
 They reformulate their problem as a single-server queueing problem in order to solve it.
 More recently, \citet{Gayon2009} propose an extension still considering one item but with several customers.
 Each customer has not the same demand arrival rate neither the same price for lost sales.
@@ -547,7 +547,7 @@ Problem~\eqref{eq:lot-size:single-line:stochastic:unconstrained} has a unique op
 
 
 \begin{proof}
-Since Problem~\eqref{eq:lot-size:single-line:stochastic:unconstrained} is a convex problem with qualified constraints, solving it is straightforward using the Karush-Kuhn-Tucker conditions which gives the unique solution given by \cref{eq:lot-size:single-line:stochastic:unconstrained:optimal-cover} and optimal cost of Problem~\eqref{eq:lot-size:single-line:stochastic:unconstrained} is $\frac{1}{2\nbsetups}\bracket{\sum_{i\in\REF}\sqrt{\holding_i\check{\demand}_i}}^2$.
+Since Problem~\eqref{eq:lot-size:single-line:stochastic:unconstrained} is a convex problem with qualified constraints, solving it is straightforward using the Karush-Kuhn-Tucker conditions which give the unique solution given by \cref{eq:lot-size:single-line:stochastic:unconstrained:optimal-cover} and optimal cost of Problem~\eqref{eq:lot-size:single-line:stochastic:unconstrained} is $\frac{1}{2\nbsetups}\bracket{\sum_{i\in\REF}\sqrt{\holding_i\check{\demand}_i}}^2$.
 \end{proof}
 
 
@@ -594,7 +594,7 @@ Since demand $\va\demand_i$ is assumed to be almost surely finite, the expectati
 \cref{lem:lot-size:stochastic:single-line:models:average-setup} and \cref{lem:lot-size:stochastic:single-line:models:ZIO} prove that every feasible solution of unconstrained EPQ-BS is a feasible solution of Problem~\eqref{eq:lot-size:single-line:stochastic:unconstrained} with the same cost.
 Conversely, a feasible solution of Problem~\eqref{eq:lot-size:single-line:stochastic:unconstrained} can be completed in a solution of unconstrained EPQ-BS with the same cost setting the first production setup $\va t_i$ of item $i$ equal to $\frac{\inventory_i(0)}{\va\demand_i}$.
 (We recall that demand is almost surely finite.)
-Then, the unique optimal solutions of Problem~\eqref{eq:lot-size:single-line:stochastic:unconstrained} (\cref{lem:lot-size:single-line:stochastic:unconstrained:optimality}) is the optimal solution of unconstrained EPQ-BS.
+Then, the unique optimal solution of Problem~\eqref{eq:lot-size:single-line:stochastic:unconstrained} (\cref{lem:lot-size:single-line:stochastic:unconstrained:optimality}) is the optimal solution of unconstrained EPQ-BS.
 \end{proof}
 
 
