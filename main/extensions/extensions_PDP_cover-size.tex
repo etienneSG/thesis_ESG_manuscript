@@ -39,8 +39,8 @@ The capacity needed (in time units) to produce one unit of $i$ is $\rate^i>0$.
 The production of item $i$ must satisfy a demand $\demand_t^i$ at the end of period $t$.
 When production of a item $i$ is not used to satisfy the demand, it can be stored but incurs a unit holding cost $\holding^i>0$ per period.
 For each item $i$, there is an initial inventory $s_0^i\in\RR_+$.
-Since we use cover-sizes, the production of item $i$ must satisfy exactly the demand between two setups.
-Moreover, for an item $i$, the time interval between two consecutive setups of $i$ is identical over the planning horizon and belong to a set $\coverset_i\subseteq\range{\horizon}$ of possible cover-sizes.
+%Since we use cover-sizes, the production of item $i$ must satisfy exactly the demand between two setups.
+Since we use cover-sizes, the production of item $i$ is made periodically and thus, the time interval between two consecutive setups of $i$ is identical over the planning horizon and belong to a set $\coverset_i\subseteq\range{\horizon}$ of possible cover-sizes.
 These cover-sizes are integers, which makes them easier to use for planners.
 
 
@@ -61,12 +61,12 @@ Then, we present the method used to test the efficiency and the reasons for whic
 \label{sec:pdp-cover:model-formulation}
 
 
-\esgil{To chose: write the model with no initial inventory or say that we replace the demand by decreasing it with the initial inventory}
-
-
 In this section, we introduce a mixed integer program which models the problem.
 We introduce the following decision variables.
-The quantity of item $i$ produced at period $t$ is denoted by $\quantity_t^i$ and the inventory at the end of the period is denoted by $\inventory_t^i$. We also introduce a binary variable $\setup_{t,\cover_i}^i$ which takes the value $1$ if the item $i$ is produced over week $t$ and its cover-size is $\cover_i$ and $0$ otherwise.
+The quantity of item $i$ produced at period $t$ is denoted by $\quantity_t^i$ and the inventory at the end of the period is denoted by $\inventory_t^i$.
+%We also introduce a binary variable $\setup_{t,\cover_i}^i$ which takes the value $1$ if the item $i$ is produced over week $t$ and its cover-size is $\cover_i$ and $0$ otherwise.
+We introduce a binary variable $\setup_t^i$ which takes the value $1$ if the item $i$ is produced over week $t$.
+Finally, we introduce a binary variable $\bed_{\cover}^i$ which takes the value $1$ if the cover-size $\cover$ is chosen for item $i$.
 
 
 We normalize the production variables by setting $\widehat{\quantity}_t^i=\frac{\rate^i\quantity_t^i}{\capacity}$ and replace accordingly the other variables and parameters by setting $\widehat{\inventory}_t^i=\frac{\rate^i\inventory_t^i}{\capacity}$, $\widehat{\demand}_t^i=\frac{\rate^i\demand_t^i}{\capacity}$ and $\widehat{\holding}^i=\frac{\capacity\holding^i}{\rate^i}$.
@@ -82,34 +82,72 @@ For the purpose of notation, hats are omitted and the Uniform CCSP-BS can be wri
     & \ds \sum_{i\in\REF} \quantity_t^i \le 1 && \forall t\in\range{\horizon},
     \label{eq:pdp:cover-MIP:total-capacity}
     \\
-    & \ds \sum_{\cover_i\in\coverset_i} \sum_{t=1}^{\cover_i} \setup_{t,\cover_i}^i = 1 && \forall i\in\REF,
-    \label{eq:pdp:cover-MIP:one-cover}
-    \\
-    & \ds \setup_{t+\cover_i,\cover_i}^i = \setup_{t,\cover_i}^i && \forall i\in\REF,\ \forall \cover_i\in\coverset_i,\ \forall t\in\range{\horizon-\cover_i},
-    \label{eq:pdp:cover-MIP:periodic-cover}
-    \\
-    & \ds \quantity_t^i = \sum_{\cover_i\in\coverset_i} \bracket{\sum_{t'=t}^{\min\crbracket{t+\cover_i-1,\horizon}}\demand_{t'}^i} \setup_{t,\cover_i}^i  && \forall i\in\REF,\ \forall t\in\range{\horizon},
+    & \ds \quantity_t^i \le \setup_t^i  && \forall i\in\REF,\ \forall t\in\range{\horizon},
     \label{eq:pdp:cover-MIP:quantity}
     \\
-    & \ds \sum_{i\in\REF} \sum_{\cover_i\in\coverset_i} \setup_{t,\cover_i}^i \le \nbsetups && \forall t\in\range{\horizon},
+    & \ds \sum_{i\in\REF} \setup_t^i \le \nbsetups && \forall t\in\range{\horizon},
     \label{eq:pdp:cover-MIP:setups-per-period}
     \\
-    & \ds \setup_{t,\cover_i}^i \in \crbracket{0,1} && \forall i\in\REF,\ \forall \cover_i\in\coverset_i,\ \forall t\in\range{\horizon},
+    & \ds \sum_{\cover\in\coverset_i} \bed_{\cover}^i = 1 && \forall i\in\REF,
+    \label{eq:pdp:cover-MIP:one-cover}
+    \\
+    & \ds 2\setup_{t+\cover}^i = \setup_t^i + \bed_{\cover}^i && \forall i\in\REF,\ \forall \cover\in\coverset_i,\ \forall t\in\range{\horizon-\cover}
+    \label{eq:pdp:cover-MIP:periodic-cover}
+    \\
+    & \ds \sum_{t=1}^{\horizon} \setup_t^i \le 1 + M \sum_{\bracket{\left.\cover'\in\coverset_i\right|\cover'<\cover}} \bed_{\cover'}^i && \forall i\in\REF,\ \forall \cover\in\coverset_i,
+    \label{eq:pdp:cover-MIP:unique-first-setup}
+    \\
+    & \ds \bed_{\cover}^i \in \crbracket{0,1} && \forall i\in\REF,\ \forall \cover\in\coverset_i,
+    \label{eq:pdp:cover-MIP:boolean-cover-choice-constraint}
+    \\
+    & \ds \setup_t^i \in \crbracket{0,1} && \forall i\in\REF,\ \forall t\in\range{\horizon},
     \label{eq:pdp:cover-MIP:boolean-constraint}
     \\
     & \ds \quantity_t^i,\ \inventory_t^i \ge 0 && \forall i\in\REF,\ \forall t\in\range{\horizon},
     \label{eq:pdp:cover-MIP:positive}
   \end{align+}
 \end{subequations}
+where $M$ is a big positive real number.
 
 
-Inventory balance~\eqref{eq:pdp:cover-MIP:inventory-balance}, capacity constraint~\eqref{eq:pdp:cover-MIP:total-capacity} and the upper bound on the number of setups~\eqref{eq:pdp:cover-MIP:setups-per-period} are similar to their counterparts in program~\eqref{eq:Uniform-CLSP-BS}.
+% \begin{subequations}\label{eq:pdp:cover-MIP}
+%   \begin{align+}
+%     \min\quad & \rlap{$\ds \sum_{t=1}^{\horizon} \sum_{i\in\REF} \holding^i \inventory_t^i$}
+%     \label{eq:pdp:cover-MIP:objective}
+%     \\
+%     \st\quad & \ds \inventory_t^i = \inventory_{t-1}^i + \quantity_t^i - \demand_t^i && \forall i\in\REF,\ \forall t\in\range{\horizon},
+%     \label{eq:pdp:cover-MIP:inventory-balance}
+%     \\
+%     & \ds \sum_{i\in\REF} \quantity_t^i \le 1 && \forall t\in\range{\horizon},
+%     \label{eq:pdp:cover-MIP:total-capacity}
+%     \\
+%     & \ds \sum_{\cover_i\in\coverset_i} \sum_{t=1}^{\cover_i} \setup_{t,\cover_i}^i = 1 && \forall i\in\REF,
+%     \label{eq:pdp:cover-MIP:one-cover}
+%     \\
+%     & \ds \setup_{t+\cover_i,\cover_i}^i = \setup_{t,\cover_i}^i && \forall i\in\REF,\ \forall \cover_i\in\coverset_i,\ \forall t\in\range{\horizon-\cover_i},
+%     \label{eq:pdp:cover-MIP:periodic-cover}
+%     \\
+%     & \ds \quantity_t^i = \sum_{\cover_i\in\coverset_i} \bracket{\sum_{t'=t}^{\min\crbracket{t+\cover_i-1,\horizon}}\demand_{t'}^i} \setup_{t,\cover_i}^i  && \forall i\in\REF,\ \forall t\in\range{\horizon},
+%     \label{eq:pdp:cover-MIP:quantity}
+%     \\
+%     & \ds \sum_{i\in\REF} \sum_{\cover_i\in\coverset_i} \setup_{t,\cover_i}^i \le \nbsetups && \forall t\in\range{\horizon},
+%     \label{eq:pdp:cover-MIP:setups-per-period}
+%     \\
+%     & \ds \setup_{t,\cover_i}^i \in \crbracket{0,1} && \forall i\in\REF,\ \forall \cover_i\in\coverset_i,\ \forall t\in\range{\horizon},
+%     \label{eq:pdp:cover-MIP:boolean-constraint}
+%     \\
+%     & \ds \quantity_t^i,\ \inventory_t^i \ge 0 && \forall i\in\REF,\ \forall t\in\range{\horizon},
+%     \label{eq:pdp:cover-MIP:positive}
+%   \end{align+}
+% \end{subequations}
+
+
+Inventory balance~\eqref{eq:pdp:cover-MIP:inventory-balance}, capacity constraints~\eqref{eq:pdp:cover-MIP:total-capacity} and \eqref{eq:pdp:cover-MIP:quantity}, and the upper bound on the number of setups~\eqref{eq:pdp:cover-MIP:setups-per-period} have the same meaning than their counterparts \eqref{eq:Uniform-CLSP-BS:stock-dynamics}, \eqref{eq:Uniform-CLSP-BS:capacity}, \eqref{eq:Uniform-CLSP-BS:item-capacity} and \eqref{eq:Uniform-CLSP-BS:setups} in the Uniform CLSP-BS.
 We add three other constraints to the model.
-The choice of exactly one cover-size for each item is ensured by constraint~\eqref{eq:pdp:cover-MIP:one-cover} and the periodicity of production setups by constraint~\eqref{eq:pdp:cover-MIP:periodic-cover}.
-Constraint~\eqref{eq:pdp:cover-MIP:quantity} defines the quantity that must be produced according to the chosen cover-size and first period of production.
-
-
-\esgil{Constraint \eqref{eq:pdp:cover-MIP:one-cover} imposes the choice of exactly one cover-size. With $\le$, we can chose no cover-size.}
+Constraint~\eqref{eq:pdp:cover-MIP:one-cover} ensures that we choose exactly one cover-size $\cover$ for each item $i$.
+Constraint~\eqref{eq:pdp:cover-MIP:periodic-cover} ensures that production of item $i$ at period $t+\cover$ is allowed only if production of item $i$ is allowed at period $t$ and if the cover-size of item $i$ is equal to $\cover$.
+Constraint~\eqref{eq:pdp:cover-MIP:unique-first-setup} ensures that, if cover-size $\cover$ is chosen for item $i$, there is at most one setup of the production of $i$ during the first $\cover$ periods.
+(Note that with constraint~\eqref{eq:pdp:cover-MIP:periodic-cover}, it ensures that there is exactly one setup.)
 
 
 \medskip
@@ -167,8 +205,8 @@ Then, like in the cover-size heuristic, at time $t$, if the inventory of item $i
 In addition, if some capacity issues are easily anticipated, the production of an item $i$ can be activated even if the inventory is not below the safety stock.
 
 
-Tests with MIP-cover-size heuristic show that this approach is bad.
-First, inventory holding costs and service level are worse than with the classical cover-size heuristic.
-Moreover, computing cover-sizes from Problem~\eqref{eq:pdp:cover-MIP} is hard and takes times (contrary to the closed-form formula in the classical cover-size heuristic).
-
+Tests with MIP-cover-size heuristic show that this approach does not seem to improve cover-size heuristic described in \cref{sec:PDP:numerical-experiments:heuristics}.
+Inventory holding costs and service level are not better than with the cover-size heuristic.
+Moreover, computing cover-sizes from Problem~\eqref{eq:pdp:cover-MIP} requires a solver contrary to the closed-form formula of \cref{sec:lot-size:single-line:models:unconstrained}.
+Since this method uses a solver, one might as well use the (2SA-$m$) heuristic which also relies on a solver and give better results.
 

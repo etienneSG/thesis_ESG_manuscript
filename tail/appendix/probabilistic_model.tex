@@ -16,7 +16,7 @@ It is parametrized by a shape parameter $k>0$ and a scale parameter $\theta>0$.
 Its support is $\RR_+$.
 
 
-The gamma distribution has a probability density function with respect to Lebesgue measure on $\RR_+$ given by
+The gamma distribution has a probability density function with respect to the Lebesgue measure on $\RR_+$ given by
 \begin{equation}\label{eq:dirchlet:probability-density-function}
   f\bracket{x,k,\theta} = \frac{x^{k-1}e^{-\frac{x}{\theta}}}{ \theta^k\Gamma\bracket{k} }
 \end{equation}
@@ -36,11 +36,11 @@ We refer to \citet[Chapter 49]{Kotz2000} for the details of the proofs of classi
 
 
 The \emph{Dirichlet distribution} denoted by $\Dir(\alpha)$ is a family of continuous multivariate probability distributions.
-It is parametrized by a number of categories $K \ge 2$ (integer) and a vector $\alpha=\bracket{\alpha_1,\ldots,\alpha_K}\in\bracket{\RR_+^*}^K$ of positive reals called concentrations parameters.
-Its support is a vector $x=\bracket{x_1,\ldots,x_K}\in\bracket{0,1}^K$ oh the $K-1$ simplex \ie such that $\sum_{k=1}^K x_k = 1$.
+It is parametrized by a number $K \ge 2$ of categories and a vector $\alpha=\bracket{\alpha_1,\ldots,\alpha_K}\in\bracket{\RR_+^*}^K$ of positive real numbers called concentrations parameters.
+Its support is the $(K-1)$-dimensional simplex $\crbracket{\bracket{x_1,\ldots,x_K}\in\RR_+^K\ \left|\ \sum_{k=1}^K x_k = 1\right.}$.
 
 
-The Dirichlet distribution has a probability density function with respect to Lebesgue measure on the Euclidean space $\RR^{K-1}$ given by
+The Dirichlet distribution has a probability density function with respect to the Lebesgue measure on the Euclidean space $\RR^{K-1}$ given by
 \begin{equation}\label{eq:dirchlet:probability-density-function}
   f\bracket{x,\alpha} = \frac{1}{ \Beta\bracket{\alpha}}\prod_{k=1}^K x_k^{\alpha_k-1}.
 \end{equation}
@@ -48,12 +48,12 @@ The normalizing constant is the multivariate beta function, which can be express
 \begin{equation}
   \Beta\bracket{\alpha} =
   \frac{ \prod_{k=1}^K \Gamma\bracket{\alpha_k} }
-       { \Gamma\bracket{\sum_{k=1}^K \alpha_k} }
+       { \Gamma\bracket{\sum_{k=1}^K \alpha_k} }.
 \end{equation}
-where the gamma function is expressed for any $z\in\RR_+^*$ by
-\begin{equation}
-  \Gamma\bracket{z} = \int_0^{\infty} x^{z-1}e^{-x} \diff x.
-\end{equation}
+% where the gamma function is expressed for any $z\in\RR_+^*$ by
+% \begin{equation}
+%   \Gamma\bracket{z} = \int_0^{\infty} x^{z-1}e^{-x} \diff x.
+% \end{equation}
 
 
 \subsubsection{Moments}
@@ -82,27 +82,30 @@ The Dirichlet distribution has the aggregation property given by \cref{prop:diri
 
 
 \begin{prop}\label{prop:dirichlet:aggregation}
-  If $\va x=\bracket{\va x_1,\ldots,\va x_K}\sim \Dir\bracket{\alpha_1,\ldots,\alpha_K}$ then, if the random variables with index $k$ and $\ell$ are dropped from the vector and replaced by their sum,
-  $$\va x=\bracket{\va x_1,\ldots,\va x_k+\va x_{\ell},\ldots,\va x_K}\sim \Dir\bracket{\alpha_1,\ldots,\alpha_k+\alpha_{\ell},\ldots,\alpha_K}$$
+  Let $\va x=\bracket{\va x_1,\ldots,\va x_K}\sim \Dir\bracket{\alpha_1,\ldots,\alpha_K}$.
+  Suppose that the random variables with indices $k$ and $\ell$ are dropped from the vector and replaced by their sum.
+  Then, this new random vector satisfies
+  \begin{equation}
+    \va x=\bracket{\va x_1,\ldots,\va x_k+\va x_{\ell},\ldots,\va x_K}\sim \Dir\bracket{\alpha_1,\ldots,\alpha_k+\alpha_{\ell},\ldots,\alpha_K}.
+  \end{equation}
 \end{prop}
 
 
 \subsubsection{Conditional Dirichlet distribution}
 
 
-The distribution of part of the variables of a Dirichlet conditionally to the other variable is a scalled Dirichlet distribution.
+The distribution of part of the variables of a Dirichlet conditionally to the other variables is a scaled Dirichlet distribution.
 
 
 \begin{prop}\label{prop:dirichlet:conditional}
   Let $\va x=\bracket{\va x_1,\ldots,\va x_K}\sim \Dir\bracket{\alpha_1,\ldots,\alpha_K}$ and $m\in\range[1]{k-1}$.
   We denote $\va x_{(1)}=\bracket{\va x_1,\ldots,\va x_m}$ and $\va x_{(2)}=\bracket{\va x_{m+1},\ldots,\va x_K}$.
-  So $\va x_{(2)}|\va x_{(1)}=x_{(1)}$ has a scaled Dirichlet distribution, or equivalently,
-  $$
-  \frac{1}{1-1^T x_{(1)}} \bracket{\va x_{(2)}|\va x_{(1)}=x_{(1)}}
-  \sim
-  \Dir\bracket{\alpha_{m+1},\ldots,\alpha_K}
-  $$
-  where $1^T$ is the vector with length $m$ and all entries equal to 1.
+  Then, we have
+  \begin{equation}
+    \frac{1}{1-\sum_{i=1}^m x_i} \bracket{\va x_{(2)}|\va x_{(1)}=x_{(1)}}
+    \sim
+    \Dir\bracket{\alpha_{m+1},\ldots,\alpha_K}.
+  \end{equation}
 \end{prop}
 
 
@@ -112,7 +115,7 @@ The distribution of part of the variables of a Dirichlet conditionally to the ot
 Realizations of the random vector $\va x=\bracket{\va x_1,\ldots,\va x_K}\sim\Dir\bracket{\alpha_1,\ldots,\alpha_K}$ can be get from a source of Gamma distributed random variates using Algorithm~\ref{alg:dirichlet:generation} described in~\citet{Frigyik2010}.
 
 
-\begin{algorithm}[H]
+\begin{algorithm}
 \Input{$\alpha_1,\ldots,\alpha_K$}
 \Output{Random realization $\bracket{x_1,\ldots,x_K}$ of $\Dir\bracket{\alpha_1,\ldots,\alpha_K}$}
 
@@ -139,45 +142,47 @@ Realizations of the random vector $\va x=\bracket{\va x_1,\ldots,\va x_K}\sim\Di
 
 
 \begin{prop}
-For any $\alpha_1,\ldots,\alpha_K$ positive, Algorithm~\ref{alg:dirichlet:generation} produces a realization $\bracket{x_1,\ldots,x_K}$ of the Dirichlet distribution $\Dir\bracket{\alpha}$.
+For any $\alpha_1,\ldots,\alpha_K$ positive, Algorithm~\ref{alg:dirichlet:generation} samples the Dirichlet distribution $\Dir\bracket{\alpha}$.
 \end{prop}
 
 
-Algorithm~\ref{alg:dirichlet:generation} relies on \cref{prop:dirichlet:generation-from-gamma} proved in \citet{Devroye1986}.
+% Algorithm~\ref{alg:dirichlet:generation} relies on \cref{prop:dirichlet:generation-from-gamma} proved in \citet{Devroye1986}.
 
 
-\begin{prop}\label{prop:dirichlet:generation-from-gamma}
-Let $\theta,\alpha_1,\ldots,\alpha_K$ be $K+1$ positive real numbers.
-For $K$ independently distributed Gamma distributions
-$\va y_1\sim\Gamma\bracket{\alpha_1,\theta},\ldots,\va y_K\sim\Gamma\bracket{\alpha_K,\theta}$,
-we have:
-\begin{subequations}
-  \begin{align+}
-    V &= \sum_{k=1}^K \va y_k \sim \Gamma\bracket{\sum_{k=1}^K \alpha_k,\theta}
-    \\
-    \va x &= \bracket{\va x_1,\ldots,\va x_K} = \bracket{\frac{\va y_1}{V},\ldots,\frac{\va y_K}{V}} \sim \Dir\bracket{\alpha_1,\ldots,\alpha_K}
-  \end{align+}
-\end{subequations}
-\end{prop}
+% \begin{prop}\label{prop:dirichlet:generation-from-gamma}
+% Let $\theta,\alpha_1,\ldots,\alpha_K$ be $K+1$ positive real numbers.
+% For $K$ independently distributed Gamma distributions
+% $\va y_1\sim\Gamma\bracket{\alpha_1,\theta},\ldots,\va y_K\sim\Gamma\bracket{\alpha_K,\theta}$,
+% we have:
+% \begin{subequations}
+%   \begin{align+}
+%     V &= \sum_{k=1}^K \va y_k \sim \Gamma\bracket{\sum_{k=1}^K \alpha_k,\theta}
+%     \\
+%     \va x &= \bracket{\va x_1,\ldots,\va x_K} = \bracket{\frac{\va y_1}{V},\ldots,\frac{\va y_K}{V}} \sim \Dir\bracket{\alpha_1,\ldots,\alpha_K}
+%   \end{align+}
+% \end{subequations}
+% \end{prop}
 
 
 Other methods exist to generate random variables following a Dirichlet distribution.
-But this one is easy to understand and to implement because C++ standard library have a gamma generator since 2011 edition.
+But this one is easy to understand and to implement because the C++ standard library have a gamma generator since the 2011 edition.
 
 
-\section{Proof of properties of ``expanded Dirichlet'' distributions}
+\section{Proofs of \cref{sec:PDP:numerical-experiments:drawing-realization-of-demand}}
 \label{sec:PDP:numerical-experiments:instances:proofs}
 
 
-In this section, we prove \cref{prop:demand-distribution:properties} and that Algorithm~\ref{alg:dirichlet:generation} returns a vector with an ``expanded Dirichlet'' distribution.
+In this section, we prove \cref{prop:demand-distribution:properties} and that Algorithm~\ref{alg:demand:initial-sampling} gives a vector with an ``expanded Dirichlet'' distribution.
 
 
 \begin{proof}[Proof of \cref{prop:demand-distribution:properties}] 
-Let $\gamma$ be a real number in $\bracket{0,1}$ and let $\tilde{\demand}_1,\ldots,\tilde{\demand}_K$ be $K$ positive number (with $K\ge2$).
+Let $\gamma$ be a real number in $\bracket{0,1}$ and let $\tilde{\demand}_1,\ldots,\tilde{\demand}_K$ be $K$ positive numbers (with $K\ge2$).
 Let $\bracket{\va\demand_1,\ldots,\va\demand_K}$ be a random variable with an ``expanded Dirichlet'' distribution $\cD\bracket{\gamma,\tilde{\demand}_1,\ldots,\tilde{\demand}_K}$.
 We recall that $\tilde{\demand}_0=\sum_{k=1}^K\tilde{\demand}_k$, that $\alpha_0=\frac{1}{\gamma^2}-1$ and that $\alpha_k=\frac{\tilde{\demand}_k}{\tilde{\demand}_0}\alpha_0$, for each $k\in\range{K}$.
-\begin{enumerate}
-\item Since $\frac{1}{\tilde{\demand}_0}\bracket{\va\demand_1,\ldots,\va\demand_K}$ has a Dirichlet distribution, we have for each $k\in\range{K}$
+
+
+\cref{enum:PDP:random-demand-property:expectation}.
+Since $\frac{1}{\tilde{\demand}_0}\bracket{\va\demand_1,\ldots,\va\demand_K}$ has a Dirichlet distribution, we have for each $k\in\range{K}$
 \begin{subequations}
 \begin{align+}
   \espe\sqbracket{\va\demand_k}
@@ -190,7 +195,10 @@ We recall that $\tilde{\demand}_0=\sum_{k=1}^K\tilde{\demand}_k$, that $\alpha_0
   && \mbox{(definition of $\alpha_k$)}
 \end{align+}
 \end{subequations}
-\item Since $\frac{1}{\tilde{\demand}_0}\bracket{\va\demand_1,\ldots,\va\demand_K}$ has a Dirichlet distribution, we have for each $k\in\range{K}$
+
+
+\cref{enum:PDP:random-demand-property:variance}.
+Since $\frac{1}{\tilde{\demand}_0}\bracket{\va\demand_1,\ldots,\va\demand_K}$ has a Dirichlet distribution, we have for each $k\in\range{K}$
 \begin{subequations}
 \begin{align+}
   \vari\sqbracket{\va\demand_k}
@@ -208,9 +216,15 @@ We recall that $\tilde{\demand}_0=\sum_{k=1}^K\tilde{\demand}_k$, that $\alpha_0
   &= \gamma^2 \tilde{\demand}_k \bracket{\tilde{\demand}_0-\tilde{\demand}_k}.
 \end{align+}
 \end{subequations}
-\item Since $\frac{1}{\tilde{\demand}_0}\bracket{\va\demand_1,\ldots,\va\demand_K}$ has a Dirichlet distribution, we have $\sum_{k=1}^K \frac{\va\demand_k}{\tilde{\demand}_0}=1$ almost surely and the result follows.
-\item Let $k$ be an integer in $\range[1]{K-1}$ and let $\demand_{(1)}$ be a vector of $k$ positive real numbers such that $\sum_{i=1}^k \demand_i < \tilde{\demand}_0$.
-We denote by $\va\demand_{(1)}=\bracket{\va\demand_1,\ldots,\va\demand_k}$ and $\va\demand_{(2)}=\bracket{\va\demand_{k+1},\ldots,\va\demand_K}$.
+
+
+\cref{enum:PDP:random-demand-property:constant-volume}.
+Since $\frac{1}{\tilde{\demand}_0}\bracket{\va\demand_1,\ldots,\va\demand_K}$ has a Dirichlet distribution, we have $\sum_{k=1}^K \frac{\va\demand_k}{\tilde{\demand}_0}=1$ almost surely and the result follows.
+
+
+\cref{enum:PDP:random-demand-property:past-conditional}.
+Let $k$ be an integer in $\range[1]{K-1}$ and let $\demand_{(1)}$ be a vector of $k$ positive real numbers such that $\sum_{i=1}^k \demand_i < \tilde{\demand}_0$.
+We denote $\va\demand_{(1)}=\bracket{\va\demand_1,\ldots,\va\demand_k}$ and $\va\demand_{(2)}=\bracket{\va\demand_{k+1},\ldots,\va\demand_K}$.
 
 
 Since $\frac{1}{\tilde{\demand}_0}\bracket{\va\demand_1,\ldots,\va\demand_K}$ has a Dirichlet distribution and thanks to \cref{prop:dirichlet:conditional}, we have
@@ -237,6 +251,8 @@ and then
 \sim
 \Dir\bracket{\alpha_{m+1},\ldots,\alpha_K}.
 \end{equation}
+Wet set $\gamma'$ as the unique positive solution of \cref{eq:PDP:random-demand-property:past-conditional:gamma}, \ie $\gamma' = \sqrt{\frac{\gamma^2}{\bracket{1-a}+a\gamma^2}}$ with $a = \frac{\sum_{i=1}^k \demand_i}{\tilde{\demand}_0}$.
+The parameter $\gamma'$ is well-defined and belong to $\bracket{0,1}$ since $\gamma^2,a\in\bracket{0,1}$.
 Thus, the random vector
 $
 \left(
@@ -247,8 +263,7 @@ $
 \right)
 $
 follows an ``expanded Dirichlet'' distribution $\cD\bracket{\gamma',\tilde{\demand}_{m+1},\ldots,\tilde{\demand}_K}$.
-Indeed, assuming that $\gamma'$ is well-defined,
-we have
+Indeed, we have
 \begin{equation}
   \tilde{\demand}_0' = \sum_{k=m+1}^K \tilde{\demand}_k = \tilde{\demand}_0 - \sum_{i=1}^k \demand_i.
 \end{equation}
@@ -264,24 +279,21 @@ and
 \begin{equation}
   \alpha_k' = \frac{\tilde{\demand}_k}{\tilde{\demand}_0'}\alpha_0' = \alpha_k\quad\forall k\in\range[m+1]{K}.
 \end{equation}
-
-
-Let prove that $\gamma'$ is well-defined.
-Existence and uniqueness are straightforward since $\gamma'$ must be positive and since $0<\gamma<1$.
-\cref{eq:PDP:random-demand-property:past-conditional:gamma} is equivalent to
-$\gamma'^2 = \frac{\gamma^2}{\bracket{1-a}+a\gamma^2}$ with $a = \frac{\sum_{i=1}^k \demand_i}{\tilde{\demand}_0}$.
-Then, it is sufficient to prove that $\frac{y}{\bracket{1-a}+ay}<1$ for any value of $\bracket{a,y}\in\bracket{0,1}^2$ which can be done studying the function $y\mapsto\frac{y}{\bracket{1-a}+ay}$ with a fixed $a\in\bracket{0,1}$.
-\end{enumerate}
+% Let prove that $\gamma'$ is well-defined.
+% Existence and uniqueness are straightforward since $\gamma'$ must be positive and since $0<\gamma<1$.
+% \cref{eq:PDP:random-demand-property:past-conditional:gamma} is equivalent to
+% $\gamma'^2 = \frac{\gamma^2}{\bracket{1-a}+a\gamma^2}$ with $a = \frac{\sum_{i=1}^k \demand_i}{\tilde{\demand}_0}$.
+% Then, it is sufficient to prove that $\frac{y}{\bracket{1-a}+ay}<1$ for any value of $\bracket{a,y}\in\bracket{0,1}^2$ which can be done studying the function $y\mapsto\frac{y}{\bracket{1-a}+ay}$ with a fixed $a\in\bracket{0,1}$.
 \end{proof}
 
 
-We now prove that Algorithm~\ref{alg:demand:initial-sampling} returns a vector with an ``expanded Dirichlet'' distribution.
+We now prove that Algorithm~\ref{alg:demand:initial-sampling} samples the ``expanded Dirichlet'' distribution.
 
 
 \begin{proof}[Proof of \cref{prop:correctness-expanded-dirichlet-generator}]
-According to Algorithm~\ref{alg:dirichlet:generation} given in \cref{sec:reminders:gamma-and-dirichlet-distributions} for generating random realizations of Dirichlet distributions, we know that step 2 and 3 produce a vector $\bracket{\frac{y_1}{\sum_k y_k},\ldots,\frac{y_K}{\sum_k y_k}}$ with a Dirichlet distribution $\Dir\bracket{\alpha_1,\ldots,\alpha_K}$.
-Thus, the last step produces a vector $\demand$ such that $\frac{1}{\tilde{\demand}_0}\bracket{\demand_1,\ldots,\demand_K}$ is generated from a Dirichlet distribution $\Dir\bracket{\alpha_1,\ldots,\alpha_K}$ with $\tilde{\demand}_0 = \sum_{k=1}^K\tilde{\demand}_k$ and $\alpha_0 = \frac{1}{\gamma^2}-1$ and $\alpha_k=\frac{\tilde{\demand}_k}{\tilde{\demand}_0}\alpha_0$, for $k\in\range{K}$.
-So \cref{proc:demand:initial-sampling} returns a vector with an ``expanded Dirichlet'' distribution $\cD\bracket{\gamma,\tilde{\demand}_1,\ldots,\tilde{\demand}_K}$.
+It is well-known that, if $y_k\sim\Gamma\bracket{\alpha_k,1}$ for each $k\in\range{K}$, then the random vector $\frac{1}{\sum_{k=1}^K y_k}\bracket{y_1,\ldots,y_K}\sim\Dir\bracket{\alpha_1,\ldots,\alpha_K}$ (see \cref{sec:reminders:gamma-and-dirichlet-distributions}).
+Thus, the last step produces a vector $\demand$ such that $\frac{1}{\tilde{\demand}_0}\bracket{\demand_1,\ldots,\demand_K}\sim\Dir\bracket{\alpha_1,\ldots,\alpha_K}$ with $\tilde{\demand}_0 = \sum_{k=1}^K\tilde{\demand}_k$ and $\alpha_0 = \frac{1}{\gamma^2}-1$ and $\alpha_k=\frac{\tilde{\demand}_k}{\tilde{\demand}_0}\alpha_0$, for $k\in\range{K}$.
+So Algorithm~\ref{alg:demand:initial-sampling} returns a vector with an ``expanded Dirichlet'' distribution $\cD\bracket{\gamma,\tilde{\demand}_1,\ldots,\tilde{\demand}_K}$.
 \end{proof}
 
 
@@ -289,19 +301,19 @@ So \cref{proc:demand:initial-sampling} returns a vector with an ``expanded Diric
 \label{sec:PDP:numerical-experiments:instances:fitting-parameters}
 
 
-When proposing a model for demand distribution, we face many objectives.
-First demand expectation should be equal to its historical forecast which is ensured by \cref{enum:PDP:random-demand-property:expectation} of \cref{prop:demand-distribution:properties}.
-Second, a main hypothesis of the model that cumulative sum of demand does not depend of the realization.
+When proposing a probabilistic model for demand distribution, we face many objectives.
+First it is desirable that the demand expectation be equal to its historical forecast, which is ensured by \cref{enum:PDP:random-demand-property:expectation} of \cref{prop:demand-distribution:properties}.
+Second, a main hypothesis of the model is that the total sum of demand does not depend of the realization.
 The chosen distribution ensures this properties thanks to \cref{enum:PDP:random-demand-property:constant-volume}.
 Last, every company do not have the same uncertainty on forecast demand.
-For example, some companies may have more historical data to rely on to produce forecast or some sectors may rely on firm command whereas other cannot.
-Thus our model should be able to control the volatility $v$ on forecast demand.
+For example, some companies may have more historical data to rely on to produce forecast or some sectors may rely on firm command whereas other may not.
+Thus our model should be able to take into account this reliability.
 
 
-For the sake of simplicity, we choose a unique parameter $v$ which represents the ratio between standard deviation and expectation of a random variable and which can be easily interpret by companies.
-Thus, we look for $\gamma\in\bracket{0,1}$ which minimizes
+For the sake of simplicity, we choose a unique parameter $v$ which represents the ratio between standard deviation and expectation of a random variable and which can be easily interpreted by companies.
+We decide to look for $\gamma\in\bracket{0,1}$ which minimizes
 \begin{equation}
-  \norm{\bracket{\frac{\sigma_1}{e_1},\ldots,\frac{\sigma_K}{e_K}}-v.1_{(K)}}_2
+  \gamma\mapsto\norm{\bracket{\frac{\sigma_1(\gamma)}{e_1(\gamma)},\ldots,\frac{\sigma_K(\gamma)}{e_K(\gamma)}}-\bracket{v,\ldots,v}}_2
 \end{equation}
 where $e_k$ and $\sigma_k$ are defined in \cref{prop:demand-distribution:properties} and $1_{(K)}$ is the vector with length $K$ and all entries equal to 1.
 Note that the norm $\norm{\ .\ }_2$ has been chosen.

@@ -3,7 +3,7 @@
 \label{chap:multi-sourcing:numerical-experiments}
 
 
-In order to test the efficiency of our approach, we test our method on datasets from Argon Consulting’s clients.
+We test our method on datasets from Argon Consulting’s clients.
 The objective is to compare the multi-sourcing currently in use by the client to the multi-sourcing computed from our method.
 In addition to comparing their cost, several Key Performance Indicators (KPI) will be used as the generated stock-out, the probability of stock-out, the workload of plants, etc.
 
@@ -278,7 +278,7 @@ The volatility $v$ is the value used in the ``expanded Dirichlet'' distribution 
 The outputs are decomposed as follows.
 The row \emph{Solver Objective} (resp. \emph{Heuristic Objective}) gives the assignment costs returned by the solver (resp. the heuristic) at the end of the time allowed to find a solution.
 This is this objective~\eqref{eq:stoch-multi-sourcing:linearized:objective} and it is expressed in k\euro{}.
-The row \emph{Multi-sourcing} give the percentage of multi-sourced families (\ie families produced on two plants or more).
+The row \emph{Multi-sourcing} gives the percentage of multi-sourced families (\ie families produced on two plants or more) and the row \emph{Multi-sourcing (max)} gives the maximal number of plants producing one item.
 
 
 The row $\prob\sqbracket{s\ge0}$ measures in-sample the probability (in \%) that inventory of a random item at a random time is positive.
@@ -355,9 +355,9 @@ $\beta$ & \multicolumn{6}{c|}{Volatility $v$} & \multicolumn{1}{c}{Output}
 \\
      & 99.6 & 99.6 & 99.3 & 99.0 & 99.0 & \multicolumn{1}{c|}{--} & $\prob\sqbracket{s\ge0}$
 \\ \cdashline{2-8}[2pt/2pt]
-     & 72.1 & 76.6 & 0.0 & inf. & inf. & \multicolumn{1}{c|}{--} & Cycle service level
+     & 72.1 & 76.6 & inf. & inf. & inf. & \multicolumn{1}{c|}{--} & Cycle service level
 \\
-     & 95.5 & 95.6 & 0.0 & inf. & inf. & \multicolumn{1}{c|}{--} & Fill rate service level
+     & 95.5 & 95.6 & inf. & inf. & inf. & \multicolumn{1}{c|}{--} & Fill rate service level
 \\
      & 16 & 18 & 1204 & 863 & 1880 & \multicolumn{1}{c|}{--} & Evaluation time
 \\ \hline
@@ -499,8 +499,24 @@ However, on huge dataset, we never got a solution from a frontal used of a solve
 Although it is not a proof, the values returned by $\prob\sqbracket{s\ge0}$ show on some examples that the satisfaction of $\AVaR$ constraint implies the satisfaction of probabilistic constraint.
 
 
-Finally, we see that aiming at $70\%$ or aiming at $95\%$ does not really change the maximal fill rate service level or the maximal cycle service level that can be reached.
-However, it really changes the cost of the assignment.
+% Finally, we see that aiming at $70\%$ or aiming at $95\%$ does not really change the maximal fill rate service level or the maximal cycle service level that can be reached.
+% However, it really changes the cost of the assignment.
+
+
+As shown by the computational times, evaluating the quality solution with fix assignment is hard.
+It may take up to two hours while problem has no integer variables.
+
+
+On Mel instances, we see that solving on a small set of scenarios is too optimistic when computing the multi-sourcing.
+Indeed, several assignments prove to be infeasible of the huge set of scenarios.
+
+
+Regarding results on Lux instance, we see that heuristic is not that bad.
+When we succeed in finding the continuous relaxation of Problem~\eqref{eq:stoch-multi-sourcing:linearized} with $m=100$ scenarios, the GAP to optimality is at most 25\%.
+For small values of the volatility $v$, playing with the value of $\servicelvl$ has little impact on the objective value and on service level.
+For greater values of the volatility, playing with the values of $\servicelvl$ enables to reached the desired service levels.
+However, when $\servicelvl$ becomes close to $100\%$, our method becomes very sensitive to the sampling and approaches like robust ones may be might appropriate.
+
 
 
 % \esgil{Refaire des tests avec des valeur plus faibles de $\servicelvl$}
