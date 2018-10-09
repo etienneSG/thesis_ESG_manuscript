@@ -276,14 +276,22 @@ The volatility $v$ is the value used in the ``expanded Dirichlet'' distribution 
 
 
 The outputs are decomposed as follows.
-The row \emph{Solver obj.} (resp. \emph{Heuristic obj.}) gives the assignment costs returned by the solver (resp. the heuristic) at the end of the time allowed to find a solution.
-This is this objective~\eqref{eq:stoch-multi-sourcing:linearized:objective}.
+The row \emph{Solver Objective} (resp. \emph{Heuristic Objective}) gives the assignment costs returned by the solver (resp. the heuristic) at the end of the time allowed to find a solution.
+This is this objective~\eqref{eq:stoch-multi-sourcing:linearized:objective} and it is expressed in k\euro{}.
+The row \emph{Multi-sourcing} give the percentage of multi-sourced families (\ie families produced on two plants or more).
 
 
-The row $\prob\sqbracket{s\ge0}$ measures in-sample the probability that inventory of a random item at a random time is positive.
+The row $\prob\sqbracket{s\ge0}$ measures in-sample the probability (in \%) that inventory of a random item at a random time is positive.
 \begin{equation}
   \prob\sqbracket{s\ge0}=\frac{1}{\horizon\times\card{\REF}\times\card{\scenarios}}\sum_{t=1}^{\horizon}\sum_{i\in\REF}\sum_{\omega\in\scenarios} \mathbb{1}_{\crbracket{\inventory_{t,\omega}^i\ge0}}
 \end{equation}
+
+
+The row \emph{GAP} is the gap (in \%) between the objective value and the best known lower bound on the problem.
+The row \emph{Solver LB} is the lower bound (in k\euro{}) found by the solver when the solver is frontally used to solve Problem~\eqref{eq:stoch-multi-sourcing:linearized}.
+The row \emph{Cont. relax.} is the value (in k\euro{}) of the continuous relaxation of Problem~\eqref{eq:stoch-multi-sourcing:linearized}.
+The row \emph{Time for bound} is the time (in seconds) needed to get the bound written on the previous line of the table.
+These KPI's are measured in-sample.
 
 
 The row \emph{Cycle service level} and \emph{Fill rate service level} are measured out-of-sample.
@@ -292,15 +300,11 @@ They are computed using \cref{eq:pdp:numerical-experiments:KPI:fill-rate-service
   w^i=\frac{\rate^i}{\sum_{j\in\REF}\rate^j}.
 \end{equation}
 In this case, the item are weighted by their internal production time.
-These two KPI's are averaged over the $n=10000$ scenarios.
+These two KPI's are averaged over the $n=10000$ scenarios and are expressed in \%.
 
 
-The row \emph{GAP} is the gap between the objective value and the best known lower bound on the problem.
-
-
-The row \emph{Solver LB} is the lower bound found by the solver when the solver is frontally used to solve Problem~\eqref{eq:stoch-multi-sourcing:linearized}.
-The row \emph{Cont. relax.} is the value of the continuous relaxation of Problem~\eqref{eq:stoch-multi-sourcing:linearized}.
-The row \emph{Time for bound} is the time needed to get the bound written on the previous line of the table.
+The row \emph{Evaluation time} gives the time (in seconds) needed to solve Problem~\eqref{eq:stoch-multi-sourcing:linearized} with fix assignment and $n=10000$ scenarios.
+The time limit of the solver is set equal to 24 hours.
 
 
 \begin{table}[h]
@@ -309,35 +313,53 @@ $\beta$ & \multicolumn{6}{c|}{Volatility $v$} & \multicolumn{1}{c}{Output}
 \\
 & \multicolumn{1}{c|}{1\%} & \multicolumn{1}{c|}{5\%} & \multicolumn{1}{c|}{10\%} & \multicolumn{1}{c|}{30\%} & \multicolumn{1}{c|}{50\%} & \multicolumn{1}{c|}{80\%} & 
 \\ \hline
-70\% & 953 & 967 & 1011 & 1034 & 1134 & 1381 & Solver obj. \hfill {\scriptsize($\times10^3$)}
+70\% & 953 & 967 & 1011 & 1034 & 1134 & 1381 & Solver Objective
 \\
-     & 93.8 & 93.5 & 93.3 & 91.2 & 90.1 & 91.4 & $\prob\sqbracket{s\ge0}$ \hfill {\scriptsize(in \%)}
+     & 45.5 & 54.5 & 54.5 & 63.6 & 100.0 & 72.7 & Multi-sourcing
 \\
-     & 99.7 & 100.0 & 100.0 & 98.7 & 97.5 & 97.5 & Cycle service level \hfill {\scriptsize(in \%)}
+     & 2 & 2 & 3 & 3 & 4 & 3 & Multi-sourcing (max)
 \\
-     & 100.0 & 100.0 & 100.0 & 99.7 & 99.2 & 98.8 & Fill rate service level \hfill {\scriptsize(in \%)}
-\\ \hline
-85\% & 957 & 957 & 1000 & 1087 & 1188 & \multicolumn{1}{c|}{$\infty$} & Solver obj. \hfill {\scriptsize($\times10^3$)}
+     & 93.8 & 93.5 & 93.3 & 91.2 & 90.1 & 91.4 & $\prob\sqbracket{s\ge0}$ 
 \\ \cdashline{2-8}[2pt/2pt]
-     & 17.5 & 15.0 & 18.1 & 17.7 & 11.3 & \multicolumn{1}{c|}{--} & GAP \hfill {\scriptsize(in \%)}
+     & 71.2 & 74.4 & 73.4 & 78.2 & inf. & 82.8 & Cycle service level
 \\
-     & 790 & 813 & 819 & 895 & 1054 & \multicolumn{1}{c|}{--} & Solver LB \hfill {\scriptsize($\times10^3$)}
+     & 90.5 & 96.0 & 94.8 & 94.1 & inf. & 92.4 & Fill rate service level
 \\
-     & 1200 & 1200 & 1200 & 1200 & 1200 & \multicolumn{1}{c|}{--} & Time for bound \hfill {\scriptsize(in s)}
-\\ \cdashline{2-8}[2pt/2pt]
-     & 98.5 & 98.1 & 97.6 & 96.5 & 95.9 & \multicolumn{1}{c|}{--} & $\prob\sqbracket{s\ge0}$ \hfill {\scriptsize(in \%)}
-\\
-     & 100.0 & 100.0 & 100.0 & 99.4 & 98.6 & \multicolumn{1}{c|}{--} & Cycle service level \hfill {\scriptsize(in \%)}
-\\
-     & 100.0 & 100.0 & 100.0 & 99.9 & 99.6 & \multicolumn{1}{c|}{--} & Fill rate service level \hfill {\scriptsize(in \%)}
+     & 22 & 28 & 86 & 34 & 61 & 38 & Evaluation time
 \\ \hline
-95\% & 954 & 956 & 997 & 1173 & 1371 & \multicolumn{1}{c|}{$\infty$} & Solver obj. \hfill {\scriptsize($\times10^3$)}
+85\% & 957 & 957 & 1000 & 1087 & 1188 & \multicolumn{1}{c|}{$\infty$} & Solver Objective
 \\
-     & 99.6 & 99.6 & 99.3 & 99.0 & 99.0 & \multicolumn{1}{c|}{--} & $\prob\sqbracket{s\ge0}$ \hfill {\scriptsize(in \%)}
+     & 54.5 & 54.5 & 54.5 & 72.7 & 63.6 & \multicolumn{1}{c|}{--} & Multi-sourcing
 \\
-     & 100.0 & 100.0 & 99.8 & 99.8 & 99.6 & \multicolumn{1}{c|}{--} & Cycle service level \hfill {\scriptsize(in \%)}
+     & 3 & 2 & 2 & 3 & 3 & \multicolumn{1}{c|}{--} & Multi-sourcing (max)
 \\
-     & 100.0 & 100.0 & 100.0 & 100.0 & 99.9 & \multicolumn{1}{c|}{--} & Fill rate service level \hfill {\scriptsize(in \%)}
+     & 98.5 & 98.1 & 97.6 & 96.5 & 95.9 & \multicolumn{1}{c|}{--} & $\prob\sqbracket{s\ge0}$
+\\ \cdashline{2-8}[2pt/2pt]
+     & 17.5 & 15.0 & 18.1 & 17.7 & 11.3 & \multicolumn{1}{c|}{--} & GAP
+\\
+     & 790 & 813 & 819 & 895 & 1054 & \multicolumn{1}{c|}{--} & Solver LB
+\\
+     & 1200 & 1200 & 1200 & 1200 & 1200 & \multicolumn{1}{c|}{--} & Time for bound
+\\ \cdashline{2-8}[2pt/2pt]
+     & 75.1 & 67.6 & 61.9 & 80.4 & inf. & \multicolumn{1}{c|}{--} & Cycle service level
+\\
+     & 94.1 & 94.2 & 94.3 & 95.3 & inf. & \multicolumn{1}{c|}{--} & Fill rate service level
+\\
+     & 17 & 21 & 40 & 25 & 43 & \multicolumn{1}{c|}{--} & Evaluation time
+\\ \hline
+95\% & 954 & 956 & 997 & 1173 & 1371 & \multicolumn{1}{c|}{$\infty$} & Solver Objective
+\\
+     & 54.5 & 54.5 & 72.7 & 72.7 & 81.8 & \multicolumn{1}{c|}{--} & Multi-sourcing
+\\
+     & 3 & 3 & 2 & 3 & 3 & \multicolumn{1}{c|}{--} & Multi-sourcing (max)
+\\
+     & 99.6 & 99.6 & 99.3 & 99.0 & 99.0 & \multicolumn{1}{c|}{--} & $\prob\sqbracket{s\ge0}$
+\\ \cdashline{2-8}[2pt/2pt]
+     & 72.1 & 76.6 & 0.0 & inf. & inf. & \multicolumn{1}{c|}{--} & Cycle service level
+\\
+     & 95.5 & 95.6 & 0.0 & inf. & inf. & \multicolumn{1}{c|}{--} & Fill rate service level
+\\
+     & 16 & 18 & 1204 & 863 & 1880 & \multicolumn{1}{c|}{--} & Evaluation time
 \\ \hline
 \end{tabular*}
 \caption{Results for Mel dataset (without heuristic)}
@@ -351,35 +373,53 @@ $\beta$ & \multicolumn{6}{c|}{Volatility $v$} & \multicolumn{1}{c}{Output}
 \\
 & \multicolumn{1}{c|}{1\%} & \multicolumn{1}{c|}{5\%} & \multicolumn{1}{c|}{10\%} & \multicolumn{1}{c|}{30\%} & \multicolumn{1}{c|}{50\%} & \multicolumn{1}{c|}{80\%} & 
 \\ \hline
-70\% & 1152 & 1176 & 1156 & 1136 & 1541 & 1640 & Heuristic obj. \hfill {\scriptsize($\times10^3$)}
+70\% & 1152 & 1176 & 1156 & 1136 & 1541 & 1640 & Heuristic Objective
 \\
-     & 95.5 & 93.8 & 92.7 & 89.7 & 88.8 & 90.1 & $\prob\sqbracket{s\ge0}$ \hfill {\scriptsize(in \%)}
+     & 90.9 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & Multi-sourcing
 \\
-     & 100.0 & 100.0 & 100.0 & 99.8 & 99.8 & 99.3 & Cycle service level \hfill {\scriptsize(in \%)}
+     & 4 & 3 & 4 & 4 & 4 & 4 & Multi-sourcing (max)
 \\
-     & 100.0 & 100.0 & 100.0 & 99.0 & 99.3 & 98.5 & Fill rate service level \hfill {\scriptsize(in \%)}
-\\ \hline
-85\% & 1152 & 1134 & 1146 & 1112 & 1230 & \multicolumn{1}{c|}{$\infty$} & Heuristic obj. \hfill {\scriptsize($\times10^3$)}
+     & 95.5 & 93.8 & 92.7 & 89.7 & 88.8 & 90.1 & $\prob\sqbracket{s\ge0}$
 \\ \cdashline{2-8}[2pt/2pt]
-     & 31.4 & 28.3 & 28.5 & 19.5 & 14.3 & \multicolumn{1}{c|}{--} & GAP \hfill {\scriptsize(in \%)}
+     & 83.6 & 83.4 & 72.1 & 82.7 & 88.7 & 85.3 & Cycle service level
 \\
-     & 673 & 707 & 686 & 797 & 900 & 1144 & Cont. relax. \hfill {\scriptsize($\times10^3$)}
+     & 96.5 & 97.5 & 96.2 & 95.9 & 96.6 & 94.0 & Fill rate service level
 \\
-     & 3.8 & 13.8 & 3.5 & 2.4 & 13.7 & 3.6 & Time for bound \hfill {\scriptsize(in s)}
-\\ \cdashline{2-8}[2pt/2pt]
-     & 97.7 & 97.2 & 96.6 & 96.2 & 95.7 & \multicolumn{1}{c|}{--} & $\prob\sqbracket{s\ge0}$ \hfill {\scriptsize(in \%)}
-\\
-     & 100.0 & 100.0 & 100.0 & 99.9 & 99.6 & \multicolumn{1}{c|}{--} & Cycle service level \hfill {\scriptsize(in \%)}
-\\
-     & 100.0 & 100.0 & 100.0 & 99.5 & 98.7 & \multicolumn{1}{c|}{--} & Fill rate service level \hfill {\scriptsize(in \%)}
+     & 77 & 25 & 40 & 29 & 32 & 36 & Evaluation time
 \\ \hline
-95\% & 1152 & 968 & 1021 & 1210 & 1396 & \multicolumn{1}{c|}{$\infty$} & Heuristic obj. \hfill {\scriptsize($\times10^3$)}
+85\% & 1152 & 1134 & 1146 & 1112 & 1230 & \multicolumn{1}{c|}{$\infty$} & Heuristic Objective
 \\
-     & 99.2 & 99.8 & 99.8 & 99.0 & 99.1 & \multicolumn{1}{c|}{--} & $\prob\sqbracket{s\ge0}$ \hfill {\scriptsize(in \%)}
+     & 90.9 & 81.8 & 81.8 & 63.6 & 81.8 & 100.0 & Multi-sourcing
 \\
-     & 100.0 & 100.0 & 100.0 & 100.0 & 99.9 & \multicolumn{1}{c|}{--} & Cycle service level \hfill {\scriptsize(in \%)}
+     & 4 & 4 & 4 & 3 & 4 & 4 & Multi-sourcing (max)
 \\
-     & 100.0 & 100.0 & 100.0 & 99.8 & 99.6 & \multicolumn{1}{c|}{--} & Fill rate service level \hfill {\scriptsize(in \%)}
+     & 97.7 & 97.2 & 96.6 & 96.2 & 95.7 & \multicolumn{1}{c|}{--} & $\prob\sqbracket{s\ge0}$
+\\ \cdashline{2-8}[2pt/2pt]
+     & 31.4 & 28.3 & 28.5 & 19.5 & 14.3 & \multicolumn{1}{c|}{--} & GAP
+\\
+     & 673 & 707 & 686 & 797 & 900 & 1144 & Cont. relax.
+\\
+     & 3.8 & 13.8 & 3.5 & 2.4 & 13.7 & 3.6 & Time for bound
+\\ \cdashline{2-8}[2pt/2pt]
+     & 79.4 & 75.0 & 91.0 & 82.7 & inf. & 86.5 & Cycle service level
+\\
+     & 95.2 & 96.3 & 98.4 & 95.7 & inf. & 95.1 & Fill rate service level
+\\
+     & 42 & 35 & 33 & 27 & 55 & 27 & Evaluation time
+\\ \hline
+95\% & 1152 & 968 & 1021 & 1210 & 1396 & \multicolumn{1}{c|}{$\infty$} & Heuristic Objective
+\\
+     & 90.9 & 63.6 & 54.5 & 72.7 & 72.7 & 100.0 & Multi-sourcing
+\\
+     & 4 & 2 & 2 & 4 & 3 & 4 & Multi-sourcing (max)
+\\
+     & 99.2 & 99.8 & 99.8 & 99.0 & 99.1 & \multicolumn{1}{c|}{--} & $\prob\sqbracket{s\ge0}$
+\\ \cdashline{2-8}[2pt/2pt]
+     & 76.2 & 76.7 & 72.7 & inf. & inf. & inf. & Cycle service level
+\\
+     & 95.0 & 97.1 & 93.9 & inf. & inf. & inf. & Fill rate service level
+\\
+     & 25 & 30 & 24 & 2333 & 2394 & 6739 & Evaluation time
 \\ \hline
 \end{tabular*}
 \caption{Results for Mel dataset (with heuristic)}
@@ -393,35 +433,53 @@ $\beta$ & \multicolumn{6}{c|}{Volatility $v$} & \multicolumn{1}{c}{Output}
 \\
 & \multicolumn{1}{c|}{1\%} & \multicolumn{1}{c|}{5\%} & \multicolumn{1}{c|}{10\%} & \multicolumn{1}{c|}{30\%} & \multicolumn{1}{c|}{50\%} & \multicolumn{1}{c|}{80\%} & 
 \\ \hline
-70\% & 1392 & 1409 & 1420 & 1476 & 1624 & 1861 & Heuristic obj. \hfill {\scriptsize($\times10^3$)}
+70\% & 1392 & 1409 & 1420 & 1476 & 1624 & 1861 & Heuristic Objective
 \\
-     & 99.4 & 99.3 & 99.2 & 98.7 & 98.6 & 98.5 & $\prob\sqbracket{s\ge0}$ \hfill {\scriptsize(in \%)}
+     & 18.0 & 23.0 & 18.0 & 19.0 & 22.0 & 25.0 & Multi-sourcing
 \\
-     & 80.2 & 80.4 & 80.6 & 81.1 & 81.3 & 82.0 & Cycle service level \hfill {\scriptsize(in \%)}
+     & 3 & 3 & 3 & 4 & 4 & 3 & Multi-sourcing (max)
 \\
-     & 87.2 & 87.1 & 86.8 & 86.5 & 88.0 & 87.3 & Fill rate service level \hfill {\scriptsize(in \%)}
-\\ \hline
-85\% & 1392 & 1409 & 1407 & 1516 & 1708 & 1997 & Heuristic obj. \hfill {\scriptsize($\times10^3$)}
+     & 99.4 & 99.3 & 99.2 & 98.7 & 98.6 & 98.5 & $\prob\sqbracket{s\ge0}$
 \\ \cdashline{2-8}[2pt/2pt]
-     & \multicolumn{1}{c|}{--} & 24.1 & 22.3 & 24.7 & \multicolumn{1}{c|}{--} & \multicolumn{1}{c|}{--} & GAP \hfill {\scriptsize(in \%)}
+     & 77.9 & 77.3 & 82.9 & 72.0 & 88.2 & 92.0 & Cycle service level
 \\
-     & \multicolumn{1}{c|}{--} & 1070 & 1084 & 1142 & \multicolumn{1}{c|}{--} & \multicolumn{1}{c|}{--} & Cont. relax. \hfill {\scriptsize($\times10^3$)}
+     & 86.2 & 85.9 & 88.7 & 80.6 & 91.9 & 94.0 & Fill rate service level
 \\
-     & 86400 & 28728 & 31277 & 51399 & 86400 & 86400 & Time for bound \hfill {\scriptsize(in s)}
-\\ \cdashline{2-8}[2pt/2pt]
-     & 99.9 & 99.8 & 99.8 & 99.6 & 99.5 & 99.4 & $\prob\sqbracket{s\ge0}$ \hfill {\scriptsize(in \%)}
-\\
-     & 80.2 & 80.4 & 80.6 & 81.1 & 82.0 & 81.1 & Cycle service level \hfill {\scriptsize(in \%)}
-\\
-     & 87.2 & 87.0 & 86.3 & 87.8 & 87.2 & 87.6 & Fill rate service level  \hfill {\scriptsize(in \%)}
+     & 4703 & 4293 & 3892 & 2212 & 2363 & 2154 &  Evaluation time
 \\ \hline
-95\% & 1392 & 1420 & 1421 & 1624 & 1900 & 2382 & Heuristic obj. \hfill {\scriptsize($\times10^3$)}
+85\% & 1392 & 1409 & 1407 & 1516 & 1708 & 1997 & Heuristic Objective
 \\
-     & 100.0 & 100.0 & 99.9 & 99.9 & 99.9 & 99.9 & $\prob\sqbracket{s\ge0}$ \hfill {\scriptsize(in \%)}
+     & 18.0 & 18.0 & 16.0 & 21.0 & 24.0 & 31.0 & Multi-sourcing
 \\
-     & 80.2 & 80.7 & 80.8 & 81.3 & 81.8 & 81.9 & Cycle service level  \hfill {\scriptsize(in \%)}
+     & 3 & 3 & 3 & 3 & 3 & 4 & Multi-sourcing (max)
 \\
-     & 87.2 & 86.7 & 88.0 & 88.3 & 88.2 & 87.5 & Fill rate service level \hfill {\scriptsize(in \%)}
+     & 99.9 & 99.8 & 99.8 & 99.6 & 99.5 & 99.4 & $\prob\sqbracket{s\ge0}$
+\\ \cdashline{2-8}[2pt/2pt]
+     & \multicolumn{1}{c|}{--} & 24.1 & 22.3 & 24.7 & \multicolumn{1}{c|}{--} & \multicolumn{1}{c|}{--} & GAP
+\\
+     & \multicolumn{1}{c|}{--} & 1070 & 1084 & 1142 & \multicolumn{1}{c|}{--} & \multicolumn{1}{c|}{--} & Cont. relax.
+\\
+     & 86400 & 28728 & 31277 & 51399 & 86400 & 86400 & Time for bound
+\\ \cdashline{2-8}[2pt/2pt]
+     & 77.8 & \multicolumn{1}{c|}{--} & 82.0 & 85.2 & 90.5 & 92.7 & Cycle service level
+\\
+     & 86.1 & \multicolumn{1}{c|}{--} & 87.7 & 89.4 & 94.0 & 94.6 & Fill rate service level
+\\
+     & 4262 & 86402 & 5148 & 3692 & 3652 & 3044 & Evaluation time
+\\ \hline
+95\% & 1392 & 1420 & 1421 & 1624 & 1900 & 2382 & Heuristic Objective
+\\
+     & 18.0 & 18.0 & 19.0 & 22.0 & 26.0 & 34.0 & Multi-sourcing
+\\
+     & 3 & 3 & 3 & 4 & 4 & 5 & Multi-sourcing (max)
+\\
+     & 100.0 & 100.0 & 99.9 & 99.9 & 99.9 & 99.9 & $\prob\sqbracket{s\ge0}$
+\\ \cdashline{2-8}[2pt/2pt]
+     & 77.8 & 80.3 & 81.1 & 86.4 & 90.6 & 92.7 & Cycle service level
+\\
+     & 85.9 & 87.2 & 87.1 & 90.1 & 93.1 & 94.5 & Fill rate service level
+\\
+     & 4025 & 5146 & 5209 & 5448 & 5716 & 5428 & Evaluation time
 \\ \hline
 \end{tabular*}
 \caption{Results for Lux dataset (with heuristic)}
