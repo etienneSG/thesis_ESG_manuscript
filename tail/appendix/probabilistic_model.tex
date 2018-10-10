@@ -311,13 +311,13 @@ Thus our model should be able to take into account this reliability.
 
 
 For the sake of simplicity, we choose a unique parameter $v$ which represents the ratio between standard deviation and expectation of a random variable and which can be easily interpreted by companies.
-We decide to look for $\gamma\in\bracket{0,1}$ which minimizes
+For $\bracket{\va\demand_1,\ldots,\va\demand_K}\sim\cD\bracket{\gamma,\tilde{\demand}_1,\ldots,\tilde{\demand}_K}$, we decide to look for $\gamma\in\bracket{0,1}$ which minimizes
 \begin{equation}
   \gamma\mapsto\norm{\bracket{\frac{\sigma_1(\gamma)}{e_1(\gamma)},\ldots,\frac{\sigma_K(\gamma)}{e_K(\gamma)}}-\bracket{v,\ldots,v}}_2
 \end{equation}
-where $e_k$ and $\sigma_k$ are defined in \cref{prop:demand-distribution:properties} and $1_{(K)}$ is the vector with length $K$ and all entries equal to 1.
+where $e_k(\gamma)=\espe\sqbracket{\va\demand_k}$ and $\sigma_k(\gamma)=\sqrt{\vari\sqbracket{\va\demand_k}}$.
 Note that the norm $\norm{\ .\ }_2$ has been chosen.
-One advantage is the close formula for the value of $\gamma$ (see \cref{prop:demand:generation:gamma-choice}).
+An interesting feature of $\norm{\ .\ }_2$ is the closed-form formula for the value of $\gamma$ (see \cref{prop:demand:generation:gamma-choice}).
 If $\norm{\ .\ }_1$ or $\norm{\ .\ }_{\infty}$ had been chosen, finding the best $\gamma$ would be done with classical linearization methods and the use of a linear solver.
 
 
@@ -331,7 +331,8 @@ For any $v\in\bracket{0,1}$ and any $\tilde{\demand}_1,\ldots,\tilde{\demand}_K$
   {\sum_{k=1}^K\bracket{\frac{\tilde{\demand}_0}{\bar{\demand_k}}-1}}
 \end{equation}
 minimize the quantity
-$\norm{\bracket{\frac{\sigma_1}{e_1},\ldots,\frac{\sigma_K}{e_K}}-v.1_{(K)}}_2$.
+$\norm{\bracket{\frac{\sigma_1(\gamma)}{e_1(\gamma)},\ldots,\frac{\sigma_K(\gamma)}{e_K(\gamma)}}-\bracket{v,\ldots,v}}_2$
+where $e_k(\gamma)=\espe\sqbracket{\va\demand_k}$ and $\sigma_k=\sqrt{\vari\sqbracket{\va\demand_k}}$.
 \end{prop}
 
 
@@ -345,7 +346,9 @@ For each index $k$, \cref{prop:demand-distribution:properties} gives
 \end{equation}
 
 
-Then, finding $\gamma'\in\bracket{0,1}$ which minimizes $\norm{\bracket{\frac{\sigma_1}{e_1},\ldots,\frac{\sigma_K}{e_K}}-v.1_{(K)}}_2$ is equivalent to look for the minimizer on $\bracket{0,1}$ of the function
+Then, finding $\gamma'\in\bracket{0,1}$ which minimizes
+$\norm{\bracket{\frac{\sigma_1(\gamma)}{e_1(\gamma)},\ldots,\frac{\sigma_K(\gamma)}{e_K(\gamma)}}-\bracket{v,\ldots,v}}_2$
+is equivalent to look for the minimizer on $\bracket{0,1}$ of the function
 \begin{subequations}
 \begin{align+}
   f\bracket{\gamma'}
@@ -378,7 +381,7 @@ Since $v\in\bracket{0,1}$, we have $\gamma\in\bracket{0,1}$ and the result follo
 
 
 \begin{lem}\label{lem:PDP:numerical-experiments:interior}
-Let $K$ be an integer greater than 1.
+Let $K$ be an integer greater than 2.
 We define
 \begin{equation}
   \delta^{K-1} = \crbracket{\bracket{x_1,\ldots,x_K}\in\bracket{0,1}^K \bigg| \sum_{k=1}^K x_k = 1}
@@ -390,7 +393,7 @@ and
      & x & \mapsto & \frac{\sum_{k=1}^K\sqrt{\frac{1}{x_k}-1}}{\sum_{k=1}^K\bracket{\frac{1}{x_k}-1}}
   \end{array}
 \end{equation}
-Then, $\max g$ exists and is equal to $\frac{1}{\sqrt{K-1}}$
+Then, $g$ reaches is supremum which is $\frac{1}{\sqrt{K-1}}$
 \end{lem}
 
 
@@ -409,7 +412,7 @@ Then we get
   = \frac{\mu\bracket{y\bracket{x}}}{\sqrt{\lambda\bracket{x}}}
   \le \frac{\sup_{y\in\delta^{K-1}}\mu\bracket{y}}{\sqrt{\inf_{x\in\delta^{K-1}}\lambda\bracket{x}}}.
 \end{equation}
-$\mu$ being concave and symmetric (\ie its value does not depend of the order of its arguments), we get
+The map $\mu$ being concave and symmetric (\ie its value does not depend of the order of its arguments), we get
 \begin{equation}
   \sup_{y\in\delta^{K-1}}\mu\bracket{y} = \mu\bracket{\frac{1}{K},\ldots,\frac{1}{K}} = \sqrt{K}.
 \end{equation}
