@@ -2,7 +2,7 @@
 \label{chap:intro:fr}
 
 
-La recherche effectuée dans le cadre de cette thèse porte sur la gestion de la Supply Chain.
+La recherche effectuée dans le cadre de cette thèse CIFRE porte sur la gestion de la Supply Chain.
 Elle a été financée par Argon Consulting, cabinet de conseil indépendant dont la mission est d'aider ses clients à améliorer l'ensemble de leur Supply Chain (de l'approvisionnement en matières premières à la livraison des produits finis) et est menée dans le cadre d'un partenariat industriel avec l'\'Ecole des Ponts ParisTech.
 L'objectif est de modéliser et de développer des méthodes pour gérer de manière optimale certaines fonctions spécifiques de la Supply Chain.
 
@@ -46,7 +46,7 @@ Plus précisément, elles déterminent la flexibilité des usines et la capacit�
 
 Considérant ses applications, Argon Consulting choisit de modéliser la demande comme principale source d'incertitude avec un volume total de demande fixe et connu.
 (Dans ses applications, Argon Consulting s'intéresse à la capacité de faire face aux variations du mix produit et non du volume de la demande.)
-Nous modélisons le problème comme un \emph{programme stochastique} avec recours où les variables de première étape sont l'affectation des articles aux usines et les variables de deuxième étape sont les décisions de production.
+Dans le Chapitre~\ref{chap:multi-sourcing:stochastic}, nous modélisons le problème comme un \emph{programme stochastique} avec recours où les variables de première étape sont l'affectation des articles aux usines et les variables de deuxième étape sont les décisions de production.
 Afin d'intégrer le caractère aléatoire et de prendre en compte l'impact à long terme et le risque des décisions d'affectation, nous nous appuyons sur les \emph{mesures de risque}, qui sont des outils de la théorie financière utilisés pour quantifier le risque lié à une position financière.
 Nous choisissons d'utiliser l'Average-Value-at-Risk ($\AVaR$) appliquée au niveau de stock des articles.
 A notre connaissance, un tel outil a rarement été utilisé dans des applications Supply Chain.
@@ -84,7 +84,7 @@ La solution retournée peut être utilisée directement par les clients d'Argon 
 \medskip
 
 
-Nos expérimentations prouvent d'ores et déjà que l'entreprise qui fournit les jeux de données peut réduire sa proportion d'articles multi-sourcés (réduisant ainsi ses coûts) tout en conservant une bonne capacité à satisfaire la demande.
+Les expérimentations faites dans le Chapitre~\ref{chap:multi-sourcing:numerical-experiments} prouvent d'ores et déjà que l'entreprise qui fournit les jeux de données peut réduire sa proportion d'articles multi-sourcés (réduisant ainsi ses coûts) tout en conservant une bonne capacité à satisfaire la demande.
 Cependant, les performances des ordinateurs et la taille réelle des jeux de données empêchent de traiter plus d'une centaine de scénarios.
 La méthode dépend donc de l'échantillonnage et le choix d'un ensemble représentatif de scénarios est essentiel.
 Nous proposons une façon concrète de réduire cette dépendance vis-à-vis de l'échantillonnage basées sur les méthodes de clustering (telles $K$-means).
@@ -125,10 +125,10 @@ Dans les jeux de données réels, les lignes de production produisent beaucoup d
 \medskip
 
 
-En remplaçant les coûts de changement par une borne supérieure sur le nombre de changements, nous proposons des généralisations de la formule classique de Wilson pour des cas avec plusieurs articles.
+En remplaçant les coûts de changement par une borne supérieure sur le nombre de changements, nous proposons dans le Chapitre~\ref{chap:lot-size:single-line} des généralisations de la formule classique de Wilson pour des cas avec plusieurs articles.
 Elles ont d'ores-et-déjà été utilisées par Argon Consulting.
 En particulier, nous étudions les cas où les tailles de couverture sont continues ou entières dans des contextes déterministes et stochastiques.
-De plus, nous étudions également une extension qui prend en compte plusieurs lignes de production parallèles et montre que le problème peut être décrit comme un problème de minimisation concave sur un polyèdre (pour lequel il existe une vaste littérature).
+De plus, nous étudions également dans le Chapitre~\ref{chap:lot-size:several-lines} une extension qui prend en compte plusieurs lignes de production parallèles et montre que le problème peut être décrit comme un problème de minimisation concave sur un polyèdre (pour lequel il existe une vaste littérature).
 
 
 \section{Modèles de stock en temps discret}
@@ -145,7 +145,7 @@ Il vise à minimiser la somme des coûts de stockage (dus aux stocks reportés d
 
 Comme déjà mentionné en Section~\ref{sec:intro:fr:continuous-time-inventory-models}, l'inconvénient de cette formulation selon Argon Consulting et ses clients est la difficulté d'estimer la valeur des coûts de lancement.
 D'autre part, l'estimation du nombre maximal de lancements pour une période donnée est une tâche facile pour les clients d'Argon Consulting.
-Nous proposons un modèle dérivé du Capacitated Lot-Sizing Problem qui remplace les coûts d'installation par une borne supérieure sur le nombre de lancements.
+Nous proposons dans le Chapitre~\ref{chap:PDP:deterministic} un modèle dérivé du Capacitated Lot-Sizing Problem qui remplace les coûts d'installation par une borne supérieure sur le nombre de lancements.
 La Figure~\ref{fig:intro:fr:pdp} montre un exemple de planification de la production de quatre articles sous contrainte qu'au plus deux éléments peuvent être produits pendant une période.
 \`A notre connaissance, ce modèle est nouveau et n'a pas été étudié dans la littérature.
 
@@ -191,7 +191,7 @@ Quel est la complexité de \eqref{eq:intro:fr:Uniform-CLSP-BS} ?
 
 
 En pratique, la demande n'est pas toujours déterministe.
-Nous proposons une version stochastique de notre problème de taille de lot basée sur la programmation stochastique. (voir Section~\ref{sec:intro:fr:multi-sourcing}).
+Nous proposons dans le Chapitre~\ref{chap:PDP:stochastic} une version stochastique de notre problème de taille de lot basée sur la programmation stochastique. (voir Section~\ref{sec:intro:fr:multi-sourcing}).
 La différence est que nous n'utilisons pas une contrainte d'aversion au risque ($\AVaR$) mais nous nous en tenons à la vision classique de neutralité au risque (l'espérance).
 En effet, la production est une décision répétée et un échec lors d'une période est facile à compenser par une autre période.
 
@@ -209,7 +209,7 @@ Comme nous n'avons pas de scénarios, nous les générons en utilisant le modèl
 \medskip
 
 
-Nos expérimentations prouvent déjà que l'entreprise qui fournit les jeux de données peut réduire ses coûts de stockage tout en conservant une bonne capacité à satisfaire la demande.
+Les expérimentations faites dans le Chapitre~\ref{chap:PDP:numerical-experiments} prouvent déjà que l'entreprise qui fournit les jeux de données peut réduire ses coûts de stockage tout en conservant une bonne capacité à satisfaire la demande.
 Cependant, comme dans la Section~\ref{sec:intro:fr:multi-sourcing}, les performance des ordinateurs, la taille réelle des jeux de données et le temps limité pour retourner un plan de production empêchent de traiter plus de vingt scénarios.
 Puisque la méthode dépend de l'échantillonnage, nous proposons encore une fois une façon concrète de réduire cette dépendance fondées sur les méthodes de regroupement (comme $K$-means).
 
