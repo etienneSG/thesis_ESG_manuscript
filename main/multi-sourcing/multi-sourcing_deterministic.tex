@@ -178,14 +178,14 @@ This problem is known to be $\NP$-complete in the strong sense (see~\citet{Garey
 Let $\crbracket{a_1,\ldots,a_{3m}}$ be an instance of the 3-partition problem such that $\frac{B}{4} < a_i < \frac{B}{2}$ for each $i$ with $B=\frac{1}{m}\sum_{i=1}^{3m}a_i$.
 We reduce polynomially this problem to an instance of the deterministic multi-sourcing problem.
 We set
-$$
+\begin{equation}
+\begin{array}{c}
   \horizon=1
   ,\quad
   \plants=\range[1]{m}
   ,\quad
   \REF=\range[1]{3m}
-$$
-$$
+\\ \smallskip
   \rate_{p,1}^i=1
   ,\quad
   \demand_1^i=\frac{a_i}{B}
@@ -193,7 +193,8 @@ $$
   \lb_{p,1}^i=\frac{a_i}{B}
   ,\quad
   \ub_{p,1}^i=\capacity_{p,1}=1.
-$$
+\end{array}
+\end{equation}
 Thus, if we have a solution for the 3-partition problem, finding a solution of the deterministic multi-sourcing problem is straightforward assigning each triple to a plant.
 
 
@@ -227,14 +228,14 @@ One can ask for simpler cases.
 Let $\crbracket{a_1,\ldots,a_{3m}}$ be an instance of the 3-partition problem such that $\frac{B}{4} < a_i < \frac{B}{2}$ for each $i$ with $B=\frac{1}{m}\sum_{i=1}^{3m}a_i$.
 We reduce polynomially this problem to an instance of the deterministic multi-sourcing problem without lower bounds on production.
 We set
-$$
+\begin{equation}
+\begin{array}{c}
   \horizon=1
   ,\quad
   \plants=\range[1]{m}
   ,\quad
   \REF=\range[1]{3m},
-$$
-$$
+\\ \smallskip
   \affect_p^i=1
   ,\quad
   \demand_1^i=\frac{a_i}{B}
@@ -244,7 +245,8 @@ $$
   \lb_{p,1}^i=0
   ,\quad
   \ub_{p,1}^i=\capacity_{p,1}=1.
-$$
+\end{array}
+\end{equation}
 Thus, if we have a solution for the 3-partition problem, finding a solution with cost $\card{\REF}$ of the deterministic multi-sourcing problem is straightforward assigning each triple to a plant.
 
 
@@ -269,14 +271,14 @@ This problem is known to be $\NP$-complete (see~\citet{Garey1979}).
 Let $\crbracket{a_1,\ldots,a_m}$ be an instance of the partition problem.
 We reduce polynomially this problem to an instance of the deterministic multi-sourcing problem.
 We set
-$$
+\begin{equation}
+\begin{array}{c}
   \horizon=1
   ,\quad
   \plants=\crbracket{1,2}
   ,\quad
   \REF=\range[1]{m},
-$$
-$$
+\\ \smallskip
   \affect_p^i=1
   ,\quad
   \demand_1^i=\frac{2a_i}{\sum_{i=1}^{m}a_i}
@@ -286,7 +288,8 @@ $$
   \lb_{pt}^i=0
   ,\quad
   \ub_{pt}^i=\capacity_{pt}=1.
-$$
+\end{array}
+\end{equation}
 Thus, if we have a solution for the partition problem, finding a solution with cost $\card{\REF}$ of the deterministic multi-sourcing problem is straightforward.
 
 
@@ -318,7 +321,7 @@ The following special cases of the deterministic multi-sourcing problem are poly
 
 
 For each item $i$, we set
-$$
+\begin{equation}
 \open_1^i=
 \left\{
 \begin{array}{l}
@@ -326,7 +329,7 @@ $$
 0\mbox{ otherwise}.
 \end{array}
 \right.
-$$
+\end{equation}
 Then, we solve the resulting linear program to get an optimal solution of the deterministic multi-sourcing problem.
 (It may return that the problem is infeasible.)
 
@@ -351,7 +354,7 @@ Then, we solve the resulting linear program to get a feasible solution of the de
 
 For each item $i$ we choose a plant $p(i)$ among $\argmin_{p\in\plants}\bracket{\affect_p^i}$.
 Then, we set
-$$
+\begin{equation}
 \open_p^i=
 \left\{
 \begin{array}{l}
@@ -359,7 +362,7 @@ $$
 0\mbox{ otherwise}.
 \end{array}
 \right.
-$$
+\end{equation}
 Then, we solve the resulting linear program to get an optimal solution of the deterministic multi-sourcing problem.
 (It may return that the problem is infeasible.)
 \end{proof}

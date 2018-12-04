@@ -3,7 +3,7 @@
 
 
 The research made in this CIFRE thesis deals with Supply Chain Management.
-It was funded by Argon Consulting which is an independent consulting firm whose mission is to help its clients improve every part of their Supply Chain (from the acquisition of raw materials to the delivery of final products) and conducted throughout an industrial partnership with the \'Ecole des Ponts ParisTech.
+It was funded by Argon Consulting which is an independent consulting firm whose mission is to help its clients improve every part of their Supply Chain (from the procurement of raw materials to the delivery of final products) and conducted throughout an industrial partnership with the \'Ecole des Ponts ParisTech.
 The goal is to model and develop methods to manage specific parts of the Supply Chain in an optimal way.
 
 
@@ -20,18 +20,27 @@ The mid-term decisions (\cref{part:continuous-review-inventory-model}) and the s
 More specifically, the mid-term decisions we are interested in aim at computing indicators that drive several Supply Chain processes whereas short-term decisions aim at deciding the production that must be launched.
 
 
+The three topics of this thesis and other examples are placed on \cref{fig:intro:en:models_time-line} depending on their decision horizon.
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=\textwidth]{main/introduction/images/models_time-line.tikz}
+  \caption{Decision horizon}
+  \label{fig:intro:en:models_time-line}
+\end{figure}
+
+
 \section{Multi-sourcing of production}
 \label{sec:intro:en:multi-sourcing}
 
 
 Multi-sourcing of production is a strategic decision in Supply Chain Management (\ie a long-term decision).
 It consists in deciding if a plant should have the ability to produce an item.
-For example, in \cref{fig:intro:en:multi-sourcing}, the first plant can produce item A, B and C while the second one can produce item B, C and D.
-Then, item A and D are said to be mono-sourced since each can be produced by only one plant whereas item B and C are said to be multi-sourced since they can be produced by at least two plants.
+For example, in \cref{fig:intro:en:multi-sourcing}, the first plant can produce items A, B and C while the second one can produce items B, C and D.
+Then, items A and D are said to be mono-sourced since each can be produced by only one plant whereas items B and C are said to be multi-sourced since they can be produced by at least two plants.
 The first characteristic of multi-sourcing decisions is their horizon.
 They take time to be implemented and have long-term impact on Supply Chain Management.
 Second, multi-sourcing decisions are taken in a highly uncertain environment.
-Among others, the future customer demands, the reliability of means of production, the future availability of raw materials are imperfectly known.
+Among others, the future customer demand, the reliability of means of production and the future availability of raw materials are imperfectly known.
 Finally, multi-sourcing decisions will constrain future production decisions (\ie mid-term decision).
 Precisely, they determine the flexibility of the plants and the ability to balance the workload between them.
 
@@ -44,37 +53,20 @@ Precisely, they determine the flexibility of the plants and the ability to balan
 \end{figure}
 
 
-% To model the multi-sourcing problem, we relies on \emph{Stochastic Programming} which studies optimization problem that involves random objective function and/or random constraints.
-% Let $\va \xi$ be a random variable with known distribution.
-% The general risk-neutral formulation of stochastic programs is of the form
-% \begin{equation}
-% \begin{array}{rl}
-%   \mbox{Minimize} \quad & f(x) + \espe_{\va\xi}\sqbracket{Q\bracket{x,\va\xi}} \\
-%   \mbox{Subject to} \quad & x \in X
-% \end{array}
-% \end{equation}
-% where $\espe_{\va\xi}\sqbracket{.}$ is the expected value over $\va\xi\in\Xi$ and $Q\bracket{x,\xi}$ is a recourse function.
-% Typically, $Q\bracket{x,\xi}$ is the value of a so-called second stage optimization problem parametrized by $x$ and $\xi$.
-% The variables $x$ are the first stage variables.
-% They are decided before knowing the realization of the randomness.
-% The parameter $\va\xi$ contains all the randomness in the second stage including the recourse variable which are decision taken knowing the realization of the randomness.
-% We apply a classical approximation scheme to solve the stochastic program doing first a two-stages approximation and then a sampling of scenarios in order to get a \emph{mixed integer linear program (MILP)}.
-
-
 Considering its applications, Argon Consulting chooses to model the demand as the main source of uncertainty with a fixed and known total volume of demand.
 (In its applications, Argon Consulting is interested by the ability to face variations in the product mix and not in the volume of demand.)
 In \cref{chap:multi-sourcing:stochastic}, we model the problem as a \emph{stochastic program} with recourses where first-stage variables are the assignment of items to plants and second-stage variables are the production decisions.
 In order to deal with randomness and to capture the long-term impact and the risk of assignment decisions, we rely on \emph{risk measures}, which are tools from financial theory used to quantify the risk of a financial position.
 We choose to use the \emph{Average-Value-at-Risk ($\AVaR$)} applied to the inventory level of items.
-To the best of our knowledge, it is almost the first time that such a tools is used in Supply Chain applications.
+To the best of our knowledge, it is almost the first time that such a tool is used in Supply Chain applications.
 High inventory level is expensive but enables an easy satisfaction of the demand.
 Reducing inventory is then risky and Average-Value-at-Risk aims at quantifying the risk of this decision.
 
 
 The Average-Value-at-Risk at $\alpha\%$ (also known as Expected Shortfall or Conditional-Value-at-Risk) can be interpreted as the expectation restricted to the $\alpha\%$ worst cases, \ie $\alpha\%$ lowest values of inventory.
-It enables the decision maker to have an indicator which captures both the shortfall probability and the undelivered quantity (which are strongly linked to two indicators used to measure service level: the cycle service level and the fill rate service level).
+It enables the decision maker to have an indicator that captures both the shortfall probability and the undelivered quantity (which are strongly linked to two indicators used to measure service level: the cycle service level and the fill rate service level).
 Moreover, the parameter $\alpha$ provides a simple way to address the control of the risk level and the Average-Value-at-Risk can be linearized.
-We apply a classical approximation scheme to solve the stochastic program doing first a two-stages approximation and then a sampling of scenarios in order to be get a \emph{mixed integer linear program (MILP)} leading to tractable formulation.
+We apply a classical approximation scheme to solve the stochastic program by doing first a two-stage approximation and then a sampling of scenarios in order to get a \emph{mixed integer linear program (MILP)}, which leads to a tractable formulation.
 
 
 \medskip
@@ -117,7 +109,7 @@ The lot-size gives the quantity of a same item produced at each production launc
 The cover-size gives the number of time units following a production launch during which inventory must be positive.
 These parameters are used as input for other decision processes in Supply Chain such as the Material Requirement Planning (MRP).
 For example, having an estimate of the lot-sizes or the cover-sizes allows to decide the quantity of raw materials that must be ordered.
-They are also used as input to plan the production since they give the sizes of produced lot.
+They are also used as input to plan the production since they give the sizes of produced lots.
 (When studying discrete-time models, we will propose to remove this constraint from the models.)
 
 
@@ -144,7 +136,7 @@ In real datasets, assembly lines produce a lot of items and time lost due to swi
 
 Replacing the ordering costs by an upper bound on the number of setups, we propose in \cref{chap:lot-size:single-line} generalizations of the classical EOQ formula for multiple items.
 They have already been useful for Argon Consulting.
-Specifically, we study continuous and integer number of setups in deterministic and stochastic settings.
+Specifically, we study continuous and integer numbers of setups in deterministic and stochastic settings.
 Moreover, we also study in \cref{chap:lot-size:several-lines} an extension that considers several parallel assembly lines and show that the problem can be stated as a concave minimization problem over a polyhedron (for which it exists an extensive literature).
 
 
@@ -200,7 +192,7 @@ Consider the problem
     & \ds \quantity_t^i,\ \inventory_t^i \ge 0 && \forall t\in\range{\horizon},\ \forall i\in\REF,
   \end{array}
 \end{equation}
-where the $\demand_t^i$'s and the $\holding^i$'s are given nonnegative real numbers and $M$ is a big positive number.
+where $M$ is a big positive number, and for each period $t$ and each item $i$, the demand $\demand_t^i$ and the holding cost $\holding^i$ are given nonnegative real numbers, and the inventory $\inventory_t^i$, the produced quantity $\quantity_t^i$ and the setup indicator $\setup_t^i$ are the decision variables.
 \begin{question}
 What is the complexity status of \eqref{eq:intro:en:Uniform-CLSP-BS}?
 \end{question}
@@ -218,17 +210,17 @@ Indeed, production is a repeated decision and a failure at one period is easy to
 Moreover, in a stochastic setting, we must allow backorder because production resources are limited and it may be impossible to cover every single possible realizations of demand.
 Here, they come with costs in the objective function.
 Except when they are enshrined through contracts with the customers, backorder costs can be hard to estimate.
-We propose a method based on the \emph{news-vendor problem} (one of the oldest stochastic models) to link the backorder cost and the desired portion of satisfied demand.
+We adapt from the literature a method based on the \emph{news-vendor problem} (one of the oldest stochastic models) to link the backorder cost and the desired portion of satisfied demand.
 
 
-As in \cref{sec:intro:en:multi-sourcing}, our stochastic lot-sizing problem is also solved by first doing a two-stage approximation and then a sampling of scenarios in order to get a mixed integer linear program.
-Since we do not have scenarios, we generate them using the probabilistic model mentioned in \cref{sec:intro:en:multi-sourcing}.
+As in \cref{sec:intro:en:multi-sourcing}, our stochastic lot-sizing problem is also solved by doing first a two-stage approximation and then a sampling of scenarios in order to get a mixed integer linear program.
+Since scenarios were not provided by our partner, we generate them using the probabilistic model mentioned in \cref{sec:intro:en:multi-sourcing}.
 
 
 \medskip
 
 
-The experimentations made in \cref{chap:PDP:numerical-experiments} already prove that the company that provides the datasets can reduce its inventory costs while keeping a good ability to satisfy the demand.
+The experimentations made in \cref{chap:PDP:numerical-experiments} seem to show that the company that provides the datasets can reduce its inventory costs while keeping a good ability to satisfy the demand.
 However, as in \cref{sec:intro:en:multi-sourcing}, computer performances, real dataset sizes and limited time to return a production planning prevent from dealing with more than twenty scenarios.
 Since the method is dependent on the sampling methods, we propose again a concrete way to reduce this dependence on the sampling methods based on clustering methods (such as $K$-means).
 
@@ -239,11 +231,11 @@ Since the method is dependent on the sampling methods, we propose again a concre
 In \cref{part:extensions}, we present two extensions of our work.
 The first is an alternative version of the multi-sourcing problem addressed in \cref{part:multi-sourcing}.
 The difference is that the company has a limited budget to invest in flexibility.
-In this case, the company aims at deciding an assignment which maximize the demand that can be satisfied.
+In this case, the company aims at deciding an assignment which maximizes the demand that can be satisfied.
 We model this alternative problem and show that it is $\NP$-hard in several simple cases.
 
 
 The second is an extension of the inventory models addressed in \cref{part:continuous-review-inventory-model} and \ref{part:production planning}.
 We aim at computing the cover-sizes at mid-term horizon using a model relying on production planning at short-term.
-We model this alternative problem and experimentally show that it has many drawback compared to the continuous-time inventory models.
+We model this alternative problem and experimentally show that it has many drawbacks compared to the continuous-time inventory models.
 

@@ -1,0 +1,63 @@
+\begin{tikzpicture}[font=\small]
+  
+  \pgfmathsetmacro{\timelineup}{5.1}%
+  \pgfmathsetmacro{\timelinedown}{4.1}%
+  \pgfmathsetmacro{\timelineleft}{0.5}%
+  \pgfmathsetmacro{\timelineright}{11.5}%
+  \pgfmathsetmacro{\timelinearrow}{0.5}%
+
+
+  \pgfmathsetmacro{\capacity}{1.75}%
+  \pgfmathsetmacro{\multisourcing}{3}%
+  \pgfmathsetmacro{\lotsizing}{5}%
+  \pgfmathsetmacro{\pdp}{7.5}%
+  \pgfmathsetmacro{\scheduling}{10}%
+
+
+  \pgfmathsetmacro{\legend}{1}%
+
+
+  \begin{scope}[local bounding box=VaR, scale=1.]
+
+  % Time line
+  \shade[left color=argon orange, right color=argon orange!25]
+    (\timelineleft,\timelineup) --
+    (\timelineright,\timelineup) --
+    ({\timelineright+\timelinearrow},{.5*(\timelineup+\timelinedown)}) --
+    (\timelineright,\timelinedown) --
+    (\timelineleft,\timelinedown) --
+    ({\timelineleft+\timelinearrow},{.5*(\timelineup+\timelinedown)}) --
+    cycle;
+  \draw (\timelineleft,{{.5*(\timelineup+\timelinedown)}}) node[rotate=90, anchor=south]{Long terme};
+  \draw ({\timelineright+\timelinearrow},{{.5*(\timelineup+\timelinedown)}}) node[rotate=90, anchor=north]{Court terme};
+
+
+  % Decision level
+  \draw (\capacity,{.5*(\timelineup+\timelinedown)}) node[anchor=center]{Stratégique};
+  \draw (\lotsizing,{.5*(\timelineup+\timelinedown)}) node[anchor=center]{\phantom{p}Tactique\phantom{p}};
+  \draw (\pdp,{.5*(\timelineup+\timelinedown)}) node[anchor=west]{Opérationnel};
+  \draw (\scheduling,{.5*(\timelineup+\timelinedown)}) node[anchor=west]{Exécution\phantom{p}};
+
+
+  % Capacity-sizing decision
+  \draw[-latex] (\capacity,{\timelineup+\legend}) node[anchor=north west, inner sep=2pt]{\textbf{\begin{minipage}{5cm}Dimensionnement\\de capacité\end{minipage}}} -- (\capacity,\timelineup);
+
+
+  % Multi-sourcing decision
+  \draw[-latex] (\multisourcing,{\timelinedown-\legend}) node[anchor=south west, inner sep=2pt]{\begin{minipage}{5cm}\textbf{Multi-sourcing} (\cref{part:multi-sourcing})\\\emph{Modèles d'affectation}\end{minipage}} -- (\multisourcing,\timelinedown);
+
+
+  % Lot-sizing decision
+  \draw[-latex] (\lotsizing,{\timelineup+\legend}) node[anchor=north west, inner sep=2pt]{\begin{minipage}{5cm}\textbf{Dimensionnement de lot} (\cref{part:continuous-review-inventory-model})\\\emph{Modèles de stock en temps continu}\end{minipage}} -- (\lotsizing,\timelineup);
+
+
+  % Production planning decision
+  \draw[-latex] (\pdp,{\timelinedown-\legend}) node[anchor=south west, inner sep=2pt]{\begin{minipage}{5cm}\textbf{Plan de production} (\cref{part:production planning})\\\emph{Modèles de stock en temps discret}\end{minipage}} -- (\pdp,\timelinedown);
+
+
+  % Scheduling decision
+  \draw[-latex] (\scheduling,{\timelineup+\legend}) node[anchor=north west, inner sep=2pt]{\textbf{Ordonnancement}} -- (\scheduling,\timelineup);
+
+  \end{scope}
+
+\end{tikzpicture}

@@ -131,6 +131,11 @@
 \usepackage{siunitx}  % International System of Units (SI).
 \usepackage{eurosym}  % Euro symbol
 
+\renewcommand{\le}{\leqslant}
+\renewcommand{\leq}{\leqslant}
+\renewcommand{\ge}{\geqslant}
+\renewcommand{\geq}{\geqslant}
+
 % Environnement outdent (centre)
 \newenvironment{outdent}
 {\begin{list}{}{\leftmargin-2cm\rightmargin\leftmargin}\centering\item\relax}
@@ -170,6 +175,7 @@
 \newtheorem{conj}{Conjecture}
 \newtheorem{example}{Example}
 \newtheorem*{question}{Open question}
+\newtheorem*{questionfr}{Question ouverte}
 \newtheorem{proc}{Procedure}
 
 \theoremstyle{remark}

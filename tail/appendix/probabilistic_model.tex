@@ -36,7 +36,7 @@ We refer to \citet[Chapter 49]{Kotz2000} for the details of the proofs of classi
 
 
 The \emph{Dirichlet distribution} denoted by $\Dir(\alpha)$ is a family of continuous multivariate probability distributions.
-It is parametrized by a number $K \ge 2$ of categories and a vector $\alpha=\bracket{\alpha_1,\ldots,\alpha_K}\in\bracket{\RR_+^*}^K$ of positive real numbers called concentrations parameters.
+It is parametrized by a number $K \ge 2$ of categories and a vector $\alpha=\bracket{\alpha_1,\ldots,\alpha_K}\in\bracket{\RR_+^*}^K$ of positive real numbers called concentration parameters.
 Its support is the $(K-1)$-dimensional simplex $\crbracket{\bracket{x_1,\ldots,x_K}\in\RR_+^K\ \left|\ \sum_{k=1}^K x_k = 1\right.}$.
 
 
@@ -112,7 +112,7 @@ The distribution of part of the variables of a Dirichlet conditionally to the ot
 \subsubsection{Generating Dirichlet distributed variables}
 
 
-Realizations of the random vector $\va x=\bracket{\va x_1,\ldots,\va x_K}\sim\Dir\bracket{\alpha_1,\ldots,\alpha_K}$ can be get from a source of Gamma distributed random variates using Algorithm~\ref{alg:dirichlet:generation} described in~\citet{Frigyik2010}.
+Realizations of the random vector $\va x=\bracket{\va x_1,\ldots,\va x_K}\sim\Dir\bracket{\alpha_1,\ldots,\alpha_K}$ can be obtained from a source of Gamma distributed random variables using Algorithm~\ref{alg:dirichlet:generation} described in~\citet{Frigyik2010}.
 
 
 \begin{algorithm}
@@ -141,7 +141,7 @@ Realizations of the random vector $\va x=\bracket{\va x_1,\ldots,\va x_K}\sim\Di
 \end{algorithm}
 
 
-\begin{prop}
+\begin{prop}\label{prop:appendix:dirichlet-generation}
 For any $\alpha_1,\ldots,\alpha_K$ positive, Algorithm~\ref{alg:dirichlet:generation} samples the Dirichlet distribution $\Dir\bracket{\alpha}$.
 \end{prop}
 
@@ -165,7 +165,7 @@ For any $\alpha_1,\ldots,\alpha_K$ positive, Algorithm~\ref{alg:dirichlet:genera
 
 
 Other methods exist to generate random variables following a Dirichlet distribution.
-But this one is easy to understand and to implement because the C++ standard library have a gamma generator since the 2011 edition.
+But this one is easy to understand and to implement because the C++ standard library has a gamma generator since the 2011 edition.
 
 
 \section{Proofs of \cref{sec:PDP:numerical-experiments:drawing-realization-of-demand}}
@@ -291,7 +291,7 @@ We now prove that Algorithm~\ref{alg:demand:initial-sampling} samples the ``expa
 
 
 \begin{proof}[Proof of \cref{prop:correctness-expanded-dirichlet-generator}]
-It is well-known that, if $y_k\sim\Gamma\bracket{\alpha_k,1}$ for each $k\in\range{K}$, then the random vector $\frac{1}{\sum_{k=1}^K y_k}\bracket{y_1,\ldots,y_K}\sim\Dir\bracket{\alpha_1,\ldots,\alpha_K}$ (see \cref{sec:reminders:gamma-and-dirichlet-distributions}).
+Algorithm~\ref{alg:dirichlet:generation} is a subroutine of Algorithm~\ref{alg:demand:initial-sampling} and \cref{prop:appendix:dirichlet-generation} gives that, if $y_k\sim\Gamma\bracket{\alpha_k,1}$, then the random vector $\frac{1}{\sum_{k=1}^K y_k}\bracket{y_1,\ldots,y_K}\sim\Dir\bracket{\alpha_1,\ldots,\alpha_K}$.
 Thus, the last step produces a vector $\demand$ such that $\frac{1}{\tilde{\demand}_0}\bracket{\demand_1,\ldots,\demand_K}\sim\Dir\bracket{\alpha_1,\ldots,\alpha_K}$ with $\tilde{\demand}_0 = \sum_{k=1}^K\tilde{\demand}_k$ and $\alpha_0 = \frac{1}{\gamma^2}-1$ and $\alpha_k=\frac{\tilde{\demand}_k}{\tilde{\demand}_0}\alpha_0$, for $k\in\range{K}$.
 So Algorithm~\ref{alg:demand:initial-sampling} returns a vector with an ``expanded Dirichlet'' distribution $\cD\bracket{\gamma,\tilde{\demand}_1,\ldots,\tilde{\demand}_K}$.
 \end{proof}
@@ -305,7 +305,7 @@ When proposing a probabilistic model for demand distribution, we face many objec
 First it is desirable that the demand expectation be equal to its historical forecast, which is ensured by \cref{enum:PDP:random-demand-property:expectation} of \cref{prop:demand-distribution:properties}.
 Second, a main hypothesis of the model is that the total sum of demand does not depend of the realization.
 The chosen distribution ensures this properties thanks to \cref{enum:PDP:random-demand-property:constant-volume}.
-Last, every company do not have the same uncertainty on forecast demand.
+Last, every company does not have the same uncertainty on forecast demand.
 For example, some companies may have more historical data to rely on to produce forecast or some sectors may rely on firm command whereas other may not.
 Thus our model should be able to take into account this reliability.
 
@@ -381,7 +381,7 @@ Since $v\in\bracket{0,1}$, we have $\gamma\in\bracket{0,1}$ and the result follo
 
 
 \begin{lem}\label{lem:PDP:numerical-experiments:interior}
-Let $K$ be an integer greater than 2.
+Let $K$ be an integer non-smaller than 2.
 We define
 \begin{equation}
   \delta^{K-1} = \crbracket{\bracket{x_1,\ldots,x_K}\in\bracket{0,1}^K \bigg| \sum_{k=1}^K x_k = 1}
@@ -393,7 +393,7 @@ and
      & x & \mapsto & \frac{\sum_{k=1}^K\sqrt{\frac{1}{x_k}-1}}{\sum_{k=1}^K\bracket{\frac{1}{x_k}-1}}
   \end{array}
 \end{equation}
-Then, $g$ reaches is supremum which is $\frac{1}{\sqrt{K-1}}$
+Then, $g$ reaches its supremum, which is $\frac{1}{\sqrt{K-1}}$
 \end{lem}
 
 

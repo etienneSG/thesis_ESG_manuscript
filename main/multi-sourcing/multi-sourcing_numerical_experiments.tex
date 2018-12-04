@@ -4,65 +4,8 @@
 
 
 We test our method on datasets from Argon Consulting’s clients.
-The objective is to compare the multi-sourcing currently in use by the client to the multi-sourcing computed from our method.
+Moreover, we compare the multi-sourcing currently in use by the client to the multi-sourcing computed from our method.
 In addition to comparing their cost, several Key Performance Indicators (KPI) will be used as the  service level (fill rate and cycle), the proportion of multi-sourced items, etc.
-
-
-% \section{Preliminary discussion}
-
-
-% We are unable to evaluate the quality of a solution $(\open_p^i)_{p,i}$.
-% To do so, we must check if $(\open_p^i)_{p,i}$ is feasible for Problem~\eqref{eq:stoch-multi-sourcing:linearized} with a huge number of scenarios.
-% Although Problem~\eqref{eq:stoch-multi-sourcing:linearized} becomes a linear program (without integer variables), its size prevents us from using a solver to frontally solve it.
-
-
-% % \esgil{Faire tourner un test avec $m=100000$ scenarios.}
-
-
-% Thus, we choose another way to evaluate our solution, which actually is also a way to assess the relevance of the original problem.
-% We do the following to ``evaluate'' a solution $(\open_p^i)_{p,i}$.
-% \begin{itemize}
-%   \item Draw $n=10000$ scenarios of demand.
-%   \item For each scenario, solve a slightly modified version of the second stage (which is now deterministic) maximizing the fill rate service level and where $\AVaR_{1-\servicelvl}\bracket{\inventory_t^i}\le0$ is removed.
-%   \item Return the average of the KPI of multi-sourcing (as the fill rate service level, the average workload of the plants or the average inventory).
-% \end{itemize}
-
-
-% We choose to remove the $\AVaR$ constraint because in deterministic case, $\AVaR_{1-\servicelvl}\bracket{\inventory_t^i}=-\inventory_t^i$ and the $\AVaR$ constraint becomes $\inventory_t^i\ge0$.
-% Thus, in many cases, the deterministic model may be infeasible whereas the stochastic model may not be since $\AVaR$ may authorized negative values.
-
-
-% Consider the following example.
-% We have one item, one plant with capacity $\capacity=100$, three periods, and two scenarios with same probability.
-% The parameter $\servicelvl$ is chosen equal to $0\%$ which gives $\AVaR_{100\%}\bracket{\va\inventory_t^i} = -\espe\sqbracket{\va\inventory_t^i}$.
-% The other parameters of the multi-sourcing problem are given in \cref{tab:multi-sourcing:numerical-experiments:example}.
-% \begin{table}[h]
-% \subfloat[Demand $\demand_{1,\omega}^i$]
-% {\begin{tabular}{@{\extracolsep{\fill}}lccc@{\extracolsep{\fill}}}
-% \cline{2-4}
-%          & period 1 & period 2 & period 3 \\
-% \hline
-% scenario 1 & 101    & 98       & 101 \\
-% scenario 2 & 99     & 102      & 99  \\
-% \hline
-% \end{tabular}}
-% \hfill
-% \subfloat[Other parameters]
-% {\begin{tabular}{p{2cm}lp{2cm}}
-% & $\rate_{p,1}^i = 1$   & \\
-% & $\lb_{p,1}^i   = 0$   & \\
-% & $\ub_{p,1}^i   = 100$ & \\
-% \end{tabular}}
-% \caption{Parameters of the counterexample}
-% \label{tab:multi-sourcing:numerical-experiments:example}
-% \end{table}
-% Every scenario is infeasible in deterministic case.
-% However, the complete scenario tree is feasible in stochastic case.
-% (It is straightforward to construct an example with as many scenarios as desired and every scenario infeasible in deterministic settings and the whole set of scenarios feasible in stochastic settings.)
-
-
-% Secondly, in Problem~\eqref{eq:stoch-multi-sourcing}, the $\AVaR$ constraint aims at controlling service level and thus backorder.
-% Since this constraint is removed and since the current objective is constant and equal to the cost of the fixed assignment $(\open_p^i)_{p,i}$, we choose to use the fill rate service level as a second order objective to maximize.
 
 
 \section{Simulation}
@@ -72,30 +15,17 @@ Simulation is based on real datasets from Argon Consulting’s clients.
 We first retrieve the historical data and the current multi-sourcing to establish a comparison point.
 
 
-% The simulation emulates the behavior of people making multi-sourcing decisions.
 First, we define plants data (capacities, internal production times, eligibility or not to be given the ability to produce items) and a forecast demand which is a function of the current period and of the past outcomes.
 Then, we construct our model defined in \cref{chap:multi-sourcing:stochastic}.
 Finally, we solve it and get a multi-sourcing decision.
-This first step enables to compare current and computed multi-sourcing costs.
 
 
-Due to dataset sizes, the number of scenarios to compute the optimal multi-sourcing is small (100 in our experiments).
-In order to show the validity of the obtained assignment, we fix it and compute Problem~\eqref{eq:stoch-multi-sourcing:linearized} with a big number of scenarios (typically 10000).
-This problem is a big linear program but have no integer variables.
-It can be solved in some cases.
-Two cases are possible.
-If problem is infeasible, it is likely that the $\AVaR$ constraint is not satisfied for this assignment.
-Otherwise, it is likely that the $\AVaR$ constraint is satisfied and we get other KPI's like the fill rate or the cycle service level.
-
-
-% However, to show its practical efficiency, we fixed these decisions and emulated the behavior of people making production planning decisions (\ie mid-term decisions) subject to multi-sourcing decisions (\ie long-term decisions) already fixed.
-% We generate a sample of realizations of the demand.
-% For each realization, we solve a slightly modified version of the second stage (which is now deterministic) maximizing the fill rate service level and where $\AVaR_{1-\servicelvl}\bracket{\inventory_t^i}\le0$ is removed.
-% Indeed, in deterministic case, $\AVaR_{1-\servicelvl}\bracket{\inventory_t^i}\le0$ is equivalent to $\inventory_t^i\ge0$.
-% Yet, in many cases, deterministic model is infeasible.
-% (This is all the more foreseeable because we do not use robust constraint.)
-% Moreover, when making a production planning, if there is not enough flexibility or capacity, a production planning is always returned satisfying as well as possible a service level objective.
-% We then get several KPI such as fill rate service level, cycle service level, holding costs.
+The question of whether this solution is feasible or not (\ie satisfies th $\AVaR$ constraint) remains open, since, due to dataset sizes, the number of scenarios is small (100 in our experiments).
+In order to show the validity of the obtained assignment, we fix it and compute Problem~\eqref{eq:stoch-multi-sourcing:linearized} with a larger number of scenarios (typically 10000).
+This problem is a big linear program but has no integer variables.
+If the solver succeeds in finding a feasible solution, it is likely that the $\AVaR$ constraint is satisfied and we then compute other KPI's like the fill rate or the cycle service level, or the multi-sourcing level.
+If the solver proves the problem is infeasible, it is likely that the $\AVaR$ constraint is not satisfied and that the assignment is infeasible.
+Finally, no conclusion can be drawn if time limit is reached before finding a solution.
 
 
 \section{Instances}
@@ -104,29 +34,20 @@ Otherwise, it is likely that the $\AVaR$ constraint is satisfied and we get othe
 \subsection{Datasets}
 
 
-% In practice, we have access to every technical characteristics of the plant (like capacity, internal production time) or assignment costs.
-% We also have the forecast demand and the quantities really produced.
-% However, as usual, real demand may be slightly different from historical one.
-% Indeed, it is almost always impossible to trace if, after a stock-out, a client changes its mind for another item or do not buy anything.
-% About opening costs, they are not straightforward.
-% Discussions lead to consider the time loss to install assembly lines, to train employees and to ramp up production as the opening cost.
-
-
 We use two instances provided by Argon Consulting's clients: Mel and Lux.
 
 
 The Mel dataset is a toy problem.
-It is a simplified dataset created by a client to enable student from \'Ecole des Ponts to train and to propose new approach of multi-sourcing.
-%We use it as a test case due to its size.
+It is a simplified dataset created by a client to enable the students from \'Ecole des Ponts to train and propose new approaches to multi-sourcing.
 
 
 The Lux dataset comes from the luxury industry.
 In the original dataset, there were 500 different items.
-However, the remaining 100 items of Lux dataset represent 80\% of the production (and of the sells).
+However, we keep only 100 items of Lux dataset, which represent 80\% of the production (and of the sales).
 Due to limited computational resources, the client prefers that the 400 items excluded from Lux dataset be mono-sourced to concentrate our effort on potential multi-sourced items.
 
 
-\cref{tab:multi-sourcing:instances-characteristics} summarize the characteristics of the two instances used for tests.
+\cref{tab:multi-sourcing:instances-characteristics} summarizes the characteristics of the two instances used for tests.
 \begin{table}[h]
 \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}llr@{\extracolsep{\fill}}c@{\extracolsep{\fill}}rr@{\extracolsep{\fill}}c@{\extracolsep{\fill}}r@{\extracolsep{\fill}}}
 \hline
@@ -159,20 +80,10 @@ Assignment cost & $\affect_p^i$ & $8392$ &--& $82196$ & $3516$ &--& $62234$
 \end{table}
 
 
-The parameter $\servicelvl$ which control the service level objective is chosen in $\crbracket{70\%,85\%,95\%}$.
+The parameter $\servicelvl$, which controls the service level is chosen in $\crbracket{70\%,85\%,95\%}$.
 The number $m$ of scenarios used to solve (2SA-$m$) is fixed to $100$ due to tractability restrictions.
-The time limit to return a solution has been set to $20$ minutes because the clients wants to try several service level target.
-Thus, the parameters for the heuristic defined in \cref{sec:multi-sourcing:stochastic:solving-method:heuristic} are $N=10$ and $\tau=120$.
-
-
-% Other rules are industrial ones.\vl{unclear}
-% For example, capacity of a plant to a specific item must never exceed 25\% of the plants capacity.
-% Indeed, if the demand for this item drastically drop, the plants must be able to rely on other item.
-% This constraint is included in the upper bound $\ub_{pt}^i$.
-
-
-% Finally, we compute a \emph{green field} multi-sourcing, \ie we do not take into account decrease of internal computation times due to ramp up production.
-% Argon Consulting's client want to compare its actual multi-sourcing to the ideal one.
+The time limit to return a solution has been set to $20$ minutes because the client wants to try several service levels.
+Thus, the parameters for the heuristic defined in \cref{sec:multi-sourcing:stochastic:solving-method:heuristic} are $N=10$ and $\tau=120$ seconds.
 
 
 \subsection{Demand distribution}
@@ -182,41 +93,35 @@ Thus, the parameters for the heuristic defined in \cref{sec:multi-sourcing:stoch
 %\esgil{Completer après la réunion du 05/09 avec Fabrice, Frédéric et Vincent.}
 
 
-As explained in \cref{chap:business-context}, we study the ability to face variations of the product mix and assume that we already known the cumulative working hours of production $\sum_{t=1}^{\horizon}\sum_{i\in\REF}\rate^i\va\demand_t^i$.
-Since production rate are not the same between item, we deal with the production hours $\bracket{\va p_t^i}_{t,i}=\bracket{\rate^i\va\demand_t^i}_{t,i}$ as random variables instead of the demand $\bracket{\va\demand_t^i}_{t,i}$.
+As explained in \cref{chap:business-context}, we study the ability to face variations of the product mix and assume that we already know the cumulative working hours of production $\sum_{t=1}^{\horizon}\sum_{i\in\REF}\rate^i\va\demand_t^i$.
 
 
-We generate randomness from historical data using ``expanded Dirichlet'' distributions as in \cref{chap:PDP:numerical-experiments} and we refer to \cref{sec:PDP:numerical-experiments:drawing-realization-of-demand} for the properties of the distribution of the $\bracket{\va p_t^i}_{t,i}$ (\cref{prop:demand-distribution:properties}) and for the definitions of a generator of vectors with this distribution (\cref{proc:demand:initial-sampling}).
+We generate randomness from historical data using ``expanded Dirichlet'' distributions as in \cref{chap:PDP:numerical-experiments}.
+But this time, we assume that $(\rate^i\va\demand_t^i)$ follows an ``expanded Dirichlet'' distribution.
+We refer to \cref{sec:PDP:numerical-experiments:drawing-realization-of-demand} for the properties of this distribution and to Algorithm~\ref{alg:demand:initial-sampling} to sample it.
 
 
-The parameters of the ``expanded Dirichlet'' distribution used to generate the working hours of production are computing from the historical forecast demand and are equal to $\rate^i\bar{\demand}_t^i=\bar{p}_t^i$ for the $\tilde{p}_t^i$ and $\gamma$ is set equal to
+The parameters of the ``expanded Dirichlet'' distribution used to generate the working hours of production are computed from the historical forecast demand and $\gamma$ is set equal to
 \begin{equation}
   \gamma
   =
   v\frac
   {\sum_{t=1}^{\horizon}\sum_{i\in\REF} \sqrt{\frac{\bar{p}_0}{\bar{p}_t^i}-1}}
-  {\sum_{t=1}^{\horizon}\sum_{i\in\REF} \bracket{\frac{\bar{p}_0}{\bar{p}_t^i}-1}}
+  {\sum_{t=1}^{\horizon}\sum_{i\in\REF} \bracket{\frac{\bar{p}_0}{\bar{p}_t^i}-1}}.
 \end{equation}
-with $\bar{p}_0 = \sum_{t=1}^{\horizon}\sum_{i\in\REF}\rate^i\bar{\demand}_t^i$.
 The parameter $\gamma$ is defined from another parameter $v$ which we call \emph{volatility} and which represents the ratio between standard deviation and expectation of a random variable.
-It can be easily interpret by companies.
+It can be easily interpreted.
 Justification of such a choice for $\gamma$ can be found in \cref{sec:PDP:numerical-experiments:instances:fitting-parameters}.
 
 
 As in \cref{chap:PDP:numerical-experiments}, results may depend on the number of generated scenarios.
-Thus, we would like to apply the same method as the one described in \cref{sec:PDP:numerical-experiments:k-means}, that is:
+If we had the time to implement method of \cref{sec:PDP:numerical-experiments:k-means}, we would like to apply the same scheme, that is:
 \begin{itemize}
-  \item using Algorithm~\ref{alg:demand:initial-sampling} to generate a sample of $M$ scenarios,
-  \item initializing $K$ with $m=100$,
-  \item using $K$-means algorithm to classify the $M$ scenarios into $m$ clusters.
+  \item use Algorithm~\ref{alg:demand:initial-sampling} to generate a sample of $M$ scenarios,
+  \item initialize $K$ with $m=100$,
+  \item use $K$-means algorithm to classify the $M$ scenarios into $m$ clusters.
 \end{itemize}
 Then, our set $\scenarios$ of representative scenarios used in \cref{eq:stoch-multi-sourcing:linearized} would be composed of the prototype of each cluster, with a probability equal to the number of scenarios in its cluster divided by $M$.
-
-
-% Since we know the historical demand, the generate demand of an item at a period should have the same expectation which explains \cref{enum:multi-sourcing:random-demand-property:expectation}.
-% \cref{enum:multi-sourcing:random-demand-property:constant-volume} is justified by our study of flexibility.
-% Indeed, as explained in \cref{chap:business-context}, we study the ability to face variations of the product mix and assume that we already known the cumulative working hours of production $\sum_{t=1}^{\horizon}\sum_{i\in\REF}\rate^i\va\demand_t^i$.
-% In \label{enum:multi-sourcing:random-demand-property:variance}, there remains a unique unfixed parameter $\gamma$ which enables to chose the level of randomness. As we can see in \cref{eq:multi-sourcing:numerical-experiments:demand:variance}, the greater $\gamma$ is, the greater the variances of demand are.
 
 
 \section{Numerical results}
@@ -229,55 +134,26 @@ Then, our set $\scenarios$ of representative scenarios used in \cref{eq:stoch-mu
 C++11 has been chosen for the implementations and Gurobi 6.5.1~\citet{gurobi} was used to solve the model on a PC with 32 processor Intel\textregistered\ Xeon\texttrademark\ E5-2667 @ 3.30GHz and 192Go RAM.
 
 
-There are two ways of measuring the output.
-First, they can be made \emph{in-sample}.
-In this cases, the obtained solution of Problem~\eqref{eq:stoch-multi-sourcing:linearized} is used to compute the KPI as if it stand for the whole possible realizations of the randomness.
-On the other hand, they can be made \emph{out-of-sample}.
-We generate $n=10000$ new realizations of demand.
-Then, we solve Problem~\eqref{eq:stoch-multi-sourcing:linearized} with the assignment obtained from this optimization and these $n$ new realizations of the demand.
-% In this case, a new linear program is created from the deterministic version~\eqref{eq:det-multi-sourcing} and from the returned assignment $\bracket{\open_p^{i*}}_{p,i}$.
-% Then, we generate $n=10000$ realizations of demand and solve $n$ times the following deterministic program (one for each realization of demand)
-% \begin{subequations}\label{eq:det-multi-sourcing:second-step:second-step}
-%   \begin{align+}
-%     \min\quad & \rlap{$\ds \sum_{i\in\REF} w^i f\bracket{(\quantity_{pt}^i)_{p,t},(\inventory_t^i)_t}$}
-%     \label{eq:det-multi-sourcing:second-step:objective}
-%     \\
-%     \st\quad & \ds \inventory_t^i = \inventory_{t-1}^i + \sum_{p\in\plants}\quantity_{pt}^i - \demand_t^i && \forall t\in\range{\horizon},\ \forall i\in\REF,
-%     \label{eq:det-multi-sourcing:second-step:inventory-dynamic}
-%     \\
-%     & \ds \sum_{i\in\REF}\rate_{pt}^i\quantity_{pt}^i \leq \capacity_{pt} && \forall t\in\range{\horizon},\ \forall p\in\plants,
-%     \label{eq:det-multi-sourcing:second-step:capacity}
-%     \\
-%     & \ds \lb_{pt}^i \open_p^{i*} \le \rate_{pt}^i\quantity_{pt}^i \le \ub_{pt}^i \open_p^{i*} && \forall t\in\range{\horizon},\ \forall p\in\plants, \forall i\in\REF,
-%     \label{eq:det-multi-sourcing:second-step:big-M}
-%     \\
-%     & \ds \quantity_{pt}^i \ge 0 && \forall t\in\range{\horizon},\ \forall p\in\plants, \forall i\in\REF.
-%     \label{eq:det-multi-sourcing:second-step:positivity}
-%   \end{align+}
-% \end{subequations}
-% where $f\bracket{(\quantity_{pt}^i)_{p,t},(\inventory_t^i)_t}$ is the fill rate service level of item $i$ given by
-% \begin{equation}
-%   f\bracket{(\quantity_{pt}^i)_{p,t},(\inventory_t^i)_t} = \frac{\sum_{t=1}^{\horizon}\min\bracket{(\inventory_{t-1}^i)^++\quantity_t^i,\ \demand_t^i}}{\sum_{t=1}^{\horizon}\demand_t^i}
-% \end{equation}
-% and $w^i$ is the weight of item $i$ in the global fill rate service level KPI and is given by
-% \begin{equation}\label{eq:multi-sourcing:numerical-experiments:KPI:weight}
-%   w^i=\frac{\rate^i}{\sum_{j\in\REF}\rate^j}.
-% \end{equation}
-% Problem~\eqref{eq:det-multi-sourcing:second-step:second-step} can clearly be written as a linear program with only continuous variables.
+There are two ways of measuring the KPI's.
+First, they can be measured \emph{in-sample} (\ie with the $m=100$ scenarios used to decide multi-sourcing).
+In this case, the obtained solution of Problem~\eqref{eq:stoch-multi-sourcing:linearized} is used to compute the KPI as if it stood for the whole possible realizations of the randomness.
+On the other hand, they can be measured \emph{out-of-sample}.
+We generate $m=10000$ new realizations of the demand.
+Then, we solve Problem~\eqref{eq:stoch-multi-sourcing:linearized} with the assignment obtained from this optimization and these $m$ new realizations of the demand.
 
 
-Simulation results for Mel dataset without using the heuristic are given in \cref{tab:multi-sourcing:results:mel:without-heuristic} and using heuristic in \cref{tab:multi-sourcing:results:mel:with-heuristic}.
-Simulation results for Lux dataset using heuristic are given in \cref{tab:multi-sourcing:results:lux:with-heuristic}.
+Simulation results for Mel dataset with a frontal resolution with a solver are given in \cref{tab:multi-sourcing:results:mel:without-heuristic} and with the use of the Algorithm~\ref{alg:multi-sourcing:MIP:heuristic} in \cref{tab:multi-sourcing:results:mel:with-heuristic}.
+Simulation results for Lux dataset with the use of the Algorithm~\ref{alg:multi-sourcing:MIP:heuristic} are in \cref{tab:multi-sourcing:results:lux:with-heuristic}.
 
 
 The inputs are decomposed as follows.
 The parameter $\servicelvl$ is the value used to control the desired service level, \ie the risk level used in the $\AVaR$ constraint.
-The volatility $v$ is the value used in the ``expanded Dirichlet'' distribution that generate the random realizations of the demand (see \cref{sec:multi-sourcing:numerical-experiments:demand-distribution}).
+The volatility $v$ is the value used in the ``expanded Dirichlet'' distribution that generates the random realizations of the demand (see \cref{sec:multi-sourcing:numerical-experiments:demand-distribution}).
 
 
 The outputs are decomposed as follows.
 The row \emph{Solver Objective} (resp. \emph{Heuristic Objective}) gives the assignment costs returned by the solver (resp. the heuristic) at the end of the time allowed to find a solution.
-This is this objective~\eqref{eq:stoch-multi-sourcing:linearized:objective} and it is expressed in k\euro{}.
+This is the objective~\eqref{eq:stoch-multi-sourcing:linearized:objective} and it is expressed in k\euro{}.
 The row \emph{Multi-sourcing} gives the percentage of multi-sourced families (\ie families produced on two plants or more) and the row \emph{Multi-sourcing (max)} gives the maximal number of plants producing one item.
 
 
@@ -287,23 +163,26 @@ The row $\prob\sqbracket{s\ge0}$ measures in-sample the probability (in \%) that
 \end{equation}
 
 
+The rows \emph{GAP}, \emph{Solver LB} \emph{Cont. relax.}, and \emph{Time for bound} are measured in-sample.
 The row \emph{GAP} is the gap (in \%) between the objective value and the best known lower bound on the problem.
 The row \emph{Solver LB} is the lower bound (in k\euro{}) found by the solver when the solver is frontally used to solve Problem~\eqref{eq:stoch-multi-sourcing:linearized}.
 The row \emph{Cont. relax.} is the value (in k\euro{}) of the continuous relaxation of Problem~\eqref{eq:stoch-multi-sourcing:linearized}.
-The row \emph{Time for bound} is the time (in seconds) needed to get the bound written on the previous line of the table.
-These KPI's are measured in-sample.
+The row \emph{Time for bound} is the time (in seconds) needed to get the bound written on the previous row of the table.
 
 
-The row \emph{Cycle service level} and \emph{Fill rate service level} are measured out-of-sample.
+The row \emph{Feasibility} says whether Problem~\eqref{eq:stoch-multi-sourcing:linearized} with the fixed obtained assignment and $m=10000$ scenarios is feasible (\emph{Yes}), infeasible (\emph{No}), or whether time limit was reached \emph{Limit}).
+
+
+The rows \emph{Cycle service level} and \emph{Fill rate service level} are measured out-of-sample.
 They are computed using \cref{eq:pdp:numerical-experiments:KPI:fill-rate-service-level} and \cref{eq:pdp:numerical-experiments:KPI:cycle-service-level} by replacing $w^i$ by
 \begin{equation}\label{eq:multi-sourcing:numerical-experiments:KPI:weight}
   w^i=\frac{\rate^i}{\sum_{j\in\REF}\rate^j}.
 \end{equation}
 In this case, the item are weighted by their internal production time.
-These two KPI's are averaged over the $n=10000$ scenarios and are expressed in \%.
+These two KPI's are averaged over the $m=10000$ scenarios and are expressed in \%.
 
 
-The row \emph{Evaluation time} gives the time (in seconds) needed to solve Problem~\eqref{eq:stoch-multi-sourcing:linearized} with fix assignment and $n=10000$ scenarios.
+The row \emph{Evaluation time} gives the time (in seconds) needed to solve Problem~\eqref{eq:stoch-multi-sourcing:linearized} with the fixed obtained assignment and $m=10000$ scenarios.
 The time limit of the solver is set equal to 24 hours.
 
 
@@ -321,9 +200,11 @@ $\beta$ & \multicolumn{6}{c|}{Volatility $v$} & \multicolumn{1}{c}{Output}
 \\
      & 93.8 & 93.5 & 93.3 & 91.2 & 90.1 & 91.4 & $\prob\sqbracket{s\ge0}$ 
 \\ \cdashline{2-8}[2pt/2pt]
-     & 71.2 & 74.4 & 73.4 & 78.2 & inf. & 82.8 & Cycle service level
+     & Yes & Yes & Yes & Yes & No & Yes & Feasibility
 \\
-     & 90.5 & 96.0 & 94.8 & 94.1 & inf. & 92.4 & Fill rate service level
+     & 71.2 & 74.4 & 73.4 & 78.2 & \multicolumn{1}{c|}{--} & 82.8 & Cycle service level
+\\
+     & 90.5 & 96.0 & 94.8 & 94.1 & \multicolumn{1}{c|}{--} & 92.4 & Fill rate service level
 \\
      & 22 & 28 & 86 & 34 & 61 & 38 & Evaluation time
 \\ \hline
@@ -341,9 +222,11 @@ $\beta$ & \multicolumn{6}{c|}{Volatility $v$} & \multicolumn{1}{c}{Output}
 \\
      & 1200 & 1200 & 1200 & 1200 & 1200 & \multicolumn{1}{c|}{--} & Time for bound
 \\ \cdashline{2-8}[2pt/2pt]
-     & 75.1 & 67.6 & 61.9 & 80.4 & inf. & \multicolumn{1}{c|}{--} & Cycle service level
+     & Yes & Yes & Yes & Yes & Yes & \multicolumn{1}{c|}{--} & Feasibility
 \\
-     & 94.1 & 94.2 & 94.3 & 95.3 & inf. & \multicolumn{1}{c|}{--} & Fill rate service level
+     & 75.1 & 67.6 & 61.9 & 80.4 & \multicolumn{1}{c|}{--} & \multicolumn{1}{c|}{--} & Cycle service level
+\\
+     & 94.1 & 94.2 & 94.3 & 95.3 & \multicolumn{1}{c|}{--} & \multicolumn{1}{c|}{--} & Fill rate service level
 \\
      & 17 & 21 & 40 & 25 & 43 & \multicolumn{1}{c|}{--} & Evaluation time
 \\ \hline
@@ -355,14 +238,16 @@ $\beta$ & \multicolumn{6}{c|}{Volatility $v$} & \multicolumn{1}{c}{Output}
 \\
      & 99.6 & 99.6 & 99.3 & 99.0 & 99.0 & \multicolumn{1}{c|}{--} & $\prob\sqbracket{s\ge0}$
 \\ \cdashline{2-8}[2pt/2pt]
-     & 72.1 & 76.6 & inf. & inf. & inf. & \multicolumn{1}{c|}{--} & Cycle service level
+     & Yes & Yes & Yes & No & No & \multicolumn{1}{c|}{--} & Feasibility
 \\
-     & 95.5 & 95.6 & inf. & inf. & inf. & \multicolumn{1}{c|}{--} & Fill rate service level
+     & 72.1 & 76.6 & inf. & \multicolumn{1}{c|}{--} & \multicolumn{1}{c|}{--} & \multicolumn{1}{c|}{--} & Cycle service level
+\\
+     & 95.5 & 95.6 & inf. & \multicolumn{1}{c|}{--} & \multicolumn{1}{c|}{--} & \multicolumn{1}{c|}{--} & Fill rate service level
 \\
      & 16 & 18 & 1204 & 863 & 1880 & \multicolumn{1}{c|}{--} & Evaluation time
 \\ \hline
 \end{tabular*}
-\caption{Results for Mel dataset (without heuristic)}
+\caption{Results for Mel dataset (frontally solved with the solver)}
 \label{tab:multi-sourcing:results:mel:without-heuristic}
 \end{table}
 
@@ -381,6 +266,8 @@ $\beta$ & \multicolumn{6}{c|}{Volatility $v$} & \multicolumn{1}{c}{Output}
 \\
      & 95.5 & 93.8 & 92.7 & 89.7 & 88.8 & 90.1 & $\prob\sqbracket{s\ge0}$
 \\ \cdashline{2-8}[2pt/2pt]
+     & Yes & Yes & Yes & Yes & Yes & Yes & Feasibility
+\\
      & 83.6 & 83.4 & 72.1 & 82.7 & 88.7 & 85.3 & Cycle service level
 \\
      & 96.5 & 97.5 & 96.2 & 95.9 & 96.6 & 94.0 & Fill rate service level
@@ -401,9 +288,11 @@ $\beta$ & \multicolumn{6}{c|}{Volatility $v$} & \multicolumn{1}{c}{Output}
 \\
      & 3.8 & 13.8 & 3.5 & 2.4 & 13.7 & 3.6 & Time for bound
 \\ \cdashline{2-8}[2pt/2pt]
-     & 79.4 & 75.0 & 91.0 & 82.7 & inf. & 86.5 & Cycle service level
+     & Yes & Yes & Yes & Yes & No & Yes & Feasibility
 \\
-     & 95.2 & 96.3 & 98.4 & 95.7 & inf. & 95.1 & Fill rate service level
+     & 79.4 & 75.0 & 91.0 & 82.7 & \multicolumn{1}{c|}{--} & 86.5 & Cycle service level
+\\
+     & 95.2 & 96.3 & 98.4 & 95.7 & \multicolumn{1}{c|}{--} & 95.1 & Fill rate service level
 \\
      & 42 & 35 & 33 & 27 & 55 & 27 & Evaluation time
 \\ \hline
@@ -415,14 +304,16 @@ $\beta$ & \multicolumn{6}{c|}{Volatility $v$} & \multicolumn{1}{c}{Output}
 \\
      & 99.2 & 99.8 & 99.8 & 99.0 & 99.1 & \multicolumn{1}{c|}{--} & $\prob\sqbracket{s\ge0}$
 \\ \cdashline{2-8}[2pt/2pt]
-     & 76.2 & 76.7 & 72.7 & inf. & inf. & inf. & Cycle service level
+     & Yes & Yes & Yes & No & No & No & Feasibility
 \\
-     & 95.0 & 97.1 & 93.9 & inf. & inf. & inf. & Fill rate service level
+     & 76.2 & 76.7 & 72.7 & \multicolumn{1}{c|}{--} & \multicolumn{1}{c|}{--} & \multicolumn{1}{c|}{--} & Cycle service level
+\\
+     & 95.0 & 97.1 & 93.9 & \multicolumn{1}{c|}{--} & \multicolumn{1}{c|}{--} & \multicolumn{1}{c|}{--} & Fill rate service level
 \\
      & 25 & 30 & 24 & 2333 & 2394 & 6739 & Evaluation time
 \\ \hline
 \end{tabular*}
-\caption{Results for Mel dataset (with heuristic)}
+\caption{Results for Mel dataset (solved with Algorithm~\ref{alg:multi-sourcing:MIP:heuristic})}
 \label{tab:multi-sourcing:results:mel:with-heuristic}
 \end{table}
 
@@ -441,6 +332,8 @@ $\beta$ & \multicolumn{6}{c|}{Volatility $v$} & \multicolumn{1}{c}{Output}
 \\
      & 99.4 & 99.3 & 99.2 & 98.7 & 98.6 & 98.5 & $\prob\sqbracket{s\ge0}$
 \\ \cdashline{2-8}[2pt/2pt]
+     & Yes & Yes & Yes & Yes & Yes & Yes & Feasibility
+\\
      & 77.9 & 77.3 & 82.9 & 72.0 & 88.2 & 92.0 & Cycle service level
 \\
      & 86.2 & 85.9 & 88.7 & 80.6 & 91.9 & 94.0 & Fill rate service level
@@ -449,7 +342,7 @@ $\beta$ & \multicolumn{6}{c|}{Volatility $v$} & \multicolumn{1}{c}{Output}
 \\ \hline
 85\% & 1392 & 1409 & 1407 & 1516 & 1708 & 1997 & Heuristic Objective
 \\
-     & 18.0 & 18.0 & 16.0 & 21.0 & 24.0 & 31.0 & Multi-sourcing
+     & 18.0 & 23.0 & 16.0 & 21.0 & 24.0 & 31.0 & Multi-sourcing
 \\
      & 3 & 3 & 3 & 3 & 3 & 4 & Multi-sourcing (max)
 \\
@@ -461,6 +354,8 @@ $\beta$ & \multicolumn{6}{c|}{Volatility $v$} & \multicolumn{1}{c}{Output}
 \\
      & 86400 & 28728 & 31277 & 51399 & 86400 & 86400 & Time for bound
 \\ \cdashline{2-8}[2pt/2pt]
+     & Yes & Limit & Yes & Yes & Yes & Yes & Feasibility
+\\
      & 77.8 & \multicolumn{1}{c|}{--} & 82.0 & 85.2 & 90.5 & 92.7 & Cycle service level
 \\
      & 86.1 & \multicolumn{1}{c|}{--} & 87.7 & 89.4 & 94.0 & 94.6 & Fill rate service level
@@ -475,6 +370,8 @@ $\beta$ & \multicolumn{6}{c|}{Volatility $v$} & \multicolumn{1}{c}{Output}
 \\
      & 100.0 & 100.0 & 99.9 & 99.9 & 99.9 & 99.9 & $\prob\sqbracket{s\ge0}$
 \\ \cdashline{2-8}[2pt/2pt]
+     & Yes & Yes & Yes & Yes & Yes & Yes & Feasibility
+\\
      & 77.8 & 80.3 & 81.1 & 86.4 & 90.6 & 92.7 & Cycle service level
 \\
      & 85.9 & 87.2 & 87.1 & 90.1 & 93.1 & 94.5 & Fill rate service level
@@ -482,9 +379,13 @@ $\beta$ & \multicolumn{6}{c|}{Volatility $v$} & \multicolumn{1}{c}{Output}
      & 4025 & 5146 & 5209 & 5448 & 5716 & 5428 & Evaluation time
 \\ \hline
 \end{tabular*}
-\caption{Results for Lux dataset (with heuristic)}
+\caption{Results for Lux dataset (solved with Algorithm~\ref{alg:multi-sourcing:MIP:heuristic})}
 \label{tab:multi-sourcing:results:lux:with-heuristic}
 \end{table}
+
+
+\section{Discussion}
+\label{sec:multi-sourcing:results:discussion}
 
 
 First, note that we do not provide results for Lux dataset without the heuristic.
@@ -492,33 +393,38 @@ Indeed, we were not able to find a solution in the allowed time (20 minutes).
 Moreover, for the Lux dataset, it is even impossible to compute the continuous relaxation in less than 24 hours for a volatility equal to $1\%$, $50\%$ and $80\%$.
 
 
-Second important point, on small data set, the frontal uses of a solver gives always better results than the heuristic even if this gap decrease with the increase of volatility.
-However, on huge dataset, we never got a solution from a frontal used of a solver.
+Second important point, on small datasets, the frontal use of a solver always gives better results than Algorithm~\ref{alg:multi-sourcing:MIP:heuristic} even if this gap decreases with the increase of volatility.
+However, on huge datasets, the solver was never able to get a feasible solution.
 
 
-Although it is not a proof, the values returned by $\prob\sqbracket{s\ge0}$ show on some examples that the satisfaction of $\AVaR$ constraint implies the satisfaction of probabilistic constraint.
+Although it is not a proof, the values returned by $\prob\sqbracket{s\ge0}$ show on some examples that the satisfaction of the $\AVaR$ constraint implies the satisfaction of the probabilistic constraint.
 
 
-% Finally, we see that aiming at $70\%$ or aiming at $95\%$ does not really change the maximal fill rate service level or the maximal cycle service level that can be reached.
-% However, it really changes the cost of the assignment.
-
-
-As shown by the computational times, evaluating the quality solution with fix assignment is hard.
-It may take up to two hours while problem has no integer variables.
+As shown by the computational times, evaluating the quality solution with fixed assignments is hard.
+It may take up to two hours while the problem has no integer variables.
 
 
 On Mel instances, we see that solving on a small set of scenarios is too optimistic when computing the multi-sourcing.
-Indeed, several assignments prove to be infeasible of the huge set of scenarios.
+Indeed, several assignments prove to be infeasible of the larger set of scenarios.
 
 
-Regarding results on Lux instance, we see that heuristic is not that bad.
+Regarding results on Lux instances, we see that Algorithm~\ref{alg:multi-sourcing:MIP:heuristic} is not that bad.
 When we succeed in finding the continuous relaxation of Problem~\eqref{eq:stoch-multi-sourcing:linearized} with $m=100$ scenarios, the GAP to optimality is at most 25\%.
 For small values of the volatility $v$, playing with the value of $\servicelvl$ has little impact on the objective value and on service level.
-For greater values of the volatility, playing with the values of $\servicelvl$ enables to reached the desired service levels.
-However, when $\servicelvl$ becomes close to $100\%$, our method becomes very sensitive to the sampling and approaches like robust ones may be might appropriate.
+For greater values of the volatility, playing with the values of $\servicelvl$ enables us to reach the desired service levels.
+However, when $\servicelvl$ becomes close to $100\%$, our method becomes very sensitive to the sampling and approaches like robust ones may be more appropriate.
 
 
 
 % \esgil{Refaire des tests avec des valeur plus faibles de $\servicelvl$}
+
+
+\section{Comparison with the current multi-sourcing of Argon Consulting's client}
+
+
+Regarding the whole items list (\ie the 500 families), Argon Consulting's client has almost 25\% of multi-sourced items.
+In the 100 considered items, it is about 80\% of the items.
+With our approach, we show that we can drastically reduce the number of multi-sourced items (and thus the multi-sourcing costs) while keeping a high service level.
+As mentioned in \cref{sec:multi-sourcing:results:discussion}, some complementary implementations can be made in order to improve the method and ensure the validity of the approach.
 
 
