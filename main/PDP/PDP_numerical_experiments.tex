@@ -99,7 +99,6 @@ In addition, if some capacity issues are easily anticipated, the production of a
   \label{fig:lot-and-cover-size-heuristics}
 \end{figure}
 
-
 The third one, the {\em cover-size heuristic}, is almost the same, but instead of precomputing a fixed quantity for each item, a duration $\tau_i^*$ is fixed before the first week.
 When the inventory of item $i$ is below the safety stock, the quantity $\quantity_t^i$ is computed so that the inventory of item $i$ exceeds the safety stock of the expected demand for the next $\tau_i^*$ weeks.
 An example is given on \cref{fig:cover-size-heuristic}.
@@ -160,7 +159,7 @@ In the column $\tilde{\holding}^i$, we indicate the range of the holding costs b
 We obtain the $\holding^i$'s by dividing these costs by $C$ since internal production times $\rate^i$ are unitary.
 
 
-We also add the loading characteristic $\kappa_t$ at period $t$ defined as follows. it is only used to provides an indication of the hardness of the instance.
+We also add the loading characteristic $\kappa_t$ at period $t$, only given as an indication of the hardness of the instance, and defined as follows.
 \begin{equation}
   \kappa_t = \frac{\sum_{i\in\REF} \bracket{\sum_{t'=1}^{t} \bar{\demand}_{t'}^i}-\inventory_0^i}{ \sum_{t'=1}^{t} \capacity_{t'}}
 \end{equation}
@@ -291,7 +290,7 @@ First, \cref{enum:PDP:random-demand-property:expectation} ensures that demand ex
 Second, \cref{enum:PDP:random-demand-property:past-conditional} ensures that the demand distribution keeps its properties when part of the demand is revealed.
 
 
-Moreover, random variables with an ``expanded Dirichlet'' distribution can be easily generated using Algorithm~\ref{alg:demand:initial-sampling} since most of modern programming languages have a generator of gamma distributed variables.
+Moreover, random variables with an ``expanded Dirichlet'' distribution can easily be generated using Algorithm~\ref{alg:demand:initial-sampling} since most of modern programming languages have a generator of gamma distributed variables.
 
 
 \begin{algorithm}[H]
@@ -329,7 +328,7 @@ For any $\gamma\in\bracket{0,1}$ and any $\tilde{\demand}_1,\ldots,\tilde{\deman
 
 
 Finally, Algorithm~\ref{alg:demand:initial-sampling} and \cref{enum:PDP:random-demand-property:past-conditional} of \cref{prop:demand-distribution:properties} enable to generate easily a realization of the demand when part of the demand is already revealed.
-
+\vlil{préciser le cas d'usage : on connait la demande des premiers pas de temps et on veut simuler pour les prochains.}
 
 \section{Use of $K$-means algorithm}
 \label{sec:PDP:numerical-experiments:k-means}
