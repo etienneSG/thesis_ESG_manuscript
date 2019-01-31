@@ -385,6 +385,10 @@ They are all averaged over the 30 runs of the simulation.
 In the column \emph{Obj.}, we write the objective value \eqref{eq:Uniform-CLSP-BS-2SA-m:backorder:objective} of the solution found by the heuristic (in k\euro{}).
 
 
+In the column \emph{LB}, we write the best lower bound on the objective value \eqref{eq:Uniform-CLSP-BS-2SA-m:backorder:objective} (in k\euro{}).
+This lower bound is computed by solving Program~\eqref{eq:Uniform-CLSP-BS-2SA-m:backorder} at time $t=1$ with $m=5000$ scenarios and a computing time limit equal to 24 hours.
+
+
 The column \emph{Inventory} gives several KPI relative to stocks.
 The sub-column \emph{Av.} gives the average of the positive part of the inventory over periods, \ie
 \begin{equation}
