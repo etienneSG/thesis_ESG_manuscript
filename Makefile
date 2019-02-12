@@ -14,6 +14,7 @@ pdf: update
 	bibtex $(OUT_DIR)/$(TEX_NAME).aux
 	pdflatex -output-directory=$(OUT_DIR) $(TEX_NAME).tex
 	pdflatex -output-directory=$(OUT_DIR) $(TEX_NAME).tex
+        pdflatex -output-directory=$(OUT_DIR) $(TEX_NAME).tex
 
 change_name:
 	@cp $(OUT_DIR)/$(TEX_NAME).pdf $(PDF_NAME).pdf
